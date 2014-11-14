@@ -1,0 +1,34 @@
+create table Tag(
+  ID int  NOT NULL AUTO_INCREMENT,
+  Name varchar(100) NOT NULL,
+  PRIMARY KEY(ID)
+    );
+
+  create table Artist(
+  ID int NOT NULL AUTO_INCREMENT,
+  Name varchar(100) NOT NULL,
+  PRIMARY KEY(ID)
+      );
+
+  create table Track(
+  ID int NOT NULL AUTO_INCREMENT,
+  Name varchar(100) NOT NULL,
+  ArtistID int NOT NULL,
+  PRIMARY KEY(ID),
+  UNIQUE(Name, ArtistID),
+  FOREIGN KEY(ArtistID) REFERENCES Artist(ID)
+    ON UPDATE CASCADE
+      );
+
+  create table TT(
+  ID int NOT NULL AUTO_INCREMENT,
+  TrackID int NOT NULL,
+  TagID int NOT NULL,
+  Count int NOT NULL,
+  PRIMARY KEY(ID),
+  UNIQUE(TrackID, TagID),
+  FOREIGN KEY(TrackID) REFERENCES Track(ID)
+    ON UPDATE CASCADE,
+  FOREIGN KEY(TagID) REFERENCES Tag(ID)
+    ON UPDATE CASCADE
+      );

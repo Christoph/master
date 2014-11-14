@@ -3,6 +3,8 @@
 *.DS_Store
 *.swp
 *.out
+eclimd.log
+.metadata/
 
 *.class
 bin/

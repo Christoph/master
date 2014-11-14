@@ -5,16 +5,17 @@ import de.umass.lastfm.*;
 
 public class Core {
 
-	private static Collection<Tag> tags;
+  private static Collection<Tag> tags;
 
-	public static void main(String[] args) {
-    System.out.println("Start");
-
-    LastFM last = new LastFM();
-
-    tags = last.mineTags("Metallica", "Nothin Else Matters");
+  public static void main(String[] args) {
+	DB db = new DB();
+	LastFM last = new LastFM();
+		
+	System.out.println("Start");
+	
+	tags = last.mineTags("Metallica", "Nothing Else Matters");
+    db.insert(tags);
     
     System.out.println("End");
-	}
-
+  }
 }
