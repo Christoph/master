@@ -5,6 +5,6 @@
 *.out
 eclimd.log
 .metadata/
-
+config.db
 *.class
 bin/
