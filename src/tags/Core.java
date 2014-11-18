@@ -35,7 +35,7 @@ public class Core {
 
     
     tags = last.mineTags("Metallica", "Nothing Else Matters");
-    db.insert(tags);
+    db.insert("Nothing Else Matters","Metallica",tags);
       
     System.out.println("End");
   }

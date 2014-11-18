@@ -4,44 +4,38 @@ import java.sql.*;
 import java.util.Collection;
 import java.util.Properties;
 
-import org.apache.commons.dbutils.*;
-
 import de.umass.lastfm.*;
 
 public class DB {
-  private String connectionString user, pass;
-  private String tagQuery, artistQuery, trackQuery;
-  private int trackID, tagID;
+  private String connectionString, user, pass;
   private Connection conn;
 
-  private QueryRunner run;
-  private Query querymanager;
+  private QueryManager querymanager;
 
   public DB(Properties config) {
     connectionString = config.getProperty("database");
     user = config.getProperty("user");
     pass = config.getProperty("password");
 
-    querymanager = new Query();
+    try {
+		conn = DriverManager.getConnection(connectionString, user, pass);
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+    querymanager = new QueryManager(conn);
   }
 
-  public void insert(Collection<Tag> tags) {
-    //Initialization
-    run = new QueryRunner();
-  
+  public void insert(String name, String artist, Collection<Tag> tags) {
+  try {     
     // Checks
     for(Tag t: tags)
     {
       // Check if the artist exists
-      if("SELECT Name FROM Artist WHERE Name = "+t.getArtist() == t.getArtist());
+      if(!querymanager.existArtist(artist))
       {
-        artistQuery = "";
+        querymanager.insertIntoArtist("Metallica");
       }
-      else
-      {
-        artistQuery = "INSERT INTO Artist VALUES(DEFAULT,'"+t.getArtist()+"');";
-      }
-      
+     /* 
       // Check if the track exists
       if("SELECT Name FROM Track WHERE Name = "+t.getTrack() == t.getTrack());
       {
@@ -73,16 +67,16 @@ public class DB {
       {
         ttQuery = "INSERT INTO TT VALUES(DEFAULT,"+trackID+","tagID");";
       }
-
-      // Execute the querys
-      try {     
-        conn = DriverManager.getConnection(connectionString, user, pass);
-        run.update(conn, query);
-      } catch(SQLException e) {
-        e.printStackTrace();
-      } finally {
-        DbUtils.closeQuietly(conn);
-      }
+      */
+      }   
+    } 
+    finally {
+      try {
+        // Close statements
+        querymanager.closeAll();
+        // Close connection
+        conn.close();
+      } catch (SQLException e) { e.printStackTrace(); }
     }
   }
 }
