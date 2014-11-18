@@ -1,4 +1,4 @@
 #Config DB
-database="jdbc:mariadb://localhost/tags"
-user="root"
-password="sh0wt1me"
+database="connection string"
+user="user name"
+password="password"
