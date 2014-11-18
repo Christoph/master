@@ -1,4 +1,10 @@
 #Config DB
+<<<<<<< HEAD
 database=jdbc:mariadb://localhost/tags
 user=root
 password=sh0wt1me
+=======
+database="connection string"
+user="user name"
+password="password"
+>>>>>>> 3a81fe58b53346fa863647d8dc1496054075de28
