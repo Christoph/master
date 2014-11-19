@@ -47,26 +47,21 @@ public class DB {
       {
         querymanager.insertTag(t);
       }
-/*      
+      
       // Check if the tag/track combination exists
-      if("SELECT * FROM TT WHERE TrackID = "+trackID.toString()+" AND TagID = "+tagID.toString() == null)
+      if(!querymanager.existsTT(track,artist,t))
       {
-        ttQuery = "";
+        querymanager.insertTT(track,artist,t);
       }
-      else
-      {
-        ttQuery = "INSERT INTO TT VALUES(DEFAULT,"+trackID+","tagID");";
-      }
-      */
-      }   
-    } 
-    finally {
-      try {
-        // Close statements
-        querymanager.closeAll();
-        // Close connection
-        conn.close();
-      } catch (SQLException e) { e.printStackTrace(); }
-    }
+    }   
+  } 
+  finally {
+    try {
+      // Close statements
+      querymanager.closeAll();
+      // Close connection
+      conn.close();
+    } catch (SQLException e) { e.printStackTrace(); }
+  }
   }
 }
