@@ -41,18 +41,13 @@ public class DB {
       {
         querymanager.insertTrack(track,artist);
       }
-/*
+
       // Check if the tag exists
-      if("SELECT Name FROM Tag WHERE Name = "+t.getName() == t.getName());
+      if(!querymanager.existsTag(t))
       {
-        tagID = "SELECT ID FROM Tag WHERE Name = "+t.getTrack()";
-        tagQuery = "";
+        querymanager.insertTag(t);
       }
-      else
-      {
-        tagQuery = "INSERT INTO Tag VALUES(DEFAULT,'"+t.getName()+"');";
-      }
-      
+/*      
       // Check if the tag/track combination exists
       if("SELECT * FROM TT WHERE TrackID = "+trackID.toString()+" AND TagID = "+tagID.toString() == null)
       {

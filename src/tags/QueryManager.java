@@ -1,26 +1,41 @@
 package tags;
 
 import java.sql.*;
+import de.umass.lastfm.*;
 
 public class QueryManager {
   private ResultSet result;
 
   // Need to be closed in the closeAll method
   private PreparedStatement selectRowFromArtist;
-  private PreparedStatement insertIntoArtist;
-  private PreparedStatement selectRowFromTrack;
   private PreparedStatement selectIDFromArtist;
+
+  private PreparedStatement selectRowFromTrack;
+  private PreparedStatement selectIDFromTrack;
+
+  private PreparedStatement selectRowFromTag;
+  private PreparedStatement selectIDFromTag;
+  
+  private PreparedStatement insertIntoArtist;
   private PreparedStatement insertIntoTrack;
+  private PreparedStatement insertIntoTag;
 
   // Constructor
   public QueryManager(Connection conn) {
     try {
       // Initialize preparedstatments
       selectRowFromArtist = conn.prepareStatement("SELECT * FROM Artist WHERE Name = ?");
-      insertIntoArtist = conn.prepareStatement("INSERT INTO Artist VALUES(DEFAULT,?)");
-      selectRowFromTrack = conn.prepareStatement("SELECT * FROM Track WHERE Name = ? AND ID = ?");
       selectIDFromArtist = conn.prepareStatement("SELECT ID FROM Artist WHERE Name = ?");
+
+      selectRowFromTrack = conn.prepareStatement("SELECT * FROM Track WHERE Name = ? AND ID = ?");
+      selectIDFromTrack = conn.prepareStatement("SELECT ID FROM Track WHERE Name = ? AND ID = ?");
+      
+      selectRowFromTag = conn.prepareStatement("SELECT * FROM Tag WHERE Name = ?");
+      selectIDFromTag = conn.prepareStatement("SELECT ID FROM Tag WHERE Name = ?");
+      
+      insertIntoArtist = conn.prepareStatement("INSERT INTO Artist VALUES(DEFAULT,?)");
       insertIntoTrack = conn.prepareStatement("INSERT INTO Track VALUES(DEFAULT,?,?)");
+      insertIntoTag = conn.prepareStatement("INSERT INTO Tag VALUES(DEFAULT,?)");
     } catch (SQLException e) { e.printStackTrace(); }
   }
 
@@ -44,25 +59,6 @@ public class QueryManager {
     } catch (SQLException e) { e.printStackTrace(); }
 
     return check;
-  }
-
-  public void insertArtist(String artist)
-  {
-    try {
-      // Execute query
-     insertIntoArtist.setString(1,artist);
-     insertIntoArtist.executeUpdate();
-    } catch (SQLException e) { e.printStackTrace(); }
-  }
-
-  public void insertTrack(String track, String artist)
-  {
-    try {
-      // Execute query
-     insertIntoTrack.setString(1,track);
-     insertIntoTrack.setInt(2,getIDFromArtist(artist));
-     insertIntoTrack.executeUpdate();
-    } catch (SQLException e) { e.printStackTrace(); }
   }
 
   public int getIDFromArtist(String artist)
@@ -107,14 +103,113 @@ public class QueryManager {
     return check;
   }
 
+  public int getIDFromTrack(String track, String artist)
+  {
+    int id = 0;
+    try {
+      // Execute the query
+      selectIDFromTrack.setString(1, track);
+      selectIDFromTrack.setInt(2,getIDFromArtist(artist));
+      result = selectIDFromTrack.executeQuery();
+
+      // Map the result
+      result.next();
+      id = result.getInt("ID");
+
+      // Close the resultset
+      result.close();
+      result = null;
+    } catch (SQLException e) { e.printStackTrace(); }
+
+      return id;
+  }
+
+  public int getIDFromTag(Tag tag)
+  {
+    int id = 0;
+    try {
+      // Execute the query
+      selectIDFromTag.setString(1, tag.getName());
+      result = selectIDFromTag.executeQuery();
+
+      // Map the result
+      result.next();
+      id = result.getInt("ID");
+
+      // Close the resultset
+      result.close();
+      result = null;
+    } catch (SQLException e) { e.printStackTrace(); }
+
+      return id;
+  }
+
+  public Boolean existsTag(Tag tag)
+  {
+    Boolean check = false;
+    
+    try {
+      // Execute the query
+      selectRowFromTag.setString(1,tag.getName());
+      result = selectRowFromTag.executeQuery();
+      
+      // Check if the row exists
+      if(result.next()){
+      check = true;
+      }
+      
+      // Close resultset
+      result.close();
+      result = null;
+    } catch (SQLException e) { e.printStackTrace(); }
+
+    return check;
+  }
+
+  public void insertArtist(String artist)
+  {
+    try {
+      // Execute query
+     insertIntoArtist.setString(1,artist);
+     insertIntoArtist.executeUpdate();
+    } catch (SQLException e) { e.printStackTrace(); }
+  }
+
+  public void insertTrack(String track, String artist)
+  {
+    try {
+      // Execute query
+     insertIntoTrack.setString(1,track);
+     insertIntoTrack.setInt(2,getIDFromArtist(artist));
+     insertIntoTrack.executeUpdate();
+    } catch (SQLException e) { e.printStackTrace(); }
+  }
+
+  public void insertTag(Tag tag)
+  {
+    try {
+      // Execute query
+     insertIntoTag.setString(1,tag.getName());
+     insertIntoTag.executeUpdate();
+    } catch (SQLException e) { e.printStackTrace(); }
+  }
+
   public void closeAll()
   {
     try {
       // Close all prepared statements
       selectRowFromArtist.close();
-      insertIntoArtist.close();
       selectIDFromArtist.close();
+
       selectRowFromTrack.close();
+      selectIDFromTrack.close();
+
+      selectRowFromTag.close();
+      selectIDFromTag.close();
+
+      insertIntoArtist.close();
+      insertIntoTrack.close();
+      insertIntoTag.close();
     } catch (SQLException e) { e.printStackTrace(); }
   }
 }
