@@ -25,28 +25,23 @@ public class DB {
     querymanager = new QueryManager(conn);
   }
 
-  public void insert(String name, String artist, Collection<Tag> tags) {
+  public void insert(String track, String artist, Collection<Tag> tags) {
   try {     
     // Checks
     for(Tag t: tags)
     {
       // Check if the artist exists
-      if(!querymanager.existArtist(artist))
+      if(!querymanager.existsArtist(artist))
       {
-        querymanager.insertIntoArtist("Metallica");
+        querymanager.insertArtist(artist);
       }
-     /* 
+      
       // Check if the track exists
-      if("SELECT Name FROM Track WHERE Name = "+t.getTrack() == t.getTrack());
+      if(!querymanager.existsTrack(track,artist))
       {
-        trackID = "SELECT ID FROM Track WHERE Name = "+t.getTrack()";
-        trackQuery = "";
+        querymanager.insertTrack(track,artist);
       }
-      else
-      {
-        trackQuery = "INSERT INTO Track VALUES(DEFAULT,'"+t.getTrack()+"',"+"SELECT ID FROM Artist WHERE Name = "+t.getArtist();+");";
-      }
-
+/*
       // Check if the tag exists
       if("SELECT Name FROM Tag WHERE Name = "+t.getName() == t.getName());
       {
