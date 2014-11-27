@@ -1,9 +1,14 @@
 package tags;
 
 import java.sql.*;
+import java.util.logging.Logger;
+
 import de.umass.lastfm.*;
 
 public class QueryManager {
+	// Initialize logger
+	private Logger logger = Logger.getLogger("Logger");
+	
   // Need to be closed in the closeAll method
   private PreparedStatement selectRowFromArtist;
   private PreparedStatement selectIDFromArtist;
@@ -162,7 +167,11 @@ public class QueryManager {
 
       // Close the resultset
       result.close();
-    } catch (SQLException e) { e.printStackTrace(); }
+    } catch (SQLException e) 
+    { 
+    	logger.severe("There might be a problem with the tag length. hte tag name is: "+tag.getName());
+    	e.printStackTrace(); 
+    }
 
       return id;
   }
