@@ -4,8 +4,6 @@ import java.sql.*;
 import de.umass.lastfm.*;
 
 public class QueryManager {
-  private ResultSet result;
-
   // Need to be closed in the closeAll method
   private PreparedStatement selectRowFromArtist;
   private PreparedStatement selectIDFromArtist;
@@ -47,7 +45,7 @@ public class QueryManager {
   public Boolean existsArtist(String artist)
   {
     Boolean check = false;
-    
+    ResultSet result;
     try {
       // Execute the query
       selectRowFromArtist.setString(1,artist);
@@ -60,7 +58,6 @@ public class QueryManager {
       
       // Close resultset
       result.close();
-      result = null;
     } catch (SQLException e) { e.printStackTrace(); }
 
     return check;
@@ -69,6 +66,7 @@ public class QueryManager {
   public int getIDFromArtist(String artist)
   {
     int id = 0;
+    ResultSet result;
     try {
       // Execute the query
       selectIDFromArtist.setString(1, artist);
@@ -80,7 +78,6 @@ public class QueryManager {
 
       // Close the resultset
       result.close();
-      result = null;
     } catch (SQLException e) { e.printStackTrace(); }
 
       return id;
@@ -89,6 +86,7 @@ public class QueryManager {
   public Boolean existsTrack(String track, String artist)
   {
     Boolean check = false;
+    ResultSet result;
     try {
       //Execute the query
       selectRowFromTrack.setString(1,track);
@@ -102,7 +100,6 @@ public class QueryManager {
 
       // Close resultset
       result.close();
-      result = null;
     } catch (SQLException e) { e.printStackTrace(); }
 
     return check;
@@ -111,6 +108,7 @@ public class QueryManager {
   public int getIDFromTrack(String track, String artist)
   {
     int id = 0;
+    ResultSet result;
     try {
       // Execute the query
       selectIDFromTrack.setString(1, track);
@@ -123,7 +121,6 @@ public class QueryManager {
 
       // Close the resultset
       result.close();
-      result = null;
     } catch (SQLException e) { e.printStackTrace(); }
 
       return id;
@@ -132,7 +129,7 @@ public class QueryManager {
   public Boolean existsTag(Tag tag)
   {
     Boolean check = false;
-    
+    ResultSet result;
     try {
       // Execute the query
       selectRowFromTag.setString(1,tag.getName());
@@ -145,7 +142,6 @@ public class QueryManager {
       
       // Close resultset
       result.close();
-      result = null;
     } catch (SQLException e) { e.printStackTrace(); }
 
     return check;
@@ -154,6 +150,7 @@ public class QueryManager {
   public int getIDFromTag(Tag tag)
   {
     int id = 0;
+    ResultSet result;
     try {
       // Execute the query
       selectIDFromTag.setString(1, tag.getName());
@@ -165,7 +162,6 @@ public class QueryManager {
 
       // Close the resultset
       result.close();
-      result = null;
     } catch (SQLException e) { e.printStackTrace(); }
 
       return id;
@@ -174,7 +170,7 @@ public class QueryManager {
   public Boolean existsTT(String track, String artist, Tag tag)
   {
     Boolean check = false;
-    
+    ResultSet result;
     try {
       // Execute the query
       selectRowFromTT.setInt(1, getIDFromTrack(track,artist));
@@ -188,7 +184,6 @@ public class QueryManager {
       
       // Close resultset
       result.close();
-      result = null;
     } catch (SQLException e) { e.printStackTrace(); }
 
     return check;
