@@ -1,6 +1,7 @@
 package tags;
 
 import java.util.Collection;
+import java.util.List;
 
 import de.umass.lastfm.*;
 
@@ -15,9 +16,12 @@ public class Core {
   public static void main(String[] args) {
     // Initializing classes and variables
     Collection<Tag> tags;
+    String[] line;
+    List<String> lines;
 
     Properties dbconf = new Properties();
     InputStream input = null;
+    ImportCSV data = new ImportCSV();
 
     // Load config files
     try {
@@ -33,6 +37,7 @@ public class Core {
     // Program
     System.out.println("Start");
 
+    lines = data.importCSV();
     
     tags = last.mineTags("Metallica", "Nothing Else Matters");
     db.insert("Nothing Else Matters","Metallica",tags);
