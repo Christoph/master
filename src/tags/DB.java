@@ -52,7 +52,13 @@ public class DB {
       {
         querymanager.insertTT(track,artist,t);
       }
-    }   
+    }
+    try {
+			conn.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
   }
 
   public void closeAll()
