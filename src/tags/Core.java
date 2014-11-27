@@ -33,6 +33,7 @@ public class Core {
     String[] line;
     List<String> lines;
     InputStream input = null;
+    int counter = 0;
 
     // Load config files
     Properties dbconf = new Properties();
@@ -53,9 +54,16 @@ public class Core {
     // Import data
     lines = data.importCSV();
     
-    for(int i = 0; i< 10; i++)
+    for(String l :lines)
     {
-    line = lines.get(i).split(",");
+    counter++;
+    
+    if(counter%100 == 0)
+    {
+    	log.info("Importet "+counter+" rows.");
+    }
+    
+    line = l.split(",");
 
     tags = last.mineTags(line[0], line[1]);
     db.insert(line[0],line[1],tags);
