@@ -26,7 +26,6 @@ public class DB {
   }
 
   public void insert(String track, String artist, Collection<Tag> tags) {
-  try {     
     // Checks
     for(Tag t: tags)
     {
@@ -54,14 +53,15 @@ public class DB {
         querymanager.insertTT(track,artist,t);
       }
     }   
-  } 
-  finally {
+  }
+
+  public void closeAll()
+  {
     try {
       // Close statements
       querymanager.closeAll();
       // Close connection
       conn.close();
     } catch (SQLException e) { e.printStackTrace(); }
-  }
   }
 }
