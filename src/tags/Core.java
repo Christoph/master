@@ -16,11 +16,12 @@ public class Core {
   private static final Logger log = Logger.getLogger(Core.class.getName());
 
   public static void main(String[] args) {
-    // Initializing the logger
+  // Initializing the logger
 	Handler handler;
-	
+
 	try {
       handler = new FileHandler( "log.txt" );
+      handler.setFormatter(new SimpleFormatter());
       log.addHandler( handler );
     } catch (SecurityException e1) { e1.printStackTrace();
     } catch (IOException e1) { e1.printStackTrace(); }
