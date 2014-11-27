@@ -28,8 +28,8 @@ public class QueryManager {
       selectIDFromArtist = conn.prepareStatement("SELECT ID FROM Artist WHERE Name = ?");
       insertIntoArtist = conn.prepareStatement("INSERT INTO Artist VALUES(DEFAULT,?)");
 
-      selectRowFromTrack = conn.prepareStatement("SELECT * FROM Track WHERE Name = ? AND ID = ?");
-      selectIDFromTrack = conn.prepareStatement("SELECT ID FROM Track WHERE Name = ? AND ID = ?");
+      selectRowFromTrack = conn.prepareStatement("SELECT * FROM Track WHERE Name = ? AND ArtistID = ?");
+      selectIDFromTrack = conn.prepareStatement("SELECT ID FROM Track WHERE Name = ? AND ArtistID = ?");
       insertIntoTrack = conn.prepareStatement("INSERT INTO Track VALUES(DEFAULT,?,?)");
       
       selectRowFromTag = conn.prepareStatement("SELECT * FROM Tag WHERE Name = ?");
