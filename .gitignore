@@ -8,3 +8,4 @@ eclimd.log
 config.*
 *.class
 bin/
+log.*

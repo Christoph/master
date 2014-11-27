@@ -9,11 +9,24 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.*;
 
 public class Core {
 
+  private static final Logger log = Logger.getLogger(Core.class.getName());
 
   public static void main(String[] args) {
+    // Initializing the logger
+	Handler handler;
+	
+	try {
+      handler = new FileHandler( "log.txt" );
+      log.addHandler( handler );
+    } catch (SecurityException e1) { e1.printStackTrace();
+    } catch (IOException e1) { e1.printStackTrace(); }
+	
+    log.info("Initializing");
+
     // Initializing variables
     Collection<Tag> tags;
     String[] line;
@@ -33,10 +46,9 @@ public class Core {
     DB db = new DB(dbconf);
     LastFM last = new LastFM();
     ImportCSV data = new ImportCSV();
-      
-    // Program
-    System.out.println("Start");
 
+    log.info("Import");
+    
     // Import data
     lines = data.importCSV();
     
@@ -49,14 +61,13 @@ public class Core {
     
     // Wait to stay below 5 cals per second.
     try {
-		Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace();
-	}
+      Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace();
+      }
     }
 
     // Close all
     db.closeAll();
 
-    // End
-    System.out.println("End");
+    log.info("End");
   }
 }
