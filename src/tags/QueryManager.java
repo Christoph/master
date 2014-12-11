@@ -7,7 +7,7 @@ import de.umass.lastfm.*;
 
 public class QueryManager {
 	// Initialize logger
-	private Logger logger = Logger.getLogger("Logger");
+	private Logger log = Logger.getLogger("Logger");
 	
   // Need to be closed in the closeAll method
   private PreparedStatement selectRowFromArtist;
@@ -44,7 +44,13 @@ public class QueryManager {
       selectRowFromTT = conn.prepareStatement("SELECT * FROM TT WHERE TrackID = ? AND TagID = ?");
       insertIntoTT = conn.prepareStatement("INSERT INTO TT VALUES(DEFAULT,?,?,?)");
 
-    } catch (SQLException e) { e.printStackTrace(); }
+    } catch (SQLException e) { 
+    	log.severe("Error in the DB constructor.");
+    	log.severe(e.getSQLState());
+    	log.severe(e.getStackTrace().toString());
+    	
+    	e.printStackTrace(); 
+    }
   }
 
   public Boolean existsArtist(String artist) throws SQLException
@@ -164,9 +170,9 @@ public class QueryManager {
       result.close();
     } catch (SQLException e) 
     { 
-    	logger.severe("There might be a problem with the tag length. The tag name is: "+tag.getName());
-    	logger.severe(e.getSQLState());
-    	logger.severe(e.getStackTrace().toString());
+    	log.severe("There might be a problem with the tag length. The tag name is: "+tag.getName());
+    	log.severe(e.getSQLState());
+    	log.severe(e.getStackTrace().toString());
     	
     	e.printStackTrace(); 
     }

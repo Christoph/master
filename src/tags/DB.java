@@ -3,10 +3,14 @@ package tags;
 import java.sql.*;
 import java.util.Collection;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import de.umass.lastfm.*;
 
 public class DB {
+	//Initialize logger
+	private Logger log = Logger.getLogger("Logger");
+	
   private String connectionString, user, pass;
   private Connection conn;
 
@@ -55,10 +59,13 @@ public class DB {
 	      }
 	    }
     
-	    //Commiting the changes
+	    //Committing the changes
 	    conn.commit();
 			
 		} catch (SQLException e) {
+			log.severe(e.getSQLState());
+    	log.severe(e.getStackTrace().toString());
+			
 			e.printStackTrace();
 		}
   }
@@ -70,6 +77,12 @@ public class DB {
       querymanager.closeAll();
       // Close connection
       conn.close();
-    } catch (SQLException e) { e.printStackTrace(); }
+    } catch (SQLException e) { 
+    	log.severe("Error while closing all connections.");
+    	log.severe(e.getSQLState());
+    	log.severe(e.getStackTrace().toString());
+    	
+    	e.printStackTrace(); 
+    }
   }
 }
