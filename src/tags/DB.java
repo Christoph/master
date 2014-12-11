@@ -27,36 +27,38 @@ public class DB {
 
   public void insert(String track, String artist, Collection<Tag> tags) {
     // Checks
-    for(Tag t: tags)
-    {
-      // Check if the artist exists
-      if(!querymanager.existsArtist(artist))
-      {
-        querymanager.insertArtist(artist);
-      }
-      
-      // Check if the track exists
-      if(!querymanager.existsTrack(track,artist))
-      {
-        querymanager.insertTrack(track,artist);
-      }
-
-      // Check if the tag exists
-      if(!querymanager.existsTag(t))
-      {
-        querymanager.insertTag(t);
-      }
-      
-      // Check if the tag/track combination exists
-      if(!querymanager.existsTT(track,artist,t))
-      {
-        querymanager.insertTT(track,artist,t);
-      }
-    }
-    try {
-			conn.commit();
+  	try {
+	    for(Tag t: tags)
+	    {
+	      // Check if the artist exists
+	      if(!querymanager.existsArtist(artist))
+	      {
+	        querymanager.insertArtist(artist);
+	      }
+	      
+	      // Check if the track exists
+	      if(!querymanager.existsTrack(track,artist))
+	      {
+	        querymanager.insertTrack(track,artist);
+	      }
+	
+	      // Check if the tag exists
+	      if(!querymanager.existsTag(t))
+	      {
+	        querymanager.insertTag(t);
+	      }
+	      
+	      // Check if the tag/track combination exists
+	      if(!querymanager.existsTT(track,artist,t))
+	      {
+	        querymanager.insertTT(track,artist,t);
+	      }
+	    }
+    
+	    //Commiting the changes
+	    conn.commit();
+			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
   }

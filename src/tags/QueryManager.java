@@ -47,11 +47,11 @@ public class QueryManager {
     } catch (SQLException e) { e.printStackTrace(); }
   }
 
-  public Boolean existsArtist(String artist)
+  public Boolean existsArtist(String artist) throws SQLException
   {
     Boolean check = false;
     ResultSet result;
-    try {
+
       // Execute the query
       selectRowFromArtist.setString(1,artist);
       result = selectRowFromArtist.executeQuery();
@@ -63,16 +63,15 @@ public class QueryManager {
       
       // Close resultset
       result.close();
-    } catch (SQLException e) { e.printStackTrace(); }
 
     return check;
   }
 
-  public int getIDFromArtist(String artist)
+  public int getIDFromArtist(String artist) throws SQLException
   {
     int id = 0;
     ResultSet result;
-    try {
+
       // Execute the query
       selectIDFromArtist.setString(1, artist);
       result = selectIDFromArtist.executeQuery();
@@ -83,16 +82,15 @@ public class QueryManager {
 
       // Close the resultset
       result.close();
-    } catch (SQLException e) { e.printStackTrace(); }
 
       return id;
   }
 
-  public Boolean existsTrack(String track, String artist)
+  public Boolean existsTrack(String track, String artist) throws SQLException
   {
     Boolean check = false;
     ResultSet result;
-    try {
+
       //Execute the query
       selectRowFromTrack.setString(1,track);
       selectRowFromTrack.setInt(2,getIDFromArtist(artist));
@@ -105,16 +103,15 @@ public class QueryManager {
 
       // Close resultset
       result.close();
-    } catch (SQLException e) { e.printStackTrace(); }
 
     return check;
   }
 
-  public int getIDFromTrack(String track, String artist)
+  public int getIDFromTrack(String track, String artist) throws SQLException
   {
     int id = 0;
     ResultSet result;
-    try {
+
       // Execute the query
       selectIDFromTrack.setString(1, track);
       selectIDFromTrack.setInt(2,getIDFromArtist(artist));
@@ -126,16 +123,15 @@ public class QueryManager {
 
       // Close the resultset
       result.close();
-    } catch (SQLException e) { e.printStackTrace(); }
 
       return id;
   }
 
-  public Boolean existsTag(Tag tag)
+  public Boolean existsTag(Tag tag) throws SQLException
   {
     Boolean check = false;
     ResultSet result;
-    try {
+
       // Execute the query
       selectRowFromTag.setString(1,tag.getName());
       result = selectRowFromTag.executeQuery();
@@ -147,7 +143,6 @@ public class QueryManager {
       
       // Close resultset
       result.close();
-    } catch (SQLException e) { e.printStackTrace(); }
 
     return check;
   }
@@ -169,18 +164,21 @@ public class QueryManager {
       result.close();
     } catch (SQLException e) 
     { 
-    	logger.severe("There might be a problem with the tag length. hte tag name is: "+tag.getName());
+    	logger.severe("There might be a problem with the tag length. The tag name is: "+tag.getName());
+    	logger.severe(e.getSQLState());
+    	logger.severe(e.getStackTrace().toString());
+    	
     	e.printStackTrace(); 
     }
 
       return id;
   }
 
-  public Boolean existsTT(String track, String artist, Tag tag)
+  public Boolean existsTT(String track, String artist, Tag tag) throws SQLException
   {
     Boolean check = false;
     ResultSet result;
-    try {
+
       // Execute the query
       selectRowFromTT.setInt(1, getIDFromTrack(track,artist));
       selectRowFromTT.setInt(2, getIDFromTag(tag));
@@ -193,53 +191,43 @@ public class QueryManager {
       
       // Close resultset
       result.close();
-    } catch (SQLException e) { e.printStackTrace(); }
 
     return check;
   }
 
-  public void insertArtist(String artist)
+  public void insertArtist(String artist) throws SQLException
   {
-    try {
       // Execute query
      insertIntoArtist.setString(1,artist);
      insertIntoArtist.executeUpdate();
-    } catch (SQLException e) { e.printStackTrace(); }
   }
 
-  public void insertTrack(String track, String artist)
+  public void insertTrack(String track, String artist) throws SQLException
   {
-    try {
       // Execute query
      insertIntoTrack.setString(1,track);
      insertIntoTrack.setInt(2,getIDFromArtist(artist));
      insertIntoTrack.executeUpdate();
-    } catch (SQLException e) { e.printStackTrace(); }
   }
 
-  public void insertTag(Tag tag)
+  public void insertTag(Tag tag) throws SQLException
   {
-    try {
       // Execute query
      insertIntoTag.setString(1,tag.getName());
      insertIntoTag.executeUpdate();
-    } catch (SQLException e) { e.printStackTrace(); }
   }
 
-  public void insertTT(String track, String artist, Tag tag)
+  public void insertTT(String track, String artist, Tag tag) throws SQLException
   {
-    try {
       // Execute query
      insertIntoTT.setInt(1, getIDFromTrack(track,artist));
      insertIntoTT.setInt(2, getIDFromTag(tag));
      insertIntoTT.setInt(3, tag.getCount());
      insertIntoTT.executeUpdate();
-    } catch (SQLException e) { e.printStackTrace(); }
   }
 
-  public void closeAll()
+  public void closeAll() throws SQLException
   {
-    try {
       // Close all prepared statements
       selectRowFromArtist.close();
       selectIDFromArtist.close();
@@ -255,6 +243,5 @@ public class QueryManager {
 
       selectRowFromTT.close();
       insertIntoTT.close();
-    } catch (SQLException e) { e.printStackTrace(); }
   }
 }
