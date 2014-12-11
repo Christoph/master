@@ -60,18 +60,17 @@ public class Core {
     
     if(counter%100 == 0)
     {
-    	log.info("Importet "+counter+" rows.");
+    	log.info("Imported "+counter+" rows.");
     }
     
     line = l.split(",");
 
-    tags = last.mineTags(line[0], line[1]);
-    db.insert(line[0],line[1],tags);
+    tags = last.mineTags(line[0].trim(), line[1].trim());
+    db.insert(line[0].trim(),line[1].trim(),tags);
     
     // Wait to stay below 5 cals per second.
     try {
-      Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace();
-      }
+      Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace(); }
     }
 
     // Close all
