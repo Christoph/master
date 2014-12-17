@@ -22,7 +22,7 @@ public class LastFM {
 
     if(tag.isEmpty())
     {
-      logger.warning("Couldn't find \""+title+"\" from \""+artist+"\".");
+      logger.info("Couldn't find tags for \""+title+"\" from \""+artist+"\".");
     }
   	
   	return tag;
