@@ -46,7 +46,7 @@ public class Core {
 
     // Initializing classes 
     DB db = new DB(dbconf);
-    LastFM last = new LastFM();
+    LastFM last = new LastFM(dbconf);
     ImportCSV data = new ImportCSV();
 
     log.info("Import");
@@ -69,8 +69,7 @@ public class Core {
     db.insert(line[0].trim(),line[1].trim(),tags);
     
     // Wait to stay below 5 cals per second.
-    try {
-      Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace(); }
+    try { Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace(); }
     }
 
     // Close all
