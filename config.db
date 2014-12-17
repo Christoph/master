@@ -2,3 +2,4 @@
 database=jdbc:mariadb://localhost/tags
 user=user
 password=password
+API=LastFM API Key
