@@ -58,11 +58,6 @@ public class Core {
     {
     counter++;
     
-    if(counter%100 == 0)
-    {
-    	log.info("Imported "+counter+" rows.");
-    }
-    
     line = l.split(",");
 
     tags = last.mineTags(line[0].trim(), line[1].trim());
@@ -70,6 +65,14 @@ public class Core {
     
     // Wait to stay below 5 cals per second.
     try { Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace(); }
+    
+    // Logging and 10s stop all 100 tracks
+    if(counter%100 == 0)
+    {
+    	log.info("Imported "+counter+" rows."+ "Tracks with tags: "+(counter-last.getNumberOfTaglessTracks())+"Tracks without tags: "+last.getNumberOfTaglessTracks());
+    	
+    	try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace(); }
+    }
     }
 
     // Close all
