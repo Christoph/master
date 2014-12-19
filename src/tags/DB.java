@@ -63,8 +63,9 @@ public class DB {
 	    conn.commit();
 			
 		} catch (SQLException e) {
+			log.severe("Artist: "+artist+"; Track: "+track);
 			log.severe(e.getSQLState());
-    	log.severe(e.getStackTrace().toString());
+    	log.severe(e.getMessage());
 			
 			e.printStackTrace();
 		}

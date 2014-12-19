@@ -12,7 +12,7 @@ public class ImportCSV {
   {
     List<String> lines = null;
     try {
-      File file = new File("db/example_track_artist.csv");
+      File file = new File("db/example.csv");
       lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
     } catch (IOException e) { e.printStackTrace(); }
 

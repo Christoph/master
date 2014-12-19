@@ -47,7 +47,7 @@ public class QueryManager {
     } catch (SQLException e) { 
     	log.severe("Error in the DB constructor.");
     	log.severe(e.getSQLState());
-    	log.severe(e.getStackTrace().toString());
+    	log.severe(e.getMessage());
     	
     	e.printStackTrace(); 
     }

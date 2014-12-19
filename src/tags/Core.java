@@ -34,6 +34,10 @@ public class Core {
     List<String> lines;
     InputStream input = null;
     int counter = 0;
+    String artist, track;
+    
+    // 150 is the size of the cell in the table
+    int maxString = 150;
 
     // Load config files
     Properties dbconf = new Properties();
@@ -56,23 +60,44 @@ public class Core {
     
     for(String l :lines)
     {
-    counter++;
-    
-    line = l.split(",");
-
-    tags = last.mineTags(line[0].trim(), line[1].trim());
-    db.insert(line[0].trim(),line[1].trim(),tags);
-    
-    // Wait to stay below 5 cals per second.
-    try { Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace(); }
-    
-    // Logging and 10s stop all 100 tracks
-    if(counter%100 == 0)
-    {
-    	log.info("Imported "+counter+" rows."+ "Tracks with tags: "+(counter-last.getNumberOfTaglessTracks())+"Tracks without tags: "+last.getNumberOfTaglessTracks());
-    	
-    	try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace(); }
-    }
+	    counter++;
+	    
+	    line = l.split(",");
+	    
+	    artist = line[0].trim();
+	    track = line[1].trim();
+	    
+	    if(artist.length() <= maxString && track.length() <= maxString)
+	    {
+	    	try
+	    	{
+			    tags = last.mineTags(track, artist);
+			    db.insert(track,artist,tags);
+	    	}
+	    	catch (de.umass.lastfm.CallException e)
+	    	{
+	    		log.severe("Row: "+counter+"; Artist: "+artist+"; Track: "+track);
+	    		log.severe(e.getMessage());
+	    		
+	    		e.printStackTrace();
+	    	}
+	    	catch (Exception e)
+	    	{
+	    		log.severe("Row: "+counter+"; Artist: "+artist+"; Track: "+track);
+	    		log.severe(e.getMessage());
+	    		
+	    		e.printStackTrace();
+	    	}
+		    
+		    // Wait to stay below 5 cals per second.
+		    try { Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace(); }
+		    
+		    // Logmessage all 100 tracks
+		    if(counter%100 == 0)
+		    {
+		    	log.info("Imported "+counter+" rows; "+ "Tracks with tags: "+(counter-last.getNumberOfTaglessTracks())+"; Tracks without tags: "+last.getNumberOfTaglessTracks());
+		    }
+	    }
     }
 
     // Close all
