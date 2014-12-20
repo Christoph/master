@@ -131,7 +131,7 @@ public class Core {
 		    // Log message all 100 tracks
 		    if(counter%100 == 0)
 		    {
-		    	log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks);
+		    	log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks+" Too long Tags: "+db.getTooLongTags());
 		    }
 	    }
 	    else
@@ -143,7 +143,7 @@ public class Core {
     // Close all
     db.closeAll();
     
-    log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks);
+    log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks+" Too long Tags: "+db.getTooLongTags());
     log.info("End");
   }
 }
