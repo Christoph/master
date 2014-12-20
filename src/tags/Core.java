@@ -34,6 +34,9 @@ public class Core {
     List<String> lines;
     InputStream input = null;
     int counter = 0;
+    int maxTries = 2;
+    int currentTries = 0;
+    Boolean retry = true;
     String artist, track;
     
     // 150 is the size of the cell in the table
@@ -60,40 +63,61 @@ public class Core {
     
     for(String l :lines)
     {
+    	// Set and reset variables.
 	    counter++;
+	    currentTries = 0;
+	    retry = true;
 	    
+	    // Extract the artist and track.
 	    line = l.split(",");
 	    
 	    artist = line[0].trim();
 	    track = line[1].trim();
 	    
+	    // Check if the names smaller than the db cell.
 	    if(artist.length() <= maxString && track.length() <= maxString)
 	    {
-	    	try
+	    	// Retries three times.
+	    	while(retry)
 	    	{
-			    tags = last.mineTags(track, artist);
-			    db.insert(track,artist,tags);
-	    	}
-	    	catch (de.umass.lastfm.CallException e)
-	    	{
-	    		log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
+	    		// Mine and insert.
+	    		try
+		    	{
+				    tags = last.mineTags(track, artist);
+				    db.insert(track,artist,tags);
+		    	}
+		    	catch (de.umass.lastfm.CallException e)
+		    	{
+		    		if(currentTries >= maxTries)
+		    		{
+		    			retry = false;
+		    			
+		    			log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
+			    		e.printStackTrace();
+		    		}
+		    	}
+		    	catch (Exception e)
+		    	{
+		    		if(currentTries >= maxTries)
+		    		{
+			    		retry = false;
+			    		
+			    		log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
+			    		e.printStackTrace();
+		    		}
+		    	}
 	    		
-	    		e.printStackTrace();
+	    		// Wait to stay below 5 cals per second.
+			    try { Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace(); }
+			    
+			    // Increase the current retry counter.
+			    currentTries++;
 	    	}
-	    	catch (Exception e)
-	    	{
-	    		log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
-	    		
-	    		e.printStackTrace();
-	    	}
-		    
-		    // Wait to stay below 5 cals per second.
-		    try { Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace(); }
 		    
 		    // Log message all 100 tracks
 		    if(counter%100 == 0)
 		    {
-		    	log.info("Imported "+counter+" rows; "+ "Tracks with tags: "+(counter-last.getNumberOfTaglessTracks())+"; Tracks without tags: "+last.getNumberOfTaglessTracks());
+		    	log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks());
 		    }
 	    }
     }
