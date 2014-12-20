@@ -134,11 +134,16 @@ public class Core {
 		    	log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks);
 		    }
 	    }
+	    else
+	    {
+	    	missingTracks++;
+	    }
     }
 
     // Close all
     db.closeAll();
-
+    
+    log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks);
     log.info("End");
   }
 }
