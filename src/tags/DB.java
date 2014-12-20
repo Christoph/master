@@ -29,44 +29,36 @@ public class DB {
     querymanager = new QueryManager(conn);
   }
 
-  public void insert(String track, String artist, Collection<Tag> tags) {
-    // Checks
-  	try {
-	    for(Tag t: tags)
-	    {
-	      // Check if the artist exists
-	      if(!querymanager.existsArtist(artist))
-	      {
-	        querymanager.insertArtist(artist);
-	      }
-	      
-	      // Check if the track exists
-	      if(!querymanager.existsTrack(track,artist))
-	      {
-	        querymanager.insertTrack(track,artist);
-	      }
-	
-	      // Check if the tag exists
-	      if(!querymanager.existsTag(t))
-	      {
-	        querymanager.insertTag(t);
-	      }
-	      
-	      // Check if the tag/track combination exists
-	      if(!querymanager.existsTT(track,artist,t))
-	      {
-	        querymanager.insertTT(track,artist,t);
-	      }
-	    }
-    
-	    //Committing the changes
-	    conn.commit();
-			
-		} catch (SQLException e) {
-			log.severe(e.getMessage()+e.getSQLState()+"at Artist: "+artist+"; Track: "+track);
-			
-			e.printStackTrace();
-		}
+  public void insert(String track, String artist, Collection<Tag> tags) throws SQLException {
+    for(Tag t: tags)
+    {
+      // Check if the artist exists
+      if(!querymanager.existsArtist(artist))
+      {
+        querymanager.insertArtist(artist);
+      }
+      
+      // Check if the track exists
+      if(!querymanager.existsTrack(track,artist))
+      {
+        querymanager.insertTrack(track,artist);
+      }
+
+      // Check if the tag exists
+      if(!querymanager.existsTag(t))
+      {
+        querymanager.insertTag(t);
+      }
+      
+      // Check if the tag/track combination exists
+      if(!querymanager.existsTT(track,artist,t))
+      {
+        querymanager.insertTT(track,artist,t);
+      }
+    }
+  
+    //Committing the changes
+    conn.commit();
   }
 
   public void closeAll()

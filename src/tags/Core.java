@@ -1,5 +1,6 @@
 package tags;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class Core {
     List<String> lines;
     InputStream input = null;
     int counter = 0;
+    int missingTracks = 0;
     int maxTries = 2;
     int currentTries = 0;
     Boolean retry = true;
@@ -80,7 +82,7 @@ public class Core {
 	    	// Retries three times.
 	    	while(retry)
 	    	{
-	    		// Mine and insert.
+	    		// Mine and insert with exception handling.
 	    		try
 		    	{
 				    tags = last.mineTags(track, artist);
@@ -91,16 +93,28 @@ public class Core {
 		    		if(currentTries >= maxTries)
 		    		{
 		    			retry = false;
+		    			missingTracks++;
 		    			
 		    			log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
 			    		e.printStackTrace();
 		    		}
 		    	}
+	    		catch (SQLException e) {
+	    			if(currentTries >= maxTries)
+		    		{
+		    			retry = false;
+		    			missingTracks++;
+		    			
+		    			log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
+			    		e.printStackTrace();
+		    		}
+		  		}
 		    	catch (Exception e)
 		    	{
 		    		if(currentTries >= maxTries)
 		    		{
 			    		retry = false;
+			    		missingTracks++;
 			    		
 			    		log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
 			    		e.printStackTrace();
@@ -117,7 +131,7 @@ public class Core {
 		    // Log message all 100 tracks
 		    if(counter%100 == 0)
 		    {
-		    	log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks());
+		    	log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks);
 		    }
 	    }
     }
