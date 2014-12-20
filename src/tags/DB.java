@@ -63,9 +63,7 @@ public class DB {
 	    conn.commit();
 			
 		} catch (SQLException e) {
-			log.severe("Artist: "+artist+"; Track: "+track);
-			log.severe(e.getSQLState());
-    	log.severe(e.getMessage());
+			log.severe(e.getMessage()+e.getSQLState()+"at Artist: "+artist+"; Track: "+track);
 			
 			e.printStackTrace();
 		}
@@ -79,9 +77,7 @@ public class DB {
       // Close connection
       conn.close();
     } catch (SQLException e) { 
-    	log.severe("Error while closing all connections.");
-    	log.severe(e.getSQLState());
-    	log.severe(e.getStackTrace().toString());
+    	log.severe("Error while closing all connections."+e.getSQLState()+e.getMessage());
     	
     	e.printStackTrace(); 
     }

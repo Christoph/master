@@ -76,15 +76,13 @@ public class Core {
 	    	}
 	    	catch (de.umass.lastfm.CallException e)
 	    	{
-	    		log.severe("Row: "+counter+"; Artist: "+artist+"; Track: "+track);
-	    		log.severe(e.getMessage());
+	    		log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
 	    		
 	    		e.printStackTrace();
 	    	}
 	    	catch (Exception e)
 	    	{
-	    		log.severe("Row: "+counter+"; Artist: "+artist+"; Track: "+track);
-	    		log.severe(e.getMessage());
+	    		log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
 	    		
 	    		e.printStackTrace();
 	    	}
@@ -92,7 +90,7 @@ public class Core {
 		    // Wait to stay below 5 cals per second.
 		    try { Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace(); }
 		    
-		    // Logmessage all 100 tracks
+		    // Log message all 100 tracks
 		    if(counter%100 == 0)
 		    {
 		    	log.info("Imported "+counter+" rows; "+ "Tracks with tags: "+(counter-last.getNumberOfTaglessTracks())+"; Tracks without tags: "+last.getNumberOfTaglessTracks());

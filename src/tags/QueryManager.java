@@ -45,9 +45,7 @@ public class QueryManager {
       insertIntoTT = conn.prepareStatement("INSERT INTO TT VALUES(DEFAULT,?,?,?)");
 
     } catch (SQLException e) { 
-    	log.severe("Error in the DB constructor.");
-    	log.severe(e.getSQLState());
-    	log.severe(e.getMessage());
+    	log.severe("Error in the DB constructor."+e.getSQLState()+e.getMessage());
     	
     	e.printStackTrace(); 
     }
