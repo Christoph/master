@@ -13,6 +13,7 @@ public class DB {
 	
   private String connectionString, user, pass;
   private Connection conn;
+  private int longTag = 0;
 
   private QueryManager querymanager;
 
@@ -32,33 +33,46 @@ public class DB {
   public void insert(String track, String artist, Collection<Tag> tags) throws SQLException {
     for(Tag t: tags)
     {
-      // Check if the artist exists
-      if(!querymanager.existsArtist(artist))
-      {
-        querymanager.insertArtist(artist);
-      }
-      
-      // Check if the track exists
-      if(!querymanager.existsTrack(track,artist))
-      {
-        querymanager.insertTrack(track,artist);
-      }
-
-      // Check if the tag exists
-      if(!querymanager.existsTag(t))
-      {
-        querymanager.insertTag(t);
-      }
-      
-      // Check if the tag/track combination exists
-      if(!querymanager.existsTT(track,artist,t))
-      {
-        querymanager.insertTT(track,artist,t);
-      }
+    	if(t.getName().length() <= 150)
+    	{
+	      // Check if the artist exists
+	      if(!querymanager.existsArtist(artist))
+	      {
+	        querymanager.insertArtist(artist);
+	      }
+	      
+	      // Check if the track exists
+	      if(!querymanager.existsTrack(track,artist))
+	      {
+	        querymanager.insertTrack(track,artist);
+	      }
+	
+	      // Check if the tag exists
+	      if(!querymanager.existsTag(t))
+	      {
+	        querymanager.insertTag(t);
+	      }
+	      
+	      // Check if the tag/track combination exists
+	      if(!querymanager.existsTT(track,artist,t))
+	      {
+	        querymanager.insertTT(track,artist,t);
+	      }
+    	}
+    	else
+    	{
+	    	log.info("Too long Tag: "+t.getName()+" From Track: "+track+" Artist: "+artist);
+    		longTag++;
+    	}
     }
   
     //Committing the changes
     conn.commit();
+  }
+  
+  public int getTooLongTags()
+  {
+  	return longTag;
   }
 
   public void closeAll()
