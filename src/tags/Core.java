@@ -87,6 +87,8 @@ public class Core {
 		    	{
 				    tags = last.mineTags(track, artist);
 				    db.insert(track,artist,tags);
+				    
+				    retry = false;
 		    	}
 		    	catch (de.umass.lastfm.CallException e)
 		    	{
