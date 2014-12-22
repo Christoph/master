@@ -1,0 +1,1394 @@
+Dec 20, 2014 7:03:14 PM tags.Core main
+INFO: Initializing
+Dec 20, 2014 7:03:14 PM tags.Core main
+INFO: Import
+Dec 20, 2014 7:04:29 PM tags.Core main
+INFO: Imported 100 rows; Tracks without tags: 51 Missing Tracks: 0 Too long Tags: 0
+Dec 20, 2014 7:06:05 PM tags.Core main
+INFO: Imported 200 rows; Tracks without tags: 110 Missing Tracks: 0 Too long Tags: 0
+Dec 20, 2014 7:08:13 PM tags.Core main
+INFO: Imported 300 rows; Tracks without tags: 162 Missing Tracks: 0 Too long Tags: 0
+Dec 20, 2014 7:10:06 PM tags.Core main
+INFO: Imported 400 rows; Tracks without tags: 209 Missing Tracks: 0 Too long Tags: 0
+Dec 20, 2014 7:12:23 PM tags.Core main
+INFO: Imported 500 rows; Tracks without tags: 260 Missing Tracks: 0 Too long Tags: 0
+Dec 20, 2014 7:14:07 PM tags.Core main
+INFO: Imported 600 rows; Tracks without tags: 311 Missing Tracks: 0 Too long Tags: 0
+Dec 20, 2014 7:14:36 PM tags.Core main
+SEVERE: Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COERCIBLE) for operation '='at Row: 633; Artist: Adema; Track: Until Now
+Dec 20, 2014 7:15:55 PM tags.Core main
+INFO: Imported 700 rows; Tracks without tags: 362 Missing Tracks: 1 Too long Tags: 0
+Dec 20, 2014 7:17:24 PM tags.Core main
+INFO: Imported 800 rows; Tracks without tags: 416 Missing Tracks: 1 Too long Tags: 0
+Dec 20, 2014 7:20:01 PM tags.Core main
+INFO: Imported 900 rows; Tracks without tags: 467 Missing Tracks: 1 Too long Tags: 0
+Dec 20, 2014 7:20:52 PM tags.DB insert
+INFO: Too long Tag: hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard sex electro From Track: Super Going Artist: Boredoms
+Dec 20, 2014 7:22:13 PM tags.Core main
+INFO: Imported 1000 rows; Tracks without tags: 523 Missing Tracks: 1 Too long Tags: 1
+Dec 20, 2014 7:23:50 PM tags.Core main
+INFO: Imported 1100 rows; Tracks without tags: 586 Missing Tracks: 1 Too long Tags: 1
+Dec 20, 2014 7:25:48 PM tags.Core main
+INFO: Imported 1200 rows; Tracks without tags: 638 Missing Tracks: 1 Too long Tags: 1
+Dec 20, 2014 7:27:45 PM tags.Core main
+INFO: Imported 1300 rows; Tracks without tags: 692 Missing Tracks: 1 Too long Tags: 1
+Dec 20, 2014 7:29:44 PM tags.Core main
+INFO: Imported 1400 rows; Tracks without tags: 743 Missing Tracks: 1 Too long Tags: 1
+Dec 20, 2014 7:31:41 PM tags.Core main
+INFO: Imported 1500 rows; Tracks without tags: 797 Missing Tracks: 1 Too long Tags: 1
+Dec 20, 2014 7:34:16 PM tags.Core main
+INFO: Imported 1600 rows; Tracks without tags: 838 Missing Tracks: 1 Too long Tags: 1
+Dec 20, 2014 7:36:40 PM tags.Core main
+INFO: Imported 1700 rows; Tracks without tags: 892 Missing Tracks: 1 Too long Tags: 1
+Dec 20, 2014 7:38:57 PM tags.Core main
+INFO: Imported 1800 rows; Tracks without tags: 939 Missing Tracks: 1 Too long Tags: 1
+Dec 20, 2014 7:40:52 PM tags.Core main
+INFO: Imported 1900 rows; Tracks without tags: 993 Missing Tracks: 1 Too long Tags: 1
+Dec 20, 2014 7:44:05 PM tags.Core main
+INFO: Imported 2000 rows; Tracks without tags: 1027 Missing Tracks: 2 Too long Tags: 1
+Dec 20, 2014 7:45:50 PM tags.Core main
+INFO: Imported 2100 rows; Tracks without tags: 1089 Missing Tracks: 2 Too long Tags: 1
+Dec 20, 2014 7:47:52 PM tags.Core main
+INFO: Imported 2200 rows; Tracks without tags: 1143 Missing Tracks: 2 Too long Tags: 1
+Dec 20, 2014 7:50:12 PM tags.Core main
+INFO: Imported 2300 rows; Tracks without tags: 1189 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 7:52:33 PM tags.Core main
+INFO: Imported 2400 rows; Tracks without tags: 1240 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 7:54:24 PM tags.Core main
+INFO: Imported 2500 rows; Tracks without tags: 1294 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 7:56:47 PM tags.Core main
+INFO: Imported 2600 rows; Tracks without tags: 1338 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 7:58:50 PM tags.Core main
+INFO: Imported 2700 rows; Tracks without tags: 1393 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:01:12 PM tags.Core main
+INFO: Imported 2800 rows; Tracks without tags: 1437 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:03:19 PM tags.Core main
+INFO: Imported 2900 rows; Tracks without tags: 1487 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:05:06 PM tags.Core main
+INFO: Imported 3000 rows; Tracks without tags: 1544 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:07:29 PM tags.Core main
+INFO: Imported 3100 rows; Tracks without tags: 1593 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:09:24 PM tags.Core main
+INFO: Imported 3200 rows; Tracks without tags: 1645 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:11:17 PM tags.Core main
+INFO: Imported 3300 rows; Tracks without tags: 1695 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:13:19 PM tags.Core main
+INFO: Imported 3400 rows; Tracks without tags: 1749 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:15:38 PM tags.Core main
+INFO: Imported 3500 rows; Tracks without tags: 1804 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:17:46 PM tags.Core main
+INFO: Imported 3600 rows; Tracks without tags: 1852 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:20:38 PM tags.Core main
+INFO: Imported 3700 rows; Tracks without tags: 1904 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:23:20 PM tags.Core main
+INFO: Imported 3800 rows; Tracks without tags: 1951 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:26:11 PM tags.Core main
+INFO: Imported 3900 rows; Tracks without tags: 1996 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:28:05 PM tags.Core main
+INFO: Imported 4000 rows; Tracks without tags: 2050 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:30:33 PM tags.Core main
+INFO: Imported 4100 rows; Tracks without tags: 2102 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:33:02 PM tags.Core main
+INFO: Imported 4200 rows; Tracks without tags: 2146 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:36:00 PM tags.Core main
+INFO: Imported 4300 rows; Tracks without tags: 2191 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:38:18 PM tags.Core main
+INFO: Imported 4400 rows; Tracks without tags: 2240 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:40:39 PM tags.Core main
+INFO: Imported 4500 rows; Tracks without tags: 2288 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:42:56 PM tags.Core main
+INFO: Imported 4600 rows; Tracks without tags: 2341 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:45:00 PM tags.Core main
+INFO: Imported 4700 rows; Tracks without tags: 2396 Missing Tracks: 3 Too long Tags: 1
+Dec 20, 2014 8:46:22 PM tags.DB insert
+INFO: Too long Tag: a campire and a tent and a flashlight and some matches and a tree and that river and my glasses and a spaceship and a really really big bear but the bear is really really far away From Track: The ibex moon Artist: Incantation
+Dec 20, 2014 8:47:17 PM tags.Core main
+INFO: Imported 4800 rows; Tracks without tags: 2451 Missing Tracks: 3 Too long Tags: 2
+Dec 20, 2014 8:49:25 PM tags.Core main
+INFO: Imported 4900 rows; Tracks without tags: 2501 Missing Tracks: 3 Too long Tags: 2
+Dec 20, 2014 8:51:56 PM tags.Core main
+INFO: Imported 5000 rows; Tracks without tags: 2552 Missing Tracks: 3 Too long Tags: 2
+Dec 20, 2014 8:54:18 PM tags.Core main
+SEVERE: For input string: ""at Row: 5098; Artist: EN VOICE; Track: Inner Vision
+Dec 20, 2014 8:54:19 PM tags.Core main
+INFO: Imported 5100 rows; Tracks without tags: 2601 Missing Tracks: 4 Too long Tags: 2
+Dec 20, 2014 8:57:05 PM tags.Core main
+INFO: Imported 5200 rows; Tracks without tags: 2642 Missing Tracks: 4 Too long Tags: 2
+Dec 20, 2014 8:59:02 PM tags.Core main
+INFO: Imported 5300 rows; Tracks without tags: 2690 Missing Tracks: 4 Too long Tags: 2
+Dec 20, 2014 9:01:49 PM tags.Core main
+INFO: Imported 5400 rows; Tracks without tags: 2744 Missing Tracks: 4 Too long Tags: 2
+Dec 20, 2014 9:03:45 PM tags.Core main
+INFO: Imported 5500 rows; Tracks without tags: 2800 Missing Tracks: 4 Too long Tags: 2
+Dec 20, 2014 9:05:44 PM tags.Core main
+INFO: Imported 5600 rows; Tracks without tags: 2855 Missing Tracks: 4 Too long Tags: 2
+Dec 20, 2014 9:08:06 PM tags.Core main
+INFO: Imported 5700 rows; Tracks without tags: 2906 Missing Tracks: 5 Too long Tags: 2
+Dec 20, 2014 9:10:14 PM tags.Core main
+INFO: Imported 5800 rows; Tracks without tags: 2955 Missing Tracks: 5 Too long Tags: 2
+Dec 20, 2014 9:12:45 PM tags.Core main
+INFO: Imported 5900 rows; Tracks without tags: 3004 Missing Tracks: 5 Too long Tags: 2
+Dec 20, 2014 9:14:44 PM tags.Core main
+INFO: Imported 6000 rows; Tracks without tags: 3053 Missing Tracks: 5 Too long Tags: 2
+Dec 20, 2014 9:17:33 PM tags.Core main
+INFO: Imported 6100 rows; Tracks without tags: 3106 Missing Tracks: 5 Too long Tags: 2
+Dec 20, 2014 9:20:00 PM tags.Core main
+INFO: Imported 6200 rows; Tracks without tags: 3155 Missing Tracks: 5 Too long Tags: 2
+Dec 20, 2014 9:22:41 PM tags.Core main
+INFO: Imported 6300 rows; Tracks without tags: 3197 Missing Tracks: 5 Too long Tags: 2
+Dec 20, 2014 9:24:17 PM tags.Core main
+INFO: Imported 6400 rows; Tracks without tags: 3251 Missing Tracks: 5 Too long Tags: 2
+Dec 20, 2014 9:26:03 PM tags.Core main
+INFO: Imported 6500 rows; Tracks without tags: 3305 Missing Tracks: 5 Too long Tags: 2
+Dec 20, 2014 9:28:11 PM tags.Core main
+INFO: Imported 6600 rows; Tracks without tags: 3359 Missing Tracks: 5 Too long Tags: 2
+Dec 20, 2014 9:30:16 PM tags.Core main
+INFO: Imported 6700 rows; Tracks without tags: 3413 Missing Tracks: 5 Too long Tags: 2
+Dec 20, 2014 9:32:51 PM tags.Core main
+INFO: Imported 6800 rows; Tracks without tags: 3465 Missing Tracks: 5 Too long Tags: 2
+Dec 20, 2014 9:34:59 PM tags.Core main
+SEVERE: Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COERCIBLE) for operation '='at Row: 6886; Artist: Adema; Track: Everyone
+Dec 20, 2014 9:35:15 PM tags.Core main
+INFO: Imported 6900 rows; Tracks without tags: 3517 Missing Tracks: 6 Too long Tags: 2
+Dec 20, 2014 9:37:11 PM tags.Core main
+INFO: Imported 7000 rows; Tracks without tags: 3574 Missing Tracks: 6 Too long Tags: 2
+Dec 20, 2014 9:37:30 PM tags.DB insert
+INFO: Too long Tag: wenn ich im angesicht des mondes am gigantischen tannenwald zwischen fuenfzigzentimeterhohen feldern stehe und die lichtspiele mit den wolken am himmel so betrachte habe ich manchmal das gefuehl teil eines kosmischen gesetzes zu sein From Track: Seesaw Artist: Groundation
+Dec 20, 2014 9:39:14 PM tags.Core main
+INFO: Imported 7100 rows; Tracks without tags: 3621 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 9:41:20 PM tags.Core main
+INFO: Imported 7200 rows; Tracks without tags: 3672 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 9:43:25 PM tags.Core main
+INFO: Imported 7300 rows; Tracks without tags: 3722 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 9:45:23 PM tags.Core main
+INFO: Imported 7400 rows; Tracks without tags: 3780 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 9:47:50 PM tags.Core main
+INFO: Imported 7500 rows; Tracks without tags: 3825 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 9:49:55 PM tags.Core main
+INFO: Imported 7600 rows; Tracks without tags: 3874 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 9:51:54 PM tags.Core main
+INFO: Imported 7700 rows; Tracks without tags: 3925 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 9:54:07 PM tags.Core main
+INFO: Imported 7800 rows; Tracks without tags: 3978 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 9:56:05 PM tags.Core main
+INFO: Imported 7900 rows; Tracks without tags: 4038 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 9:58:32 PM tags.Core main
+INFO: Imported 8000 rows; Tracks without tags: 4089 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 10:00:50 PM tags.Core main
+INFO: Imported 8100 rows; Tracks without tags: 4141 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 10:03:44 PM tags.Core main
+INFO: Imported 8200 rows; Tracks without tags: 4192 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 10:06:48 PM tags.Core main
+INFO: Imported 8300 rows; Tracks without tags: 4233 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 10:08:33 PM tags.Core main
+INFO: Imported 8400 rows; Tracks without tags: 4289 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 10:10:28 PM tags.Core main
+INFO: Imported 8500 rows; Tracks without tags: 4343 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 10:12:46 PM tags.Core main
+INFO: Imported 8600 rows; Tracks without tags: 4392 Missing Tracks: 6 Too long Tags: 3
+Dec 20, 2014 10:13:27 PM tags.Core main
+SEVERE: org.xml.sax.SAXParseException; lineNumber: 3; columnNumber: 45; An invalid XML character (Unicode: 0x{2}) was found in the value of attribute "{1}" and element is "18".at Row: 8627; Artist: Sl2; Track: On A Ragga Tip 97 (original Mix)
+Dec 20, 2014 10:14:43 PM tags.Core main
+INFO: Imported 8700 rows; Tracks without tags: 4437 Missing Tracks: 7 Too long Tags: 3
+Dec 20, 2014 10:16:27 PM tags.Core main
+INFO: Imported 8800 rows; Tracks without tags: 4498 Missing Tracks: 7 Too long Tags: 3
+Dec 20, 2014 10:17:56 PM tags.Core main
+INFO: Imported 8900 rows; Tracks without tags: 4550 Missing Tracks: 7 Too long Tags: 3
+Dec 20, 2014 10:20:18 PM tags.Core main
+INFO: Imported 9000 rows; Tracks without tags: 4609 Missing Tracks: 7 Too long Tags: 3
+Dec 20, 2014 10:22:32 PM tags.Core main
+SEVERE: For input string: ""at Row: 9090; Artist: John Lurie; Track: The Invasion Of Poland
+Dec 20, 2014 10:22:45 PM tags.Core main
+INFO: Imported 9100 rows; Tracks without tags: 4660 Missing Tracks: 8 Too long Tags: 3
+Dec 20, 2014 10:24:44 PM tags.Core main
+INFO: Imported 9200 rows; Tracks without tags: 4708 Missing Tracks: 8 Too long Tags: 3
+Dec 20, 2014 10:26:45 PM tags.Core main
+INFO: Imported 9300 rows; Tracks without tags: 4769 Missing Tracks: 8 Too long Tags: 3
+Dec 20, 2014 10:28:51 PM tags.Core main
+INFO: Imported 9400 rows; Tracks without tags: 4826 Missing Tracks: 8 Too long Tags: 3
+Dec 20, 2014 10:31:12 PM tags.Core main
+INFO: Imported 9500 rows; Tracks without tags: 4872 Missing Tracks: 8 Too long Tags: 3
+Dec 20, 2014 10:33:25 PM tags.Core main
+INFO: Imported 9600 rows; Tracks without tags: 4935 Missing Tracks: 8 Too long Tags: 3
+Dec 20, 2014 10:35:30 PM tags.Core main
+INFO: Imported 9700 rows; Tracks without tags: 4988 Missing Tracks: 8 Too long Tags: 3
+Dec 20, 2014 10:37:06 PM tags.Core main
+SEVERE: For input string: ""at Row: 9790; Artist: Savoy Brown; Track: Got Love If You Want It
+Dec 20, 2014 10:37:14 PM tags.Core main
+INFO: Imported 9800 rows; Tracks without tags: 5044 Missing Tracks: 9 Too long Tags: 3
+Dec 20, 2014 10:39:31 PM tags.Core main
+INFO: Imported 9900 rows; Tracks without tags: 5094 Missing Tracks: 9 Too long Tags: 3
+Dec 20, 2014 10:40:07 PM tags.Core main
+SEVERE: Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COERCIBLE) for operation '='at Row: 9927; Artist: Korn; Track: Let's Get This Party Started
+Dec 20, 2014 10:41:14 PM tags.Core main
+INFO: Imported 10000 rows; Tracks without tags: 5155 Missing Tracks: 10 Too long Tags: 3
+Dec 20, 2014 10:43:47 PM tags.Core main
+INFO: Imported 10100 rows; Tracks without tags: 5203 Missing Tracks: 10 Too long Tags: 3
+Dec 20, 2014 10:45:42 PM tags.Core main
+INFO: Imported 10200 rows; Tracks without tags: 5251 Missing Tracks: 10 Too long Tags: 3
+Dec 20, 2014 10:48:00 PM tags.DB insert
+INFO: Too long Tag: MeditativeNorwayMinimalMysticalRelaxingRelaxNorwegianChilloutDowntempoChillAtmosphericAmbient TechnoIdmExperimentalIndieArctic AmbientAmbientDark AmbientAlternativeSoundscapeElectronicDeep Ambient From Track: Thermal Motion Artist: Biosphere
+Dec 20, 2014 10:48:04 PM tags.Core main
+INFO: Imported 10300 rows; Tracks without tags: 5299 Missing Tracks: 10 Too long Tags: 4
+Dec 20, 2014 10:50:07 PM tags.Core main
+INFO: Imported 10400 rows; Tracks without tags: 5353 Missing Tracks: 10 Too long Tags: 4
+Dec 20, 2014 10:52:48 PM tags.Core main
+INFO: Imported 10500 rows; Tracks without tags: 5399 Missing Tracks: 10 Too long Tags: 4
+Dec 20, 2014 10:56:02 PM tags.Core main
+INFO: Imported 10600 rows; Tracks without tags: 5457 Missing Tracks: 10 Too long Tags: 4
+Dec 20, 2014 10:58:53 PM tags.Core main
+INFO: Imported 10700 rows; Tracks without tags: 5507 Missing Tracks: 10 Too long Tags: 4
+Dec 20, 2014 11:01:01 PM tags.Core main
+INFO: Imported 10800 rows; Tracks without tags: 5563 Missing Tracks: 10 Too long Tags: 4
+Dec 20, 2014 11:03:03 PM tags.Core main
+INFO: Imported 10900 rows; Tracks without tags: 5619 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:05:22 PM tags.Core main
+INFO: Imported 11000 rows; Tracks without tags: 5670 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:07:28 PM tags.Core main
+INFO: Imported 11100 rows; Tracks without tags: 5714 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:11:02 PM tags.Core main
+INFO: Imported 11200 rows; Tracks without tags: 5757 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:13:45 PM tags.Core main
+INFO: Imported 11300 rows; Tracks without tags: 5806 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:16:04 PM tags.Core main
+INFO: Imported 11400 rows; Tracks without tags: 5861 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:18:21 PM tags.Core main
+INFO: Imported 11500 rows; Tracks without tags: 5915 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:21:33 PM tags.Core main
+INFO: Imported 11600 rows; Tracks without tags: 5962 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:23:51 PM tags.Core main
+INFO: Imported 11700 rows; Tracks without tags: 6013 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:25:54 PM tags.Core main
+INFO: Imported 11800 rows; Tracks without tags: 6069 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:28:00 PM tags.Core main
+INFO: Imported 11900 rows; Tracks without tags: 6119 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:30:32 PM tags.Core main
+INFO: Imported 12000 rows; Tracks without tags: 6163 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:32:38 PM tags.Core main
+INFO: Imported 12100 rows; Tracks without tags: 6218 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:35:27 PM tags.Core main
+INFO: Imported 12200 rows; Tracks without tags: 6271 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:38:27 PM tags.Core main
+INFO: Imported 12300 rows; Tracks without tags: 6325 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:40:41 PM tags.Core main
+INFO: Imported 12400 rows; Tracks without tags: 6375 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:42:58 PM tags.Core main
+INFO: Imported 12500 rows; Tracks without tags: 6422 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:45:20 PM tags.Core main
+INFO: Imported 12600 rows; Tracks without tags: 6464 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:47:47 PM tags.Core main
+INFO: Imported 12700 rows; Tracks without tags: 6514 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:50:33 PM tags.Core main
+INFO: Imported 12800 rows; Tracks without tags: 6569 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:52:35 PM tags.Core main
+INFO: Imported 12900 rows; Tracks without tags: 6628 Missing Tracks: 11 Too long Tags: 4
+Dec 20, 2014 11:54:18 PM tags.Core main
+SEVERE: Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COERCIBLE) for operation '='at Row: 12957; Artist: Jacek Kaczmarski; Track: Bieszczady
+Dec 20, 2014 11:55:43 PM tags.Core main
+INFO: Imported 13000 rows; Tracks without tags: 6668 Missing Tracks: 12 Too long Tags: 4
+Dec 20, 2014 11:58:28 PM tags.Core main
+INFO: Imported 13100 rows; Tracks without tags: 6710 Missing Tracks: 12 Too long Tags: 4
+Dec 21, 2014 12:01:04 AM tags.Core main
+INFO: Imported 13200 rows; Tracks without tags: 6757 Missing Tracks: 12 Too long Tags: 4
+Dec 21, 2014 12:03:18 AM tags.Core main
+INFO: Imported 13300 rows; Tracks without tags: 6818 Missing Tracks: 12 Too long Tags: 4
+Dec 21, 2014 12:05:36 AM tags.Core main
+INFO: Imported 13400 rows; Tracks without tags: 6870 Missing Tracks: 12 Too long Tags: 4
+Dec 21, 2014 12:07:49 AM tags.Core main
+INFO: Imported 13500 rows; Tracks without tags: 6914 Missing Tracks: 12 Too long Tags: 4
+Dec 21, 2014 12:09:55 AM tags.Core main
+INFO: Imported 13600 rows; Tracks without tags: 6970 Missing Tracks: 12 Too long Tags: 4
+Dec 21, 2014 12:11:46 AM tags.Core main
+INFO: Imported 13700 rows; Tracks without tags: 7027 Missing Tracks: 12 Too long Tags: 4
+Dec 21, 2014 12:14:16 AM tags.Core main
+INFO: Imported 13800 rows; Tracks without tags: 7080 Missing Tracks: 12 Too long Tags: 4
+Dec 21, 2014 12:16:54 AM tags.Core main
+INFO: Imported 13900 rows; Tracks without tags: 7134 Missing Tracks: 12 Too long Tags: 4
+Dec 21, 2014 12:17:52 AM tags.Core main
+SEVERE: For input string: ""at Row: 13950; Artist: Finntroll; Track: Ursvamp
+Dec 21, 2014 12:19:07 AM tags.Core main
+INFO: Imported 14000 rows; Tracks without tags: 7177 Missing Tracks: 13 Too long Tags: 4
+Dec 21, 2014 12:21:51 AM tags.Core main
+INFO: Imported 14100 rows; Tracks without tags: 7219 Missing Tracks: 13 Too long Tags: 4
+Dec 21, 2014 12:24:49 AM tags.Core main
+INFO: Imported 14200 rows; Tracks without tags: 7271 Missing Tracks: 13 Too long Tags: 4
+Dec 21, 2014 12:27:17 AM tags.Core main
+INFO: Imported 14300 rows; Tracks without tags: 7331 Missing Tracks: 13 Too long Tags: 4
+Dec 21, 2014 12:28:42 AM tags.DB insert
+INFO: Too long Tag: neoclassical shred mohommad suicmez theory arpeggio deathmetal metal brutal solo guitar grindcore powerful enegetic enery thrash heavy hardcore rock technical technique From Track: Vanity Artist: Eighteen Visions
+Dec 21, 2014 12:29:36 AM tags.Core main
+INFO: Imported 14400 rows; Tracks without tags: 7375 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 12:31:44 AM tags.Core main
+INFO: Imported 14500 rows; Tracks without tags: 7434 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 12:34:02 AM tags.Core main
+INFO: Imported 14600 rows; Tracks without tags: 7487 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 12:36:38 AM tags.Core main
+INFO: Imported 14700 rows; Tracks without tags: 7530 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 12:39:00 AM tags.Core main
+INFO: Imported 14800 rows; Tracks without tags: 7582 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 12:41:14 AM tags.Core main
+INFO: Imported 14900 rows; Tracks without tags: 7640 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 12:44:06 AM tags.Core main
+INFO: Imported 15000 rows; Tracks without tags: 7692 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 12:46:25 AM tags.Core main
+INFO: Imported 15100 rows; Tracks without tags: 7736 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 12:48:37 AM tags.Core main
+INFO: Imported 15200 rows; Tracks without tags: 7785 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 12:50:55 AM tags.Core main
+INFO: Imported 15300 rows; Tracks without tags: 7834 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 12:53:59 AM tags.Core main
+INFO: Imported 15400 rows; Tracks without tags: 7884 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 12:57:02 AM tags.Core main
+INFO: Imported 15500 rows; Tracks without tags: 7927 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 12:59:03 AM tags.Core main
+INFO: Imported 15600 rows; Tracks without tags: 7985 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:01:44 AM tags.Core main
+INFO: Imported 15700 rows; Tracks without tags: 8030 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:04:17 AM tags.Core main
+INFO: Imported 15800 rows; Tracks without tags: 8080 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:06:33 AM tags.Core main
+INFO: Imported 15900 rows; Tracks without tags: 8142 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:08:51 AM tags.Core main
+INFO: Imported 16000 rows; Tracks without tags: 8191 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:11:35 AM tags.Core main
+INFO: Imported 16100 rows; Tracks without tags: 8233 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:14:30 AM tags.Core main
+INFO: Imported 16200 rows; Tracks without tags: 8278 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:16:58 AM tags.Core main
+INFO: Imported 16300 rows; Tracks without tags: 8335 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:19:10 AM tags.Core main
+INFO: Imported 16400 rows; Tracks without tags: 8389 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:21:19 AM tags.Core main
+INFO: Imported 16500 rows; Tracks without tags: 8442 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:23:53 AM tags.Core main
+INFO: Imported 16600 rows; Tracks without tags: 8486 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:25:41 AM tags.Core main
+INFO: Imported 16700 rows; Tracks without tags: 8535 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:28:15 AM tags.Core main
+INFO: Imported 16800 rows; Tracks without tags: 8587 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:30:39 AM tags.Core main
+INFO: Imported 16900 rows; Tracks without tags: 8637 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:33:05 AM tags.Core main
+INFO: Imported 17000 rows; Tracks without tags: 8689 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:35:27 AM tags.Core main
+INFO: Imported 17100 rows; Tracks without tags: 8741 Missing Tracks: 13 Too long Tags: 5
+Dec 21, 2014 1:38:07 AM tags.Core main
+INFO: Imported 17200 rows; Tracks without tags: 8789 Missing Tracks: 14 Too long Tags: 5
+Dec 21, 2014 1:40:43 AM tags.Core main
+INFO: Imported 17300 rows; Tracks without tags: 8846 Missing Tracks: 14 Too long Tags: 5
+Dec 21, 2014 1:43:45 AM tags.Core main
+INFO: Imported 17400 rows; Tracks without tags: 8900 Missing Tracks: 14 Too long Tags: 5
+Dec 21, 2014 1:46:20 AM tags.Core main
+INFO: Imported 17500 rows; Tracks without tags: 8957 Missing Tracks: 14 Too long Tags: 5
+Dec 21, 2014 1:49:07 AM tags.Core main
+INFO: Imported 17600 rows; Tracks without tags: 9004 Missing Tracks: 14 Too long Tags: 5
+Dec 21, 2014 1:52:19 AM tags.Core main
+INFO: Imported 17700 rows; Tracks without tags: 9049 Missing Tracks: 14 Too long Tags: 5
+Dec 21, 2014 1:53:54 AM tags.Core main
+INFO: Imported 17800 rows; Tracks without tags: 9112 Missing Tracks: 14 Too long Tags: 5
+Dec 21, 2014 1:55:38 AM tags.Core main
+INFO: Imported 17900 rows; Tracks without tags: 9161 Missing Tracks: 14 Too long Tags: 5
+Dec 21, 2014 1:57:25 AM tags.Core main
+INFO: Imported 18000 rows; Tracks without tags: 9211 Missing Tracks: 14 Too long Tags: 5
+Dec 21, 2014 2:00:00 AM tags.Core main
+INFO: Imported 18100 rows; Tracks without tags: 9262 Missing Tracks: 14 Too long Tags: 5
+Dec 21, 2014 2:03:35 AM tags.Core main
+INFO: Imported 18200 rows; Tracks without tags: 9301 Missing Tracks: 14 Too long Tags: 5
+Dec 21, 2014 2:04:58 AM tags.Core main
+SEVERE: For input string: ""at Row: 18255; Artist: Brian Hyland; Track: Gypsy Woman
+Dec 21, 2014 2:06:08 AM tags.Core main
+INFO: Imported 18300 rows; Tracks without tags: 9349 Missing Tracks: 15 Too long Tags: 5
+Dec 21, 2014 2:08:24 AM tags.Core main
+INFO: Imported 18400 rows; Tracks without tags: 9405 Missing Tracks: 15 Too long Tags: 5
+Dec 21, 2014 2:10:56 AM tags.Core main
+INFO: Imported 18500 rows; Tracks without tags: 9453 Missing Tracks: 15 Too long Tags: 5
+Dec 21, 2014 2:14:05 AM tags.Core main
+INFO: Imported 18600 rows; Tracks without tags: 9501 Missing Tracks: 15 Too long Tags: 5
+Dec 21, 2014 2:16:57 AM tags.Core main
+INFO: Imported 18700 rows; Tracks without tags: 9545 Missing Tracks: 15 Too long Tags: 5
+Dec 21, 2014 2:19:11 AM tags.Core main
+INFO: Imported 18800 rows; Tracks without tags: 9598 Missing Tracks: 15 Too long Tags: 5
+Dec 21, 2014 2:21:11 AM tags.Core main
+INFO: Imported 18900 rows; Tracks without tags: 9651 Missing Tracks: 15 Too long Tags: 5
+Dec 21, 2014 2:23:35 AM tags.Core main
+INFO: Imported 19000 rows; Tracks without tags: 9698 Missing Tracks: 16 Too long Tags: 5
+Dec 21, 2014 2:25:11 AM tags.Core main
+INFO: Imported 19100 rows; Tracks without tags: 9759 Missing Tracks: 16 Too long Tags: 5
+Dec 21, 2014 2:25:23 AM tags.DB insert
+INFO: Too long Tag: he had failed and that wasnt the saddest he had seen alec fail in a way they were one person love had failed love was an emotion though which you occasionally enjoyed yourself it could not do things From Track: You've Got The Love Artist: Florence + The Machine
+Dec 21, 2014 2:27:35 AM tags.Core main
+INFO: Imported 19200 rows; Tracks without tags: 9815 Missing Tracks: 16 Too long Tags: 6
+Dec 21, 2014 2:29:44 AM tags.Core main
+INFO: Imported 19300 rows; Tracks without tags: 9868 Missing Tracks: 16 Too long Tags: 6
+Dec 21, 2014 2:31:43 AM tags.Core main
+INFO: Imported 19400 rows; Tracks without tags: 9927 Missing Tracks: 16 Too long Tags: 6
+Dec 21, 2014 2:33:38 AM tags.Core main
+INFO: Imported 19500 rows; Tracks without tags: 9984 Missing Tracks: 16 Too long Tags: 6
+Dec 21, 2014 2:36:32 AM tags.Core main
+INFO: Imported 19600 rows; Tracks without tags: 10028 Missing Tracks: 16 Too long Tags: 6
+Dec 21, 2014 2:38:36 AM tags.Core main
+INFO: Imported 19700 rows; Tracks without tags: 10076 Missing Tracks: 16 Too long Tags: 6
+Dec 21, 2014 2:41:01 AM tags.Core main
+INFO: Imported 19800 rows; Tracks without tags: 10125 Missing Tracks: 16 Too long Tags: 6
+Dec 21, 2014 2:42:49 AM tags.Core main
+INFO: Imported 19900 rows; Tracks without tags: 10174 Missing Tracks: 16 Too long Tags: 6
+Dec 21, 2014 2:48:49 AM tags.Core main
+INFO: Imported 20000 rows; Tracks without tags: 10227 Missing Tracks: 16 Too long Tags: 6
+Dec 21, 2014 2:59:54 AM tags.Core main
+INFO: Imported 20100 rows; Tracks without tags: 10274 Missing Tracks: 16 Too long Tags: 6
+Dec 21, 2014 3:01:44 AM tags.Core main
+INFO: Imported 20200 rows; Tracks without tags: 10332 Missing Tracks: 16 Too long Tags: 6
+Dec 21, 2014 3:04:15 AM tags.Core main
+INFO: Imported 20300 rows; Tracks without tags: 10380 Missing Tracks: 17 Too long Tags: 6
+Dec 21, 2014 3:06:44 AM tags.Core main
+INFO: Imported 20400 rows; Tracks without tags: 10433 Missing Tracks: 17 Too long Tags: 6
+Dec 21, 2014 3:09:30 AM tags.Core main
+INFO: Imported 20500 rows; Tracks without tags: 10485 Missing Tracks: 17 Too long Tags: 6
+Dec 21, 2014 3:12:25 AM tags.Core main
+INFO: Imported 20600 rows; Tracks without tags: 10532 Missing Tracks: 17 Too long Tags: 6
+Dec 21, 2014 3:14:22 AM tags.Core main
+INFO: Imported 20700 rows; Tracks without tags: 10592 Missing Tracks: 17 Too long Tags: 6
+Dec 21, 2014 3:16:39 AM tags.Core main
+INFO: Imported 20800 rows; Tracks without tags: 10650 Missing Tracks: 17 Too long Tags: 6
+Dec 21, 2014 3:17:54 AM tags.DB insert
+INFO: Too long Tag: a campire and a tent and a flashlight and some matches and a tree and that river and my glasses and a spaceship and a really really big bear but the bear is really really far away From Track: Planet Health Artist: Chairlift
+Dec 21, 2014 3:19:26 AM tags.Core main
+INFO: Imported 20900 rows; Tracks without tags: 10700 Missing Tracks: 17 Too long Tags: 7
+Dec 21, 2014 3:19:48 AM tags.Core main
+SEVERE: For input string: ""at Row: 20929; Artist: Molotov; Track: Quen Pon-Ponk (Quen Pompo)
+Dec 21, 2014 3:22:09 AM tags.Core main
+INFO: Imported 21000 rows; Tracks without tags: 10751 Missing Tracks: 18 Too long Tags: 7
+Dec 21, 2014 3:23:52 AM tags.Core main
+INFO: Imported 21100 rows; Tracks without tags: 10807 Missing Tracks: 18 Too long Tags: 7
+Dec 21, 2014 3:26:03 AM tags.Core main
+INFO: Imported 21200 rows; Tracks without tags: 10858 Missing Tracks: 18 Too long Tags: 7
+Dec 21, 2014 3:28:03 AM tags.Core main
+INFO: Imported 21300 rows; Tracks without tags: 10913 Missing Tracks: 18 Too long Tags: 7
+Dec 21, 2014 3:30:40 AM tags.Core main
+INFO: Imported 21400 rows; Tracks without tags: 10964 Missing Tracks: 18 Too long Tags: 7
+Dec 21, 2014 3:33:38 AM tags.Core main
+INFO: Imported 21500 rows; Tracks without tags: 11020 Missing Tracks: 18 Too long Tags: 7
+Dec 21, 2014 3:35:43 AM tags.Core main
+INFO: Imported 21600 rows; Tracks without tags: 11072 Missing Tracks: 18 Too long Tags: 7
+Dec 21, 2014 3:38:33 AM tags.Core main
+INFO: Imported 21700 rows; Tracks without tags: 11128 Missing Tracks: 18 Too long Tags: 7
+Dec 21, 2014 3:41:40 AM tags.Core main
+INFO: Imported 21800 rows; Tracks without tags: 11174 Missing Tracks: 18 Too long Tags: 7
+Dec 21, 2014 3:44:23 AM tags.Core main
+INFO: Imported 21900 rows; Tracks without tags: 11227 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 3:47:20 AM tags.Core main
+INFO: Imported 22000 rows; Tracks without tags: 11276 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 3:49:38 AM tags.Core main
+INFO: Imported 22100 rows; Tracks without tags: 11325 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 3:52:16 AM tags.Core main
+INFO: Imported 22200 rows; Tracks without tags: 11374 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 3:54:26 AM tags.Core main
+INFO: Imported 22300 rows; Tracks without tags: 11428 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 3:56:38 AM tags.Core main
+INFO: Imported 22400 rows; Tracks without tags: 11479 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 3:58:59 AM tags.Core main
+INFO: Imported 22500 rows; Tracks without tags: 11530 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 4:01:12 AM tags.Core main
+INFO: Imported 22600 rows; Tracks without tags: 11594 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 4:03:11 AM tags.Core main
+INFO: Imported 22700 rows; Tracks without tags: 11650 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 4:05:36 AM tags.Core main
+INFO: Imported 22800 rows; Tracks without tags: 11701 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 4:07:27 AM tags.Core main
+INFO: Imported 22900 rows; Tracks without tags: 11753 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 4:09:56 AM tags.Core main
+INFO: Imported 23000 rows; Tracks without tags: 11806 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 4:12:35 AM tags.Core main
+INFO: Imported 23100 rows; Tracks without tags: 11852 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 4:15:20 AM tags.Core main
+INFO: Imported 23200 rows; Tracks without tags: 11897 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 4:17:46 AM tags.Core main
+INFO: Imported 23300 rows; Tracks without tags: 11953 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 4:20:17 AM tags.Core main
+INFO: Imported 23400 rows; Tracks without tags: 11999 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 4:22:45 AM tags.Core main
+INFO: Imported 23500 rows; Tracks without tags: 12044 Missing Tracks: 19 Too long Tags: 7
+Dec 21, 2014 4:25:05 AM tags.DB insert
+INFO: Too long Tag: really violent sex that is not only extremely bloody but also can scar people forever as well as haunt people in their dreams and plus it can turn innocent people into bloodthirsty killers that have no mercy for their victims From Track: Pen & Paper Artist: The Red Jumpsuit Apparatus
+Dec 21, 2014 4:25:06 AM tags.DB insert
+INFO: Too long Tag: a campfire and a tent and a flashlight and some matches and a tree and that river and my glasses and a spaceship and a really really big bear but the bear is really really far away From Track: Pen & Paper Artist: The Red Jumpsuit Apparatus
+Dec 21, 2014 4:25:14 AM tags.DB insert
+INFO: Too long Tag: a campire and a tent and a flashlight and some matches and a tree and that river and my glasses and a spaceship and a really really big bear but the bear is really really far away From Track: Pen & Paper Artist: The Red Jumpsuit Apparatus
+Dec 21, 2014 4:25:21 AM tags.Core main
+INFO: Imported 23600 rows; Tracks without tags: 12099 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:27:23 AM tags.Core main
+INFO: Imported 23700 rows; Tracks without tags: 12144 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:30:33 AM tags.Core main
+INFO: Imported 23800 rows; Tracks without tags: 12194 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:32:08 AM tags.Core main
+INFO: Imported 23900 rows; Tracks without tags: 12243 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:34:47 AM tags.Core main
+INFO: Imported 24000 rows; Tracks without tags: 12290 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:36:31 AM tags.Core main
+INFO: Imported 24100 rows; Tracks without tags: 12341 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:39:15 AM tags.Core main
+INFO: Imported 24200 rows; Tracks without tags: 12389 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:41:48 AM tags.Core main
+INFO: Imported 24300 rows; Tracks without tags: 12443 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:44:04 AM tags.Core main
+INFO: Imported 24400 rows; Tracks without tags: 12490 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:46:36 AM tags.Core main
+INFO: Imported 24500 rows; Tracks without tags: 12540 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:49:10 AM tags.Core main
+INFO: Imported 24600 rows; Tracks without tags: 12589 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:51:54 AM tags.Core main
+INFO: Imported 24700 rows; Tracks without tags: 12630 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:54:12 AM tags.Core main
+INFO: Imported 24800 rows; Tracks without tags: 12681 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:56:18 AM tags.Core main
+INFO: Imported 24900 rows; Tracks without tags: 12732 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 4:58:47 AM tags.Core main
+INFO: Imported 25000 rows; Tracks without tags: 12783 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:01:34 AM tags.Core main
+INFO: Imported 25100 rows; Tracks without tags: 12838 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:07:02 AM tags.Core main
+INFO: Imported 25200 rows; Tracks without tags: 12882 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:09:59 AM tags.Core main
+INFO: Imported 25300 rows; Tracks without tags: 12930 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:11:58 AM tags.Core main
+INFO: Imported 25400 rows; Tracks without tags: 12987 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:15:32 AM tags.Core main
+INFO: Imported 25500 rows; Tracks without tags: 13034 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:18:47 AM tags.Core main
+INFO: Imported 25600 rows; Tracks without tags: 13069 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:21:04 AM tags.Core main
+INFO: Imported 25700 rows; Tracks without tags: 13121 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:23:06 AM tags.Core main
+INFO: Imported 25800 rows; Tracks without tags: 13174 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:25:42 AM tags.Core main
+INFO: Imported 25900 rows; Tracks without tags: 13229 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:28:03 AM tags.Core main
+INFO: Imported 26000 rows; Tracks without tags: 13286 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:31:06 AM tags.Core main
+INFO: Imported 26100 rows; Tracks without tags: 13331 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:33:09 AM tags.Core main
+INFO: Imported 26200 rows; Tracks without tags: 13383 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:35:54 AM tags.Core main
+INFO: Imported 26300 rows; Tracks without tags: 13434 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:38:21 AM tags.Core main
+INFO: Imported 26400 rows; Tracks without tags: 13485 Missing Tracks: 19 Too long Tags: 10
+Dec 21, 2014 5:40:27 AM tags.Core main
+SEVERE: For input string: ""at Row: 26493; Artist: Laith Al-Deen; Track: Es tut mir leid
+Dec 21, 2014 5:40:35 AM tags.Core main
+INFO: Imported 26500 rows; Tracks without tags: 13544 Missing Tracks: 21 Too long Tags: 10
+Dec 21, 2014 5:44:11 AM tags.Core main
+INFO: Imported 26600 rows; Tracks without tags: 13588 Missing Tracks: 21 Too long Tags: 10
+Dec 21, 2014 5:45:51 AM tags.Core main
+INFO: Imported 26700 rows; Tracks without tags: 13652 Missing Tracks: 21 Too long Tags: 10
+Dec 21, 2014 5:48:19 AM tags.Core main
+INFO: Imported 26800 rows; Tracks without tags: 13693 Missing Tracks: 21 Too long Tags: 10
+Dec 21, 2014 5:51:18 AM tags.Core main
+INFO: Imported 26900 rows; Tracks without tags: 13744 Missing Tracks: 21 Too long Tags: 10
+Dec 21, 2014 5:54:13 AM tags.Core main
+INFO: Imported 27000 rows; Tracks without tags: 13794 Missing Tracks: 21 Too long Tags: 10
+Dec 21, 2014 5:57:00 AM tags.Core main
+INFO: Imported 27100 rows; Tracks without tags: 13839 Missing Tracks: 21 Too long Tags: 10
+Dec 21, 2014 5:59:16 AM tags.Core main
+INFO: Imported 27200 rows; Tracks without tags: 13883 Missing Tracks: 21 Too long Tags: 10
+Dec 21, 2014 6:01:44 AM tags.Core main
+INFO: Imported 27300 rows; Tracks without tags: 13937 Missing Tracks: 21 Too long Tags: 10
+Dec 21, 2014 6:02:59 AM tags.Core main
+SEVERE: For input string: ""at Row: 27349; Artist: Boy Kill Boy; Track: Shoot Me Down
+Dec 21, 2014 6:04:35 AM tags.Core main
+INFO: Imported 27400 rows; Tracks without tags: 13990 Missing Tracks: 22 Too long Tags: 10
+Dec 21, 2014 6:07:20 AM tags.Core main
+INFO: Imported 27500 rows; Tracks without tags: 14038 Missing Tracks: 22 Too long Tags: 10
+Dec 21, 2014 6:09:43 AM tags.Core main
+INFO: Imported 27600 rows; Tracks without tags: 14093 Missing Tracks: 22 Too long Tags: 10
+Dec 21, 2014 6:11:54 AM tags.Core main
+INFO: Imported 27700 rows; Tracks without tags: 14156 Missing Tracks: 22 Too long Tags: 10
+Dec 21, 2014 6:14:18 AM tags.Core main
+INFO: Imported 27800 rows; Tracks without tags: 14202 Missing Tracks: 22 Too long Tags: 10
+Dec 21, 2014 6:17:07 AM tags.Core main
+INFO: Imported 27900 rows; Tracks without tags: 14250 Missing Tracks: 22 Too long Tags: 10
+Dec 21, 2014 6:19:50 AM tags.Core main
+INFO: Imported 28000 rows; Tracks without tags: 14305 Missing Tracks: 23 Too long Tags: 10
+Dec 21, 2014 6:22:32 AM tags.Core main
+INFO: Imported 28100 rows; Tracks without tags: 14353 Missing Tracks: 23 Too long Tags: 10
+Dec 21, 2014 6:24:35 AM tags.Core main
+INFO: Imported 28200 rows; Tracks without tags: 14406 Missing Tracks: 23 Too long Tags: 10
+Dec 21, 2014 6:24:43 AM tags.DB insert
+INFO: Too long Tag: This is so bad it makes me wanna shove an emo hedgehog up my ass and masturbate to pictures of bisexual gay pinguins but it is still somehow better then Michael Angelo Batio From Track: 23 (Album Version) Artist: Jimmy Eat World
+Dec 21, 2014 6:26:50 AM tags.Core main
+INFO: Imported 28300 rows; Tracks without tags: 14461 Missing Tracks: 23 Too long Tags: 11
+Dec 21, 2014 6:28:49 AM tags.Core main
+INFO: Imported 28400 rows; Tracks without tags: 14512 Missing Tracks: 23 Too long Tags: 11
+Dec 21, 2014 6:31:23 AM tags.Core main
+INFO: Imported 28500 rows; Tracks without tags: 14563 Missing Tracks: 23 Too long Tags: 11
+Dec 21, 2014 6:33:57 AM tags.Core main
+INFO: Imported 28600 rows; Tracks without tags: 14612 Missing Tracks: 23 Too long Tags: 11
+Dec 21, 2014 6:35:37 AM tags.DB insert
+INFO: Too long Tag: hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard sex electro From Track: Love Will Tear Us Apart Artist: Squarepusher
+Dec 21, 2014 6:36:56 AM tags.Core main
+INFO: Imported 28700 rows; Tracks without tags: 14663 Missing Tracks: 23 Too long Tags: 12
+Dec 21, 2014 6:39:29 AM tags.Core main
+INFO: Imported 28800 rows; Tracks without tags: 14720 Missing Tracks: 23 Too long Tags: 12
+Dec 21, 2014 6:41:41 AM tags.Core main
+INFO: Imported 28900 rows; Tracks without tags: 14772 Missing Tracks: 23 Too long Tags: 12
+Dec 21, 2014 6:44:25 AM tags.Core main
+INFO: Imported 29000 rows; Tracks without tags: 14826 Missing Tracks: 23 Too long Tags: 12
+Dec 21, 2014 6:46:44 AM tags.Core main
+INFO: Imported 29100 rows; Tracks without tags: 14878 Missing Tracks: 23 Too long Tags: 12
+Dec 21, 2014 6:49:17 AM tags.Core main
+INFO: Imported 29200 rows; Tracks without tags: 14926 Missing Tracks: 23 Too long Tags: 12
+Dec 21, 2014 6:50:58 AM tags.Core main
+INFO: Imported 29300 rows; Tracks without tags: 14983 Missing Tracks: 23 Too long Tags: 12
+Dec 21, 2014 6:53:01 AM tags.Core main
+INFO: Imported 29400 rows; Tracks without tags: 15037 Missing Tracks: 23 Too long Tags: 12
+Dec 21, 2014 6:55:48 AM tags.Core main
+INFO: Imported 29500 rows; Tracks without tags: 15092 Missing Tracks: 23 Too long Tags: 12
+Dec 21, 2014 6:57:49 AM tags.Core main
+INFO: Imported 29600 rows; Tracks without tags: 15144 Missing Tracks: 23 Too long Tags: 12
+Dec 21, 2014 7:00:10 AM tags.Core main
+INFO: Imported 29700 rows; Tracks without tags: 15194 Missing Tracks: 23 Too long Tags: 12
+Dec 21, 2014 7:02:36 AM tags.Core main
+INFO: Imported 29800 rows; Tracks without tags: 15245 Missing Tracks: 23 Too long Tags: 12
+Dec 21, 2014 7:05:00 AM tags.Core main
+INFO: Imported 29900 rows; Tracks without tags: 15294 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:08:13 AM tags.Core main
+INFO: Imported 30000 rows; Tracks without tags: 15343 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:11:28 AM tags.Core main
+INFO: Imported 30100 rows; Tracks without tags: 15391 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:13:28 AM tags.Core main
+INFO: Imported 30200 rows; Tracks without tags: 15446 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:17:37 AM tags.Core main
+INFO: Imported 30300 rows; Tracks without tags: 15492 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:21:19 AM tags.Core main
+INFO: Imported 30400 rows; Tracks without tags: 15535 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:24:17 AM tags.Core main
+INFO: Imported 30500 rows; Tracks without tags: 15575 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:27:13 AM tags.Core main
+INFO: Imported 30600 rows; Tracks without tags: 15619 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:29:30 AM tags.Core main
+INFO: Imported 30700 rows; Tracks without tags: 15676 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:32:27 AM tags.Core main
+INFO: Imported 30800 rows; Tracks without tags: 15725 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:35:10 AM tags.Core main
+INFO: Imported 30900 rows; Tracks without tags: 15779 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:38:29 AM tags.Core main
+INFO: Imported 31000 rows; Tracks without tags: 15823 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:40:40 AM tags.Core main
+INFO: Imported 31100 rows; Tracks without tags: 15876 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:42:49 AM tags.Core main
+INFO: Imported 31200 rows; Tracks without tags: 15930 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:46:00 AM tags.Core main
+INFO: Imported 31300 rows; Tracks without tags: 15982 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:48:36 AM tags.Core main
+INFO: Imported 31400 rows; Tracks without tags: 16031 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:50:39 AM tags.Core main
+INFO: Imported 31500 rows; Tracks without tags: 16082 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:52:34 AM tags.Core main
+INFO: Imported 31600 rows; Tracks without tags: 16131 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:54:50 AM tags.Core main
+INFO: Imported 31700 rows; Tracks without tags: 16193 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 7:57:56 AM tags.Core main
+INFO: Imported 31800 rows; Tracks without tags: 16244 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 8:00:43 AM tags.Core main
+INFO: Imported 31900 rows; Tracks without tags: 16298 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 8:03:23 AM tags.Core main
+INFO: Imported 32000 rows; Tracks without tags: 16352 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 8:05:41 AM tags.Core main
+INFO: Imported 32100 rows; Tracks without tags: 16410 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 8:08:24 AM tags.Core main
+INFO: Imported 32200 rows; Tracks without tags: 16460 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 8:10:55 AM tags.Core main
+INFO: Imported 32300 rows; Tracks without tags: 16516 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 8:13:10 AM tags.Core main
+INFO: Imported 32400 rows; Tracks without tags: 16561 Missing Tracks: 24 Too long Tags: 12
+Dec 21, 2014 8:15:06 AM tags.Core main
+SEVERE: Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COERCIBLE) for operation '='at Row: 32482; Artist: Adema; Track: Enter The Cage
+Dec 21, 2014 8:15:42 AM tags.Core main
+INFO: Imported 32500 rows; Tracks without tags: 16610 Missing Tracks: 25 Too long Tags: 12
+Dec 21, 2014 8:17:48 AM tags.Core main
+INFO: Imported 32600 rows; Tracks without tags: 16659 Missing Tracks: 25 Too long Tags: 12
+Dec 21, 2014 8:19:47 AM tags.Core main
+INFO: Imported 32700 rows; Tracks without tags: 16705 Missing Tracks: 25 Too long Tags: 12
+Dec 21, 2014 8:22:39 AM tags.Core main
+INFO: Imported 32800 rows; Tracks without tags: 16751 Missing Tracks: 25 Too long Tags: 12
+Dec 21, 2014 8:24:38 AM tags.Core main
+INFO: Imported 32900 rows; Tracks without tags: 16807 Missing Tracks: 25 Too long Tags: 12
+Dec 21, 2014 8:27:16 AM tags.Core main
+INFO: Imported 33000 rows; Tracks without tags: 16851 Missing Tracks: 25 Too long Tags: 12
+Dec 21, 2014 8:30:43 AM tags.Core main
+INFO: Imported 33100 rows; Tracks without tags: 16897 Missing Tracks: 25 Too long Tags: 12
+Dec 21, 2014 8:32:56 AM tags.Core main
+INFO: Imported 33200 rows; Tracks without tags: 16943 Missing Tracks: 25 Too long Tags: 12
+Dec 21, 2014 8:34:58 AM tags.Core main
+INFO: Imported 33300 rows; Tracks without tags: 17007 Missing Tracks: 25 Too long Tags: 12
+Dec 21, 2014 8:37:52 AM tags.Core main
+INFO: Imported 33400 rows; Tracks without tags: 17061 Missing Tracks: 25 Too long Tags: 12
+Dec 21, 2014 8:40:50 AM tags.Core main
+INFO: Imported 33500 rows; Tracks without tags: 17109 Missing Tracks: 25 Too long Tags: 12
+Dec 21, 2014 8:43:18 AM tags.Core main
+INFO: Imported 33600 rows; Tracks without tags: 17160 Missing Tracks: 25 Too long Tags: 12
+Dec 21, 2014 8:46:20 AM tags.Core main
+INFO: Imported 33700 rows; Tracks without tags: 17211 Missing Tracks: 26 Too long Tags: 12
+Dec 21, 2014 8:48:56 AM tags.Core main
+INFO: Imported 33800 rows; Tracks without tags: 17267 Missing Tracks: 26 Too long Tags: 12
+Dec 21, 2014 8:50:59 AM tags.Core main
+INFO: Imported 33900 rows; Tracks without tags: 17319 Missing Tracks: 26 Too long Tags: 12
+Dec 21, 2014 8:53:08 AM tags.Core main
+INFO: Imported 34000 rows; Tracks without tags: 17377 Missing Tracks: 26 Too long Tags: 12
+Dec 21, 2014 8:55:23 AM tags.Core main
+INFO: Imported 34100 rows; Tracks without tags: 17435 Missing Tracks: 26 Too long Tags: 12
+Dec 21, 2014 8:57:38 AM tags.Core main
+INFO: Imported 34200 rows; Tracks without tags: 17497 Missing Tracks: 26 Too long Tags: 12
+Dec 21, 2014 9:00:53 AM tags.Core main
+INFO: Imported 34300 rows; Tracks without tags: 17545 Missing Tracks: 26 Too long Tags: 12
+Dec 21, 2014 9:03:41 AM tags.Core main
+INFO: Imported 34400 rows; Tracks without tags: 17600 Missing Tracks: 26 Too long Tags: 12
+Dec 21, 2014 9:05:55 AM tags.Core main
+INFO: Imported 34500 rows; Tracks without tags: 17647 Missing Tracks: 26 Too long Tags: 12
+Dec 21, 2014 9:08:12 AM tags.DB insert
+INFO: Too long Tag: hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard sex electro From Track: VL AL 5 Artist: Autechre
+Dec 21, 2014 9:09:05 AM tags.Core main
+INFO: Imported 34600 rows; Tracks without tags: 17706 Missing Tracks: 26 Too long Tags: 13
+Dec 21, 2014 9:12:00 AM tags.Core main
+INFO: Imported 34700 rows; Tracks without tags: 17749 Missing Tracks: 27 Too long Tags: 13
+Dec 21, 2014 9:13:57 AM tags.Core main
+INFO: Imported 34800 rows; Tracks without tags: 17810 Missing Tracks: 27 Too long Tags: 13
+Dec 21, 2014 9:16:36 AM tags.DB insert
+INFO: Too long Tag: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 From Track: Prove Artist: Fuel
+Dec 21, 2014 9:16:40 AM tags.Core main
+INFO: Imported 34900 rows; Tracks without tags: 17849 Missing Tracks: 27 Too long Tags: 14
+Dec 21, 2014 9:19:48 AM tags.Core main
+INFO: Imported 35000 rows; Tracks without tags: 17894 Missing Tracks: 27 Too long Tags: 14
+Dec 21, 2014 9:22:55 AM tags.Core main
+INFO: Imported 35100 rows; Tracks without tags: 17940 Missing Tracks: 27 Too long Tags: 14
+Dec 21, 2014 9:26:14 AM tags.Core main
+INFO: Imported 35200 rows; Tracks without tags: 17992 Missing Tracks: 27 Too long Tags: 14
+Dec 21, 2014 9:28:25 AM tags.Core main
+INFO: Imported 35300 rows; Tracks without tags: 18041 Missing Tracks: 27 Too long Tags: 14
+Dec 21, 2014 9:31:00 AM tags.Core main
+INFO: Imported 35400 rows; Tracks without tags: 18095 Missing Tracks: 27 Too long Tags: 14
+Dec 21, 2014 9:33:16 AM tags.Core main
+INFO: Imported 35500 rows; Tracks without tags: 18147 Missing Tracks: 27 Too long Tags: 14
+Dec 21, 2014 9:36:18 AM tags.Core main
+INFO: Imported 35600 rows; Tracks without tags: 18196 Missing Tracks: 27 Too long Tags: 14
+Dec 21, 2014 9:39:10 AM tags.Core main
+INFO: Imported 35700 rows; Tracks without tags: 18249 Missing Tracks: 27 Too long Tags: 14
+Dec 21, 2014 9:41:41 AM tags.Core main
+INFO: Imported 35800 rows; Tracks without tags: 18293 Missing Tracks: 27 Too long Tags: 14
+Dec 21, 2014 9:44:40 AM tags.Core main
+INFO: Imported 35900 rows; Tracks without tags: 18342 Missing Tracks: 27 Too long Tags: 14
+Dec 21, 2014 9:47:12 AM tags.Core main
+INFO: Imported 36000 rows; Tracks without tags: 18385 Missing Tracks: 27 Too long Tags: 14
+Dec 21, 2014 9:47:22 AM tags.Core main
+SEVERE: org.xml.sax.SAXParseException; lineNumber: 3; columnNumber: 24; An invalid XML character (Unicode: 0x{2}) was found in the value of attribute "{1}" and element is "18".at Row: 36016; Artist: Tapes n Tapes; Track: Time Of Songs
+Dec 21, 2014 9:49:21 AM tags.Core main
+INFO: Imported 36100 rows; Tracks without tags: 18437 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 9:51:26 AM tags.Core main
+INFO: Imported 36200 rows; Tracks without tags: 18486 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 9:54:06 AM tags.Core main
+INFO: Imported 36300 rows; Tracks without tags: 18535 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 9:56:30 AM tags.Core main
+INFO: Imported 36400 rows; Tracks without tags: 18587 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 9:57:56 AM tags.Core main
+INFO: Imported 36500 rows; Tracks without tags: 18650 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:00:21 AM tags.Core main
+INFO: Imported 36600 rows; Tracks without tags: 18706 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:03:41 AM tags.Core main
+INFO: Imported 36700 rows; Tracks without tags: 18761 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:07:26 AM tags.Core main
+INFO: Imported 36800 rows; Tracks without tags: 18810 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:09:39 AM tags.Core main
+INFO: Imported 36900 rows; Tracks without tags: 18862 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:12:07 AM tags.Core main
+INFO: Imported 37000 rows; Tracks without tags: 18912 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:14:57 AM tags.Core main
+INFO: Imported 37100 rows; Tracks without tags: 18954 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:17:59 AM tags.Core main
+INFO: Imported 37200 rows; Tracks without tags: 18997 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:21:05 AM tags.Core main
+INFO: Imported 37300 rows; Tracks without tags: 19043 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:24:03 AM tags.Core main
+INFO: Imported 37400 rows; Tracks without tags: 19088 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:26:48 AM tags.Core main
+INFO: Imported 37500 rows; Tracks without tags: 19141 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:29:46 AM tags.Core main
+INFO: Imported 37600 rows; Tracks without tags: 19190 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:32:19 AM tags.Core main
+INFO: Imported 37700 rows; Tracks without tags: 19239 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:35:03 AM tags.Core main
+INFO: Imported 37800 rows; Tracks without tags: 19290 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:38:02 AM tags.Core main
+INFO: Imported 37900 rows; Tracks without tags: 19342 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:41:16 AM tags.Core main
+INFO: Imported 38000 rows; Tracks without tags: 19391 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:43:58 AM tags.Core main
+INFO: Imported 38100 rows; Tracks without tags: 19445 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:47:16 AM tags.Core main
+INFO: Imported 38200 rows; Tracks without tags: 19489 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:49:35 AM tags.Core main
+INFO: Imported 38300 rows; Tracks without tags: 19539 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:52:32 AM tags.Core main
+INFO: Imported 38400 rows; Tracks without tags: 19589 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:54:57 AM tags.Core main
+INFO: Imported 38500 rows; Tracks without tags: 19641 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 10:57:48 AM tags.Core main
+INFO: Imported 38600 rows; Tracks without tags: 19693 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 11:00:26 AM tags.Core main
+INFO: Imported 38700 rows; Tracks without tags: 19740 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 11:03:27 AM tags.Core main
+INFO: Imported 38800 rows; Tracks without tags: 19792 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 11:06:16 AM tags.Core main
+INFO: Imported 38900 rows; Tracks without tags: 19840 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 11:09:27 AM tags.Core main
+INFO: Imported 39000 rows; Tracks without tags: 19887 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 11:11:41 AM tags.Core main
+INFO: Imported 39100 rows; Tracks without tags: 19935 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 11:14:49 AM tags.Core main
+INFO: Imported 39200 rows; Tracks without tags: 19990 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 11:18:08 AM tags.Core main
+INFO: Imported 39300 rows; Tracks without tags: 20046 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 11:21:30 AM tags.Core main
+INFO: Imported 39400 rows; Tracks without tags: 20100 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 11:24:04 AM tags.Core main
+INFO: Imported 39500 rows; Tracks without tags: 20152 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 11:26:44 AM tags.Core main
+INFO: Imported 39600 rows; Tracks without tags: 20195 Missing Tracks: 28 Too long Tags: 14
+Dec 21, 2014 11:29:21 AM tags.DB insert
+INFO: Too long Tag: best shit ever existing in the whole world makes me vomit over my daddys pussy while i listen to the popes earcream following the dark lord to my grandmummies treassure in an iland of dicksucking faggot frogs having silver eyebrows From Track: Never Gonna Give You Up Artist: The Black Keys
+Dec 21, 2014 11:29:54 AM tags.Core main
+INFO: Imported 39700 rows; Tracks without tags: 20244 Missing Tracks: 28 Too long Tags: 15
+Dec 21, 2014 11:33:22 AM tags.Core main
+INFO: Imported 39800 rows; Tracks without tags: 20290 Missing Tracks: 28 Too long Tags: 15
+Dec 21, 2014 11:36:35 AM tags.Core main
+INFO: Imported 39900 rows; Tracks without tags: 20347 Missing Tracks: 28 Too long Tags: 15
+Dec 21, 2014 11:39:29 AM tags.Core main
+INFO: Imported 40000 rows; Tracks without tags: 20394 Missing Tracks: 28 Too long Tags: 15
+Dec 21, 2014 11:42:25 AM tags.Core main
+INFO: Imported 40100 rows; Tracks without tags: 20440 Missing Tracks: 28 Too long Tags: 15
+Dec 21, 2014 11:44:59 AM tags.Core main
+INFO: Imported 40200 rows; Tracks without tags: 20490 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 11:47:46 AM tags.Core main
+INFO: Imported 40300 rows; Tracks without tags: 20542 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 11:49:44 AM tags.Core main
+INFO: Imported 40400 rows; Tracks without tags: 20595 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 11:51:58 AM tags.Core main
+INFO: Imported 40500 rows; Tracks without tags: 20643 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 11:53:58 AM tags.Core main
+INFO: Imported 40600 rows; Tracks without tags: 20696 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 11:56:58 AM tags.Core main
+INFO: Imported 40700 rows; Tracks without tags: 20754 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 11:59:02 AM tags.Core main
+INFO: Imported 40800 rows; Tracks without tags: 20813 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:01:56 PM tags.Core main
+INFO: Imported 40900 rows; Tracks without tags: 20862 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:04:45 PM tags.Core main
+INFO: Imported 41000 rows; Tracks without tags: 20912 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:07:40 PM tags.Core main
+INFO: Imported 41100 rows; Tracks without tags: 20961 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:10:45 PM tags.Core main
+INFO: Imported 41200 rows; Tracks without tags: 21016 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:13:43 PM tags.Core main
+INFO: Imported 41300 rows; Tracks without tags: 21063 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:16:06 PM tags.Core main
+INFO: Imported 41400 rows; Tracks without tags: 21117 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:19:21 PM tags.Core main
+INFO: Imported 41500 rows; Tracks without tags: 21162 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:22:24 PM tags.Core main
+INFO: Imported 41600 rows; Tracks without tags: 21212 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:25:26 PM tags.Core main
+INFO: Imported 41700 rows; Tracks without tags: 21264 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:28:22 PM tags.Core main
+INFO: Imported 41800 rows; Tracks without tags: 21322 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:31:08 PM tags.Core main
+INFO: Imported 41900 rows; Tracks without tags: 21376 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:33:39 PM tags.Core main
+INFO: Imported 42000 rows; Tracks without tags: 21432 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:36:17 PM tags.Core main
+INFO: Imported 42100 rows; Tracks without tags: 21491 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:38:39 PM tags.Core main
+INFO: Imported 42200 rows; Tracks without tags: 21542 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:41:49 PM tags.Core main
+INFO: Imported 42300 rows; Tracks without tags: 21590 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:44:49 PM tags.Core main
+INFO: Imported 42400 rows; Tracks without tags: 21636 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:47:47 PM tags.Core main
+INFO: Imported 42500 rows; Tracks without tags: 21690 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:51:26 PM tags.Core main
+INFO: Imported 42600 rows; Tracks without tags: 21739 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:55:23 PM tags.Core main
+INFO: Imported 42700 rows; Tracks without tags: 21792 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 12:58:35 PM tags.Core main
+INFO: Imported 42800 rows; Tracks without tags: 21836 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:01:24 PM tags.Core main
+INFO: Imported 42900 rows; Tracks without tags: 21882 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:03:49 PM tags.Core main
+INFO: Imported 43000 rows; Tracks without tags: 21934 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:07:52 PM tags.Core main
+INFO: Imported 43100 rows; Tracks without tags: 21976 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:10:51 PM tags.Core main
+INFO: Imported 43200 rows; Tracks without tags: 22027 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:13:38 PM tags.Core main
+INFO: Imported 43300 rows; Tracks without tags: 22078 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:17:24 PM tags.Core main
+INFO: Imported 43400 rows; Tracks without tags: 22119 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:19:52 PM tags.Core main
+INFO: Imported 43500 rows; Tracks without tags: 22170 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:22:19 PM tags.Core main
+INFO: Imported 43600 rows; Tracks without tags: 22229 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:24:42 PM tags.Core main
+INFO: Imported 43700 rows; Tracks without tags: 22284 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:27:40 PM tags.Core main
+INFO: Imported 43800 rows; Tracks without tags: 22330 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:30:13 PM tags.Core main
+INFO: Imported 43900 rows; Tracks without tags: 22381 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:32:42 PM tags.Core main
+INFO: Imported 44000 rows; Tracks without tags: 22435 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:35:42 PM tags.Core main
+INFO: Imported 44100 rows; Tracks without tags: 22491 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:37:41 PM tags.Core main
+INFO: Imported 44200 rows; Tracks without tags: 22540 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:40:06 PM tags.Core main
+INFO: Imported 44300 rows; Tracks without tags: 22588 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:43:40 PM tags.Core main
+INFO: Imported 44400 rows; Tracks without tags: 22640 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:45:40 PM tags.Core main
+INFO: Imported 44500 rows; Tracks without tags: 22700 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:48:12 PM tags.Core main
+INFO: Imported 44600 rows; Tracks without tags: 22749 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:50:34 PM tags.Core main
+INFO: Imported 44700 rows; Tracks without tags: 22805 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:53:04 PM tags.Core main
+INFO: Imported 44800 rows; Tracks without tags: 22855 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:56:31 PM tags.Core main
+INFO: Imported 44900 rows; Tracks without tags: 22904 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 1:58:59 PM tags.Core main
+INFO: Imported 45000 rows; Tracks without tags: 22959 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 2:02:04 PM tags.Core main
+INFO: Imported 45100 rows; Tracks without tags: 23011 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 2:04:19 PM tags.Core main
+INFO: Imported 45200 rows; Tracks without tags: 23069 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 2:06:53 PM tags.Core main
+INFO: Imported 45300 rows; Tracks without tags: 23113 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 2:09:12 PM tags.Core main
+INFO: Imported 45400 rows; Tracks without tags: 23163 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 2:11:44 PM tags.Core main
+INFO: Imported 45500 rows; Tracks without tags: 23215 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 2:14:39 PM tags.Core main
+INFO: Imported 45600 rows; Tracks without tags: 23260 Missing Tracks: 29 Too long Tags: 15
+Dec 21, 2014 2:15:37 PM tags.DB insert
+INFO: Too long Tag: sitting on the 242 at the intersection of bread st and cannon st wondering what would be better: a cannon that fired rolls or one made out of dough like a bread bowl From Track: Love Is All Artist: The Tallest Man On Earth
+Dec 21, 2014 2:16:48 PM tags.DB insert
+INFO: Too long Tag: best shit ever existing in the whole world makes me vomit over my daddys pussy while i listen to the popes earcream following the dark lord to my grandmummies treassure in an iland of dicksucking faggot frogs having silver eyebrows From Track: Iskander D'hul Karnon Artist: Nile
+Dec 21, 2014 2:17:11 PM tags.Core main
+INFO: Imported 45700 rows; Tracks without tags: 23319 Missing Tracks: 29 Too long Tags: 17
+Dec 21, 2014 2:19:49 PM tags.Core main
+INFO: Imported 45800 rows; Tracks without tags: 23373 Missing Tracks: 29 Too long Tags: 17
+Dec 21, 2014 2:21:53 PM tags.Core main
+INFO: Imported 45900 rows; Tracks without tags: 23423 Missing Tracks: 29 Too long Tags: 17
+Dec 21, 2014 2:24:32 PM tags.Core main
+INFO: Imported 46000 rows; Tracks without tags: 23482 Missing Tracks: 29 Too long Tags: 17
+Dec 21, 2014 2:27:07 PM tags.Core main
+INFO: Imported 46100 rows; Tracks without tags: 23538 Missing Tracks: 29 Too long Tags: 17
+Dec 21, 2014 2:30:31 PM tags.Core main
+INFO: Imported 46200 rows; Tracks without tags: 23584 Missing Tracks: 29 Too long Tags: 17
+Dec 21, 2014 2:33:28 PM tags.Core main
+INFO: Imported 46300 rows; Tracks without tags: 23632 Missing Tracks: 29 Too long Tags: 17
+Dec 21, 2014 2:36:53 PM tags.Core main
+INFO: Imported 46400 rows; Tracks without tags: 23684 Missing Tracks: 29 Too long Tags: 17
+Dec 21, 2014 2:40:04 PM tags.Core main
+INFO: Imported 46500 rows; Tracks without tags: 23741 Missing Tracks: 29 Too long Tags: 17
+Dec 21, 2014 2:41:45 PM tags.Core main
+SEVERE: For input string: ""at Row: 46571; Artist: Sofia Talvik; Track: It's Silly Now
+Dec 21, 2014 2:42:11 PM tags.Core main
+INFO: Imported 46600 rows; Tracks without tags: 23800 Missing Tracks: 30 Too long Tags: 17
+Dec 21, 2014 2:44:55 PM tags.Core main
+INFO: Imported 46700 rows; Tracks without tags: 23850 Missing Tracks: 30 Too long Tags: 17
+Dec 21, 2014 2:48:13 PM tags.Core main
+INFO: Imported 46800 rows; Tracks without tags: 23905 Missing Tracks: 30 Too long Tags: 17
+Dec 21, 2014 2:51:32 PM tags.Core main
+INFO: Imported 46900 rows; Tracks without tags: 23959 Missing Tracks: 30 Too long Tags: 17
+Dec 21, 2014 2:54:34 PM tags.Core main
+INFO: Imported 47000 rows; Tracks without tags: 24013 Missing Tracks: 30 Too long Tags: 17
+Dec 21, 2014 2:56:42 PM tags.Core main
+INFO: Imported 47100 rows; Tracks without tags: 24072 Missing Tracks: 30 Too long Tags: 17
+Dec 21, 2014 2:59:27 PM tags.Core main
+INFO: Imported 47200 rows; Tracks without tags: 24118 Missing Tracks: 30 Too long Tags: 17
+Dec 21, 2014 3:02:53 PM tags.Core main
+INFO: Imported 47300 rows; Tracks without tags: 24163 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:06:00 PM tags.Core main
+INFO: Imported 47400 rows; Tracks without tags: 24210 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:08:18 PM tags.Core main
+INFO: Imported 47500 rows; Tracks without tags: 24264 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:10:28 PM tags.Core main
+INFO: Imported 47600 rows; Tracks without tags: 24318 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:13:51 PM tags.Core main
+INFO: Imported 47700 rows; Tracks without tags: 24367 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:17:03 PM tags.Core main
+INFO: Imported 47800 rows; Tracks without tags: 24418 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:19:39 PM tags.Core main
+INFO: Imported 47900 rows; Tracks without tags: 24470 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:22:11 PM tags.Core main
+INFO: Imported 48000 rows; Tracks without tags: 24524 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:24:50 PM tags.Core main
+INFO: Imported 48100 rows; Tracks without tags: 24582 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:27:43 PM tags.Core main
+INFO: Imported 48200 rows; Tracks without tags: 24639 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:30:10 PM tags.Core main
+INFO: Imported 48300 rows; Tracks without tags: 24684 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:33:01 PM tags.Core main
+INFO: Imported 48400 rows; Tracks without tags: 24734 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:35:16 PM tags.Core main
+INFO: Imported 48500 rows; Tracks without tags: 24789 Missing Tracks: 31 Too long Tags: 17
+Dec 21, 2014 3:37:03 PM tags.Core main
+SEVERE: Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COERCIBLE) for operation '='at Row: 48575; Artist: Marek Grechuta; Track: Jak Wielkie Jablko (Nowy Jork)
+Dec 21, 2014 3:38:44 PM tags.Core main
+INFO: Imported 48600 rows; Tracks without tags: 24828 Missing Tracks: 32 Too long Tags: 17
+Dec 21, 2014 3:41:05 PM tags.Core main
+INFO: Imported 48700 rows; Tracks without tags: 24877 Missing Tracks: 32 Too long Tags: 17
+Dec 21, 2014 3:43:37 PM tags.Core main
+INFO: Imported 48800 rows; Tracks without tags: 24932 Missing Tracks: 32 Too long Tags: 17
+Dec 21, 2014 3:47:40 PM tags.Core main
+INFO: Imported 48900 rows; Tracks without tags: 24980 Missing Tracks: 32 Too long Tags: 17
+Dec 21, 2014 3:49:51 PM tags.Core main
+INFO: Imported 49000 rows; Tracks without tags: 25031 Missing Tracks: 32 Too long Tags: 17
+Dec 21, 2014 3:53:02 PM tags.Core main
+INFO: Imported 49100 rows; Tracks without tags: 25081 Missing Tracks: 32 Too long Tags: 17
+Dec 21, 2014 3:55:27 PM tags.Core main
+INFO: Imported 49200 rows; Tracks without tags: 25139 Missing Tracks: 32 Too long Tags: 17
+Dec 21, 2014 3:57:06 PM tags.Core main
+INFO: Imported 49300 rows; Tracks without tags: 25203 Missing Tracks: 32 Too long Tags: 17
+Dec 21, 2014 3:59:46 PM tags.Core main
+INFO: Imported 49400 rows; Tracks without tags: 25250 Missing Tracks: 32 Too long Tags: 17
+Dec 21, 2014 4:02:34 PM tags.Core main
+INFO: Imported 49500 rows; Tracks without tags: 25299 Missing Tracks: 32 Too long Tags: 17
+Dec 21, 2014 4:06:54 PM tags.Core main
+INFO: Imported 49600 rows; Tracks without tags: 25350 Missing Tracks: 32 Too long Tags: 17
+Dec 21, 2014 4:06:56 PM tags.Core main
+SEVERE: For input string: ""at Row: 49603; Artist: Kurtis Blow; Track: I'm Chillin'
+Dec 21, 2014 4:10:02 PM tags.Core main
+INFO: Imported 49700 rows; Tracks without tags: 25398 Missing Tracks: 33 Too long Tags: 17
+Dec 21, 2014 4:12:59 PM tags.Core main
+INFO: Imported 49800 rows; Tracks without tags: 25449 Missing Tracks: 33 Too long Tags: 17
+Dec 21, 2014 4:15:22 PM tags.Core main
+INFO: Imported 49900 rows; Tracks without tags: 25506 Missing Tracks: 33 Too long Tags: 17
+Dec 21, 2014 4:18:03 PM tags.Core main
+INFO: Imported 50000 rows; Tracks without tags: 25560 Missing Tracks: 33 Too long Tags: 17
+Dec 21, 2014 4:20:27 PM tags.Core main
+INFO: Imported 50100 rows; Tracks without tags: 25612 Missing Tracks: 33 Too long Tags: 17
+Dec 21, 2014 4:24:44 PM tags.Core main
+INFO: Imported 50200 rows; Tracks without tags: 25650 Missing Tracks: 34 Too long Tags: 17
+Dec 21, 2014 4:27:41 PM tags.Core main
+INFO: Imported 50300 rows; Tracks without tags: 25698 Missing Tracks: 34 Too long Tags: 17
+Dec 21, 2014 4:30:01 PM tags.Core main
+INFO: Imported 50400 rows; Tracks without tags: 25752 Missing Tracks: 34 Too long Tags: 17
+Dec 21, 2014 4:32:52 PM tags.Core main
+INFO: Imported 50500 rows; Tracks without tags: 25802 Missing Tracks: 34 Too long Tags: 17
+Dec 21, 2014 4:34:55 PM tags.Core main
+INFO: Imported 50600 rows; Tracks without tags: 25862 Missing Tracks: 34 Too long Tags: 17
+Dec 21, 2014 4:38:12 PM tags.Core main
+INFO: Imported 50700 rows; Tracks without tags: 25917 Missing Tracks: 34 Too long Tags: 17
+Dec 21, 2014 4:40:18 PM tags.Core main
+INFO: Imported 50800 rows; Tracks without tags: 25970 Missing Tracks: 34 Too long Tags: 17
+Dec 21, 2014 4:42:30 PM tags.Core main
+INFO: Imported 50900 rows; Tracks without tags: 26022 Missing Tracks: 34 Too long Tags: 17
+Dec 21, 2014 4:45:05 PM tags.Core main
+INFO: Imported 51000 rows; Tracks without tags: 26074 Missing Tracks: 34 Too long Tags: 17
+Dec 21, 2014 4:48:19 PM tags.Core main
+INFO: Imported 51100 rows; Tracks without tags: 26125 Missing Tracks: 34 Too long Tags: 17
+Dec 21, 2014 4:51:25 PM tags.Core main
+INFO: Imported 51200 rows; Tracks without tags: 26176 Missing Tracks: 34 Too long Tags: 17
+Dec 21, 2014 4:52:37 PM tags.DB insert
+INFO: Too long Tag: This is so bad it makes me wanna shove an emo hedgehog up my ass and masturbate to pictures of bisexual gay pinguins but it is still somehow better then Michael Angelo Batio From Track: The Ghost Of You (Live Version) (AOL Sessions) Artist: My Chemical Romance
+Dec 21, 2014 4:53:56 PM tags.Core main
+INFO: Imported 51300 rows; Tracks without tags: 26230 Missing Tracks: 34 Too long Tags: 18
+Dec 21, 2014 4:56:26 PM tags.Core main
+INFO: Imported 51400 rows; Tracks without tags: 26288 Missing Tracks: 34 Too long Tags: 18
+Dec 21, 2014 4:59:02 PM tags.Core main
+INFO: Imported 51500 rows; Tracks without tags: 26343 Missing Tracks: 34 Too long Tags: 18
+Dec 21, 2014 5:02:21 PM tags.Core main
+INFO: Imported 51600 rows; Tracks without tags: 26395 Missing Tracks: 34 Too long Tags: 18
+Dec 21, 2014 5:04:33 PM tags.Core main
+INFO: Imported 51700 rows; Tracks without tags: 26447 Missing Tracks: 34 Too long Tags: 18
+Dec 21, 2014 5:07:06 PM tags.Core main
+INFO: Imported 51800 rows; Tracks without tags: 26504 Missing Tracks: 34 Too long Tags: 18
+Dec 21, 2014 5:09:03 PM tags.Core main
+INFO: Imported 51900 rows; Tracks without tags: 26555 Missing Tracks: 35 Too long Tags: 18
+Dec 21, 2014 5:12:08 PM tags.Core main
+INFO: Imported 52000 rows; Tracks without tags: 26613 Missing Tracks: 35 Too long Tags: 18
+Dec 21, 2014 5:15:31 PM tags.Core main
+INFO: Imported 52100 rows; Tracks without tags: 26661 Missing Tracks: 35 Too long Tags: 18
+Dec 21, 2014 5:18:11 PM tags.Core main
+INFO: Imported 52200 rows; Tracks without tags: 26709 Missing Tracks: 35 Too long Tags: 18
+Dec 21, 2014 5:20:45 PM tags.Core main
+INFO: Imported 52300 rows; Tracks without tags: 26768 Missing Tracks: 35 Too long Tags: 18
+Dec 21, 2014 5:23:22 PM tags.Core main
+INFO: Imported 52400 rows; Tracks without tags: 26819 Missing Tracks: 35 Too long Tags: 18
+Dec 21, 2014 5:25:59 PM tags.Core main
+INFO: Imported 52500 rows; Tracks without tags: 26861 Missing Tracks: 35 Too long Tags: 18
+Dec 21, 2014 5:28:18 PM tags.Core main
+INFO: Imported 52600 rows; Tracks without tags: 26911 Missing Tracks: 35 Too long Tags: 18
+Dec 21, 2014 5:31:07 PM tags.Core main
+INFO: Imported 52700 rows; Tracks without tags: 26960 Missing Tracks: 35 Too long Tags: 18
+Dec 21, 2014 5:33:12 PM tags.DB insert
+INFO: Too long Tag: wenn ich im angesicht des mondes am gigantischen tannenwald zwischen fuenfzigzentimeterhohen feldern stehe und die lichtspiele mit den wolken am himmel so betrachte habe ich manchmal das gefuehl teil eines kosmischen gesetzes zu sein From Track: Planet Caravan Artist: Black Sabbath
+Dec 21, 2014 5:33:53 PM tags.Core main
+INFO: Imported 52800 rows; Tracks without tags: 27019 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 5:36:34 PM tags.Core main
+INFO: Imported 52900 rows; Tracks without tags: 27066 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 5:38:30 PM tags.Core main
+INFO: Imported 53000 rows; Tracks without tags: 27120 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 5:42:15 PM tags.Core main
+INFO: Imported 53100 rows; Tracks without tags: 27163 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 5:45:07 PM tags.Core main
+INFO: Imported 53200 rows; Tracks without tags: 27217 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 5:47:54 PM tags.Core main
+INFO: Imported 53300 rows; Tracks without tags: 27265 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 5:50:55 PM tags.Core main
+INFO: Imported 53400 rows; Tracks without tags: 27314 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 5:53:55 PM tags.Core main
+INFO: Imported 53500 rows; Tracks without tags: 27362 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 5:57:27 PM tags.Core main
+INFO: Imported 53600 rows; Tracks without tags: 27402 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 6:00:32 PM tags.Core main
+INFO: Imported 53700 rows; Tracks without tags: 27448 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 6:03:18 PM tags.Core main
+INFO: Imported 53800 rows; Tracks without tags: 27497 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 6:05:46 PM tags.Core main
+INFO: Imported 53900 rows; Tracks without tags: 27544 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 6:08:51 PM tags.Core main
+INFO: Imported 54000 rows; Tracks without tags: 27586 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 6:11:23 PM tags.Core main
+INFO: Imported 54100 rows; Tracks without tags: 27644 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 6:14:25 PM tags.Core main
+INFO: Imported 54200 rows; Tracks without tags: 27695 Missing Tracks: 35 Too long Tags: 19
+Dec 21, 2014 6:16:46 PM tags.DB insert
+INFO: Too long Tag: songs that i sing along to but i always forget the words so i say duh duh while trying to sound like i do know the words and no one is falling for it but they keep quiet because they are embarassed for me From Track: Monster Artist: The Automatic
+Dec 21, 2014 6:17:26 PM tags.Core main
+INFO: Imported 54300 rows; Tracks without tags: 27747 Missing Tracks: 35 Too long Tags: 20
+Dec 21, 2014 6:19:25 PM tags.Core main
+INFO: Imported 54400 rows; Tracks without tags: 27800 Missing Tracks: 35 Too long Tags: 20
+Dec 21, 2014 6:22:48 PM tags.Core main
+INFO: Imported 54500 rows; Tracks without tags: 27853 Missing Tracks: 35 Too long Tags: 20
+Dec 21, 2014 6:26:48 PM tags.Core main
+INFO: Imported 54600 rows; Tracks without tags: 27900 Missing Tracks: 35 Too long Tags: 20
+Dec 21, 2014 6:29:50 PM tags.Core main
+INFO: Imported 54700 rows; Tracks without tags: 27951 Missing Tracks: 35 Too long Tags: 20
+Dec 21, 2014 6:32:45 PM tags.Core main
+INFO: Imported 54800 rows; Tracks without tags: 28000 Missing Tracks: 35 Too long Tags: 20
+Dec 21, 2014 6:34:04 PM tags.DB insert
+INFO: Too long Tag: hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard hard sex electro From Track: Parallelogram Bin Artist: Squarepusher
+Dec 21, 2014 6:35:20 PM tags.Core main
+INFO: Imported 54900 rows; Tracks without tags: 28050 Missing Tracks: 35 Too long Tags: 21
+Dec 21, 2014 6:40:08 PM tags.Core main
+INFO: Imported 55000 rows; Tracks without tags: 28092 Missing Tracks: 35 Too long Tags: 21
+Dec 21, 2014 6:43:13 PM tags.Core main
+INFO: Imported 55100 rows; Tracks without tags: 28145 Missing Tracks: 35 Too long Tags: 21
+Dec 21, 2014 6:46:21 PM tags.Core main
+INFO: Imported 55200 rows; Tracks without tags: 28186 Missing Tracks: 35 Too long Tags: 21
+Dec 21, 2014 6:49:19 PM tags.Core main
+INFO: Imported 55300 rows; Tracks without tags: 28243 Missing Tracks: 35 Too long Tags: 21
+Dec 21, 2014 6:52:22 PM tags.Core main
+INFO: Imported 55400 rows; Tracks without tags: 28285 Missing Tracks: 35 Too long Tags: 21
+Dec 21, 2014 6:54:16 PM tags.Core main
+INFO: Imported 55500 rows; Tracks without tags: 28337 Missing Tracks: 35 Too long Tags: 21
+Dec 21, 2014 6:57:27 PM tags.Core main
+INFO: Imported 55600 rows; Tracks without tags: 28390 Missing Tracks: 35 Too long Tags: 21
+Dec 21, 2014 6:59:25 PM tags.Core main
+INFO: Imported 55700 rows; Tracks without tags: 28448 Missing Tracks: 35 Too long Tags: 21
+Dec 21, 2014 7:02:09 PM tags.Core main
+INFO: Imported 55800 rows; Tracks without tags: 28498 Missing Tracks: 35 Too long Tags: 21
+Dec 21, 2014 7:04:41 PM tags.Core main
+INFO: Imported 55900 rows; Tracks without tags: 28550 Missing Tracks: 36 Too long Tags: 21
+Dec 21, 2014 7:07:42 PM tags.Core main
+INFO: Imported 56000 rows; Tracks without tags: 28603 Missing Tracks: 36 Too long Tags: 21
+Dec 21, 2014 7:10:09 PM tags.Core main
+INFO: Imported 56100 rows; Tracks without tags: 28657 Missing Tracks: 36 Too long Tags: 21
+Dec 21, 2014 7:13:16 PM tags.Core main
+INFO: Imported 56200 rows; Tracks without tags: 28706 Missing Tracks: 36 Too long Tags: 21
+Dec 21, 2014 7:16:17 PM tags.Core main
+INFO: Imported 56300 rows; Tracks without tags: 28752 Missing Tracks: 36 Too long Tags: 21
+Dec 21, 2014 7:19:57 PM tags.Core main
+INFO: Imported 56400 rows; Tracks without tags: 28795 Missing Tracks: 36 Too long Tags: 21
+Dec 21, 2014 7:22:42 PM tags.Core main
+INFO: Imported 56500 rows; Tracks without tags: 28850 Missing Tracks: 36 Too long Tags: 21
+Dec 21, 2014 7:24:50 PM tags.Core main
+INFO: Imported 56600 rows; Tracks without tags: 28909 Missing Tracks: 36 Too long Tags: 21
+Dec 21, 2014 7:25:25 PM tags.Core main
+SEVERE: For input string: ""at Row: 56613; Artist: The Sensational Alex Harvey Band; Track: Swampsnake
+Dec 21, 2014 7:27:25 PM tags.Core main
+INFO: Imported 56700 rows; Tracks without tags: 28961 Missing Tracks: 37 Too long Tags: 21
+Dec 21, 2014 7:30:20 PM tags.Core main
+INFO: Imported 56800 rows; Tracks without tags: 29013 Missing Tracks: 37 Too long Tags: 21
+Dec 21, 2014 7:33:31 PM tags.Core main
+INFO: Imported 56900 rows; Tracks without tags: 29066 Missing Tracks: 37 Too long Tags: 21
+Dec 21, 2014 7:35:57 PM tags.Core main
+INFO: Imported 57000 rows; Tracks without tags: 29119 Missing Tracks: 37 Too long Tags: 21
+Dec 21, 2014 7:38:43 PM tags.Core main
+INFO: Imported 57100 rows; Tracks without tags: 29172 Missing Tracks: 38 Too long Tags: 21
+Dec 21, 2014 7:41:58 PM tags.Core main
+INFO: Imported 57200 rows; Tracks without tags: 29220 Missing Tracks: 38 Too long Tags: 21
+Dec 21, 2014 7:46:04 PM tags.Core main
+INFO: Imported 57300 rows; Tracks without tags: 29268 Missing Tracks: 38 Too long Tags: 21
+Dec 21, 2014 7:48:55 PM tags.Core main
+INFO: Imported 57400 rows; Tracks without tags: 29317 Missing Tracks: 39 Too long Tags: 21
+Dec 21, 2014 7:52:36 PM tags.Core main
+INFO: Imported 57500 rows; Tracks without tags: 29370 Missing Tracks: 39 Too long Tags: 21
+Dec 21, 2014 7:54:11 PM tags.DB insert
+INFO: Too long Tag: This is so bad it makes me wanna shove an emo hedgehog up my ass and masturbate to pictures of bisexual gay pinguins but it is still somehow better then Michael Angelo Batio From Track: Devil Is A Loser Artist: Lordi
+Dec 21, 2014 7:56:25 PM tags.Core main
+INFO: Imported 57600 rows; Tracks without tags: 29413 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 7:59:14 PM tags.Core main
+INFO: Imported 57700 rows; Tracks without tags: 29465 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:02:37 PM tags.Core main
+INFO: Imported 57800 rows; Tracks without tags: 29518 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:06:06 PM tags.Core main
+INFO: Imported 57900 rows; Tracks without tags: 29564 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:08:23 PM tags.Core main
+INFO: Imported 58000 rows; Tracks without tags: 29619 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:11:39 PM tags.Core main
+INFO: Imported 58100 rows; Tracks without tags: 29671 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:15:43 PM tags.Core main
+INFO: Imported 58200 rows; Tracks without tags: 29724 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:18:18 PM tags.Core main
+INFO: Imported 58300 rows; Tracks without tags: 29776 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:22:08 PM tags.Core main
+INFO: Imported 58400 rows; Tracks without tags: 29827 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:24:25 PM tags.Core main
+INFO: Imported 58500 rows; Tracks without tags: 29879 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:27:09 PM tags.Core main
+INFO: Imported 58600 rows; Tracks without tags: 29935 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:30:13 PM tags.Core main
+INFO: Imported 58700 rows; Tracks without tags: 29993 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:33:07 PM tags.Core main
+INFO: Imported 58800 rows; Tracks without tags: 30044 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:36:22 PM tags.Core main
+INFO: Imported 58900 rows; Tracks without tags: 30098 Missing Tracks: 39 Too long Tags: 22
+Dec 21, 2014 8:36:29 PM tags.DB insert
+INFO: Too long Tag: This is so bad it makes me wanna shove an emo hedgehog up my ass and masturbate to pictures of bisexual gay pinguins but it is still somehow better then Michael Angelo Batio From Track: Shooting Stars Artist: Kelis
+Dec 21, 2014 8:38:58 PM tags.Core main
+INFO: Imported 59000 rows; Tracks without tags: 30146 Missing Tracks: 39 Too long Tags: 23
+Dec 21, 2014 8:42:08 PM tags.Core main
+INFO: Imported 59100 rows; Tracks without tags: 30194 Missing Tracks: 39 Too long Tags: 23
+Dec 21, 2014 8:44:46 PM tags.Core main
+INFO: Imported 59200 rows; Tracks without tags: 30241 Missing Tracks: 39 Too long Tags: 23
+Dec 21, 2014 8:47:26 PM tags.Core main
+INFO: Imported 59300 rows; Tracks without tags: 30292 Missing Tracks: 39 Too long Tags: 23
+Dec 21, 2014 8:49:43 PM tags.Core main
+INFO: Imported 59400 rows; Tracks without tags: 30339 Missing Tracks: 39 Too long Tags: 23
+Dec 21, 2014 8:52:22 PM tags.Core main
+INFO: Imported 59500 rows; Tracks without tags: 30394 Missing Tracks: 39 Too long Tags: 23
+Dec 21, 2014 8:55:25 PM tags.Core main
+INFO: Imported 59600 rows; Tracks without tags: 30443 Missing Tracks: 39 Too long Tags: 23
+Dec 21, 2014 8:58:35 PM tags.Core main
+INFO: Imported 59700 rows; Tracks without tags: 30496 Missing Tracks: 39 Too long Tags: 23
+Dec 21, 2014 9:00:52 PM tags.Core main
+INFO: Imported 59800 rows; Tracks without tags: 30547 Missing Tracks: 39 Too long Tags: 23
+Dec 21, 2014 9:04:58 PM tags.Core main
+INFO: Imported 59900 rows; Tracks without tags: 30600 Missing Tracks: 39 Too long Tags: 23
+Dec 21, 2014 9:07:25 PM tags.Core main
+SEVERE: For input string: ""at Row: 59987; Artist: Sandy Posey; Track: Let's All Go Down To The River
+Dec 21, 2014 9:07:53 PM tags.Core main
+INFO: Imported 60000 rows; Tracks without tags: 30651 Missing Tracks: 40 Too long Tags: 23
+Dec 21, 2014 9:10:13 PM tags.Core main
+INFO: Imported 60100 rows; Tracks without tags: 30704 Missing Tracks: 40 Too long Tags: 23
+Dec 21, 2014 9:13:59 PM tags.Core main
+INFO: Imported 60200 rows; Tracks without tags: 30756 Missing Tracks: 40 Too long Tags: 23
+Dec 21, 2014 9:17:23 PM tags.Core main
+INFO: Imported 60300 rows; Tracks without tags: 30804 Missing Tracks: 40 Too long Tags: 23
+Dec 21, 2014 9:20:34 PM tags.Core main
+INFO: Imported 60400 rows; Tracks without tags: 30849 Missing Tracks: 40 Too long Tags: 23
+Dec 21, 2014 9:24:23 PM tags.Core main
+INFO: Imported 60500 rows; Tracks without tags: 30892 Missing Tracks: 40 Too long Tags: 23
+Dec 21, 2014 9:25:23 PM tags.Core main
+SEVERE: For input string: ""at Row: 60540; Artist: True Love Always; Track: Windows Fade
+Dec 21, 2014 9:26:50 PM tags.Core main
+INFO: Imported 60600 rows; Tracks without tags: 30942 Missing Tracks: 42 Too long Tags: 23
+Dec 21, 2014 9:28:51 PM tags.Core main
+SEVERE: Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COERCIBLE) for operation '='at Row: 60654; Artist: Grzegorz Turnau; Track: Atlantyda
+Dec 21, 2014 9:30:26 PM tags.DB insert
+INFO: Too long Tag: songs that make me think of people i loved dearly and miss sorely but know in my heart i shall never see again and i have to learn to be ok with that and i shall someday even though i still want to love them and even though it all still hurts From Track: Hello Again Artist: Neil Diamond
+Dec 21, 2014 9:30:46 PM tags.Core main
+INFO: Imported 60700 rows; Tracks without tags: 30998 Missing Tracks: 43 Too long Tags: 24
+Dec 21, 2014 9:32:21 PM tags.Core main
+SEVERE: For input string: ""at Row: 60769; Artist: Boy Kill Boy; Track: Shoot Me Down
+Dec 21, 2014 9:33:15 PM tags.Core main
+INFO: Imported 60800 rows; Tracks without tags: 31056 Missing Tracks: 44 Too long Tags: 24
+Dec 21, 2014 9:36:40 PM tags.Core main
+INFO: Imported 60900 rows; Tracks without tags: 31096 Missing Tracks: 44 Too long Tags: 24
+Dec 21, 2014 9:40:47 PM tags.Core main
+INFO: Imported 61000 rows; Tracks without tags: 31148 Missing Tracks: 44 Too long Tags: 24
+Dec 21, 2014 9:44:50 PM tags.Core main
+INFO: Imported 61100 rows; Tracks without tags: 31195 Missing Tracks: 44 Too long Tags: 24
+Dec 21, 2014 9:47:54 PM tags.Core main
+INFO: Imported 61200 rows; Tracks without tags: 31240 Missing Tracks: 44 Too long Tags: 24
+Dec 21, 2014 9:50:45 PM tags.Core main
+INFO: Imported 61300 rows; Tracks without tags: 31287 Missing Tracks: 44 Too long Tags: 24
+Dec 21, 2014 9:54:26 PM tags.Core main
+INFO: Imported 61400 rows; Tracks without tags: 31338 Missing Tracks: 45 Too long Tags: 24
+Dec 21, 2014 9:57:15 PM tags.Core main
+INFO: Imported 61500 rows; Tracks without tags: 31390 Missing Tracks: 46 Too long Tags: 24
+Dec 21, 2014 9:59:49 PM tags.Core main
+INFO: Imported 61600 rows; Tracks without tags: 31435 Missing Tracks: 46 Too long Tags: 24
+Dec 21, 2014 10:03:01 PM tags.Core main
+INFO: Imported 61700 rows; Tracks without tags: 31477 Missing Tracks: 46 Too long Tags: 24
+Dec 21, 2014 10:06:18 PM tags.Core main
+INFO: Imported 61800 rows; Tracks without tags: 31523 Missing Tracks: 46 Too long Tags: 24
+Dec 21, 2014 10:08:40 PM tags.Core main
+SEVERE: Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COERCIBLE) for operation '='at Row: 61872; Artist: Korn; Track: Dirty
+Dec 21, 2014 10:09:37 PM tags.Core main
+INFO: Imported 61900 rows; Tracks without tags: 31576 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:12:38 PM tags.Core main
+INFO: Imported 62000 rows; Tracks without tags: 31629 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:15:34 PM tags.Core main
+INFO: Imported 62100 rows; Tracks without tags: 31683 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:18:43 PM tags.Core main
+INFO: Imported 62200 rows; Tracks without tags: 31729 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:22:46 PM tags.Core main
+INFO: Imported 62300 rows; Tracks without tags: 31774 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:25:06 PM tags.Core main
+INFO: Imported 62400 rows; Tracks without tags: 31824 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:29:02 PM tags.Core main
+INFO: Imported 62500 rows; Tracks without tags: 31868 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:31:54 PM tags.Core main
+INFO: Imported 62600 rows; Tracks without tags: 31923 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:34:52 PM tags.Core main
+INFO: Imported 62700 rows; Tracks without tags: 31979 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:37:04 PM tags.Core main
+INFO: Imported 62800 rows; Tracks without tags: 32039 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:40:38 PM tags.Core main
+INFO: Imported 62900 rows; Tracks without tags: 32091 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:44:08 PM tags.Core main
+INFO: Imported 63000 rows; Tracks without tags: 32138 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:46:26 PM tags.Core main
+INFO: Imported 63100 rows; Tracks without tags: 32199 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:49:24 PM tags.Core main
+INFO: Imported 63200 rows; Tracks without tags: 32248 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:53:24 PM tags.Core main
+INFO: Imported 63300 rows; Tracks without tags: 32294 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:55:48 PM tags.Core main
+INFO: Imported 63400 rows; Tracks without tags: 32354 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 10:58:35 PM tags.Core main
+INFO: Imported 63500 rows; Tracks without tags: 32403 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 11:01:55 PM tags.Core main
+INFO: Imported 63600 rows; Tracks without tags: 32460 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 11:05:24 PM tags.Core main
+INFO: Imported 63700 rows; Tracks without tags: 32503 Missing Tracks: 47 Too long Tags: 24
+Dec 21, 2014 11:06:50 PM tags.DB insert
+INFO: Too long Tag: OMG I LOVE VIS SNG CUM ON PEOPLE XXXXXXXXXX LETS START DANCIN GRLYS MWAH XXXXXXXXXXX CLUBBIN TUNE WOOP XXXXXXXXX FAV OF ALL TIME XXXX CUM ON LASGO XXXXXXXXX LVYAZ XXXXXXXXXXXXXXXXXX From Track: Something (Radio Edit) Artist: Lasgo
+Dec 21, 2014 11:08:12 PM tags.Core main
+INFO: Imported 63800 rows; Tracks without tags: 32553 Missing Tracks: 47 Too long Tags: 25
+Dec 21, 2014 11:11:54 PM tags.Core main
+INFO: Imported 63900 rows; Tracks without tags: 32600 Missing Tracks: 47 Too long Tags: 25
+Dec 21, 2014 11:13:49 PM tags.DB insert
+INFO: Too long Tag: THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST THE BEST From Track: Straws pulled at random Artist: Meshuggah
+Dec 21, 2014 11:15:57 PM tags.Core main
+INFO: Imported 64000 rows; Tracks without tags: 32646 Missing Tracks: 50 Too long Tags: 26
+Dec 21, 2014 11:19:17 PM tags.Core main
+INFO: Imported 64100 rows; Tracks without tags: 32696 Missing Tracks: 50 Too long Tags: 26
+Dec 21, 2014 11:22:10 PM tags.Core main
+INFO: Imported 64200 rows; Tracks without tags: 32747 Missing Tracks: 50 Too long Tags: 26
+
+INFO: Open connection: http://ws.audioscrobbler.com/2.0/
+Dec 21, 2014 11:24:39 PM de.umass.lastfm.Caller openPostConnection
+INFO: Post body: method=track.getTopTags&api_key=97d879c2f3a01fbbfb007be0eb86734e&track=MAUDIE&artist=John+Lee+Hooker+Jr
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 1
+	at tags.Core.main(Core.java:77)
