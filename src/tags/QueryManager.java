@@ -10,15 +10,12 @@ public class QueryManager {
 	private Logger log = Logger.getLogger("Logger");
 	
   // Need to be closed in the closeAll method
-  private PreparedStatement selectRowFromArtist;
   private PreparedStatement selectIDFromArtist;
   private PreparedStatement insertIntoArtist;
 
-  private PreparedStatement selectRowFromTrack;
   private PreparedStatement selectIDFromTrack;
   private PreparedStatement insertIntoTrack;
 
-  private PreparedStatement selectRowFromTag;
   private PreparedStatement selectIDFromTag;
   private PreparedStatement insertIntoTag;
 
@@ -29,15 +26,12 @@ public class QueryManager {
   public QueryManager(Connection conn) {
     try {
       // Initialize preparedstatments
-      selectRowFromArtist = conn.prepareStatement("SELECT * FROM Artist WHERE Name = ?");
       selectIDFromArtist = conn.prepareStatement("SELECT ID FROM Artist WHERE Name = ?");
       insertIntoArtist = conn.prepareStatement("INSERT INTO Artist VALUES(DEFAULT,?)");
 
-      selectRowFromTrack = conn.prepareStatement("SELECT * FROM Track WHERE Name = ? AND ArtistID = ?");
       selectIDFromTrack = conn.prepareStatement("SELECT ID FROM Track WHERE Name = ? AND ArtistID = ?");
       insertIntoTrack = conn.prepareStatement("INSERT INTO Track VALUES(DEFAULT,?,?)");
       
-      selectRowFromTag = conn.prepareStatement("SELECT * FROM Tag WHERE Name = ?");
       selectIDFromTag = conn.prepareStatement("SELECT ID FROM Tag WHERE Name = ?");
       insertIntoTag = conn.prepareStatement("INSERT INTO Tag VALUES(DEFAULT,?)");
       
@@ -57,8 +51,8 @@ public class QueryManager {
     ResultSet result;
 
       // Execute the query
-      selectRowFromArtist.setString(1,artist);
-      result = selectRowFromArtist.executeQuery();
+      selectIDFromArtist.setString(1,artist);
+      result = selectIDFromArtist.executeQuery();
       
       // Check if the row exists
       if(result.next()){
@@ -96,9 +90,9 @@ public class QueryManager {
     ResultSet result;
 
       //Execute the query
-      selectRowFromTrack.setString(1,track);
-      selectRowFromTrack.setInt(2,getIDFromArtist(artist));
-      result = selectRowFromTrack.executeQuery();
+      selectIDFromTrack.setString(1,track);
+      selectIDFromTrack.setInt(2,getIDFromArtist(artist));
+      result = selectIDFromTrack.executeQuery();
       
       // Check if the row exists
       if(result.next()){
@@ -137,8 +131,8 @@ public class QueryManager {
     ResultSet result;
 
       // Execute the query
-      selectRowFromTag.setString(1,tag.getName());
-      result = selectRowFromTag.executeQuery();
+      selectIDFromTag.setString(1,tag.getName());
+      result = selectIDFromTag.executeQuery();
       
       // Check if the row exists
       if(result.next()){
@@ -233,15 +227,12 @@ public class QueryManager {
   public void closeAll() throws SQLException
   {
       // Close all prepared statements
-      selectRowFromArtist.close();
       selectIDFromArtist.close();
       insertIntoArtist.close();
 
-      selectRowFromTrack.close();
       selectIDFromTrack.close();
       insertIntoTrack.close();
 
-      selectRowFromTag.close();
       selectIDFromTag.close();
       insertIntoTag.close();
 
