@@ -73,6 +73,11 @@ public class Core {
 	    // Extract the artist and track.
 	    line = l.split(",");
 	    
+      if(line.length < 2)
+      {
+        line = new String[]{"",""};
+      }
+
 	    artist = line[0].trim();
 	    track = line[1].trim();
 	    
