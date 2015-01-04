@@ -75,6 +75,7 @@ public class Core {
 	    
       if(line.length < 2)
       {
+      	log.severe("Artist or Track from file missing.");
         line = new String[]{"",""};
       }
 
