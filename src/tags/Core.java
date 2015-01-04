@@ -12,8 +12,8 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.*;
 
-import mining.DB;
-import mining.LastFM;
+import mining.*;
+import processing.*;
 
 public class Core {
 
