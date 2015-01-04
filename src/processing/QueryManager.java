@@ -7,6 +7,10 @@ public class QueryManager {
 	// Initialize logger
 	private Logger log = Logger.getLogger("Logger");
 	
+	// Important querys
+	// Gives how many tracks have 1, 2, 3 .... tags.
+	private String getListOfTagsPerTrack = "select tags,count(*) from Track inner join (select Track.ID,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID) as t on Track.ID = t.ID group by tags";
+	
   // Need to be closed in the closeAll method
   private PreparedStatement selectIDFromArtist;
 
