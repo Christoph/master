@@ -12,6 +12,9 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.*;
 
+import mining.DB;
+import mining.LastFM;
+
 public class Core {
 
   private static final Logger log = Logger.getLogger("Logger");

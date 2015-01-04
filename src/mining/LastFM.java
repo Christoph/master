@@ -1,4 +1,4 @@
-package tags;
+package mining;
 
 import java.util.Collection;
 import java.util.Properties;

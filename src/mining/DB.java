@@ -1,4 +1,4 @@
-package tags;
+package mining;
 
 import java.sql.*;
 import java.util.Collection;
