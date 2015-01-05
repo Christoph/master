@@ -12,13 +12,14 @@ public class QueryManager {
 	private String getListOfTagsPerTrack = "select tags,count(*) from Track inner join (select Track.ID,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID) as t on Track.ID = t.ID group by tags";
 	
   // Need to be closed in the closeAll method
-  private PreparedStatement selectIDFromArtist;
+  private PreparedStatement deleteTrackWithLessThanTags;
 
   // Constructor
   public QueryManager(Connection conn) {
     try {
       // Initialize preparedstatments
-      selectIDFromArtist = conn.prepareStatement("SELECT ID FROM Artist WHERE Name = ?");
+    	// Deletes all tracks with less than ? tags.
+      deleteTrackWithLessThanTags = conn.prepareStatement("delete Track from Track inner join (select Track.ID,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID) as t on Track.ID = t.ID where tags < ?");
       
     } catch (SQLException e) { 
     	log.severe("Error in the DB constructor."+e.getSQLState()+e.getMessage());
@@ -27,29 +28,16 @@ public class QueryManager {
     }
   }
 
-  public Boolean existsArtist(String artist) throws SQLException
+  public void deleteTracksWithTagsLessThan(int number) throws SQLException
   {
-    Boolean check = false;
-    ResultSet result;
-
       // Execute the query
-      selectIDFromArtist.setString(1,artist);
-      result = selectIDFromArtist.executeQuery();
-      
-      // Check if the row exists
-      if(result.next()){
-      check = true;
-      }
-      
-      // Close resultset
-      result.close();
-
-    return check;
+      deleteTrackWithLessThanTags.setInt(1,number);
+      deleteTrackWithLessThanTags.executeQuery();
   }
   
   public void closeAll() throws SQLException
   {
       // Close all prepared statements
-      selectIDFromArtist.close();
+      deleteTrackWithLessThanTags.close();
   }
 }

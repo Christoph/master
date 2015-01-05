@@ -14,6 +14,7 @@ import java.util.logging.*;
 
 import mining.*;
 import processing.*;
+import processing.QueryManager;
 
 public class Core {
 
@@ -60,7 +61,12 @@ public class Core {
     DB db = new DB(dbconf);
     LastFM last = new LastFM(dbconf);
     ImportCSV data = new ImportCSV();
+    Processor p = new Processor(dbconf);
 
+    ////////////////////////////////////////////////////////////////
+    /// DATA IMPORT
+    ////////////////////////////////////////////////////////////////
+    
     log.info("Import");
     
     // Import data
@@ -155,6 +161,21 @@ public class Core {
     db.closeAll();
     
     log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks+" Too long Tags: "+db.getTooLongTags());
-    log.info("End");
+    log.info("Import Finished");
+    
+    ////////////////////////////////////////////////////////////////
+    /// DATA Processing
+    ////////////////////////////////////////////////////////////////
+    
+    log.info("Data Processing");
+    
+    try {
+			p.deleteTracksWithTagsLessThan(5);
+		} catch (SQLException e) {
+			log.severe(e.getMessage());
+			e.printStackTrace();
+		}
+    
+    log.info("END");
   }
 }
