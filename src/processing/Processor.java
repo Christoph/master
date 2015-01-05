@@ -1,11 +1,8 @@
 package processing;
 
 import java.sql.*;
-import java.util.Collection;
 import java.util.Properties;
 import java.util.logging.Logger;
-
-import de.umass.lastfm.*;
 
 public class Processor {
 	//Initialize logger

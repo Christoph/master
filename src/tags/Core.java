@@ -14,7 +14,6 @@ import java.util.logging.*;
 
 import mining.*;
 import processing.*;
-import processing.QueryManager;
 
 public class Core {
 
@@ -58,7 +57,7 @@ public class Core {
     } catch (IOException e) { e.printStackTrace(); }
 
     // Initializing classes 
-    DB db = new DB(dbconf);
+    DBImport dbi = new DBImport(dbconf);
     LastFM last = new LastFM(dbconf);
     ImportCSV data = new ImportCSV();
     Processor p = new Processor(dbconf);
@@ -101,7 +100,7 @@ public class Core {
 	    		try
 		    	{
 				    tags = last.mineTags(track, artist);
-				    db.insert(track,artist,tags);
+				    dbi.insert(track,artist,tags);
 				    
 				    retry = false;
 		    	}
@@ -148,7 +147,7 @@ public class Core {
 		    // Log message all 100 tracks
 		    if(counter%100 == 0)
 		    {
-		    	log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks+" Too long Tags: "+db.getTooLongTags());
+		    	log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks+" Too long Tags: "+dbi.getTooLongTags());
 		    }
 	    }
 	    else
@@ -158,9 +157,9 @@ public class Core {
     }
 
     // Close all
-    db.closeAll();
+    dbi.closeAll();
     
-    log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks+" Too long Tags: "+db.getTooLongTags());
+    log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks+" Too long Tags: "+dbi.getTooLongTags());
     log.info("Import Finished");
     
     ////////////////////////////////////////////////////////////////
@@ -175,6 +174,9 @@ public class Core {
 			log.severe(e.getMessage());
 			e.printStackTrace();
 		}
+    
+    // Close all
+    p.closeAll();
     
     log.info("END");
   }

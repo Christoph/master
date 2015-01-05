@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import de.umass.lastfm.*;
 
-public class DB {
+public class DBImport {
 	//Initialize logger
 	private Logger log = Logger.getLogger("Logger");
 	
@@ -17,7 +17,7 @@ public class DB {
 
   private QueryManager querymanager;
 
-  public DB(Properties config) {
+  public DBImport(Properties config) {
     connectionString = config.getProperty("database");
     user = config.getProperty("user");
     pass = config.getProperty("password");
