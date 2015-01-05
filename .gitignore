@@ -9,3 +9,4 @@ config.*
 *.class
 bin/
 log.*
+tags.sql
