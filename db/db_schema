@@ -17,6 +17,7 @@ create table Tag(
   PRIMARY KEY(ID),
   UNIQUE(Name, ArtistID),
   FOREIGN KEY(ArtistID) REFERENCES Artist(ID)
+    ON DELETE CASCADE
     ON UPDATE CASCADE
       );
 
@@ -28,7 +29,9 @@ create table Tag(
   PRIMARY KEY(ID),
   UNIQUE(TrackID, TagID),
   FOREIGN KEY(TrackID) REFERENCES Track(ID)
+    ON DELETE CASCADE
     ON UPDATE CASCADE,
   FOREIGN KEY(TagID) REFERENCES Tag(ID)
+    ON DELETE CASCADE
     ON UPDATE CASCADE
       );
