@@ -1,11 +1,5 @@
 package tags;
 
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-
-import de.umass.lastfm.*;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,19 +27,7 @@ public class Core {
     log.info("Initializing");
 
     // Initializing variables
-    Collection<Tag> tags;
-    String[] line;
-    List<String> lines;
     InputStream input = null;
-    int counter = 0;
-    int missingTracks = 0;
-    int maxTries = 2;
-    int currentTries = 0;
-    Boolean retry = true;
-    String artist, track;
-    
-    // 150 is the size of the cell in the table
-    int maxString = 150;
 
     // Load config files
     Properties dbconf = new Properties();
@@ -56,127 +38,31 @@ public class Core {
 
     } catch (IOException e) { e.printStackTrace(); }
 
-    // Initializing classes 
-    DBImport dbi = new DBImport(dbconf);
-    LastFM last = new LastFM(dbconf);
-    ImportCSV data = new ImportCSV();
-    Processor p = new Processor(dbconf);
-
     ////////////////////////////////////////////////////////////////
     /// DATA IMPORT
     ////////////////////////////////////////////////////////////////
-    
     log.info("Import");
     
-    // Import data
-    lines = data.importCSV();
+    DBImport dbi = new DBImport(dbconf);
     
-    for(String l :lines)
-    {
-    	// Set and reset variables.
-	    counter++;
-	    currentTries = 0;
-	    retry = true;
-	    
-	    // Extract the artist and track.
-	    line = l.split(",");
-	    
-      if(line.length < 2)
-      {
-      	log.severe("Artist or Track from file missing.");
-        line = new String[]{"",""};
-      }
-
-	    artist = line[0].trim();
-	    track = line[1].trim();
-	    
-	    // Check if the names smaller than the db cell.
-	    if(artist.length() <= maxString && track.length() <= maxString)
-	    {
-	    	// Retries three times.
-	    	while(retry)
-	    	{
-	    		// Mine and insert with exception handling.
-	    		try
-		    	{
-				    tags = last.mineTags(track, artist);
-				    dbi.insert(track,artist,tags);
-				    
-				    retry = false;
-		    	}
-		    	catch (de.umass.lastfm.CallException e)
-		    	{
-		    		if(currentTries >= maxTries)
-		    		{
-		    			retry = false;
-		    			missingTracks++;
-		    			
-		    			log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
-			    		e.printStackTrace();
-		    		}
-		    	}
-	    		catch (SQLException e) {
-	    			if(currentTries >= maxTries)
-		    		{
-		    			retry = false;
-		    			missingTracks++;
-		    			
-		    			log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
-			    		e.printStackTrace();
-		    		}
-		  		}
-		    	catch (Exception e)
-		    	{
-		    		if(currentTries >= maxTries)
-		    		{
-			    		retry = false;
-			    		missingTracks++;
-			    		
-			    		log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
-			    		e.printStackTrace();
-		    		}
-		    	}
-	    		
-	    		// Wait to stay below 5 cals per second.
-			    try { Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace(); }
-			    
-			    // Increase the current retry counter.
-			    currentTries++;
-	    	}
-		    
-		    // Log message all 100 tracks
-		    if(counter%100 == 0)
-		    {
-		    	log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks+" Too long Tags: "+dbi.getTooLongTags());
-		    }
-	    }
-	    else
-	    {
-	    	missingTracks++;
-	    }
-    }
+    dbi.mineAndImportCSV();
 
     // Close all
     dbi.closeAll();
     
-    log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks+" Too long Tags: "+dbi.getTooLongTags());
     log.info("Import Finished");
     
     ////////////////////////////////////////////////////////////////
     /// DATA Processing
     ////////////////////////////////////////////////////////////////
-    
     log.info("Data Processing");
     
-    try {
-			p.deleteTracksWithTagsLessThan(5);
-		} catch (SQLException e) {
-			log.severe(e.getMessage());
-			e.printStackTrace();
-		}
+    Processor pro = new Processor(dbconf);
+    
+		pro.deleteTracksWithTagsLessThan(5);
     
     // Close all
-    p.closeAll();
+    pro.closeAll();
     
     log.info("END");
   }

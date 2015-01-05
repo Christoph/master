@@ -26,11 +26,17 @@ public class Processor {
     querymanager = new QueryManager(conn);
   }
 
-  public void deleteTracksWithTagsLessThan(int number) throws SQLException {
-  	querymanager.deleteTracksWithTagsLessThan(number);
-  
-    //Committing the changes
-    conn.commit();
+  public void deleteTracksWithTagsLessThan(int number) {
+  	try {
+  		// Delete Tracks
+			querymanager.deleteTracksWithTagsLessThan(number);
+		
+	    //Committing the changes
+	    conn.commit();
+  	} catch (SQLException e) {
+  		log.severe(e.getMessage());
+			e.printStackTrace();
+		}
   }
 
   public void closeAll()
