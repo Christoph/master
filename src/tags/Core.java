@@ -3,6 +3,7 @@ package tags;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.logging.*;
 
@@ -45,7 +46,8 @@ public class Core {
     
     DBImport dbi = new DBImport(dbconf);
     
-    dbi.mineAndImportCSV();
+    // Import tracks from lastfm.
+    //dbi.mineAndImportCSV();
 
     // Close all
     dbi.closeAll();
@@ -58,8 +60,23 @@ public class Core {
     log.info("Data Processing");
     
     Processor pro = new Processor(dbconf);
+    PlainStringSimilarity psim = new PlainStringSimilarity();
     
-		pro.deleteTracksWithTagsLessThan(5);
+    // Decision with Torsten: Removing all tracks with less than six tags.
+		// pro.deleteTracksWithTagsLessThan(6);
+    
+    String s1 = "work";
+    String s2 = "wirk";
+    float dice = 0;
+    float jac = 0;
+    float cos = 0;
+    HashSet<String> h1, h2;
+    
+    h1 = psim.create_n_gram(s1, 2);
+    h2 = psim.create_n_gram(s2, 2);
+    
+    dice = psim.dice_coeffizient(h1, h2);
+    jac = psim.jaccard_index(h1, h2);
     
     // Close all
     pro.closeAll();
