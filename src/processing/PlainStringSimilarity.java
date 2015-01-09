@@ -1,10 +1,12 @@
 package processing;
 
+import java.util.HashSet;
+
 public class PlainStringSimilarity {
 
-  public Hashset create_n_gram(String text, int n) {
+  public HashSet<String> create_n_gram(String text, int n) {
     // Initialize variables
-    Hashset set = new Hashset();
+    HashSet<String> set = new HashSet<String>();
     int c = 0;
     int l = text.length();
 
