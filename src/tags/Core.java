@@ -65,11 +65,12 @@ public class Core {
     // Decision with Torsten: Removing all tracks with less than six tags.
 		// pro.deleteTracksWithTagsLessThan(6);
     
+    // Testing the n-gram and distance methods
     String s1 = "work";
     String s2 = "wirk";
-    float dice = 0;
-    float jac = 0;
-    float cos = 0;
+    double dice = 0;
+    double jac = 0;
+    double cos = 0;
     HashSet<String> h1, h2;
     
     h1 = psim.create_n_gram(s1, 2);
@@ -77,6 +78,7 @@ public class Core {
     
     dice = psim.dice_coeffizient(h1, h2);
     jac = psim.jaccard_index(h1, h2);
+    cos = psim.cosine_similarity(h1, h2);
     
     // Close all
     pro.closeAll();

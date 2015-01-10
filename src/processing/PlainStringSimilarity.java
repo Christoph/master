@@ -4,7 +4,8 @@ import java.util.HashSet;
 
 public class PlainStringSimilarity {
 
-  public HashSet<String> create_n_gram(String text, int n) {
+  public HashSet<String> create_n_gram(String text, int n) 
+  {
     // Initialize variables
     HashSet<String> set = new HashSet<String>();
     int c = 0;
@@ -12,7 +13,7 @@ public class PlainStringSimilarity {
     
     text = " "+text+" ";
 
-    // Compute maximum combinations.
+    // Compute maximum combinations
     if(n==1)
     {
       c = l;
@@ -22,7 +23,7 @@ public class PlainStringSimilarity {
       c = l + 3 - n;
     }
 
-    // Create a list of unique n-grams.
+    // Create a list of unique n-grams
     for(int i = 0;i<c;i++)
     {
       set.add(text.substring(i,i+(n)));
@@ -31,45 +32,71 @@ public class PlainStringSimilarity {
     return set;
   }
   
-  public float dice_coeffizient(HashSet<String> set1, HashSet<String> set2)
+  public double dice_coeffizient(HashSet<String> set1, HashSet<String> set2)
   {
-  	// Save initial set1.
+  	// Initialize variables
    	HashSet<String> num = new HashSet<String>();
    	num.addAll(set1);
   	
-  	// convert set1 to the intersection of both sets.
+  	// Compute the intersection of both sets
   	num.retainAll(set2);
   	
-  	//Compute the coefficient.
+  	//Compute the coefficient
   	int n = (2*num.size());
-  	int d = (set1.size()+set2.size());
+  	double d = (set1.size()+set2.size());
 
 		return n/d;
   }
   
-  public float jaccard_index(HashSet<String> set1, HashSet<String> set2)
+  public double jaccard_index(HashSet<String> set1, HashSet<String> set2)
   {
-  	// Save initial set1.
+  	// Initialize variables
   	HashSet<String> num = new HashSet<String>();
   	HashSet<String> deno = new HashSet<String>();
   	num.addAll(set1);
   	deno.addAll(set1);
   	
-  	// Compute intersection.
+  	// Compute intersection
   	num.retainAll(set2);
   	
-  	// Compute union.
+  	// Compute union
   	deno.addAll(set2);
   	
-  	// Compute the index.
+  	// Compute the index
   	int n = num.size();
-  	int d = deno.size();
+  	double d = deno.size();
   	
   	return n/d;
   }
   
-  public float cosine_similarity(HashSet<String> set1, HashSet<String> set2)
+  public double cosine_similarity(HashSet<String> set1, HashSet<String> set2)
   {
-  	return 0;
+  	// Initialize variables
+   	HashSet<String> full = new HashSet<String>();
+   	HashSet<String> A = new HashSet<String>();
+   	HashSet<String> B = new HashSet<String>();
+   	HashSet<String> num = new HashSet<String>();
+   	double deno = 0.0f;
+   	
+  	// Create union of both sets
+   	full.addAll(set1);
+   	full.addAll(set2);
+   	
+   	// Create the intersections
+   	// Maybe not necessary
+   	A.addAll(set1);
+   	B.addAll(set2);
+   	A.retainAll(full);
+   	B.retainAll(full);
+   	
+   	// Intersection of A and B is the numerator
+   	num.addAll(A);
+    num.retainAll(B);
+   	
+    // Compute the denominator
+    // There are only positive ones in the sets which leads to this simple formula
+    deno = Math.sqrt(A.size())+Math.sqrt(B.size());
+  	
+  	return num.size()/deno;
   }
 }
