@@ -37,7 +37,7 @@ public class PhoneticStringSimilarity {
     	// Fill missing chars with zeros 
     	for(int i = s.length();i < 4;i++)
     	{
-    		s.concat("0");
+    		s = s.concat("0");
     	}
     }
     
