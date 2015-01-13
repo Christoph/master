@@ -65,6 +65,13 @@ public class Core {
     // Decision with Torsten: Removing all tracks with less than six tags.
 		// pro.deleteTracksWithTagsLessThan(6);
     
+    // Testing phonetic algorithms
+    PhoneticStringSimilarity phon = new PhoneticStringSimilarity();
+    
+    String text = "tesstt22asdf";
+
+    String sol = phon.refinedSoundex(text);
+    
     // Testing the n-gram and distance methods
     String s1 = "work";
     String s2 = "wirk";
