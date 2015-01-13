@@ -68,20 +68,20 @@ public class Core {
     // Testing phonetic algorithms
     PhoneticStringSimilarity phon = new PhoneticStringSimilarity();
     
-    String text = "tesstt22asdf";
-
-    String sol = phon.refinedSoundex(text);
-    
-    // Testing the n-gram and distance methods
     String s1 = "work";
     String s2 = "wirk";
+
+    String p1 = phon.refinedSoundex(s1);
+    String p2 = phon.refinedSoundex(s2);
+    
+    // Testing the n-gram and distance methods
     double dice = 0;
     double jac = 0;
     double cos = 0;
     HashSet<String> h1, h2;
     
-    h1 = psim.create_n_gram(s1, 2);
-    h2 = psim.create_n_gram(s2, 2);
+    h1 = psim.create_n_gram(p1, 2);
+    h2 = psim.create_n_gram(p2, 2);
     
     dice = psim.dice_coeffizient(h1, h2);
     jac = psim.jaccard_index(h1, h2);
