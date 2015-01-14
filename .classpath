@@ -4,5 +4,6 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="redist/mariadb-java-client-1.1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="redist/lastfm-java-0.1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="redist/commons-codec-1.10.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
