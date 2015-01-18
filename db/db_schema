@@ -14,6 +14,8 @@ create table Tag(
   ID int NOT NULL AUTO_INCREMENT,
   Name varchar(150) NOT NULL,
   ArtistID int NOT NULL,
+  Listeners int NOT NULL,
+  Playcount int NOT NULL,
   PRIMARY KEY(ID),
   UNIQUE(Name, ArtistID),
   FOREIGN KEY(ArtistID) REFERENCES Artist(ID)
