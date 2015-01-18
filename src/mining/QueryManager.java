@@ -30,7 +30,7 @@ public class QueryManager {
       insertIntoArtist = conn.prepareStatement("INSERT INTO Artist VALUES(DEFAULT,?)");
 
       selectIDFromTrack = conn.prepareStatement("SELECT ID FROM Track WHERE Name = ? AND ArtistID = ?");
-      insertIntoTrack = conn.prepareStatement("INSERT INTO Track VALUES(DEFAULT,?,?)");
+      insertIntoTrack = conn.prepareStatement("INSERT INTO Track VALUES(DEFAULT,?,?,?,?)");
       
       selectIDFromTag = conn.prepareStatement("SELECT ID FROM Tag WHERE Name = ?");
       insertIntoTag = conn.prepareStatement("INSERT INTO Tag VALUES(DEFAULT,?)");
@@ -200,11 +200,13 @@ public class QueryManager {
      insertIntoArtist.executeUpdate();
   }
 
-  public void insertTrack(String track, String artist) throws SQLException
+  public void insertTrack(String track, String artist, int listeners, int playcount) throws SQLException
   {
       // Execute query
      insertIntoTrack.setString(1,track);
      insertIntoTrack.setInt(2,getIDFromArtist(artist));
+     insertIntoTrack.setInt(3,listeners);
+     insertIntoTrack.setInt(4,playcount);
      insertIntoTrack.executeUpdate();
   }
 

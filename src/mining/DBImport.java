@@ -18,6 +18,7 @@ public class DBImport {
   private int longTag = 0;
   
   private Collection<Tag> tags;
+  private Track minedtrack;
   private String[] line;
   private List<String> lines;
   private int counter = 0;
@@ -84,8 +85,10 @@ public class DBImport {
 	    		// Mine and insert with exception handling.
 	    		try
 		    	{
-				    tags = last.mineTags(track, artist);
-				    insert(track,artist,tags);
+	    			tags = last.mineTags(track, artist);
+	    			minedtrack = last.mineTrackinfo(track, artist);
+	    			
+				    insert(track,artist,tags, minedtrack);
 				    
 				    retry = false;
 		    	}
@@ -122,8 +125,8 @@ public class DBImport {
 		    		}
 		    	}
 	    		
-	    		// Wait to stay below 5 cals per second.
-			    try { Thread.sleep(250); } catch (InterruptedException e) { e.printStackTrace(); }
+	    		// Wait to stay below 5 cals per second. 2 calls/loop
+			    try { Thread.sleep(500); } catch (InterruptedException e) { e.printStackTrace(); }
 			    
 			    // Increase the current retry counter.
 			    currentTries++;
@@ -143,7 +146,10 @@ public class DBImport {
     log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks+" Too long Tags: "+getTooLongTags());
   }
   
-  private void insert(String track, String artist, Collection<Tag> tags) throws SQLException {
+  private void insert(String track, String artist, Collection<Tag> tags, Track minedTrack) throws SQLException {	
+  	int playcount = minedTrack.getPlaycount();
+  	int listeners = minedTrack.getListeners();
+  	
     for(Tag t: tags)
     {
     	if(t.getName().length() <= 150)
@@ -157,7 +163,9 @@ public class DBImport {
 	      // Check if the track exists
 	      if(!querymanager.existsTrack(track,artist))
 	      {
-	        querymanager.insertTrack(track,artist);
+	      	
+	      	
+	        querymanager.insertTrack(track,artist,listeners, playcount);
 	      }
 	
 	      // Check if the tag exists

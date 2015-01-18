@@ -22,9 +22,19 @@ public class LastFM {
     if(tag.isEmpty())
     {
       count++;
+      throw new NoTagsException();
     }
   	
   	return tag;
+  }
+  
+//Get the tags from last.fm
+  public Track mineTrackinfo(String title, String artist) {
+  	Track track = null;
+  
+    track = Track.getInfo(artist, title, key);	
+    
+  	return track;
   }
   
   public int getNumberOfTaglessTracks()

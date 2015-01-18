@@ -49,7 +49,7 @@ public class Core {
     DBImport dbi = new DBImport(dbconf);
     
     // Import tracks from lastfm.
-    //dbi.mineAndImportCSV();
+    dbi.mineAndImportCSV();
 
     // Close all
     dbi.closeAll();
@@ -59,6 +59,7 @@ public class Core {
     ////////////////////////////////////////////////////////////////
     /// DATA Processing
     ////////////////////////////////////////////////////////////////
+    /*
     log.info("Data Processing");
     
     Processor pro = new Processor(dbconf);
@@ -129,7 +130,7 @@ public class Core {
     
     // Close all
     pro.closeAll();
-    
+    */
     log.info("END");
   }
 }
