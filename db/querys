@@ -1,0 +1,25 @@
+use tags;
+SELECT * from Artist;
+SELECT * from Track;
+SELECT * from Tag;
+SELECT * from TT;
+SELECT * FROM Track inner join Artist on Track.ArtistID = Artist.ID where Track.Name = "Adventure";
+SELECT * FROM Track inner join Artist on Track.ArtistID = Artist.ID where Track.ID = 21970;
+SELECT * FROM tags.Tag;
+SELECT count(*) from Tag;
+SELECT count(*) from Artist;
+SELECT count(*) from Track;
+select count(*) from TT;
+select * from TT inner join Track on TT.TrackID = Track.ID where TrackID = 1;
+# Track and number of tags/track
+select Track.Name,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID;
+# Histogram data
+select tags,count(*) from Track inner join (select Track.ID,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID) as t on Track.ID = t.ID group by tags;
+# Select tracks with less than x tags
+select * from Track inner join (select Track.ID,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID) as t on Track.ID = t.ID where tags < 5;
+# Delete tracks withless than x tags
+delete Track from Track inner join (select Track.ID,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID) as t on Track.ID = t.ID where tags < 6;
+# Length Histogramm of all Tags
+select ID, length(Name) from Tag;
+# Get all tags to a track
+select Tag.Name,Count from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID where TrackID = 1;
