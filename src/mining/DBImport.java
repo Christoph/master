@@ -98,7 +98,7 @@ public class DBImport {
 	    			retry = false;
 	    			noTags++;
 	    			
-	    			log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);  		
+	    			log.warning("No Tags at Row: "+counter+"; Artist: "+artist+"; Track: "+track);  		
 		    	}
 		    	catch (Exception e)
 		    	{

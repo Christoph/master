@@ -7,6 +7,7 @@ import de.umass.lastfm.*;
 
 public class LastFM {
 	private String key;
+	private int counter;
 
   public LastFM(Properties config) {
   	key = config.getProperty("API");
@@ -17,6 +18,7 @@ public class LastFM {
   	Collection<Tag> tag = null;
   
     tag = Track.getTopTags(artist, title, key);	
+    counter++;
 
     if(tag.isEmpty())
     {
@@ -31,7 +33,16 @@ public class LastFM {
   	Track track = null;
   
     track = Track.getInfo(artist, title, key);	
+    counter++;
     
   	return track;
   }
+
+	public int getCounter() {
+		return counter;
+	}
+
+	public void setCounter(int counter) {
+		this.counter = counter;
+	}
 }
