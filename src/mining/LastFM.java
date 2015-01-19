@@ -7,7 +7,6 @@ import de.umass.lastfm.*;
 
 public class LastFM {
 	private String key;
-  private int count = 0;
 
   public LastFM(Properties config) {
   	key = config.getProperty("API");
@@ -21,7 +20,6 @@ public class LastFM {
 
     if(tag.isEmpty())
     {
-      count++;
       throw new NoTagsException();
     }
   	
@@ -35,10 +33,5 @@ public class LastFM {
     track = Track.getInfo(artist, title, key);	
     
   	return track;
-  }
-  
-  public int getNumberOfTaglessTracks()
-  {
-  	return count;
   }
 }

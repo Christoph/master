@@ -23,6 +23,7 @@ public class DBImport {
   private List<String> lines;
   private int counter = 0;
   private int missingTracks = 0;
+  private int noTags = 0;
   private int maxTries = 2;
   private int currentTries = 0;
   private Boolean retry = true;
@@ -92,27 +93,13 @@ public class DBImport {
 				    
 				    retry = false;
 		    	}
-		    	catch (de.umass.lastfm.CallException e)
+	    		catch (NoTagsException e)
 		    	{
-		    		if(currentTries >= maxTries)
-		    		{
-		    			retry = false;
-		    			missingTracks++;
-		    			
-		    			log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
-			    		e.printStackTrace();
-		    		}
+	    			retry = false;
+	    			noTags++;
+	    			
+	    			log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);  		
 		    	}
-	    		catch (SQLException e) {
-	    			if(currentTries >= maxTries)
-		    		{
-		    			retry = false;
-		    			missingTracks++;
-		    			
-		    			log.severe(e.getMessage()+"at Row: "+counter+"; Artist: "+artist+"; Track: "+track);
-			    		e.printStackTrace();
-		    		}
-		  		}
 		    	catch (Exception e)
 		    	{
 		    		if(currentTries >= maxTries)
@@ -135,7 +122,7 @@ public class DBImport {
 		    // Log message all 100 tracks
 		    if(counter%100 == 0)
 		    {
-		    	log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks+" Too long Tags: "+getTooLongTags());
+		    	log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+noTags+" Missing Tracks: "+missingTracks+" Too long Tags: "+getTooLongTags());
 		    }
 	    }
 	    else
@@ -143,7 +130,7 @@ public class DBImport {
 	    	missingTracks++;
 	    }
     }
-    log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+last.getNumberOfTaglessTracks()+" Missing Tracks: "+missingTracks+" Too long Tags: "+getTooLongTags());
+    log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+noTags+" Missing Tracks: "+missingTracks+" Too long Tags: "+getTooLongTags());
   }
   
   private void insert(String track, String artist, Collection<Tag> tags, Track minedTrack) throws SQLException {	
