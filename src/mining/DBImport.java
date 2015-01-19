@@ -28,6 +28,7 @@ public class DBImport {
   private int currentTries = 0;
   private Boolean retry = true;
   private String artist, track;
+  private long time, starttime;
   
   //150 is the size of the cell in the table
   int maxString = 150;
@@ -41,7 +42,7 @@ public class DBImport {
   public DBImport(Properties config) {
   	last = new LastFM(config);
   	
-    connectionString = config.getProperty("database");
+    connectionString = config.getProperty("database")+"?characterEncoding=utf8";
     user = config.getProperty("user");
     pass = config.getProperty("password");
 
@@ -57,6 +58,9 @@ public class DBImport {
   {
   	// Import data
     lines = data.importCSV();
+    
+    // Starting time
+    starttime = System.currentTimeMillis();
     
     for(String l :lines)
     {
@@ -112,8 +116,24 @@ public class DBImport {
 		    		}
 		    	}
 	    		
-	    		// Wait to stay below 5 cals per second. 2 calls/loop
-			    try { Thread.sleep(500); } catch (InterruptedException e) { e.printStackTrace(); }
+	    		time = System.currentTimeMillis() - starttime;
+	    		
+	    		// Check if near 5 minutes the cals exceed 1500 with security buffers
+	    		if(time < 300000 && last.getCounter() > 1400)
+	    		{
+    				try { Thread.sleep(310000 - time); } catch (InterruptedException e) { e.printStackTrace(); }
+    				starttime = System.currentTimeMillis();
+    				last.setCounter(0);
+	    		}
+	    		
+	    		if(time >= 300000)
+	    		{
+	    			starttime = System.currentTimeMillis();
+    				last.setCounter(0);
+	    		}
+	    		
+	    		// To keep the cals at bay.
+			    // try { Thread.sleep(50); } catch (InterruptedException e) { e.printStackTrace(); }
 			    
 			    // Increase the current retry counter.
 			    currentTries++;
@@ -130,6 +150,8 @@ public class DBImport {
 	    	missingTracks++;
 	    }
     }
+    
+    //Finished with for loop
     log.info("Imported "+counter+" rows; "+ "Tracks without tags: "+noTags+" Missing Tracks: "+missingTracks+" Too long Tags: "+getTooLongTags());
   }
   
