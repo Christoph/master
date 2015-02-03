@@ -102,7 +102,8 @@ public class DBImport {
 	    			retry = false;
 	    			noTags++;
 	    			
-	    			log.warning("No Tags at Row: "+counter+"; Artist: "+artist+"; Track: "+track);  		
+	    			// Removed because of logfile spamming
+	    			// log.warning("No Tags at Row: "+counter+"; Artist: "+artist+"; Track: "+track);  		
 		    	}
 		    	catch (Exception e)
 		    	{
