@@ -5,6 +5,7 @@ SELECT * from Tag;
 SELECT * from TT;
 SELECT * FROM Track inner join Artist on Track.ArtistID = Artist.ID where Track.Name = "Adventure";
 SELECT * FROM Track inner join Artist on Track.ArtistID = Artist.ID where Track.ID = 1;
+SELECT * FROM TT left outer join Track on TT.TrackID = Track.ID;
 SELECT * FROM tags.Tag;
 SELECT count(*) from Tag;
 SELECT count(*) from Artist;
@@ -15,7 +16,7 @@ select count(*) from TT;
 # Join TT and Track of a specific track
 select * from TT inner join Track on TT.TrackID = Track.ID where TrackID = 1;
 # List of all tracks and number of tags for each one
-select Track.Name,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID;
+select Track.ID,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID;
 # Histogram data: number of tags / number of tracks with that count of tags
 select tags,count(*) from Track inner join (select Track.ID,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID) as t on Track.ID = t.ID group by tags;
 # Select tracks with less than x tags
@@ -28,7 +29,11 @@ select ID, length(Name) from Tag;
 select Tag.Name,Count from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID where TrackID = 1;
 # Tag, number of songs where the tag is used
 select TT.TagID,count(*) from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID;
-
+# List of all tracks + tagcount, listeners, playcount
+select Track.ID, Listeners, Playcount, tags from Track inner join (select Track.ID,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID) as c on Track.ID = c.ID;
+# Delete all tags which are used less than x
+select * from Tag inner join (select TT.TagID,count(*) as n from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID) as t on Tag.ID = t.TagID Where n < 4;
+delete Tag from Tag inner join (select TT.TagID,count(*) as n from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID) as t on Tag.ID = t.TagID Where n < 100;
 
 
 
