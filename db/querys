@@ -27,8 +27,8 @@ delete Track from Track inner join (select Track.ID,count(*) as tags from TT inn
 select ID, length(Name) from Tag;
 # Get all tags to a track
 select Tag.Name,Count from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID where TrackID = 1;
-# Tag, number of songs where the tag is used
-select TT.TagID,count(*) from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID;
+# Tag, number of songs where the tag is used, weight
+select TT.TagID,count(*),avg(TT.Count) from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID;
 # List of all tracks + tagcount, listeners, playcount
 select Track.ID, Listeners, Playcount, tags from Track inner join (select Track.ID,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID) as c on Track.ID = c.ID;
 # Delete all tags which are used less than x
