@@ -45,7 +45,20 @@ public class Processor {
   	List<String> tags = new ArrayList<String>();
   	
   	try {
-			tags = querymanager.getTagsWhichOccurMoreThan(times);
+			tags = querymanager.getTagsWhichOccursMoreThan(times);
+  	} catch (SQLException e) {
+  		log.severe(e.getMessage());
+			e.printStackTrace();
+		}
+  	
+  	return tags;
+  }
+  
+  public List<String> getTagsOccuringLessOrEqualThan(int times) {
+  	List<String> tags = new ArrayList<String>();
+  	
+  	try {
+			tags = querymanager.getTagsWhichOccurLessOrEqualThan(times);
   	} catch (SQLException e) {
   		log.severe(e.getMessage());
 			e.printStackTrace();

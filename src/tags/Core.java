@@ -3,6 +3,7 @@ package tags;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.HashSet;
@@ -77,28 +78,44 @@ public class Core {
     String b = "I saw this song at the rock festival!!!";
     
     String sa = dmeta.encode(a);
-
     System.out.println(sa);
 
     List<String> words;
+    List<String> intersect = new ArrayList<String>();
 
     words = psim.create_word_gram(b);
-    
-    System.out.println(words.toString());
+    intersect.add(sa);
 
     for(int i = 0; i < words.size(); i++) {
       words.set(i,dmeta.encode(words.get(i))); 
     }
     System.out.println(words.toString());
 
-    System.out.println(words.contains(sa));
+    intersect.retainAll(words);
+    
+    System.out.println(intersect);
     
     // Try select from db
     List<String> base;
     List<String> lower;
+    int counter = 0;
     
-    base = pro.getTagsOccuringMoreThan(50);
+    base = pro.getTagsOccuringMoreThan(20);
+    lower = pro.getTagsOccuringLessOrEqualThan(20);
     
+    System.out.println(base.size());
+    System.out.println(lower.size());
+    
+    for(String s: lower) {
+    	words = psim.create_word_gram(s);
+    	
+    	words.retainAll(base);
+    	
+    	if(!words.isEmpty())
+    	{
+    		System.out.println("Tag "+(counter++)+": \""+s+"\" includes following tags: "+words);
+    	}
+    }
     
     // Testing the n-gram and distance methods
     String s1 = "work";
