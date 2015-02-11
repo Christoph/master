@@ -1,6 +1,8 @@
 package processing;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -37,6 +39,19 @@ public class Processor {
   		log.severe(e.getMessage());
 			e.printStackTrace();
 		}
+  }
+  
+  public List<String> getTagsOccuringMoreThan(int times) {
+  	List<String> tags = new ArrayList<String>();
+  	
+  	try {
+			tags = querymanager.getTagsWhichOccurMoreThan(times);
+  	} catch (SQLException e) {
+  		log.severe(e.getMessage());
+			e.printStackTrace();
+		}
+  	
+  	return tags;
   }
 
   public void closeAll()

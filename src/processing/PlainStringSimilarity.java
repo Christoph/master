@@ -1,6 +1,8 @@
 package processing;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class PlainStringSimilarity {
 
@@ -29,6 +31,25 @@ public class PlainStringSimilarity {
       set.add(text.substring(i,i+(n)));
     }
 
+    return set;
+  }
+  
+  public List<String> create_word_gram(String text) {
+  	// Initialize variables
+    List<String> set = new ArrayList<String>();
+    
+    if(!text.contains(" "))
+    {
+    	set.add(text);
+    }
+    else
+    {   	
+    	for(String s: text.split("\\s+"))
+    	{
+    		set.add(s);
+    	}
+    }
+    
     return set;
   }
   

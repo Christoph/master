@@ -3,6 +3,7 @@ package tags;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 import java.util.HashSet;
 import java.util.logging.*;
@@ -44,6 +45,7 @@ public class Core {
     ////////////////////////////////////////////////////////////////
     /// DATA IMPORT
     ////////////////////////////////////////////////////////////////
+    /*
     log.info("Import");
     
     DBImport dbi = new DBImport(dbconf);
@@ -55,56 +57,48 @@ public class Core {
     dbi.closeAll();
     
     log.info("Import Finished");
-    
+    */
     ////////////////////////////////////////////////////////////////
     /// DATA Processing
     ////////////////////////////////////////////////////////////////
-    /*
+    
     log.info("Data Processing");
     
     Processor pro = new Processor(dbconf);
     PlainStringSimilarity psim = new PlainStringSimilarity();
     
-    PhoneticStringSimilarity phon = new PhoneticStringSimilarity();
-    Soundex sound = new Soundex();
-    RefinedSoundex rsound = new RefinedSoundex();
-    Caverphone2 cave = new Caverphone2();
-    ColognePhonetic colo = new ColognePhonetic();
-    DaitchMokotoffSoundex dai = new DaitchMokotoffSoundex();
-    Nysiis nys = new Nysiis();
-    Metaphone meta = new Metaphone();
     DoubleMetaphone dmeta = new DoubleMetaphone();
     
     // Decision with Torsten: Removing all tracks with less than six tags.
 		// pro.deleteTracksWithTagsLessThan(6);
     
-    // Examples phonetic codes
-    String test = "Awesome song";
+    // Testing phonetic algorithm with real example
+    String a = "rock";
+    String b = "I saw this song at the rock festival!!!";
     
-    System.out.println("My Implementation:");
-    System.out.println("RefinedSoundex: String: "+test+" Code: "+phon.refinedSoundex(test));
+    String sa = dmeta.encode(a);
+
+    System.out.println(sa);
+
+    List<String> words;
+
+    words = psim.create_word_gram(b);
     
-    System.out.println("\nLib:");
-    System.out.println("Soundex: String: "+test+"; Code: "+sound.encode(test));
-    System.out.println("RefinedSoundex: String: "+test+"; Code: "+rsound.encode(test));
-    System.out.println("Caverphone2: String: "+test+"; Code: "+cave.encode(test));
-    System.out.println("ColognePhonetic: String: "+test+"; Code: "+colo.encode(test));
-    System.out.println("DaitchMokotoffSoundex: String: "+test+"; Code: "+dai.encode(test));
-    System.out.println("Nysiis: String: "+test+"; Code: "+nys.encode(test));
-    System.out.println("Metaphone: String: "+test+"; Code: "+meta.encode(test));
-    System.out.println("DoubleMetaphone: String: "+test+"; Code: "+dmeta.encode(test));
+    System.out.println(words.toString());
+
+    for(int i = 0; i < words.size(); i++) {
+      words.set(i,dmeta.encode(words.get(i))); 
+    }
+    System.out.println(words.toString());
+
+    System.out.println(words.contains(sa));
     
-    test = "This is an awesome song!!!";
+    // Try select from db
+    List<String> base;
+    List<String> lower;
     
-    System.out.println("\nTesting methods with a longer tag:");
-    System.out.println("Soundex: String: "+test+"; Code: "+sound.encode(test));
-    System.out.println("RefinedSoundex: String: "+test+"; Code: "+rsound.encode(test));
-    System.out.println("Caverphone2: String: "+test+"; Code: "+cave.encode(test));
-    System.out.println("ColognePhonetic: String: "+test+"; Code: "+colo.encode(test));
-    System.out.println("DaitchMokotoffSoundex: String: "+test+"; Code: "+dai.encode(test));
-    System.out.println("Nysiis: String: "+test+"; Code: "+nys.encode(test));
-    System.out.println("Metaphone: String: "+test+"; Code: "+meta.encode(test));
-    System.out.println("DoubleMetaphone: String: "+test+"; Code: "+dmeta.encode(test));
+    base = pro.getTagsOccuringMoreThan(50);
+    
     
     // Testing the n-gram and distance methods
     String s1 = "work";
@@ -127,10 +121,10 @@ public class Core {
     System.out.println("Dice coefficient: "+dice);
     System.out.println("Jaccard similarity: "+jac);
     System.out.println("Cosine similarity: "+cos);
-    
+
     // Close all
     pro.closeAll();
-    */
+    
     log.info("END");
   }
 }
