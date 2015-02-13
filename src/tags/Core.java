@@ -79,9 +79,6 @@ public class Core {
     
     base = pro.getTagsOccuringMoreThan(20);
     lower = pro.getTagsOccuringLessOrEqualThan(20);
-    
-    System.out.println(base.size());
-    System.out.println(lower.size());
     /*
     for(String s: lower) {
     	words = psim.create_word_gram(s);
@@ -95,6 +92,7 @@ public class Core {
     }
     */
     // Second and third steps are 2 word and 3 word grams
+    // HashSet<String> base_grams = new HashSet<String>();
     List<String> base_grams = new ArrayList<String>();
     
     for(String s: base)
@@ -102,6 +100,7 @@ public class Core {
     	base_grams.addAll(psim.create_total_word_gram(s));
     }
     
+    /*
     for(String s: lower) {
     	words = psim.create_total_word_gram(s);
       
@@ -112,6 +111,10 @@ public class Core {
     		System.out.println("Tag "+(counter++)+": \""+s+"\" includes following tags: "+words);
     	}
     }
+    */
+    
+    System.out.println(psim.create_total_word_gram("this is hard rock"));
+    System.out.println(psim.create_word_gram("this is hard rock"));
     
     // Testing the n-gram and distance methods
     String s1 = "work";

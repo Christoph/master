@@ -94,17 +94,23 @@ public class PlainStringSimilarity {
   public List<String> create_total_word_gram(String text) {
   	// Initialize variables
     List<String> set = new ArrayList<String>();
+    List<String> out = new ArrayList<String>();
     int c = 0;
     int l, n;
     String temp = "";
 
+    if(!text.contains(" "))
+    {
+    	out.add(text);
+    }
+    
     if(text.contains(" "))
     {
-    	text = text.toLowerCase();
     	
     	for(String s: text.split("\\s+"))
     	{
     		set.add(s);
+    		out.add(s);
     	}
     	
     	l = set.size();
@@ -123,7 +129,7 @@ public class PlainStringSimilarity {
 	      		temp = temp.concat(set.get(i+j))+" ";
 	      	}
 	      	temp = temp.trim();
-	      	set.add(temp);
+	      	out.add(temp);
 	      	
 	      	temp = "";
 	      }
@@ -142,19 +148,15 @@ public class PlainStringSimilarity {
 		      		temp = temp.concat(set.get(i+j))+" ";
 		      	}
 		      	temp = temp.trim();
-		      	set.add(temp);
+		      	out.add(temp);
 		      	
 		      	temp = "";
 		      }
 	    	}
     	}
     }
-    else
-    {
-    	set.add(text);
-    }
     
-    return set;
+    return out;
   }
   
   public double dice_coeffizient(HashSet<String> set1, HashSet<String> set2)
