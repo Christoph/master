@@ -65,39 +65,16 @@ public class Core {
     
     log.info("Data Processing");
     
+    // Variable initialization
     Processor pro = new Processor(dbconf);
     PlainStringSimilarity psim = new PlainStringSimilarity();
     
     DoubleMetaphone dmeta = new DoubleMetaphone();
     
-    // Decision with Torsten: Removing all tracks with less than six tags.
-		// pro.deleteTracksWithTagsLessThan(6);
-    
-    // Testing phonetic algorithm with real example
-    String a = "rock";
-    String b = "I saw this song at the rock festival!!!";
-    
-    String sa = dmeta.encode(a);
-    System.out.println(sa);
-
-    List<String> words;
-    List<String> intersect = new ArrayList<String>();
-
-    words = psim.create_word_gram(b);
-    intersect.add(sa);
-
-    for(int i = 0; i < words.size(); i++) {
-      words.set(i,dmeta.encode(words.get(i))); 
-    }
-    System.out.println(words.toString());
-
-    intersect.retainAll(words);
-    
-    System.out.println(intersect);
-    
-    // Try select from db
+    // First comparison step: word - word
     List<String> base;
     List<String> lower;
+    List<String> words;
     int counter = 0;
     
     base = pro.getTagsOccuringMoreThan(20);
@@ -105,11 +82,30 @@ public class Core {
     
     System.out.println(base.size());
     System.out.println(lower.size());
-    
+    /*
     for(String s: lower) {
     	words = psim.create_word_gram(s);
-    	
+      
     	words.retainAll(base);
+    	
+    	if(!words.isEmpty())
+    	{
+    		System.out.println("Tag "+(counter++)+": \""+s+"\" includes following tags: "+words);
+    	}
+    }
+    */
+    // Second and third steps are 2 word and 3 word grams
+    List<String> base_grams = new ArrayList<String>();
+    
+    for(String s: base)
+    {
+    	base_grams.addAll(psim.create_total_word_gram(s));
+    }
+    
+    for(String s: lower) {
+    	words = psim.create_total_word_gram(s);
+      
+    	words.retainAll(base_grams);
     	
     	if(!words.isEmpty())
     	{
@@ -139,6 +135,30 @@ public class Core {
     System.out.println("Jaccard similarity: "+jac);
     System.out.println("Cosine similarity: "+cos);
 
+    // Testing phonetic algorithm with real example
+    String a = "rock";
+    String b = "I saw this song at the rock festival!!!";
+    
+    String sa = dmeta.encode(a);
+    System.out.println(sa);
+
+    List<String> intersect = new ArrayList<String>();
+
+    words = psim.create_word_gram(b);
+    intersect.add(sa);
+
+    for(int i = 0; i < words.size(); i++) {
+      words.set(i,dmeta.encode(words.get(i))); 
+    }
+    System.out.println(words.toString());
+
+    intersect.retainAll(words);
+    
+    System.out.println(intersect);
+    
+    // Decision with Torsten: Removing all tracks with less than six tags.
+		// pro.deleteTracksWithTagsLessThan(6);
+    
     // Close all
     pro.closeAll();
     

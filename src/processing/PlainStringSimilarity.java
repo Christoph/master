@@ -53,6 +53,110 @@ public class PlainStringSimilarity {
     return set;
   }
   
+  public List<String> create_word_n_gram(String text, int n) {
+  	// Initialize variables
+    List<String> set = new ArrayList<String>();
+    List<String> gram = new ArrayList<String>();
+    int c = 0;
+    int l;
+    String temp = "";
+
+    if(text.contains(" "))
+    {
+    	text = text.toLowerCase();
+    	
+    	for(String s: text.split("\\s+"))
+    	{
+    		set.add(s);
+    	}
+    	
+    	l = set.size();
+    	
+    	c = l + 1 - n;
+    	
+    	// Create a list of word-n-grams
+      for(int i = 0;i<c;i++)
+      {
+      	for(int j = 0;j<n;j++) 
+      	{
+      		temp = temp.concat(set.get(i+j))+" ";
+      	}
+      	temp = temp.trim();
+      	gram.add(temp);
+      	
+      	temp = "";
+      }
+    }
+    
+    return gram;
+  }
+  
+  public List<String> create_total_word_gram(String text) {
+  	// Initialize variables
+    List<String> set = new ArrayList<String>();
+    int c = 0;
+    int l, n;
+    String temp = "";
+
+    if(text.contains(" "))
+    {
+    	text = text.toLowerCase();
+    	
+    	for(String s: text.split("\\s+"))
+    	{
+    		set.add(s);
+    	}
+    	
+    	l = set.size();
+    	
+    	if(l > 1)
+    	{
+	    	n = 2;
+	    	
+	    	c = l + 1 - n;
+	    	
+	    	// Create a list of word-n-grams
+	      for(int i = 0;i<c;i++)
+	      {
+	      	for(int j = 0;j<n;j++) 
+	      	{
+	      		temp = temp.concat(set.get(i+j))+" ";
+	      	}
+	      	temp = temp.trim();
+	      	set.add(temp);
+	      	
+	      	temp = "";
+	      }
+	      
+	      if(l > 2)
+	    	{
+		    	n = 3;
+		    	
+		    	c = l + 1 - n;
+		    	
+		    	// Create a list of word-n-grams
+		      for(int i = 0;i<c;i++)
+		      {
+		      	for(int j = 0;j<n;j++) 
+		      	{
+		      		temp = temp.concat(set.get(i+j))+" ";
+		      	}
+		      	temp = temp.trim();
+		      	set.add(temp);
+		      	
+		      	temp = "";
+		      }
+	    	}
+    	}
+    }
+    else
+    {
+    	set.add(text);
+    }
+    
+    return set;
+  }
+  
   public double dice_coeffizient(HashSet<String> set1, HashSet<String> set2)
   {
   	// Initialize variables
