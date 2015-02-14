@@ -1,4 +1,4 @@
-package mining;
+package tags;
 
 import java.io.File;
 import java.io.IOException;
