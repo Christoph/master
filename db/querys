@@ -5,7 +5,8 @@ SELECT * from Tag;
 SELECT * from TT;
 SELECT * FROM Track inner join Artist on Track.ArtistID = Artist.ID where Track.Name = "Adventure";
 SELECT * FROM Track inner join Artist on Track.ArtistID = Artist.ID where Track.ID = 1;
-SELECT * FROM TT inner join Track on TT.TrackID = Track.ID where TT.TagID = 1;
+SELECT * FROM TT inner join Track on TT.TrackID = Track.ID where TT.TagID = 4086;
+SELECT * FROM TT inner join Track on TT.TrackID = Track.ID where TT.TrackID = 396;
 SELECT * FROM tags.Tag;
 SELECT count(*) from Tag;
 SELECT count(*) from Artist;
@@ -31,12 +32,14 @@ select Tag.Name,Count from TT inner join Track on TT.TrackID = Track.ID inner jo
 select TT.TagID,count(*),avg(TT.Count) from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID;
 # List of all tracks + tagcount, listeners, playcount
 select Track.ID, Listeners, Playcount, tags from Track inner join (select Track.ID,count(*) as tags from TT inner join Track on TT.TrackID = Track.ID group by Track.ID) as c on Track.ID = c.ID;
-# Select all tags which are used less than x
-select * from Tag inner join (select TT.TagID,count(*) as n from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID) as t on Tag.ID = t.TagID Where n < 10;
 # Delete all tags which are used less than x
+select * from Tag inner join (select TT.TagID,count(*) as n from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID) as t on Tag.ID = t.TagID Where n < 10;
 delete Tag from Tag inner join (select TT.TagID,count(*) as n from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID) as t on Tag.ID = t.TagID Where n < 100;
 # all
 select Track.ID as SongID, Track.Listeners, Track.Playcount, Tag.ID as TagID, TT.Count as Tagweight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID;
+# Throw out tags which occus in one song and have a weight of zero
+select * from Tag inner join (select TT.TagID,TT.TrackID ,TT.Count,count(*) as n from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID) as t on Tag.ID = t.TagID Where n = 1  and Count = 0;
+
 
 
 
