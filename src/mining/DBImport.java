@@ -58,7 +58,7 @@ public class DBImport {
   public void mineAndImportCSV()
   {
   	// Import data
-    lines = data.importCSV();
+    lines = data.importCSV("db/complete.csv");
     
     // Starting time
     starttime = System.currentTimeMillis();

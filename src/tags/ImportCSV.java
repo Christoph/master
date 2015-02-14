@@ -8,11 +8,11 @@ import java.util.*;
 
 public class ImportCSV {
 
-  public List<String> importCSV()
+  public List<String> importCSV(String data)
   {
     List<String> lines = null;
     try {
-      File file = new File("db/complete.csv");
+      File file = new File(data);
       lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
     } catch (IOException e) { e.printStackTrace(); }
 
