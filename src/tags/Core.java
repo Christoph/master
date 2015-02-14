@@ -92,8 +92,8 @@ public class Core {
     }
     */
     // Second and third steps are 2 word and 3 word grams
-    // HashSet<String> base_grams = new HashSet<String>();
-    List<String> base_grams = new ArrayList<String>();
+    HashSet<String> base_grams = new HashSet<String>();
+    // List<String> base_grams = new ArrayList<String>();
     
     for(String s: base)
     {
@@ -117,8 +117,8 @@ public class Core {
     System.out.println(psim.create_word_gram("this is hard rock"));
     
     // Testing the n-gram and distance methods
-    String s1 = "work";
-    String s2 = "wirk";
+    String s1 = "rock";
+    String s2 = "rok";
     
     double dice = 0;
     double jac = 0;
