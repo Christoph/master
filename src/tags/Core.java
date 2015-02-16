@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.*;
 
 import mining.*;
@@ -119,6 +120,7 @@ public class Core {
 	    		{
 	    			value = ngrams.get(key);
 	    			
+	    			// Sum up the count
 	    			ngrams.put(key, value + raw.get(i).getCount());
 	    		}
 	    		else
@@ -129,44 +131,33 @@ public class Core {
     	}
     }
     
-    // old
-    /////////////////////////////////
-    // Split the tags into popular and not popular ones
-    List<String> base;
-    List<String> lower;
-    int counter = 0;
+    // Create phonetic dictionary
+    Map<String, Set<String>> phon = new HashMap<String, Set<String>>();
+    String p;
     
-    base = pro.getTagsOccuringMoreThan(20);
-    lower = pro.getTagsOccuringLessOrEqualThan(20);
-    
-    List<String> total = new ArrayList<String>();
-    
-    total.addAll(base);
-    total.addAll(lower);
-    
-    
-    // Create a set of all base word grams
-    // I use the HashSet to have each gram only once in the list
-    HashSet<String> base_grams = new HashSet<String>();
-    // List<String> base_grams = new ArrayList<String>();
-    
-    for(String s: base)
+    for(String k: ngrams.keySet())
     {
-    	base_grams.addAll(psim.create_total_word_gram(s));
-    }
-    
-    /*
-    for(String s: lower) {
-    	words = psim.create_total_word_gram(s);
-      
-    	words.retainAll(base_grams);
+    	p = dmeta.encode(k);
     	
-    	if(!words.isEmpty())
+    	if(phon.containsKey(p))
     	{
-    		System.out.println("Tag "+(counter++)+": \""+s+"\" includes following tags: "+words);
+    		Set<String> temp;
+    		
+    		temp = phon.get(p);
+    		temp.add(k);
+    		
+    		phon.put(p, temp);
+    		
+    	}
+    	else
+    	{
+    		Set<String> temp = new HashSet<String>();
+    		
+    		temp.add(k);
+    		
+    		phon.put(p, temp);
     	}
     }
-    */
     
     /////////////////////////////////
     // Testing the n-gram and distance methods
@@ -192,11 +183,12 @@ public class Core {
     System.out.println("Cosine similarity: "+cos);
 
     // Testing phonetic algorithm
-    String a = "hip hop";
-    String b = "I saw this song at the hip hop festival!!!";
+    String a = "old school";
+    String b = "old school rock";
     
     String sa = dmeta.encode(a);
     System.out.println(sa);
+    System.out.println(dmeta.encode(b));
 
     List<String> intersect = new ArrayList<String>();
 
