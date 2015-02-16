@@ -65,13 +65,21 @@ public class Core {
     
     log.info("Data Processing");
     
-    // Variable initialization
+    /////////////////////////////////
+    // Variable initialization  
     Processor pro = new Processor(dbconf);
+    ImportCSV im = new ImportCSV();
     PlainStringSimilarity psim = new PlainStringSimilarity();
     
     DoubleMetaphone dmeta = new DoubleMetaphone();
     
-    // First comparison step: word - word
+    List<String> genres = im.importCSV("dicts/genres.txt");
+    List<String> articles = im.importCSV("dicts/article.txt");
+    List<String> moods = im.importCSV("dicts/moods.txt");
+    List<String> preps = im.importCSV("dicts/prep.txt");   
+    
+    /////////////////////////////////
+    // Split the tags into popular and not popular ones
     List<String> base;
     List<String> lower;
     List<String> words;
@@ -79,19 +87,27 @@ public class Core {
     
     base = pro.getTagsOccuringMoreThan(20);
     lower = pro.getTagsOccuringLessOrEqualThan(20);
-    /*
-    for(String s: lower) {
-    	words = psim.create_word_gram(s);
-      
-    	words.retainAll(base);
-    	
-    	if(!words.isEmpty())
-    	{
-    		System.out.println("Tag "+(counter++)+": \""+s+"\" includes following tags: "+words);
-    	}
-    }
-    */
-    // Second and third steps are 2 word and 3 word grams
+    
+    /////////////////////////////////
+    // Spell checking
+    
+    // Get all tags
+    List<RawTag> raw;
+    
+    raw = pro.getTagsWithCount();
+    
+    
+    
+    
+    // old
+    List<String> total = new ArrayList<String>();
+    
+    total.addAll(base);
+    total.addAll(lower);
+    
+    
+    // Create a set of all base word grams
+    // I use the HashSet to have each gram only once in the list
     HashSet<String> base_grams = new HashSet<String>();
     // List<String> base_grams = new ArrayList<String>();
     
@@ -113,12 +129,10 @@ public class Core {
     }
     */
     
-    System.out.println(psim.create_total_word_gram("this is hard rock"));
-    System.out.println(psim.create_word_gram("this is hard rock"));
-    
+    /////////////////////////////////
     // Testing the n-gram and distance methods
-    String s1 = "rock";
-    String s2 = "rok";
+    String s1 = "hip hop";
+    String s2 = "hip-hop";
     
     double dice = 0;
     double jac = 0;
@@ -138,9 +152,9 @@ public class Core {
     System.out.println("Jaccard similarity: "+jac);
     System.out.println("Cosine similarity: "+cos);
 
-    // Testing phonetic algorithm with real example
-    String a = "rock";
-    String b = "I saw this song at the rock festival!!!";
+    // Testing phonetic algorithm
+    String a = "hip hop";
+    String b = "I saw this song at the hip hop festival!!!";
     
     String sa = dmeta.encode(a);
     System.out.println(sa);

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import tags.RawTag;
+
 public class Processor {
 	//Initialize logger
 	private Logger log = Logger.getLogger("Logger");
@@ -59,6 +61,19 @@ public class Processor {
   	
   	try {
 			tags = querymanager.getTagsWhichOccurLessOrEqualThan(times);
+  	} catch (SQLException e) {
+  		log.severe(e.getMessage());
+			e.printStackTrace();
+		}
+  	
+  	return tags;
+  }
+  
+  public List<RawTag> getTagsWithCount() {
+  	List<RawTag> tags = new ArrayList<RawTag>();
+  	
+  	try {
+			tags = querymanager.getTagsWithCount();
   	} catch (SQLException e) {
   		log.severe(e.getMessage());
 			e.printStackTrace();
