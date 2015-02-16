@@ -159,6 +159,78 @@ public class PlainStringSimilarity {
     return out;
   }
   
+  public List<String> create_total_word_gram(String text, List<String> blacklist) {
+  	// Initialize variables
+    List<String> set = new ArrayList<String>();
+    List<String> out = new ArrayList<String>();
+    int c = 0;
+    int l, n;
+    String temp = "";
+
+    if(!text.contains(" "))
+    {
+    	out.add(text);
+    }
+    
+    if(text.contains(" "))
+    {
+    	
+    	for(String s: text.split("\\s+"))
+    	{
+    		set.add(s);
+    		out.add(s);
+    	}
+    	
+    	// Removing blacklisted words
+    	set.removeAll(blacklist);
+    	out.removeAll(blacklist);
+    	
+    	l = set.size();
+    	
+    	if(l > 1)
+    	{
+	    	n = 2;
+	    	
+	    	c = l + 1 - n;
+	    	
+	    	// Create a list of word-n-grams
+	      for(int i = 0;i<c;i++)
+	      {
+	      	for(int j = 0;j<n;j++) 
+	      	{
+	      		temp = temp.concat(set.get(i+j))+" ";
+	      	}
+	      	temp = temp.trim();
+	      	out.add(temp);
+	      	
+	      	temp = "";
+	      }
+	      
+	      if(l > 2)
+	    	{
+		    	n = 3;
+		    	
+		    	c = l + 1 - n;
+		    	
+		    	// Create a list of word-n-grams
+		      for(int i = 0;i<c;i++)
+		      {
+		      	for(int j = 0;j<n;j++) 
+		      	{
+		      		temp = temp.concat(set.get(i+j))+" ";
+		      	}
+		      	temp = temp.trim();
+		      	out.add(temp);
+		      	
+		      	temp = "";
+		      }
+	    	}
+    	}
+    }
+    
+    return out;
+  }
+  
   public double dice_coeffizient(HashSet<String> set1, HashSet<String> set2)
   {
   	// Initialize variables

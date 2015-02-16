@@ -104,10 +104,7 @@ public class Core {
     
     for(int i = 0;i < raw.size(); i++)
     {
-    	words = psim.create_total_word_gram(raw.get(i).getName());
-    	
-    	//Removing blacklisted words
-    	words.removeAll(blacklist);
+    	words = psim.create_total_word_gram(raw.get(i).getName(),blacklist);
     	
     	for(int j = 0; j < words.size(); j++)
     	{
