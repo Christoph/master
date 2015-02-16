@@ -4,7 +4,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.HashSet;
 import java.util.logging.*;
@@ -78,15 +81,11 @@ public class Core {
     List<String> moods = im.importCSV("dicts/moods.txt");
     List<String> preps = im.importCSV("dicts/prep.txt");   
     
-    /////////////////////////////////
-    // Split the tags into popular and not popular ones
-    List<String> base;
-    List<String> lower;
-    List<String> words;
-    int counter = 0;
+    // Create word blacklist
+    List<String> blacklist = new ArrayList<String>();
     
-    base = pro.getTagsOccuringMoreThan(20);
-    lower = pro.getTagsOccuringLessOrEqualThan(20);
+    blacklist.addAll(preps);
+    blacklist.addAll(articles);
     
     /////////////////////////////////
     // Spell checking
@@ -96,10 +95,50 @@ public class Core {
     
     raw = pro.getTagsWithCount();
     
+    // Create the n-grams and put them into a dictionary
+    Map<String, Integer> ngrams = new HashMap<String, Integer>();
+    List<String> words;
+    int value;
+    String key;
     
-    
+    for(int i = 0;i < raw.size(); i++)
+    {
+    	words = psim.create_total_word_gram(raw.get(i).getName());
+    	
+    	//Removing blacklisted words
+    	words.removeAll(blacklist);
+    	
+    	for(int j = 0; j < words.size(); j++)
+    	{
+    		key = words.get(j);
+    		
+    		//Filter words below 2 characters
+    		if(key.length()>1)
+    		{
+	    		if(ngrams.containsKey(key))
+	    		{
+	    			value = ngrams.get(key);
+	    			
+	    			ngrams.put(key, value + raw.get(i).getCount());
+	    		}
+	    		else
+	    		{
+	    			ngrams.put(key, raw.get(i).getCount());
+	    		}
+    		}
+    	}
+    }
     
     // old
+    /////////////////////////////////
+    // Split the tags into popular and not popular ones
+    List<String> base;
+    List<String> lower;
+    int counter = 0;
+    
+    base = pro.getTagsOccuringMoreThan(20);
+    lower = pro.getTagsOccuringLessOrEqualThan(20);
+    
     List<String> total = new ArrayList<String>();
     
     total.addAll(base);
