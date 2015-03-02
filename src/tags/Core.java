@@ -96,6 +96,7 @@ public class Core {
     
     raw = pro.getTagsWithCount();
     
+    // Firsts run => Spelling
     // Create the n-grams and put them into a dictionary
     Map<String, Integer> ngrams = new HashMap<String, Integer>();
     List<String> words;
@@ -155,6 +156,8 @@ public class Core {
     		phon.put(p, temp);
     	}
     }
+    
+    // Second run => Synonyms 
     
     /////////////////////////////////
     // Testing the n-gram and distance methods

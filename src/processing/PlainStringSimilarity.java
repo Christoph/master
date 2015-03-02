@@ -53,6 +53,27 @@ public class PlainStringSimilarity {
     return set;
   }
   
+  public List<String> create_word_gram(String text, List<String> blacklist) {
+  	// Initialize variables
+    List<String> set = new ArrayList<String>();
+    
+    if(!text.contains(" "))
+    {
+    	set.add(text);
+    }
+    else
+    {   	
+    	for(String s: text.split("\\s+"))
+    	{
+    		set.add(s);
+    	}
+    }
+    
+    set.removeAll(blacklist);
+    
+    return set;
+  }
+  
   public List<String> create_word_n_gram(String text, int n) {
   	// Initialize variables
     List<String> set = new ArrayList<String>();
