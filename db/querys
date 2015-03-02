@@ -36,7 +36,7 @@ select Track.ID, Listeners, Playcount, tags from Track inner join (select Track.
 select * from Tag inner join (select TT.TagID,count(*) as n from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID) as t on Tag.ID = t.TagID Where n < 10;
 delete Tag from Tag inner join (select TT.TagID,count(*) as n from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID) as t on Tag.ID = t.TagID Where n < 100;
 # all
-select Track.ID as SongID, Track.Listeners, Track.Playcount, Tag.ID as TagID, TT.Count as Tagweight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID;
+select Track.ID as SongID, Track.Name, Track.Listeners, Track.Playcount, Tag.ID as TagID, Tag.Name, TT.Count as Tagweight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID;
 # Throw out tags which occus in one song and have a weight of zero
 select * from Tag inner join (select TT.TagID,TT.TrackID ,TT.Count,count(*) as n from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID) as t on Tag.ID = t.TagID Where n = 1  and Count = 0;
 # Tag, used in # songs
