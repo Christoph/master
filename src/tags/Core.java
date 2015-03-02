@@ -113,8 +113,8 @@ public class Core {
     	{
     		key = words.get(j);
     		
-    		//Filter words below 2 characters
-    		if(key.length()>1)
+    		//Filter words below 3 characters
+    		if(key.length()>2)
     		{
 	    		if(ngrams.containsKey(key))
 	    		{
@@ -172,76 +172,43 @@ public class Core {
     	{
     		String word = words.get(j);
     		String code = phonetic.encode(word);
-    		String temp = "";
+    		String high = "";
   			int count = 0;
-  			sum = 0;
     		
     		Set<String> str = phon.get(code);
     		
     		for(String s: str)
     		{
-
-    			sum += ngrams.get(s);
-    			
     			if(ngrams.get(s) > count)
     			{
-    				temp = s;
+    				high = s;
     				count = ngrams.get(s);
     			}
     		}
     		
-    		words.set(j, temp);
+    		HashSet<String> h1, h2;
+    		double dice = 0;
+        double jac = 0;
+        double cos = 0;
+    		
+    		h1 = psim.create_n_gram(word, 2);
+        h2 = psim.create_n_gram(high, 2);
+    		
+        dice = psim.dice_coeffizient(h1, h2);
+        jac = psim.jaccard_index(h1, h2);
+        cos = psim.cosine_similarity(h1, h2);
+        
+        if(dice > 0.7)
+        {
+        	words.set(j, high);
+        }
     	}
     	
     	tags.get(i).setName(words.toString());
     }
     
     // Second run => Synonyms 
-    
-    /////////////////////////////////
-    // Testing the n-gram and distance methods
-    String s1 = "hip hop";
-    String s2 = "hip-hop";
-    
-    double dice = 0;
-    double jac = 0;
-    double cos = 0;
-    HashSet<String> h1, h2;
-    
-    h1 = psim.create_n_gram(s1, 2);
-    h2 = psim.create_n_gram(s2, 2);
-    
-    dice = psim.dice_coeffizient(h1, h2);
-    jac = psim.jaccard_index(h1, h2);
-    cos = psim.cosine_similarity(h1, h2);
-    
-    System.out.println("\nDistance measures:");
-    System.out.println("StringA: "+s1+"; StringB: "+s2);
-    System.out.println("Dice coefficient: "+dice);
-    System.out.println("Jaccard similarity: "+jac);
-    System.out.println("Cosine similarity: "+cos);
 
-    // Testing phonetic algorithm
-    String a = "old school";
-    String b = "old school rock";
-    
-    String sa = phonetic.encode(a);
-    System.out.println(sa);
-    System.out.println(phonetic.encode(b));
-
-    List<String> intersect = new ArrayList<String>();
-
-    words = psim.create_word_gram(b);
-    intersect.add(sa);
-
-    for(int i = 0; i < words.size(); i++) {
-      words.set(i,phonetic.encode(words.get(i))); 
-    }
-    System.out.println(words.toString());
-
-    intersect.retainAll(words);
-    
-    System.out.println(intersect);
     
     // Decision with Torsten: Removing all tracks with less than six tags.
 		// pro.deleteTracksWithTagsLessThan(6);
