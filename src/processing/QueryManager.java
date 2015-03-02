@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import tags.RawTag;
+import tags.Tag;
 
 public class QueryManager {
 	// Initialize logger
@@ -67,13 +67,13 @@ public class QueryManager {
   	return data;
   }
   
-  public List<RawTag> getTagsWithCount() throws SQLException {
-  	List<RawTag> data = new ArrayList<RawTag>();
+  public List<Tag> getTagsWithCount() throws SQLException {
+  	List<Tag> data = new ArrayList<Tag>();
   	
   	ResultSet result = selectTagsWithCount.executeQuery();
   	
   	while(result.next()) {
-  		data.add(new RawTag(result.getString("Name").toLowerCase(), result.getInt("Count")));
+  		data.add(new Tag(result.getString("Name").toLowerCase(), result.getInt("Count")));
   	}
   	
   	return data;

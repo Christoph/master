@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import tags.RawTag;
+import tags.Tag;
 
 public class Processor {
 	//Initialize logger
@@ -69,8 +69,8 @@ public class Processor {
   	return tags;
   }
   
-  public List<RawTag> getTagsWithCount() {
-  	List<RawTag> tags = new ArrayList<RawTag>();
+  public List<Tag> getTagsWithCount() {
+  	List<Tag> tags = new ArrayList<Tag>();
   	
   	try {
 			tags = querymanager.getTagsWithCount();

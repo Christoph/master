@@ -75,7 +75,8 @@ public class Core {
     ImportCSV im = new ImportCSV();
     PlainStringSimilarity psim = new PlainStringSimilarity();
     
-    DoubleMetaphone dmeta = new DoubleMetaphone();
+    //DoubleMetaphone phonetic = new DoubleMetaphone();
+    ColognePhonetic phonetic = new ColognePhonetic();
     
     List<String> genres = im.importCSV("dicts/genres.txt");
     List<String> articles = im.importCSV("dicts/article.txt");
@@ -92,9 +93,9 @@ public class Core {
     // Spell checking
     
     // Get all tags
-    List<RawTag> raw;
+    List<Tag> tags;
     
-    raw = pro.getTagsWithCount();
+    tags = pro.getTagsWithCount();
     
     // Firsts run => Spelling
     // Create the n-grams and put them into a dictionary
@@ -103,9 +104,10 @@ public class Core {
     int value;
     String key;
     
-    for(int i = 0;i < raw.size(); i++)
+    // Create 1-word-gram/total count dict
+    for(int i = 0;i < tags.size(); i++)
     {
-    	words = psim.create_total_word_gram(raw.get(i).getName(),blacklist);
+    	words = psim.create_word_gram(tags.get(i).getName(),blacklist);
     	
     	for(int j = 0; j < words.size(); j++)
     	{
@@ -119,11 +121,11 @@ public class Core {
 	    			value = ngrams.get(key);
 	    			
 	    			// Sum up the count
-	    			ngrams.put(key, value + raw.get(i).getCount());
+	    			ngrams.put(key, value + tags.get(i).getCount());
 	    		}
 	    		else
 	    		{
-	    			ngrams.put(key, raw.get(i).getCount());
+	    			ngrams.put(key, tags.get(i).getCount());
 	    		}
     		}
     	}
@@ -135,7 +137,10 @@ public class Core {
     
     for(String k: ngrams.keySet())
     {
-    	p = dmeta.encode(k);
+    	
+    	//p = dmeta.encode(k);
+    	
+    	p = phonetic.encode(k);
     	
     	if(phon.containsKey(p))
     	{
@@ -155,6 +160,40 @@ public class Core {
     		
     		phon.put(p, temp);
     	}
+    }
+    
+    // Create word set/count dict  
+    for(int i = 0;i < tags.size(); i++)
+    {
+    	words = psim.create_word_gram(tags.get(i).getName(),blacklist);
+    	int sum = 0;
+    	
+    	for(int j = 0; j < words.size(); j++)
+    	{
+    		String word = words.get(j);
+    		String code = phonetic.encode(word);
+    		String temp = "";
+  			int count = 0;
+  			sum = 0;
+    		
+    		Set<String> str = phon.get(code);
+    		
+    		for(String s: str)
+    		{
+
+    			sum += ngrams.get(s);
+    			
+    			if(ngrams.get(s) > count)
+    			{
+    				temp = s;
+    				count = ngrams.get(s);
+    			}
+    		}
+    		
+    		words.set(j, temp);
+    	}
+    	
+    	tags.get(i).setName(words.toString());
     }
     
     // Second run => Synonyms 
@@ -186,9 +225,9 @@ public class Core {
     String a = "old school";
     String b = "old school rock";
     
-    String sa = dmeta.encode(a);
+    String sa = phonetic.encode(a);
     System.out.println(sa);
-    System.out.println(dmeta.encode(b));
+    System.out.println(phonetic.encode(b));
 
     List<String> intersect = new ArrayList<String>();
 
@@ -196,7 +235,7 @@ public class Core {
     intersect.add(sa);
 
     for(int i = 0; i < words.size(); i++) {
-      words.set(i,dmeta.encode(words.get(i))); 
+      words.set(i,phonetic.encode(words.get(i))); 
     }
     System.out.println(words.toString());
 
