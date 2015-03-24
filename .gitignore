@@ -10,3 +10,4 @@ config.*
 bin/
 log.*
 tags.sql
+*.csv

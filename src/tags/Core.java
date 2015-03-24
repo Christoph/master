@@ -3,6 +3,7 @@ package tags;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -74,6 +75,7 @@ public class Core {
     Processor pro = new Processor(dbconf);
     ImportCSV im = new ImportCSV();
     PlainStringSimilarity psim = new PlainStringSimilarity();
+    TagsToCSV writer = new TagsToCSV("tags.csv");
     
     //DoubleMetaphone phonetic = new DoubleMetaphone();
     ColognePhonetic phonetic = new ColognePhonetic();
@@ -94,9 +96,13 @@ public class Core {
     
     // Get all tags
     List<Tag> tags;
+    List<Tag> all;
     
     tags = pro.getTagsWithCount();
+    all = pro.getAll();
     
+    writer.writeTag(all);
+    /*
     // Firsts run => Spelling
     // Create the n-grams and put them into a dictionary
     Map<String, Integer> ngrams = new HashMap<String, Integer>();
@@ -107,7 +113,7 @@ public class Core {
     // Create 1-word-gram/total count dict
     for(int i = 0;i < tags.size(); i++)
     {
-    	words = psim.create_word_gram(tags.get(i).getName(),blacklist);
+    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
     	
     	for(int j = 0; j < words.size(); j++)
     	{
@@ -121,11 +127,11 @@ public class Core {
 	    			value = ngrams.get(key);
 	    			
 	    			// Sum up the count
-	    			ngrams.put(key, value + tags.get(i).getCount());
+	    			ngrams.put(key, value + tags.get(i).getTagWeight());
 	    		}
 	    		else
 	    		{
-	    			ngrams.put(key, tags.get(i).getCount());
+	    			ngrams.put(key, tags.get(i).getTagWeight());
 	    		}
     		}
     	}
@@ -165,7 +171,7 @@ public class Core {
     // Create word set/count dict  
     for(int i = 0;i < tags.size(); i++)
     {
-    	words = psim.create_word_gram(tags.get(i).getName(),blacklist);
+    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
     	int sum = 0;
     	
     	for(int j = 0; j < words.size(); j++)
@@ -204,9 +210,11 @@ public class Core {
         }
     	}
     	
-    	tags.get(i).setName(words.toString());
+    	tags.get(i).setTagName(words.toString());
     }
-    
+
+    writer.writeTagNames(tags);
+    */
     // Second run => Synonyms 
 
     

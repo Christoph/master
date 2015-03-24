@@ -81,6 +81,19 @@ public class Processor {
   	
   	return tags;
   }
+  
+  public List<Tag> getAll() {
+  	List<Tag> tags = new ArrayList<Tag>();
+  	
+  	try {
+			tags = querymanager.getAll();
+  	} catch (SQLException e) {
+  		log.severe(e.getMessage());
+			e.printStackTrace();
+		}
+  	
+  	return tags;
+  }
 
   public void closeAll()
   {
