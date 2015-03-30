@@ -82,11 +82,11 @@ public class Processor {
   	return tags;
   }
   
-  public List<Tag> getAll() {
-  	List<Tag> tags = new ArrayList<Tag>();
+  public List<String> exportAll(String file) {
+  	List<String> tags = new ArrayList<String>();
   	
   	try {
-			tags = querymanager.getAll();
+			querymanager.exportAll(file);
   	} catch (SQLException e) {
   		log.severe(e.getMessage());
 			e.printStackTrace();

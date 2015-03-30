@@ -96,12 +96,10 @@ public class Core {
     
     // Get all tags
     List<Tag> tags;
-    List<Tag> all;
+    //tags = pro.getTagsWithCount();
     
-    tags = pro.getTagsWithCount();
-    all = pro.getAll();
+    pro.exportAll("tags.csv");
     
-    writer.writeTag(all);
     /*
     // Firsts run => Spelling
     // Create the n-grams and put them into a dictionary

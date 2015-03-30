@@ -44,22 +44,26 @@ public class TagsToCSV {
 		}
 	}
 	
-	public void writeTag(List<Tag> data) {
+	public void writeTag(Tag t) {
 		createHeader("SongID,SongName,Listeners,Playcount,TagID,TagName,TagWeight");
-		for(Tag t:data)
-		{
 			try {
 				writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getTagWeight()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		
+		/*
+		try {
+			writer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
+	}
+	
+	public void closeWriteTag() {	
 		try {
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
