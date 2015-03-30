@@ -6,6 +6,7 @@ import java.util.List;
 
 public class TagsToCSV {
 	FileWriter writer;
+	Boolean head = true;
 
 	public TagsToCSV(String file) {
 		try {
@@ -45,24 +46,24 @@ public class TagsToCSV {
 	}
 	
 	public void writeTag(Tag t) {
-		createHeader("SongID,SongName,Listeners,Playcount,TagID,TagName,TagWeight");
-			try {
-				writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getTagWeight()+"\n");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		/*
+		if(head) 
+		{
+			createHeader("SongID,SongName,Listeners,Playcount,TagID,TagName,TagWeight");
+			head = false;
+		}
+		
 		try {
-			writer.flush();
+			writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getTagWeight()+"\n");
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
 	public void closeWriteTag() {	
 		try {
 			writer.flush();
 			writer.close();
+			head = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

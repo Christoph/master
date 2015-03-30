@@ -1,12 +1,9 @@
 package processing;
 
-import java.lang.instrument.Instrumentation;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import javax.sql.rowset.CachedRowSet;
 
 import tags.Tag;
 import tags.TagsToCSV;
@@ -86,16 +83,11 @@ public class QueryManager {
   }
   
   public void exportAll(String file) throws SQLException {
-  	List<String> data = new ArrayList<String>();
   	TagsToCSV writer = new TagsToCSV(file);
   	
-  	int r = 0;
   	ResultSet result = selectAll.executeQuery();
   	
-  	while(result.next()) {
-  		r++;
-  		if(r%10000 == 0) log.info(""+r);
-  		
+  	while(result.next()) {  	
   		writer.writeTag(new Tag(result.getString("TagName").toLowerCase(), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners")));	
   	}
   	
