@@ -2,7 +2,9 @@ package tags;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TagsToCSV {
 	FileWriter writer;
@@ -21,6 +23,51 @@ public class TagsToCSV {
 		try {
 			writer.write(header+"\n");
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeSubs(Map<String, String> subs)
+	{
+	    // Prepare data for export
+	    Map<String, String> exp_subs = new HashMap<String, String>();
+	    String key;
+
+	    for(String val: subs.keySet())
+	    {
+	      key = subs.get(val);
+
+	      if(exp_subs.containsKey(key))
+	      {
+	        exp_subs.put(key,exp_subs.get(key)+","+val);
+	      }
+	      else
+	      {
+	        exp_subs.put(key,val);
+	      }
+	    }
+		
+		if(head)
+	    {
+	      createHeader("Truth,Replaced");
+	      head = false;
+	    }
+		
+		for(String s:exp_subs.keySet())
+		{
+			try {
+				writer.write("\""+s+"\" ,\""+exp_subs.get(s)+"\"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+			exp_subs.clear();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

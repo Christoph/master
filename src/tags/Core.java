@@ -79,6 +79,7 @@ public class Core {
     ImportCSV im = new ImportCSV();
     PlainStringSimilarity psim = new PlainStringSimilarity();
     TagsToCSV writer = new TagsToCSV("tags.csv");
+    TagsToCSV writer_subs = new TagsToCSV("subs.csv");
     
     DoubleMetaphone phonetic = new DoubleMetaphone();
     //ColognePhonetic phonetic = new ColognePhonetic();
@@ -93,6 +94,10 @@ public class Core {
     
     blacklist.addAll(preps);
     blacklist.addAll(articles);
+    blacklist.add("");
+    blacklist.add("and");
+    blacklist.add("I");
+    blacklist.add("am");
     
     /////////////////////////////////
     // Spell checking
@@ -118,22 +123,18 @@ public class Core {
     	
     	for(int j = 0; j < words.size(); j++)
     	{
-    		key = words.get(j);
-    		
-    		//Filter words below 3 characters
-    		if(key.length()>2)
+    		key = words.get(j); 		
+
+    		if(ngrams.containsKey(key))
     		{
-	    		if(ngrams.containsKey(key))
-	    		{
-	    			value = ngrams.get(key);
-	    			
-	    			// Sum up the count
-	    			ngrams.put(key, value + tags.get(i).getListeners());
-	    		}
-	    		else
-	    		{
-	    			ngrams.put(key, tags.get(i).getListeners());
-	    		}
+    			value = ngrams.get(key);
+    			
+    			// Sum up the count
+    			ngrams.put(key, value + tags.get(i).getListeners());
+    		}
+    		else
+    		{
+    			ngrams.put(key, tags.get(i).getListeners());
     		}
     	}
     }
@@ -224,6 +225,23 @@ public class Core {
           }
         }   
       }
+    }
+
+    writer_subs.writeSubs(subs);
+    
+    // Replace tags corresponding to the subs dict
+    
+    for(Tag t: tags)
+    {
+    	words = psim.create_word_gram(t.getTagName(),blacklist);
+      String new_tag = "";
+    	
+      for(String w: words)
+    	{
+        new_tag = new_tag + " " + subs.get(w);
+      }
+
+      t.setTagName(new_tag);
     }
 
     writer.writeTagNames(tags);
