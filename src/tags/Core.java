@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -15,9 +16,11 @@ import java.util.Set;
 import java.util.logging.*;
 
 import mining.*;
+
 import processing.*;
 
 import org.apache.commons.codec.language.*;
+import org.apache.commons.codec.language.bm.Rule.PhonemeList;
 
 public class Core {
 
@@ -166,49 +169,57 @@ public class Core {
     	}
     }
     
+    // Subsitution dict
+    Map<String, String> subs = new HashMap<String, String>();
+    
     // Create word set/count dict  
     for(int i = 0;i < tags.size(); i++)
     {
     	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
-    	int sum = 0;
+      int count;
     	
     	for(int j = 0; j < words.size(); j++)
     	{
-    		String word = words.get(j);
-    		String code = phonetic.encode(word);
+    		String tag = words.get(j);
+    		String code = phonetic.encode(tag);
     		String high = "";
-  			int count = 0;
     		
-    		Set<String> str = phon.get(code);
+    		Set<String> phonetics = phon.get(code);
     		
-    		for(String s: str)
-    		{
-    			if(ngrams.get(s) > count)
-    			{
-    				high = s;
-    				count = ngrams.get(s);
-    			}
-    		}
-    		
-    		HashSet<String> h1, h2;
-    		double dice = 0;
-        double jac = 0;
-        double cos = 0;
-    		
-    		h1 = psim.create_n_gram(word, 2);
-        h2 = psim.create_n_gram(high, 2);
-    		
-        dice = psim.dice_coeffizient(h1, h2);
-        jac = psim.jaccard_index(h1, h2);
-        cos = psim.cosine_similarity(h1, h2);
-        
-        if(dice > 0.7)
+        while(!phonetics.isEmpty())
         {
-        	words.set(j, high);
+          count = 0;
+
+          for(String s: phonetics)
+          {
+            if(ngrams.get(s) > count)
+            {
+              high = s;
+              count = ngrams.get(s);
+            }
+          }
+          
+          for(Iterator<String> iterator = phonetics.iterator(); iterator.hasNext();)
+          {
+            String word = iterator.next();
+            HashSet<String> h1, h2;
+            double dist = 0;
+            
+            h1 = psim.create_n_gram(word, 2);
+            h2 = psim.create_n_gram(high, 2);
+            
+            dist = psim.dice_coeffizient(h1, h2);
+            //dist = psim.jaccard_index(h1, h2);
+            //dist = psim.cosine_similarity(h1, h2);
+            
+            if(dist > 0.7)
+            {
+              subs.put(word, high);
+              iterator.remove();
+            }  
+          }
         }
-    	}
-    	
-    	tags.get(i).setTagName(words.toString());
+      }
     }
 
     writer.writeTagNames(tags);
