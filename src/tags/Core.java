@@ -77,12 +77,12 @@ public class Core {
     PlainStringSimilarity psim = new PlainStringSimilarity();
     TagsToCSV writer = new TagsToCSV("tags.csv");
     
-    //DoubleMetaphone phonetic = new DoubleMetaphone();
-    ColognePhonetic phonetic = new ColognePhonetic();
+    DoubleMetaphone phonetic = new DoubleMetaphone();
+    //ColognePhonetic phonetic = new ColognePhonetic();
     
-    List<String> genres = im.importCSV("dicts/genres.txt");
+    //List<String> genres = im.importCSV("dicts/genres.txt");
     List<String> articles = im.importCSV("dicts/article.txt");
-    List<String> moods = im.importCSV("dicts/moods.txt");
+    //List<String> moods = im.importCSV("dicts/moods.txt");
     List<String> preps = im.importCSV("dicts/prep.txt");   
     
     // Create word blacklist
@@ -96,11 +96,11 @@ public class Core {
     
     // Get all tags
     List<Tag> tags;
-    //tags = pro.getTagsWithCount();
+    tags = pro.getAll();
     
-    pro.exportAll("tags.csv");
+    //pro.exportAll("tags.csv");
     
-    /*
+    
     // Firsts run => Spelling
     // Create the n-grams and put them into a dictionary
     Map<String, Integer> ngrams = new HashMap<String, Integer>();
@@ -125,11 +125,11 @@ public class Core {
 	    			value = ngrams.get(key);
 	    			
 	    			// Sum up the count
-	    			ngrams.put(key, value + tags.get(i).getTagWeight());
+	    			ngrams.put(key, value + tags.get(i).getListeners());
 	    		}
 	    		else
 	    		{
-	    			ngrams.put(key, tags.get(i).getTagWeight());
+	    			ngrams.put(key, tags.get(i).getListeners());
 	    		}
     		}
     	}
@@ -212,7 +212,7 @@ public class Core {
     }
 
     writer.writeTagNames(tags);
-    */
+    
     // Second run => Synonyms 
 
     

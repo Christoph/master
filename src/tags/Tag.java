@@ -11,15 +11,15 @@ public class Tag {
 	
 	private String originalTagName;
 	
-	public Tag(String tagName, int playcount) {
+	public Tag(String tagName, int listeners) {
 		this.tagName = tagName;
-		this.playcount = playcount;
+		this.listeners = listeners;
 		this.originalTagName = tagName;
 		this.tagID = 0;
 		this.tagWeight = 0;
 		this.songID = 0;
 		this.songName = "";
-		this.listeners = 0;
+		this.playcount = 0;
 	}
 	
 	public Tag(String tagName, int playcount, int tagID, int tagWeight, int songID, String songName, int listeners ) {

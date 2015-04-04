@@ -26,7 +26,12 @@ public class TagsToCSV {
 	}
 	
 	public void writeTagNames(List<Tag> data) {
-		createHeader("Original,Processed");
+    if(head)
+    {
+      createHeader("Original,Processed");
+      head = false;
+    }
+
 		for(Tag t:data)
 		{
 			try {

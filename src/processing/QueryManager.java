@@ -66,18 +66,24 @@ public class QueryManager {
   	while(result.next()) {
   		data.add(result.getString("Name").toLowerCase());
   	}
+
+    // Close huge resultset
+    result.close();
   	
   	return data;
   }
   
-  public List<Tag> getTagsWithCount() throws SQLException {
+  public List<Tag> getAll() throws SQLException {
   	List<Tag> data = new ArrayList<Tag>();
   	
-  	ResultSet result = selectTagsWithCount.executeQuery();
+  	ResultSet result = selectAll.executeQuery();
   	
   	while(result.next()) {
-  		data.add(new Tag(result.getString("Name").toLowerCase(), result.getInt("Count")));
+  		data.add(new Tag(result.getString("TagName").toLowerCase(), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners")));
   	}
+
+    // Close huge resultset
+    result.close();
   	
   	return data;
   }
