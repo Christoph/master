@@ -181,44 +181,48 @@ public class Core {
     	for(int j = 0; j < words.size(); j++)
     	{
     		String tag = words.get(j);
-    		String code = phonetic.encode(tag);
-    		String high = "";
-    		
-    		Set<String> phonetics = phon.get(code);
-    		
-        while(!phonetics.isEmpty())
-        {
-          count = 0;
 
-          for(String s: phonetics)
+        if(!subs.containsKey(tag))
+        {
+          String code = phonetic.encode(tag);
+          String high = "";
+          
+          Set<String> phonetics = phon.get(code);
+          
+          while(!phonetics.isEmpty())
           {
-            if(ngrams.get(s) > count)
+            count = 0;
+
+            for(String s: phonetics)
             {
-              high = s;
-              count = ngrams.get(s);
+              if(ngrams.get(s) > count)
+              {
+                high = s;
+                count = ngrams.get(s);
+              }
+            }
+            
+            for(Iterator<String> iterator = phonetics.iterator(); iterator.hasNext();)
+            {
+              String word = iterator.next();
+              HashSet<String> h1, h2;
+              double dist = 0;
+              
+              h1 = psim.create_n_gram(word, 2);
+              h2 = psim.create_n_gram(high, 2);
+              
+              dist = psim.dice_coeffizient(h1, h2);
+              //dist = psim.jaccard_index(h1, h2);
+              //dist = psim.cosine_similarity(h1, h2);
+              
+              if(dist > 0.7)
+              {
+                subs.put(word, high);
+                iterator.remove();
+              }  
             }
           }
-          
-          for(Iterator<String> iterator = phonetics.iterator(); iterator.hasNext();)
-          {
-            String word = iterator.next();
-            HashSet<String> h1, h2;
-            double dist = 0;
-            
-            h1 = psim.create_n_gram(word, 2);
-            h2 = psim.create_n_gram(high, 2);
-            
-            dist = psim.dice_coeffizient(h1, h2);
-            //dist = psim.jaccard_index(h1, h2);
-            //dist = psim.cosine_similarity(h1, h2);
-            
-            if(dist > 0.7)
-            {
-              subs.put(word, high);
-              iterator.remove();
-            }  
-          }
-        }
+        }   
       }
     }
 
