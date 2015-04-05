@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.logging.*;
 
 import mining.*;
-
 import processing.*;
 
 import org.apache.commons.codec.language.*;
@@ -111,7 +110,114 @@ public class Core {
     writer.writeTagNames(tags);
     
     // Removing rare and less used tags
+    TagsToCSV writer_freq = new TagsToCSV("freq.csv");
+    TagsToCSV writer_filtered = new TagsToCSV("filt.csv");
+	
+    Map<String, Double> wordgrams = new HashMap<String, Double>();
+    Map<String, Integer> totaloccur = new HashMap<String, Integer>();
     
+    List<String> words;
+    int l, p, w;
+    String key;
+    int lmin = 0,lmax = 0,pmin = 0,pmax = 0;
+    double lscale = 0.0, pscale = 0.0;
+    double qw = 1, ql = 1, qp = 1;
+    double value;
+    
+    // get min and max for listeners and playcount
+    for(Tag t: tags)
+    {
+    	l = t.getListeners();
+    	p = t.getPlaycount();
+    	
+    	if(l > lmax) lmax = l;
+    	if(l <= lmin) lmin = l;
+    	
+    	if(p > pmax) pmax = p;
+    	// Some songs have a playcount of -1 and i ignore them
+    	if(p > -1)
+    	{
+    		if(p <= pmin) pmin = p;
+    	}
+    }
+    
+    // Compute scaling values
+    // Using this tagweight, listeners and playcount have the same interval [0,100]
+    lscale = (lmax - lmin) / 100.0;
+    pscale = (pmax - pmin) / 100.0;
+    
+	// Set weights for the weighted normalized weight for each tag/song pair
+	// Lastfmweight
+	qw = 1;
+	// Listeners
+	ql = 2;
+	// Playcount
+	qp = 1;
+    
+    // Compute a weighted normalized weight for each tag/song pair
+    for(Tag t: tags)
+    {
+    	l = t.getListeners();
+    	p = t.getPlaycount();
+    	w = t.getTagWeight();
+    	
+    	// If the playcount is negative I ignore it
+    	if(p < 0) qp = 0;
+    	
+    	// Compute the weighted normalized weight
+    	t.setWeight((qw*w+ql*((l-lmin)/lscale)+qp*((p-pmin)/pscale))/(qw+ql+qp));
+    }
+    
+    // Create a 1-word-gram/weigthed average dict
+    // Summing up the weights
+    for(int i = 0;i < tags.size(); i++)
+    {
+    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
+    	
+    	for(int j = 0; j < words.size(); j++)
+    	{
+    		key = words.get(j); 		
+
+    		if(wordgrams.containsKey(key))
+    		{
+    			value = wordgrams.get(key);
+    			
+    			// Sum up the weight
+    			wordgrams.put(key, value + tags.get(i).getWeight());
+    		}
+    		else
+    		{
+    			wordgrams.put(key, tags.get(i).getWeight());
+    		}
+    	}
+    }
+    
+    // Compute total occurrences of all tags
+    for(int i = 0;i < tags.size(); i++)
+    {
+    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
+    	
+    	for(int j = 0; j < words.size(); j++)
+    	{
+    		key = words.get(j); 		
+
+    		if(totaloccur.containsKey(key))
+    		{   			
+    			// Sum up the occurrences
+    			totaloccur.put(key, totaloccur.get(key) + 1);
+    		}
+    		else
+    		{
+    			totaloccur.put(key, 1);
+    		}
+    	}
+    }
+    
+    // Compute the weighted normalized mean for each tag
+    for(String s: wordgrams.keySet())
+    {
+    	wordgrams.put(s, wordgrams.get(s)/totaloccur.get(s));
+    }
     
     // Decision with Torsten: Removing all tracks with less than six tags.
 	// pro.deleteTracksWithTagsLessThan(6);

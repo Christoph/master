@@ -50,7 +50,7 @@ public class SpellChecking {
 		/////////////////////////////////
 		// Algorithm		
 	    
-	    // Create 1-word-gram/total count dict
+	    // Create a 1-word-gram/total listeners dict
 	    for(int i = 0;i < tags.size(); i++)
 	    {
 	    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);

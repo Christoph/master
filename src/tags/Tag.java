@@ -8,6 +8,7 @@ public class Tag {
 	private String songName;
 	private int listeners;
 	private int playcount;
+	private double weight;
 	
 	private String originalTagName;
 	
@@ -87,5 +88,13 @@ public class Tag {
 
 	public void setPlaycount(int playcount) {
 		this.playcount = playcount;
+	}
+
+	public double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(double weight) {
+		this.weight = weight;
 	}
 }
