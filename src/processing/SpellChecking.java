@@ -21,14 +21,15 @@ public class SpellChecking {
 	    PlainStringSimilarity psim = new PlainStringSimilarity();
 		TagsToCSV writer_subs;
 		
-	    Map<String, Integer> wordgrams = new HashMap<String, Integer>();
-	    Map<String, Set<String>> phon = new HashMap<String, Set<String>>();
-	    Map<String, String> subs = new HashMap<String, String>();
+	    Map<String, Integer> tag_words = new HashMap<String, Integer>();
+	    Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
+	    Map<String, String> substitution_list = new HashMap<String, String>();
 	    
 	    List<String> words;
-	    int value, count, ngram_size;
-	    double dist;
-	    String key, p, new_tag;
+	    Set<String> temp;
+	    int value, listener_count, ngram_size;
+	    double similarity;
+	    String key, phonetic, new_tag;
 	    Boolean print_substitutions;
         HashSet<String> h1, h2;
 	    
@@ -36,7 +37,7 @@ public class SpellChecking {
 		// Configuration
         
 		// Choose phonetic algorithm
-		DoubleMetaphone phonetic = new DoubleMetaphone();
+		DoubleMetaphone phonetic_algorithm = new DoubleMetaphone();
 		//ColognePhonetic phonetic = new ColognePhonetic();
 		
 		// Print substitution list
@@ -59,93 +60,94 @@ public class SpellChecking {
 	    	{
 	    		key = words.get(j); 		
 
-	    		if(wordgrams.containsKey(key))
+	    		if(tag_words.containsKey(key))
 	    		{
-	    			value = wordgrams.get(key);
+	    			value = tag_words.get(key);
 	    			
 	    			// Sum up the count
-	    			wordgrams.put(key, value + tags.get(i).getListeners());
+	    			tag_words.put(key, value + tags.get(i).getListeners());
 	    		}
 	    		else
 	    		{
-	    			wordgrams.put(key, tags.get(i).getListeners());
+	    			tag_words.put(key, tags.get(i).getListeners());
 	    		}
 	    	}
 	    }
 	    
 	    // Create phonetic dictionary
-	    for(String k: wordgrams.keySet())
-	    {
+	    for(String k: tag_words.keySet())
+	    {	    	
+	    	phonetic = phonetic_algorithm.encode(k);
 	    	
-	    	//p = dmeta.encode(k);
-	    	
-	    	p = phonetic.encode(k);
-	    	
-	    	if(phon.containsKey(p))
+	    	if(phonetic_groups.containsKey(phonetic))
 	    	{
-	    		Set<String> temp;
-	    		
-	    		temp = phon.get(p);
+	    		temp = phonetic_groups.get(phonetic);
 	    		temp.add(k);
 	    		
-	    		phon.put(p, temp);
+	    		phonetic_groups.put(phonetic, temp);
 	    		
 	    	}
 	    	else
 	    	{
-	    		Set<String> temp = new HashSet<String>();
+	    		temp = new HashSet<String>();
 	    		
 	    		temp.add(k);
 	    		
-	    		phon.put(p, temp);
+	    		phonetic_groups.put(phonetic, temp);
 	    	}
 	    }
 	    
 	    // Create word set/count dict  
 	    for(int i = 0;i < tags.size(); i++)
 	    {
-	    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
+	      words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
 	    	
-	    	for(int j = 0; j < words.size(); j++)
-	    	{
-	    		String tag = words.get(j);
-
-	        if(!subs.containsKey(tag))
+	      for(int j = 0; j < words.size(); j++)
+	      {
+	    	String tag = words.get(j);
+	    	
+	    	// Check if the substitution already exists
+	        if(!substitution_list.containsKey(tag))
 	        {
-	          String code = phonetic.encode(tag);
+	          // Get all words with the same phonetic code
+	          String code = phonetic_algorithm.encode(tag);
 	          String high = "";
 	          
-	          Set<String> phonetics = phon.get(code);
+	          Set<String> phonetics = phonetic_groups.get(code);
 	          
+	          // Iterate over those
 	          while(!phonetics.isEmpty())
 	          {
-	            count = 0;
-
+	            listener_count = 0;
+	            
+	            // Find the word with the highest listener count
 	            for(String s: phonetics)
 	            {
-	              if(wordgrams.get(s) > count)
+	              if(tag_words.get(s) > listener_count)
 	              {
 	                high = s;
-	                count = wordgrams.get(s);
+	                listener_count = tag_words.get(s);
 	              }
 	            }
 	            
+	            // Iterate over the phonetic similar words and find similar words with distance methods
 	            for(Iterator<String> iterator = phonetics.iterator(); iterator.hasNext();)
 	            {
 	              String word = iterator.next();
-	              dist = 0;
+	              similarity = 0;
 	              
 	              h1 = psim.create_n_gram(word, ngram_size);
 	              h2 = psim.create_n_gram(high, ngram_size);
 	              
 	              // Choose distance methods
-	              dist = psim.dice_coeffizient(h1, h2);
+	              similarity = psim.dice_coeffizient(h1, h2);
 	              //dist = psim.jaccard_index(h1, h2);
 	              //dist = psim.cosine_similarity(h1, h2);
 	              
-	              if(dist > 0.7)
+	              // Check if the ngram method gives a similarity > 70%
+	              if(similarity > 0.7)
 	              {
-	                subs.put(word, high);
+	                substitution_list.put(word, high);
 	                iterator.remove();
 	              }  
 	            }
@@ -158,7 +160,7 @@ public class SpellChecking {
 	    if(print_substitutions)
 	    {
 	    	writer_subs = new TagsToCSV("subs.csv");
-	    	writer_subs.writeSubs(subs);
+	    	writer_subs.writeSubs(substitution_list);
 	    }
 	    
 	    // Replace tags corresponding to the subs dict
@@ -169,15 +171,15 @@ public class SpellChecking {
 	    	
 	      for(String w: words)
 	      {
-	        new_tag = new_tag + " " + subs.get(w);
+	        new_tag = new_tag + " " + substitution_list.get(w);
 	      }
 
 	      t.setTagName(new_tag);
 	    }
 	    
-	    wordgrams = null;
-	    phon = null;
-	    subs = null;
+	    tag_words = null;
+	    phonetic_groups = null;
+	    substitution_list = null;
 	}
 	
 }
