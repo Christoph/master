@@ -19,6 +19,7 @@ public class SpellChecking {
 	    /////////////////////////////////
 	    // Variables
 	    PlainStringSimilarity psim = new PlainStringSimilarity();
+	    Helper helper = new Helper();
 		TagsToCSV writer_subs;
 		
 	    Map<String, Integer> tag_words = new HashMap<String, Integer>();
@@ -176,6 +177,8 @@ public class SpellChecking {
 
 	      t.setTagName(new_tag);
 	    }
+	    
+	    helper.removeTagsWithoutWords(tags);
 	    
 	    tag_words = null;
 	    phonetic_groups = null;

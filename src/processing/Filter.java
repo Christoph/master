@@ -14,7 +14,8 @@ public class Filter {
 	{
 	    /////////////////////////////////
 	    // Variables
-	    PlainStringSimilarity psim = new PlainStringSimilarity();
+	    PlainStringSimilarity string_similarity = new PlainStringSimilarity();
+	    Helper helper = new Helper();
 	    TagsToCSV writer_filtered;
 	    TagsToCSV writer_accepted;
 		
@@ -93,7 +94,7 @@ public class Filter {
 	    // Summing up the weights
 	    for(int i = 0;i < tags.size(); i++)
 	    {
-	    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
+	    	words = string_similarity.create_word_gram(tags.get(i).getTagName(),blacklist);
 	    	
 	    	for(int j = 0; j < words.size(); j++)
 	    	{
@@ -116,7 +117,7 @@ public class Filter {
 	    // Compute total occurrences of all words
 	    for(int i = 0;i < tags.size(); i++)
 	    {
-	    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
+	    	words = string_similarity.create_word_gram(tags.get(i).getTagName(),blacklist);
 	    	
 	    	for(int j = 0; j < words.size(); j++)
 	    	{
@@ -165,7 +166,7 @@ public class Filter {
 	    // Remove filtered words from all tags
 	    for(Tag t: tags)
 	    {
-	    	words = psim.create_word_gram(t.getTagName(),blacklist);
+	    	words = string_similarity.create_word_gram(t.getTagName(),blacklist);
 	    	new_tag = "";
 	    	
 	    	for(String s: words)
@@ -178,6 +179,8 @@ public class Filter {
 	    	
 	    	t.setTagName(new_tag);
 	    }
+	    
+	    helper.removeTagsWithoutWords(tags);
 	    
 	    tag_words = null;
 	    total_word_occurrence = null;

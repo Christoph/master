@@ -106,6 +106,7 @@ public class Core {
     List<Tag> tags;
     tags = pro.getAll();
     
+    // Exports all data
     //pro.exportAll("tags.csv");
     
     // Basic spell checking
