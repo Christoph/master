@@ -14,7 +14,7 @@ import tags.TagsToCSV;
 
 public class SpellChecking {
 	
-	public void check(List<Tag> tags, List<String> blacklist)
+	public void withPhoneticsAndNgrams(List<Tag> tags, List<String> blacklist)
 	{
 	    /////////////////////////////////
 	    // Variables
@@ -29,18 +29,18 @@ public class SpellChecking {
 	    int value, count, ngram_size;
 	    double dist;
 	    String key, p, new_tag;
-	    Boolean export_substitutions;
+	    Boolean print_substitutions;
         HashSet<String> h1, h2;
 	    
 		/////////////////////////////////
 		// Configuration
-		
+        
 		// Choose phonetic algorithm
 		DoubleMetaphone phonetic = new DoubleMetaphone();
 		//ColognePhonetic phonetic = new ColognePhonetic();
 		
-		// Set output of substitution list
-		export_substitutions = false;
+		// Print substitution list
+		print_substitutions = false;
 		
 		// Set the size for the n-gram distance method
 		ngram_size = 2;
@@ -155,7 +155,7 @@ public class SpellChecking {
 	    }
 
 	    // Export substitution list
-	    if(export_substitutions)
+	    if(print_substitutions)
 	    {
 	    	writer_subs = new TagsToCSV("subs.csv");
 	    	writer_subs.writeSubs(subs);

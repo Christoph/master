@@ -17,6 +17,7 @@ import java.util.logging.*;
 
 import mining.*;
 import processing.*;
+import processing.Filter;
 
 import org.apache.commons.codec.language.*;
 import org.apache.commons.codec.language.bm.Rule.PhonemeList;
@@ -77,8 +78,11 @@ public class Core {
     Processor pro = new Processor(dbconf);
     ImportCSV im = new ImportCSV();
     PlainStringSimilarity psim = new PlainStringSimilarity();
-    TagsToCSV writer = new TagsToCSV("tags.csv");
     SpellChecking checker = new SpellChecking();
+    Filter filter = new Filter();
+    
+    TagsToCSV writer_tags = new TagsToCSV("tags.csv");
+    TagsToCSV writer_filtered_tags = new TagsToCSV("filtered_tags.csv");
     
     //List<String> genres = im.importCSV("dicts/genres.txt");
     List<String> articles = im.importCSV("dicts/article.txt");
@@ -105,152 +109,12 @@ public class Core {
     //pro.exportAll("tags.csv");
     
     // Basic spell checking
-    checker.check(tags, blacklist);
+    checker.withPhoneticsAndNgrams(tags, blacklist);
 
-    writer.writeTagNames(tags);
+    writer_tags.writeTagNames(tags);
     
-    // Removing rare and less used tags
-    TagsToCSV writer_filtered = new TagsToCSV("filtered.csv");
-    TagsToCSV writer_accepted = new TagsToCSV("accepted.csv");
-    TagsToCSV writer_filtered_tags = new TagsToCSV("filtered_tags.csv");
-	
-    Map<String, Double> wordgrams = new HashMap<String, Double>();
-    Map<String, Integer> totaloccur = new HashMap<String, Integer>();
-    Map<String, Double> filtered = new HashMap<String, Double>();
-    
-    List<String> words;
-    int l, p, w;
-    String key, new_tag = "";
-    int lmin = 0,lmax = 0,pmin = 0,pmax = 0;
-    double lscale = 0.0, pscale = 0.0;
-    double qw = 1, ql = 1, qp = 1;
-    double value;
-    // Remove all tags below cutoff percent
-    double cutoff = 5;
-    
-    // get min and max for listeners and playcount
-    for(Tag t: tags)
-    {
-    	l = t.getListeners();
-    	p = t.getPlaycount();
-    	
-    	if(l > lmax) lmax = l;
-    	if(l <= lmin) lmin = l;
-    	
-    	if(p > pmax) pmax = p;
-    	// Some songs have a playcount of -1 and i ignore them
-    	if(p > -1)
-    	{
-    		if(p <= pmin) pmin = p;
-    	}
-    }
-    
-    // Compute scaling values
-    // Using this tagweight, listeners and playcount have the same interval [0,100]
-    lscale = (lmax - lmin) / 100.0;
-    pscale = (pmax - pmin) / 100.0;
-    
-	// Set weights for the weighted normalized weight for each tag/song pair
-	// Lastfmweight
-	qw = 1;
-	// Listeners
-	ql = 2;
-	// Playcount
-	qp = 1;
-    
-    // Compute a weighted normalized weight for each tag/song pair
-    for(Tag t: tags)
-    {
-    	l = t.getListeners();
-    	p = t.getPlaycount();
-    	w = t.getTagWeight();
-    	
-    	// If the playcount is negative I ignore it
-    	if(p < 0) qp = 0;
-    	
-    	// Compute the weighted normalized weight
-    	t.setWeight((qw*w+ql*((l-lmin)/lscale)+qp*((p-pmin)/pscale))/(qw+ql+qp));
-    }
-    
-    // Create a 1-word-gram/weigthed average dict
-    // Summing up the weights
-    for(int i = 0;i < tags.size(); i++)
-    {
-    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
-    	
-    	for(int j = 0; j < words.size(); j++)
-    	{
-    		key = words.get(j); 		
-
-    		if(wordgrams.containsKey(key))
-    		{
-    			value = wordgrams.get(key);
-    			
-    			// Sum up the weight
-    			wordgrams.put(key, value + tags.get(i).getWeight());
-    		}
-    		else
-    		{
-    			wordgrams.put(key, tags.get(i).getWeight());
-    		}
-    	}
-    }
-    
-    // Compute total occurrences of all words
-    for(int i = 0;i < tags.size(); i++)
-    {
-    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
-    	
-    	for(int j = 0; j < words.size(); j++)
-    	{
-    		key = words.get(j); 		
-
-    		if(totaloccur.containsKey(key))
-    		{   			
-    			// Sum up the occurrences
-    			totaloccur.put(key, totaloccur.get(key) + 1);
-    		}
-    		else
-    		{
-    			totaloccur.put(key, 1);
-    		}
-    	}
-    }
-    
-    // Compute the weighted normalized mean for each word   
-    for(Iterator<Map.Entry<String, Double>> iterator = wordgrams.entrySet().iterator(); iterator.hasNext(); ) 
-    {
-        Map.Entry<String, Double> entry = iterator.next();
-        
-        entry.setValue(entry.getValue()/totaloccur.get(entry.getKey()));
-        
-        if(entry.getValue() <= cutoff) 
-        {
-        	filtered.put(entry.getKey(), entry.getValue());
-        	iterator.remove();
-        }
-    }
-    
-    // Write files
-    writer_filtered.writeTagWeightMap(filtered);
-    writer_accepted.writeTagWeightMap(wordgrams);
-    
-    // Remove filtered words from all tags
-    for(Tag t: tags)
-    {
-    	words = psim.create_word_gram(t.getTagName(),blacklist);
-    	new_tag = "";
-    	
-    	for(String s: words)
-    	{
-    		if(wordgrams.containsKey(s))
-    		{
-    			new_tag = new_tag + " " + s;
-    		}
-    	}
-    	
-    	t.setTagName(new_tag);
-    }
+    // Filter words which have a weighted mean < 5%
+    filter.byWeightedMean(tags, blacklist);
     
     writer_filtered_tags.writeTagNames(tags);
     
