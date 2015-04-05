@@ -18,16 +18,16 @@ public class Filter {
 	    TagsToCSV writer_filtered;
 	    TagsToCSV writer_accepted;
 		
-	    Map<String, Double> wordgrams = new HashMap<String, Double>();
-	    Map<String, Integer> totaloccur = new HashMap<String, Integer>();
-	    Map<String, Double> filtered = new HashMap<String, Double>();
+	    Map<String, Double> tag_words = new HashMap<String, Double>();
+	    Map<String, Integer> total_word_occurrence = new HashMap<String, Integer>();
+	    Map<String, Double> filtered_words = new HashMap<String, Double>();
 	    
 	    List<String> words;
-	    int l, p, w;
+	    int listeners, playcount, lastfmweight;
 	    String key, new_tag = "";
-	    int lmin = 0,lmax = 0,pmin = 0,pmax = 0;
-	    double lscale = 0.0, pscale = 0.0;
-	    double qw = 1, ql = 1, qp = 1;
+	    int listeners_min = 0,listeners_max = 0,playcount_min = 0,playcount_max = 0;
+	    double listeners_scale = 0.0, playcount_scale = 0.0;
+	    double q_lastfmweight = 1, q_listeners = 1, q_playlist = 1;
 	    double value, cutoff;
 	    Boolean print_filtered, print_accepted;
 	    
@@ -39,11 +39,11 @@ public class Filter {
 	    
 		// Set weights for the weighted normalized weight for each tag/song pair
 		// Lastfmweight
-		qw = 1;
+		q_lastfmweight = 1;
 		// Listeners
-		ql = 2;
+		q_listeners = 2;
 		// Playcount
-		qp = 1;
+		q_playlist = 1;
 		
 		// Print temp files
 		print_filtered = false;
@@ -55,40 +55,41 @@ public class Filter {
 	    // get min and max for listeners and playcount
 	    for(Tag t: tags)
 	    {
-	    	l = t.getListeners();
-	    	p = t.getPlaycount();
+	    	listeners = t.getListeners();
+	    	playcount = t.getPlaycount();
 	    	
-	    	if(l > lmax) lmax = l;
-	    	if(l <= lmin) lmin = l;
+	    	if(listeners > listeners_max) listeners_max = listeners;
+	    	if(listeners <= listeners_min) listeners_min = listeners;
 	    	
-	    	if(p > pmax) pmax = p;
+	    	if(playcount > playcount_max) playcount_max = playcount;
+	    	
 	    	// Some songs have a playcount of -1 and i ignore them
-	    	if(p > -1)
+	    	if(playcount > -1)
 	    	{
-	    		if(p <= pmin) pmin = p;
+	    		if(playcount <= playcount_min) playcount_min = playcount;
 	    	}
 	    }
 	    
 	    // Compute scaling values
-	    // Using this tagweight, listeners and playcount have the same interval [0,100]
-	    lscale = (lmax - lmin) / 100.0;
-	    pscale = (pmax - pmin) / 100.0;
+	    // Using this values, tagweight, listeners and playcount have the same interval: [0,100]
+	    listeners_scale = (listeners_max - listeners_min) / 100.0;
+	    playcount_scale = (playcount_max - playcount_min) / 100.0;
 	    
 	    // Compute a weighted normalized weight for each tag/song pair
 	    for(Tag t: tags)
 	    {
-	    	l = t.getListeners();
-	    	p = t.getPlaycount();
-	    	w = t.getTagWeight();
+	    	listeners = t.getListeners();
+	    	playcount = t.getPlaycount();
+	    	lastfmweight = t.getTagWeight();
 	    	
 	    	// If the playcount is negative I ignore it
-	    	if(p < 0) qp = 0;
+	    	if(playcount < 0) q_playlist = 0;
 	    	
 	    	// Compute the weighted normalized weight
-	    	t.setWeight((qw*w+ql*((l-lmin)/lscale)+qp*((p-pmin)/pscale))/(qw+ql+qp));
+	    	t.setWeight((q_lastfmweight*lastfmweight+q_listeners*((listeners-listeners_min)/listeners_scale)+q_playlist*((playcount-playcount_min)/playcount_scale))/(q_lastfmweight+q_listeners+q_playlist));
 	    }
 	    
-	    // Create a 1-word-gram/weigthed average dict
+	    // Create a 1-word-gram/weighted average dict
 	    // Summing up the weights
 	    for(int i = 0;i < tags.size(); i++)
 	    {
@@ -98,16 +99,16 @@ public class Filter {
 	    	{
 	    		key = words.get(j); 		
 
-	    		if(wordgrams.containsKey(key))
+	    		if(tag_words.containsKey(key))
 	    		{
-	    			value = wordgrams.get(key);
+	    			value = tag_words.get(key);
 	    			
 	    			// Sum up the weight
-	    			wordgrams.put(key, value + tags.get(i).getWeight());
+	    			tag_words.put(key, value + tags.get(i).getWeight());
 	    		}
 	    		else
 	    		{
-	    			wordgrams.put(key, tags.get(i).getWeight());
+	    			tag_words.put(key, tags.get(i).getWeight());
 	    		}
 	    	}
 	    }
@@ -121,43 +122,44 @@ public class Filter {
 	    	{
 	    		key = words.get(j); 		
 
-	    		if(totaloccur.containsKey(key))
+	    		if(total_word_occurrence.containsKey(key))
 	    		{   			
 	    			// Sum up the occurrences
-	    			totaloccur.put(key, totaloccur.get(key) + 1);
+	    			total_word_occurrence.put(key, total_word_occurrence.get(key) + 1);
 	    		}
 	    		else
 	    		{
-	    			totaloccur.put(key, 1);
+	    			total_word_occurrence.put(key, 1);
 	    		}
 	    	}
 	    }
 	    
 	    // Compute the weighted normalized mean for each word   
-	    for(Iterator<Map.Entry<String, Double>> iterator = wordgrams.entrySet().iterator(); iterator.hasNext(); ) 
+	    for(Iterator<Map.Entry<String, Double>> iterator = tag_words.entrySet().iterator(); iterator.hasNext(); ) 
 	    {
 	        Map.Entry<String, Double> entry = iterator.next();
 	        
-	        entry.setValue(entry.getValue()/totaloccur.get(entry.getKey()));
+	        entry.setValue(entry.getValue()/total_word_occurrence.get(entry.getKey()));
 	        
+	        // Delete the entry if its lower than the cutoff
 	        if(entry.getValue() <= cutoff) 
 	        {
-	        	filtered.put(entry.getKey(), entry.getValue());
+	        	filtered_words.put(entry.getKey(), entry.getValue());
 	        	iterator.remove();
 	        }
 	    }
 	    
-	    // Write files
+	    // Write temp files
 	    if(print_filtered) 
     	{
 		    writer_filtered = new TagsToCSV("filtered.csv");
-    		writer_filtered.writeTagWeightMap(filtered);
+    		writer_filtered.writeTagWeightMap(filtered_words);
     	}
 	    
 	    if(print_accepted) 
     	{
 		    writer_accepted = new TagsToCSV("accepted.csv");
-    		writer_accepted.writeTagWeightMap(wordgrams);
+    		writer_accepted.writeTagWeightMap(tag_words);
     	}
 	    
 	    // Remove filtered words from all tags
@@ -168,7 +170,7 @@ public class Filter {
 	    	
 	    	for(String s: words)
 	    	{
-	    		if(wordgrams.containsKey(s))
+	    		if(tag_words.containsKey(s))
 	    		{
 	    			new_tag = new_tag + " " + s;
 	    		}
@@ -177,8 +179,8 @@ public class Filter {
 	    	t.setTagName(new_tag);
 	    }
 	    
-	    wordgrams = null;
-	    totaloccur = null;
-	    filtered = null;
+	    tag_words = null;
+	    total_word_occurrence = null;
+	    filtered_words = null;
 	}
 }
