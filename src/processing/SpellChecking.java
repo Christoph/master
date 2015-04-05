@@ -175,7 +175,7 @@ public class SpellChecking {
 	        new_tag = new_tag + " " + substitution_list.get(w);
 	      }
 
-	      t.setTagName(new_tag);
+	      t.setTagName(new_tag.trim());
 	    }
 	    
 	    helper.removeTagsWithoutWords(tags);

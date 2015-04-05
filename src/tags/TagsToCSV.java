@@ -110,6 +110,27 @@ public class TagsToCSV {
 		}
 	}
 	
+	public void writeTagList(List<Tag> data) {
+		
+		createHeader("SongID,SongName,Listeners,Playcount,TagID,TagName,TagWeight");
+
+		for(Tag t:data)
+		{
+			try {
+				writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getTagWeight()+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void writeTag(Tag t) {
 		if(head) 
 		{

@@ -83,6 +83,7 @@ public class Core {
     
     TagsToCSV writer_tags = new TagsToCSV("tags.csv");
     TagsToCSV writer_filtered_tags = new TagsToCSV("filtered_tags.csv");
+    TagsToCSV writer_taglist = new TagsToCSV("tags_processed.csv");
     
     //List<String> genres = im.importCSV("dicts/genres.txt");
     List<String> articles = im.importCSV("dicts/article.txt");
@@ -118,6 +119,8 @@ public class Core {
     filter.byWeightedMean(tags, blacklist);
     
     writer_filtered_tags.writeTagNames(tags);
+    
+    writer_taglist.writeTagList(tags);
     
     // Decision with Torsten: Removing all tracks with less than six tags.
 	// pro.deleteTracksWithTagsLessThan(6);

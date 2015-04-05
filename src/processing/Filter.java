@@ -177,7 +177,7 @@ public class Filter {
 	    		}
 	    	}
 	    	
-	    	t.setTagName(new_tag);
+	    	t.setTagName(new_tag.trim());
 	    }
 	    
 	    helper.removeTagsWithoutWords(tags);
