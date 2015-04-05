@@ -47,11 +47,7 @@ public class TagsToCSV {
 	      }
 	    }
 		
-		if(head)
-	    {
-	      createHeader("Truth,Replaced");
-	      head = false;
-	    }
+	    createHeader("Truth,Replaced");
 		
 		for(String s:exp_subs.keySet())
 		{
@@ -72,12 +68,30 @@ public class TagsToCSV {
 		}
 	}
 	
+	public void writeTagWeightMap(Map<String, Double> filtered)
+	{		
+	    createHeader("Tag,Weight");
+		
+		for(String s:filtered.keySet())
+		{
+			try {
+				writer.write("\""+s+"\" ,\""+filtered.get(s)+"\"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void writeTagNames(List<Tag> data) {
-    if(head)
-    {
-      createHeader("Original,Processed");
-      head = false;
-    }
+		
+    createHeader("Original,Processed");
 
 		for(Tag t:data)
 		{
@@ -92,7 +106,6 @@ public class TagsToCSV {
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

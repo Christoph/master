@@ -19,7 +19,7 @@ public class SpellChecking {
 	    /////////////////////////////////
 	    // Variables
 	    PlainStringSimilarity psim = new PlainStringSimilarity();
-		TagsToCSV writer_subs = new TagsToCSV("subs.csv");
+		TagsToCSV writer_subs;
 		
 	    Map<String, Integer> wordgrams = new HashMap<String, Integer>();
 	    Map<String, Set<String>> phon = new HashMap<String, Set<String>>();
@@ -157,6 +157,7 @@ public class SpellChecking {
 	    // Export substitution list
 	    if(export_substitutions)
 	    {
+	    	writer_subs = new TagsToCSV("subs.csv");
 	    	writer_subs.writeSubs(subs);
 	    }
 	    

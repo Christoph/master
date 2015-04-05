@@ -110,19 +110,23 @@ public class Core {
     writer.writeTagNames(tags);
     
     // Removing rare and less used tags
-    TagsToCSV writer_freq = new TagsToCSV("freq.csv");
-    TagsToCSV writer_filtered = new TagsToCSV("filt.csv");
+    TagsToCSV writer_filtered = new TagsToCSV("filtered.csv");
+    TagsToCSV writer_accepted = new TagsToCSV("accepted.csv");
+    TagsToCSV writer_filtered_tags = new TagsToCSV("filtered_tags.csv");
 	
     Map<String, Double> wordgrams = new HashMap<String, Double>();
     Map<String, Integer> totaloccur = new HashMap<String, Integer>();
+    Map<String, Double> filtered = new HashMap<String, Double>();
     
     List<String> words;
     int l, p, w;
-    String key;
+    String key, new_tag = "";
     int lmin = 0,lmax = 0,pmin = 0,pmax = 0;
     double lscale = 0.0, pscale = 0.0;
     double qw = 1, ql = 1, qp = 1;
     double value;
+    // Remove all tags below cutoff percent
+    double cutoff = 5;
     
     // get min and max for listeners and playcount
     for(Tag t: tags)
@@ -192,7 +196,7 @@ public class Core {
     	}
     }
     
-    // Compute total occurrences of all tags
+    // Compute total occurrences of all words
     for(int i = 0;i < tags.size(); i++)
     {
     	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
@@ -213,11 +217,42 @@ public class Core {
     	}
     }
     
-    // Compute the weighted normalized mean for each tag
-    for(String s: wordgrams.keySet())
+    // Compute the weighted normalized mean for each word   
+    for(Iterator<Map.Entry<String, Double>> iterator = wordgrams.entrySet().iterator(); iterator.hasNext(); ) 
     {
-    	wordgrams.put(s, wordgrams.get(s)/totaloccur.get(s));
+        Map.Entry<String, Double> entry = iterator.next();
+        
+        entry.setValue(entry.getValue()/totaloccur.get(entry.getKey()));
+        
+        if(entry.getValue() <= cutoff) 
+        {
+        	filtered.put(entry.getKey(), entry.getValue());
+        	iterator.remove();
+        }
     }
+    
+    // Write files
+    writer_filtered.writeTagWeightMap(filtered);
+    writer_accepted.writeTagWeightMap(wordgrams);
+    
+    // Remove filtered words from all tags
+    for(Tag t: tags)
+    {
+    	words = psim.create_word_gram(t.getTagName(),blacklist);
+    	new_tag = "";
+    	
+    	for(String s: words)
+    	{
+    		if(wordgrams.containsKey(s))
+    		{
+    			new_tag = new_tag + " " + s;
+    		}
+    	}
+    	
+    	t.setTagName(new_tag);
+    }
+    
+    writer_filtered_tags.writeTagNames(tags);
     
     // Decision with Torsten: Removing all tracks with less than six tags.
 	// pro.deleteTracksWithTagsLessThan(6);
