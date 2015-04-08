@@ -81,8 +81,6 @@ public class Core {
     SpellChecking checker = new SpellChecking();
     Filter filter = new Filter();
     
-    TagsToCSV writer_tags = new TagsToCSV("tags.csv");
-    TagsToCSV writer_filtered_tags = new TagsToCSV("filtered_tags.csv");
     TagsToCSV writer_taglist = new TagsToCSV("tags_processed.csv");
     
     //List<String> genres = im.importCSV("dicts/genres.txt");
@@ -100,9 +98,6 @@ public class Core {
     // Somehow some tags have words without characters...
     blacklist.add("");
     
-    /////////////////////////////////
-    // Spell checking
-    
     // Get all tags
     List<Tag> tags;
     tags = pro.getAll();
@@ -112,14 +107,10 @@ public class Core {
     
     // Basic spell checking
     checker.withPhoneticsAndNgrams(tags, blacklist);
-
-    writer_tags.writeTagNames(tags);
     
     // Filter words which have a weighted mean < 5%
     filter.byWeightedMean(tags, blacklist);
-    
-    writer_filtered_tags.writeTagNames(tags);
-    
+        
     writer_taglist.writeTagList(tags);
     
     // Decision with Torsten: Removing all tracks with less than six tags.

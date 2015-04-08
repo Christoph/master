@@ -30,6 +30,7 @@ public class SpellChecking {
 	    Set<String> temp;
 	    int value, listener_count, ngram_size;
 	    double similarity;
+	    float threshold;
 	    String key, phonetic, new_tag;
 	    Boolean print_substitutions;
         HashSet<String> h1, h2;
@@ -46,6 +47,9 @@ public class SpellChecking {
 		
 		// Set the size for the n-gram distance method
 		ngram_size = 2;
+		
+		// Acceptance threshold
+		threshold = 0.7f;
 		
 		// Choose distance metric on line 143
 		
@@ -141,12 +145,12 @@ public class SpellChecking {
 	              h2 = psim.create_n_gram(high, ngram_size);
 	              
 	              // Choose distance methods
-	              similarity = psim.dice_coeffizient(h1, h2);
-	              //dist = psim.jaccard_index(h1, h2);
-	              //dist = psim.cosine_similarity(h1, h2);
+	              //similarity = psim.dice_coeffizient(h1, h2);
+	              similarity = psim.jaccard_index(h1, h2);
+	              //similarity = psim.cosine_similarity(h1, h2);
 	              
 	              // Check if the ngram method gives a similarity > 70%
-	              if(similarity > 0.7)
+	              if(similarity > threshold)
 	              {
 	                substitution_list.put(word, high);
 	                iterator.remove();
