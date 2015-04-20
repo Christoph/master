@@ -108,6 +108,74 @@ public class Core {
     // Basic spell checking
     checker.withPhoneticsAndNgrams(tags, blacklist);
     
+    // Find word groups
+    
+    /////////////////////////////////
+    // Variables
+    TagsToCSV writer_2words_group;
+	
+    Map<String, Integer> word_count = new HashMap<String, Integer>();
+    Map<String, List<String>> word_occu = new HashMap<String, List<String>>();
+    
+    List<String> words, values;
+    List<String> co_words = new ArrayList<String>();
+    int value;
+    String key;
+    HashSet<String> h1, h2;
+    
+    // Create a 1-word-gram/total occurrences
+    for(int i = 0;i < tags.size(); i++)
+    {
+    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
+    	
+    	for(int j = 0; j < words.size(); j++)
+    	{
+    		key = words.get(j); 		
+
+    		if(word_count.containsKey(key))
+    		{
+    			value = word_count.get(key);
+    			
+    			// Sum up the count
+    			word_count.put(key, value + 1);
+    		}
+    		else
+    		{
+    			word_count.put(key, 1);
+    		}
+    	}
+    }
+    
+    // Create a 1-word-gram/co-occurrend tags dict
+    for(int i = 0;i < tags.size(); i++)
+    {
+    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
+    	
+    	for(int j = 0; j < words.size(); j++)
+    	{
+    		key = words.get(j); 
+    		
+    		co_words.clear();
+    		co_words.addAll(words);
+    		co_words.remove(key);
+
+    		if(word_occu.containsKey(key))
+    		{
+    			values = word_occu.get(key);
+    			values.addAll(co_words);
+    			
+    			word_occu.put(key, values);
+    		}
+    		else
+    		{
+    			values = new ArrayList<String>();
+    			values.addAll(co_words);
+    			
+    			word_occu.put(key, values);
+    		}
+    	}
+    }
+    
     // Filter words which have a weighted mean < 5%
     filter.byWeightedMean(tags, blacklist);
         

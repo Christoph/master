@@ -20,7 +20,7 @@ public class SpellChecking {
 	    // Variables
 	    PlainStringSimilarity psim = new PlainStringSimilarity();
 	    Helper helper = new Helper();
-		TagsToCSV writer_subs;
+	    TagsToCSV writer_subs;
 		
 	    Map<String, Integer> tag_words = new HashMap<String, Integer>();
 	    Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
@@ -33,7 +33,7 @@ public class SpellChecking {
 	    float threshold;
 	    String key, phonetic, new_tag;
 	    Boolean print_substitutions;
-        HashSet<String> h1, h2;
+      HashSet<String> h1, h2;
 	    
 		/////////////////////////////////
 		// Configuration
