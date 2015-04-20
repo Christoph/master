@@ -1,5 +1,5 @@
 #Config DB
 database=jdbc:mariadb://localhost/tags
-user=root
-password=sh0wt1me
+user=user
+password=pw
 API=LastFM API Key
