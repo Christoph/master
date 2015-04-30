@@ -31,13 +31,17 @@ public class Grouping_Simple {
 	    
 		/////////////////////////////////
 		// Configuration
+	    
 	    // Which groups are accepted [0,1]
 	    acceptance_value = 0.2;
 	    
 		// Print temp files
-	    print_groups = true;
-		print_accepted = true;
+	    print_groups = false;
+		print_accepted = false;
 	    
+		/////////////////////////////////
+		// Algorithm
+		
 	    // Create a n-word-gram/total occurrences
 	    for(int i = 0;i < tags.size(); i++)
 	    {
