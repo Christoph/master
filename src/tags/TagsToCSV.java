@@ -89,6 +89,48 @@ public class TagsToCSV {
 		}
 	}
 	
+	public void writeGroups(Map<String, Double> groups)
+	{		
+	    createHeader("Tag,Strength");
+		
+		for(String s:groups.keySet())
+		{
+			try {
+				writer.write("\""+s+"\" ,\""+groups.get(s)+"\"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeTagOccu(Map<String, Integer> groups)
+	{		
+	    createHeader("Tag,Occurences");
+		
+		for(String s:groups.keySet())
+		{
+			try {
+				writer.write("\""+s+"\" ,\""+groups.get(s)+"\"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void writeTagNames(List<Tag> data) {
 		
     createHeader("Original,Processed");

@@ -80,6 +80,7 @@ public class Core {
     PlainStringSimilarity psim = new PlainStringSimilarity();
     SpellChecking checker = new SpellChecking();
     Filter filter = new Filter();
+    Grouping_Simple grouping = new Grouping_Simple();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_processed.csv");
     
@@ -109,20 +110,25 @@ public class Core {
     checker.withPhoneticsAndNgrams(tags, blacklist);
     
     // Find word groups
+    grouping.groupBy(tags, blacklist, 2);
     
+    // VARIATION 1
+    /*
     /////////////////////////////////
     // Variables
-    TagsToCSV writer_2words_group;
+    TagsToCSV writer_2words_groups = new TagsToCSV("groups.csv");
+    TagsToCSV writer_word_occu = new TagsToCSV("occu.csv");
 	
     Map<String, Integer> word_count = new HashMap<String, Integer>();
-    Map<String, List<String>> word_occu = new HashMap<String, List<String>>();
+    Map<String, Integer> word_groups = new HashMap<String, Integer>();
+    Map<String, Double> group_weight = new HashMap<String, Double>();
+    Map<String, Double> filtered_groups = new HashMap<String, Double>();
     
-    List<String> words, values;
-    List<String> co_words = new ArrayList<String>();
+    List<String> words;
     int value;
-    String key;
-    HashSet<String> h1, h2;
-    
+    double nom, deno, strength, min_o = 1, max_o = 0;
+    String key, group;
+     
     // Create a 1-word-gram/total occurrences
     for(int i = 0;i < tags.size(); i++)
     {
@@ -146,40 +152,69 @@ public class Core {
     	}
     }
     
-    // Create a 1-word-gram/co-occurrend tags dict
+    
+    // Create a 2-word-gram/total occurrences
     for(int i = 0;i < tags.size(); i++)
     {
-    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
+    	words = psim.create_word_n_gram(tags.get(i).getTagName(),2,blacklist);
     	
     	for(int j = 0; j < words.size(); j++)
     	{
-    		key = words.get(j); 
-    		
-    		co_words.clear();
-    		co_words.addAll(words);
-    		co_words.remove(key);
+    		key = words.get(j); 		
 
-    		if(word_occu.containsKey(key))
+    		if(word_groups.containsKey(key))
     		{
-    			values = word_occu.get(key);
-    			values.addAll(co_words);
+    			value = word_groups.get(key);
     			
-    			word_occu.put(key, values);
+    			// Sum up the count
+    			word_groups.put(key, value + 1);
     		}
     		else
     		{
-    			values = new ArrayList<String>();
-    			values.addAll(co_words);
-    			
-    			word_occu.put(key, values);
+    			word_groups.put(key, 1);
     		}
     	}
     }
     
+    writer_word_occu.writeTagOccu(word_groups);
+    
+    // Compute binding strength
+    for(String k: word_groups.keySet())
+    {
+    	words = psim.create_word_gram(k,blacklist);
+    	deno = 0;
+    	group = "";
+    	
+    	for(String s: words)
+    	{
+    		deno = deno + word_count.get(s);
+    	}
+    	
+    	nom = word_groups.get(k);
+    	strength = nom/deno;
+    	group_weight.put(k.replace(" ", "-"), strength);
+    	
+		// Find min max
+    	if(strength < min_o) min_o = strength;
+    	if(strength >= max_o) max_o = strength;
+    }
+    
+    // Normalize
+    for(String s: group_weight.keySet())
+    {
+    	strength = (group_weight.get(s)-min_o)/(max_o - min_o);
+    	
+    	// Set acceptance border
+    	if(strength >= 0.1) filtered_groups.put(s, strength);
+    }
+    
+    writer_2words_groups.writeGroups(filtered_groups);
+    */
+    
     // Filter words which have a weighted mean < 5%
-    filter.byWeightedMean(tags, blacklist);
+    //filter.byWeightedMean(tags, blacklist);
         
-    writer_taglist.writeTagList(tags);
+    //writer_taglist.writeTagList(tags);
     
     // Decision with Torsten: Removing all tracks with less than six tags.
 	// pro.deleteTracksWithTagsLessThan(6);

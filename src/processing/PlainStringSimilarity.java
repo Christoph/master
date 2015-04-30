@@ -77,7 +77,7 @@ public class PlainStringSimilarity {
     return set;
   }
   
-  public List<String> create_word_n_gram(String text, int n) {
+  public List<String> create_word_n_gram(String text, int n, List<String> blacklist) {
   	// Initialize variables
     List<String> set = new ArrayList<String>();
     List<String> gram = new ArrayList<String>();
@@ -93,6 +93,8 @@ public class PlainStringSimilarity {
     	{
     		set.add(s);
     	}
+    	
+    	set.removeAll(blacklist);
     	
     	l = set.size();
     	
