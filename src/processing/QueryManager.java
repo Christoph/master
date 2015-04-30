@@ -79,7 +79,7 @@ public class QueryManager {
   	ResultSet result = selectAll.executeQuery();
   	
   	while(result.next()) {
-  		data.add(new Tag(result.getString("TagName").toLowerCase(), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners")));
+  		data.add(new Tag(result.getString("TagName").toLowerCase().replace('-', ' '), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners")));
   	}
 
     // Close huge resultset

@@ -58,7 +58,7 @@ public class PlainStringSimilarity {
     List<String> set = new ArrayList<String>();
     
     // Replace all - with spaces to have a consistent basis
-    text = text.replace('-', ' ');
+    //text = text.replace('-', ' ');
     
     if(!text.contains(" "))
     {
