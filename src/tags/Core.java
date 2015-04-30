@@ -214,7 +214,7 @@ public class Core {
     // Filter words which have a weighted mean < 5%
     //filter.byWeightedMean(tags, blacklist);
         
-    //writer_taglist.writeTagList(tags);
+    writer_taglist.writeTagList(tags);
     
     // Decision with Torsten: Removing all tracks with less than six tags.
 	// pro.deleteTracksWithTagsLessThan(6);

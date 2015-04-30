@@ -35,8 +35,8 @@ public class Grouping_Simple {
 	    acceptance_value = 0.2;
 	    
 		// Print temp files
-	    print_groups = false;
-		print_accepted = false;
+	    print_groups = true;
+		print_accepted = true;
 	    
 	    // Create a n-word-gram/total occurrences
 	    for(int i = 0;i < tags.size(); i++)
@@ -92,7 +92,7 @@ public class Grouping_Simple {
 	    
 	    // Replace tag groups
 	    for(Tag t: tags)
-	    {
+	    {	    	
 		  groups = psim.create_word_n_gram(t.getTagName(),size,blacklist);
 		  words = psim.create_word_gram(t.getTagName(),blacklist);
 	      new_tag = "";
@@ -124,13 +124,23 @@ public class Grouping_Simple {
 		      }
 	
 		      temp = psim.create_word_gram(key,blacklist);
-		      words.removeAll(temp);
 		      subs.remove(key);
 		      
-		      key = key.replace(" ", "-");
-		      
-		      new_tag = new_tag+" "+key;
+		      if(words.containsAll(temp))
+		      {
+			      words.removeAll(temp);
+			      
+			      key = key.replace(" ", "-");
+			      
+			      new_tag = new_tag+" "+key;
+		      }  
 	      } while(subs.size() > 0);
+	      
+	      // Add missing single word tags
+	      for(String s : words)
+	      {
+	    	  new_tag = new_tag+" "+s;
+	      }
 	      
 	      // Replace tag name
 	      t.setTagName(new_tag.trim());
