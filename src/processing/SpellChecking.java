@@ -21,6 +21,7 @@ public class SpellChecking {
 	    PlainStringSimilarity psim = new PlainStringSimilarity();
 	    Helper helper = new Helper();
 	    TagsToCSV writer_subs;
+	    TagsToCSV writer_subs_count;
 		
 	    Map<String, Integer> tag_words = new HashMap<String, Integer>();
 	    Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
@@ -33,7 +34,7 @@ public class SpellChecking {
 	    float threshold;
 	    String key, phonetic, new_tag;
 	    Boolean print_substitutions;
-      HashSet<String> h1, h2;
+	    HashSet<String> h1, h2;
 	    
 		/////////////////////////////////
 		// Configuration
@@ -43,7 +44,7 @@ public class SpellChecking {
 		//ColognePhonetic phonetic = new ColognePhonetic();
 		
 		// Print substitution list
-		print_substitutions = false;
+		print_substitutions = true;
 		
 		// Set the size for the n-gram distance method
 		ngram_size = 2;
@@ -164,8 +165,37 @@ public class SpellChecking {
 	    // Export substitution list
 	    if(print_substitutions)
 	    {
+	    	Map<String, String> out = new HashMap<String, String>();
+	    	Map<String, Integer> count = new HashMap<String, Integer>();
+	 
+	    	for(String s: substitution_list.keySet())
+	    	{
+	    		String str = substitution_list.get(s);
+	    		if(!s.equals(str))
+	    		{		
+	    			out.put(s,substitution_list.get(s));
+	    		}
+	    	}
+	    	
+	    	for(String s: out.keySet())
+	    	{	    		
+	  	      key = out.get(s);
+
+		      if(count.containsKey(key))
+		      {
+		    	  count.put(key,count.get(key)+1);
+		      }
+		      else
+		      {
+		    	  count.put(key,1);
+		      }
+	    	}
+	    	
 	    	writer_subs = new TagsToCSV("subs.csv");
-	    	writer_subs.writeSubs(substitution_list);
+	    	writer_subs.writeSubs(out);
+	    	
+	    	writer_subs_count = new TagsToCSV("subs_count.csv");
+	    	writer_subs_count.writeTagOccu(count);
 	    }
 	    
 	    // Replace tags corresponding to the subs dict

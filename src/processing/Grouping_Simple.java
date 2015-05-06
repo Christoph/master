@@ -18,7 +18,6 @@ public class Grouping_Simple {
 	    TagsToCSV writer_acc;
 		
 	    Map<String, Integer> word_count = new HashMap<String, Integer>();
-	    Map<String, Double> word_groups = new HashMap<String, Double>();
 	    Map<String, Double> good_groups = new HashMap<String, Double>();
 	    Map<String, Double> subs = new HashMap<String, Double>();
 	    
@@ -36,8 +35,8 @@ public class Grouping_Simple {
 	    acceptance_value = 0.2;
 	    
 		// Print temp files
-	    print_groups = false;
-		print_accepted = false;
+	    print_groups = true;
+		print_accepted = true;
 	    
 		/////////////////////////////////
 		// Algorithm
@@ -85,7 +84,7 @@ public class Grouping_Simple {
 	    if(print_groups) 
     	{
 	    	writer_groups = new TagsToCSV("groups.csv");
-	    	writer_groups.writeGroups(word_groups);
+	    	writer_groups.writeTagOccu(word_count);
     	}
 	    
 	    if(print_accepted) 

@@ -3,24 +3,13 @@ package tags;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.*;
 
-import mining.*;
 import processing.*;
 import processing.Filter;
-
-import org.apache.commons.codec.language.*;
-import org.apache.commons.codec.language.bm.Rule.PhonemeList;
 
 public class Core {
 
@@ -77,11 +66,10 @@ public class Core {
     // Variable initialization  
     Processor pro = new Processor(dbconf);
     ImportCSV im = new ImportCSV();
-    PlainStringSimilarity psim = new PlainStringSimilarity();
     SpellChecking checker = new SpellChecking();
     Filter filter = new Filter();
-    //Grouping_Simple grouping = new Grouping_Simple();
-    Grouping grouping = new Grouping();
+    Grouping_Simple grouping = new Grouping_Simple();
+    //Grouping grouping = new Grouping();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_processed.csv");
     
@@ -117,7 +105,7 @@ public class Core {
     grouping.groupBy(tags, blacklist, 2);
     
     // Filter words which have a weighted mean < 5%
-    //filter.byWeightedMean(tags, blacklist);
+    filter.byWeightedMean(tags, blacklist);
         
     writer_taglist.writeTagList(tags);
     

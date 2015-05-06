@@ -68,14 +68,23 @@ public class TagsToCSV {
 		}
 	}
 	
-	public void writeTagWeightMap(Map<String, Double> filtered)
+	public void writeTagWeightMap(Map<String, Double> filtered, Map<String, Double> accepted)
 	{		
-	    createHeader("Tag,Weight");
+	    createHeader("Tag,Weight,Accepted");
 		
+	    for(String s:accepted.keySet())
+		{
+			try {
+				writer.write("\""+s+"\" ,"+accepted.get(s)+" ,"+1+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	    
 		for(String s:filtered.keySet())
 		{
 			try {
-				writer.write("\""+s+"\" ,\""+filtered.get(s)+"\"\n");
+				writer.write("\""+s+"\" ,"+filtered.get(s)+" ,"+0+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -96,7 +105,7 @@ public class TagsToCSV {
 		for(String s:groups.keySet())
 		{
 			try {
-				writer.write("\""+s+"\" ,\""+groups.get(s)+"\"\n");
+				writer.write("\""+s+"\" ,"+groups.get(s)+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -117,7 +126,7 @@ public class TagsToCSV {
 		for(String s:groups.keySet())
 		{
 			try {
-				writer.write("\""+s+"\" ,\""+groups.get(s)+"\"\n");
+				writer.write("\""+s+"\" ,"+groups.get(s)+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

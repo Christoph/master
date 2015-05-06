@@ -17,7 +17,6 @@ public class Filter {
 	    PlainStringSimilarity string_similarity = new PlainStringSimilarity();
 	    Helper helper = new Helper();
 	    TagsToCSV writer_filtered;
-	    TagsToCSV writer_accepted;
 		
 	    Map<String, Double> tag_words = new HashMap<String, Double>();
 	    Map<String, Integer> total_word_occurrence = new HashMap<String, Integer>();
@@ -30,26 +29,25 @@ public class Filter {
 	    double listeners_scale = 0.0, playcount_scale = 0.0;
 	    double q_lastfmweight = 1, q_listeners = 1, q_playlist = 1;
 	    double value, cutoff;
-	    Boolean print_filtered, print_accepted;
+	    Boolean print_filtered;
 	    
 		/////////////////////////////////
 		// Configuration
 	    
 	    // Remove all tags below cutoff percent
-	    cutoff = 5;
+	    cutoff = 10;
 	    
 		// Set weights for the weighted normalized weight for each tag/song pair
 		// Lastfmweight
-		q_lastfmweight = 1;
+		q_lastfmweight = 10;
 		// Listeners
 		q_listeners = 2;
 		// Playcount
 		q_playlist = 1;
 		
 		// Print temp files
-		print_filtered = false;
-		print_accepted = false;
-	    
+		print_filtered = true;
+
 		/////////////////////////////////
 		// Algorithm	
 		
@@ -153,14 +151,8 @@ public class Filter {
 	    // Write temp files
 	    if(print_filtered) 
     	{
-		    writer_filtered = new TagsToCSV("filtered.csv");
-    		writer_filtered.writeTagWeightMap(filtered_words);
-    	}
-	    
-	    if(print_accepted) 
-    	{
-		    writer_accepted = new TagsToCSV("accepted.csv");
-    		writer_accepted.writeTagWeightMap(tag_words);
+		    writer_filtered = new TagsToCSV("tag_weights.csv");
+    		writer_filtered.writeTagWeightMap(filtered_words,tag_words);
     	}
 	    
 	    // Remove filtered words from all tags

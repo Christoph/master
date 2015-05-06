@@ -32,11 +32,11 @@ public class Grouping {
 		// Configuration
 		
 	    // Which groups are accepted [0,1]
-	    acceptance_value = 0.7;
+	    acceptance_value = 0.2;
 		
 		// Print temp files
-	    print_groups = false;
-		print_accepted = false;
+	    print_groups = true;
+		print_accepted = true;
 		
 		/////////////////////////////////
 		// Algorithm
