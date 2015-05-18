@@ -72,6 +72,7 @@ public class Core {
     //Grouping grouping = new Grouping();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_processed.csv");
+    TagsToCSV writer_tags = new TagsToCSV("tags.csv");
     
     //List<String> genres = im.importCSV("dicts/genres.txt");
     List<String> articles = im.importCSV("dicts/article.txt");
@@ -98,6 +99,8 @@ public class Core {
 	/////////////////////////////////
     // Algorithm
     
+    writer_tags.writeTagList(tags);
+    
     // Basic spell checking
     checker.withPhoneticsAndNgrams(tags, blacklist);
     
@@ -107,7 +110,7 @@ public class Core {
     // Filter words which have a weighted mean < 5%
     filter.byWeightedMean(tags, blacklist);
         
-    writer_taglist.writeTagList(tags);
+    writer_taglist.writeTagListCustomWeight(tags);
     
     // Maybe outdated
     // Decision with Torsten: Removing all tracks with less than six tags.

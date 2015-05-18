@@ -141,7 +141,7 @@ public class Filter {
 	        entry.setValue(entry.getValue()/total_word_occurrence.get(entry.getKey()));
 	        
 	        // Delete the entry if its lower than the cutoff
-	        if(entry.getValue() <= cutoff) 
+	        if(entry.getValue() < cutoff) 
 	        {
 	        	filtered_words.put(entry.getKey(), entry.getValue());
 	        	iterator.remove();
@@ -155,20 +155,29 @@ public class Filter {
     		writer_filtered.writeTagWeightMap(filtered_words,tag_words);
     	}
 	    
+	    double total_weight = 0;
+	    int counter = 0;
+	    
 	    // Remove filtered words from all tags
 	    for(Tag t: tags)
 	    {
 	    	words = string_similarity.create_word_gram(t.getTagName(),blacklist);
 	    	new_tag = "";
+	    	total_weight = 0;
+	    	counter = 0;
 	    	
 	    	for(String s: words)
 	    	{
 	    		if(tag_words.containsKey(s))
 	    		{
+	    			total_weight  = total_weight + tag_words.get(s);
+	    			counter++;
+	    			
 	    			new_tag = new_tag + " " + s;
 	    		}
 	    	}
 	    	
+	    	t.setWeight(total_weight/counter);
 	    	t.setTagName(new_tag.trim());
 	    }
 	    
