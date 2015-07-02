@@ -163,12 +163,12 @@ public class TagsToCSV {
 	
 	public void writeTagList(List<Tag> data) {
 		
-		createHeader("SongID,SongName,Listeners,Playcount,TagID,TagName,TagWeight");
+		createHeader("SongID,SongName,Listeners,Playcount,TagID,TagName,LastFMWeight");
 
 		for(Tag t:data)
 		{
 			try {
-				writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getTagWeight()+"\n");
+				writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -184,12 +184,12 @@ public class TagsToCSV {
 	
 	public void writeTagListCustomWeight(List<Tag> data) {
 		
-		createHeader("SongID,SongName,Listeners,Playcount,TagID,TagName,TagWeight");
+		createHeader("SongID,SongName,Listeners,Playcount,TagID,TagName,LastFMWeight,TagWeight");
 
 		for(Tag t:data)
 		{
 			try {
-				writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getWeight()+"\n");
+				writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+","+t.getWeight()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -206,12 +206,12 @@ public class TagsToCSV {
 	public void writeTag(Tag t) {
 		if(head) 
 		{
-			createHeader("SongID,SongName,Listeners,Playcount,TagID,TagName,TagWeight");
+			createHeader("SongID,SongName,Listeners,Playcount,TagID,TagName,TagLastFMWeight");
 			head = false;
 		}
 		
 		try {
-			writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getTagWeight()+"\n");
+			writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+"\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

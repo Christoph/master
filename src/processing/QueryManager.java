@@ -34,6 +34,8 @@ public class QueryManager {
       
       stmt = conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY,
               java.sql.ResultSet.CONCUR_READ_ONLY);
+      stmt.setFetchSize(Integer.MIN_VALUE);
+      
       
     } catch (SQLException e) { 
     	log.severe("Error in the DB constructor."+e.getSQLState()+e.getMessage());
@@ -82,10 +84,8 @@ public class QueryManager {
   	List<Tag> data = new ArrayList<Tag>();
   	
   	ResultSet result = stmt.executeQuery("select Track.ID as SongID, Track.Name as SongName, Track.Listeners, Track.Playcount, Tag.ID as TagID, Tag.Name as TagName, TT.Count as TagWeight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID;");
-  	int c = 0;
-  	while(result.next()) {  
-  		c++;
-  		if(c%1000000==0)System.out.println(c);
+  	
+  	while(result.next()) {    		
   		data.add(new Tag(result.getString("TagName").toLowerCase().replace('-', ' '), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners")));
   	}
 

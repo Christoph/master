@@ -25,8 +25,9 @@ public class Filter {
 	    List<String> words;
 	    int listeners, playcount, lastfmweight;
 	    String key, new_tag = "";
-	    int listeners_min = 0,listeners_max = 0,playcount_min = 0,playcount_max = 0;
-	    double listeners_scale = 0.0, playcount_scale = 0.0;
+	    //int listeners_min = 0,listeners_max = 0,playcount_min = 0,playcount_max = 0;
+	    //double listeners_scale = 0.0, playcount_scale = 0.0;
+	    double weight, max_w = 0, min_w = 0;
 	    double q_lastfmweight = 1, q_listeners = 1, q_playlist = 1;
 	    double value;
 	    Boolean print_filtered;
@@ -36,11 +37,11 @@ public class Filter {
 	    
 		// Set weights for the weighted normalized weight for each tag/song pair
 		// Lastfmweight
-		q_lastfmweight = 10;
+		q_lastfmweight = 1;
 		// Listeners
-		q_listeners = 10;
+		q_listeners = 1;
 		// Playcount
-		q_playlist = 10;
+		q_playlist = 1;
 		
 		// Print temp files
 		print_filtered = true;
@@ -49,6 +50,7 @@ public class Filter {
 		// Algorithm	
 		
 	    // get min and max for listeners and playcount
+		/*
 	    for(Tag t: tags)
 	    {
 	    	listeners = t.getListeners();
@@ -65,24 +67,40 @@ public class Filter {
 	    		if(playcount <= playcount_min) playcount_min = playcount;
 	    	}
 	    }
+	    */
 	    
 	    // Compute scaling values
 	    // Using this values, tagweight, listeners and playcount have the same interval: [0,100]
-	    listeners_scale = (listeners_max - listeners_min) / 100.0;
-	    playcount_scale = (playcount_max - playcount_min) / 100.0;
-	    
+	    // listeners_scale = (listeners_max - listeners_min) / 100.0;
+	    // playcount_scale = (playcount_max - playcount_min) / 100.0;
+
 	    // Compute a weighted normalized weight for each tag/song pair
 	    for(Tag t: tags)
 	    {
 	    	listeners = t.getListeners();
 	    	playcount = t.getPlaycount();
-	    	lastfmweight = t.getTagWeight();
+	    	lastfmweight = t.getLastFMWeight();
 	    	
 	    	// If the playcount is negative I ignore it
-	    	if(playcount < 0) q_playlist = 0;
+	    	if(playcount <= 0) 
+    		{
+    			q_playlist = 0;
+    			// If playcount is 0 i get a weight of NaN
+    			playcount = 1;
+    		}
 	    	
 	    	// Compute the weighted normalized weight
-	    	t.setWeight((q_lastfmweight*lastfmweight+q_listeners*((listeners-listeners_min)/listeners_scale)+q_playlist*((playcount-playcount_min)/playcount_scale))/(q_lastfmweight+q_listeners+q_playlist));
+	    	//t.setWeight((q_lastfmweight*lastfmweight+q_listeners*((listeners-listeners_min)/listeners_scale)+q_playlist*((playcount-playcount_min)/playcount_scale))/(q_lastfmweight+q_listeners+q_playlist));
+	    	
+    		if(t.getTagName().equals("broadside-balladeer"))
+    			key = "broadside-balladeer";
+	    	
+	    	weight = lastfmweight*(q_listeners*Math.log(listeners)+q_playlist*Math.log(playcount));
+	    	t.setWeight(weight);
+	    	
+	    	// Save min and max
+	    	if(weight > max_w) max_w = weight;
+	    	if(weight <= min_w) min_w = weight;
 	    }
 	    
 	    // Create a 1-word-gram/weighted average dict
@@ -93,18 +111,21 @@ public class Filter {
 	    	
 	    	for(int j = 0; j < words.size(); j++)
 	    	{
-	    		key = words.get(j); 		
+	    		key = words.get(j); 	
+	    		
+	    		//Normalize weight to [0,1]
+	    		weight = (tags.get(i).getWeight())/(max_w);
 
 	    		if(tag_words.containsKey(key))
 	    		{
 	    			value = tag_words.get(key);
 	    			
 	    			// Sum up the weight
-	    			tag_words.put(key, value + tags.get(i).getWeight());
+	    			tag_words.put(key, value + weight);
 	    		}
 	    		else
 	    		{
-	    			tag_words.put(key, tags.get(i).getWeight());
+	    			tag_words.put(key, weight);
 	    		}
 	    	}
 	    }
@@ -138,11 +159,13 @@ public class Filter {
 	        entry.setValue(entry.getValue()/total_word_occurrence.get(entry.getKey()));
 	        
 	        // Delete the entry if its lower than the cutoff
+	        /*
 	        if(entry.getValue() < cutoff) 
 	        {
 	        	filtered_words.put(entry.getKey(), entry.getValue());
 	        	iterator.remove();
 	        }
+	        */
 	    }
 	    
 	    // Write temp files
@@ -152,31 +175,27 @@ public class Filter {
     		writer_filtered.writeTagWeightMap(filtered_words,tag_words);
     	}
 	    
+	    
 	    double total_weight = 0;
 	    int counter = 0;
 	    
-	    // Remove filtered words from all tags
+	    // Set weights
 	    for(Tag t: tags)
 	    {
 	    	words = string_similarity.create_word_gram(t.getTagName(),blacklist);
-	    	new_tag = "";
+	    	
 	    	total_weight = 0;
 	    	counter = 0;
 	    	
 	    	for(String s: words)
 	    	{
-	    		if(tag_words.containsKey(s))
-	    		{
-	    			total_weight  = total_weight + tag_words.get(s);
-	    			counter++;
-	    			
-	    			new_tag = new_tag + " " + s;
-	    		}
+    			total_weight  = total_weight + tag_words.get(s);
+    			counter++;
 	    	}
 	    	
 	    	t.setWeight(total_weight/counter);
-	    	t.setTagName(new_tag.trim());
 	    }
+	    
 	    
 	    helper.removeTagsWithoutWords(tags);
 	    

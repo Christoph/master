@@ -102,12 +102,12 @@ public class Core {
     writer_tags.writeTagList(tags);
     
     // Basic spell checking
-    checker.withPhoneticsAndNgrams(tags, blacklist,0.7f,"first");
+    checker.withPhoneticsAndNgrams(tags, blacklist,0.6f,"first");
     log.info("1st similiarity replacement finished\n");
     
     // Find word groups
-    complex_grouping.groupBy(tags, blacklist, 3,0.2d,"three");
-    complex_grouping.groupBy(tags, blacklist, 2,0.2d,"two");
+    complex_grouping.groupBy(tags, blacklist, 3,0.4d,"three");
+    complex_grouping.groupBy(tags, blacklist, 2,0.4d,"two");
     //log.info("complex grouping finished\n");
     
     grouping.groupBy(tags, blacklist, 3,0.2d,"three");
@@ -118,14 +118,11 @@ public class Core {
     checker.withPhoneticsAndNgrams(tags, blacklist,0.7f,"second");
     log.info("2st similiarity replacement finished\n");
     
-    // Filter words which have a weighted mean < 5%
+    // Weighting words without filtering
     filter.byWeightedMean(tags, blacklist,0.0d);
     log.info("weigthing and filtering finished\n");    
     
     writer_taglist.writeTagListCustomWeight(tags);
-    
-    // Decision with Torsten: Removing all tracks with less than six tags.
-	//pro.deleteTracksWithTagsLessThan(6);
     
 	/////////////////////////////////
     // End

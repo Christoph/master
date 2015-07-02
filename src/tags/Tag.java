@@ -3,7 +3,7 @@ package tags;
 public class Tag {
 	private String tagName;
 	private int tagID;
-	private int tagWeight;
+	private int lastFMWeight;
 	private int songID;
 	private String songName;
 	private int listeners;
@@ -17,7 +17,7 @@ public class Tag {
 		this.listeners = listeners;
 		this.originalTagName = tagName;
 		this.tagID = 0;
-		this.tagWeight = 0;
+		this.lastFMWeight = 0;
 		this.songID = 0;
 		this.songName = "";
 		this.playcount = 0;
@@ -28,7 +28,7 @@ public class Tag {
 		this.playcount = playcount;
 		this.originalTagName = tagName;
 		this.tagID = tagID;
-		this.tagWeight = tagWeight;
+		this.lastFMWeight = tagWeight;
 		this.songID = songID;
 		this.songName = songName;
 		this.listeners = listeners;
@@ -42,8 +42,8 @@ public class Tag {
 		this.tagName =  name;
 	}
 	
-	public int getTagWeight() {
-		return tagWeight;
+	public int getLastFMWeight() {
+		return lastFMWeight;
 	}
 	
 	public String getOriginalTagName() {
