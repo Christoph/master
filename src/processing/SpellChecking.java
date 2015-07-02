@@ -14,7 +14,7 @@ import tags.TagsToCSV;
 
 public class SpellChecking {
 	
-	public void withPhoneticsAndNgrams(List<Tag> tags, List<String> blacklist)
+	public void withPhoneticsAndNgrams(List<Tag> tags, List<String> blacklist, float threshold, String filename_suffix)
 	{
 	    /////////////////////////////////
 	    // Variables
@@ -31,7 +31,6 @@ public class SpellChecking {
 	    Set<String> temp;
 	    int value, listener_count, ngram_size;
 	    double similarity;
-	    float threshold;
 	    String key, phonetic, new_tag;
 	    Boolean print_substitutions;
 	    HashSet<String> h1, h2;
@@ -48,9 +47,6 @@ public class SpellChecking {
 		
 		// Set the size for the n-gram distance method
 		ngram_size = 2;
-		
-		// Acceptance threshold
-		threshold = 0.7f;
 		
 		// Choose distance metric on line 143
 		
@@ -191,10 +187,10 @@ public class SpellChecking {
 		      }
 	    	}
 	    	
-	    	writer_subs = new TagsToCSV("subs.csv");
+	    	writer_subs = new TagsToCSV("subs_"+filename_suffix+".csv");
 	    	writer_subs.writeSubs(out);
 	    	
-	    	writer_subs_count = new TagsToCSV("subs_count.csv");
+	    	writer_subs_count = new TagsToCSV("subs_count_"+filename_suffix+".csv");
 	    	writer_subs_count.writeTagOccu(count);
 	    }
 	    

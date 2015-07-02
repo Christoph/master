@@ -69,7 +69,7 @@ public class Core {
     SpellChecking checker = new SpellChecking();
     Filter filter = new Filter();
     Grouping_Simple grouping = new Grouping_Simple();
-    //Grouping grouping = new Grouping();
+    Grouping complex_grouping = new Grouping();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_processed.csv");
     TagsToCSV writer_tags = new TagsToCSV("tags.csv");
@@ -96,25 +96,36 @@ public class Core {
     // Exports all data
     //pro.exportAll("tags.csv");
     
-	/////////////////////////////////
+	///////////////////////////////// 
     // Algorithm
     
     writer_tags.writeTagList(tags);
     
     // Basic spell checking
-    checker.withPhoneticsAndNgrams(tags, blacklist);
+    checker.withPhoneticsAndNgrams(tags, blacklist,0.7f,"first");
+    log.info("1st similiarity replacement finished\n");
     
     // Find word groups
-    grouping.groupBy(tags, blacklist, 2);
+    complex_grouping.groupBy(tags, blacklist, 3,0.2d,"three");
+    complex_grouping.groupBy(tags, blacklist, 2,0.2d,"two");
+    //log.info("complex grouping finished\n");
+    
+    grouping.groupBy(tags, blacklist, 3,0.2d,"three");
+    grouping.groupBy(tags, blacklist, 2,0.2d,"two");
+    log.info("simple grouping finished\n");
+    
+    // Again spell checking
+    checker.withPhoneticsAndNgrams(tags, blacklist,0.7f,"second");
+    log.info("2st similiarity replacement finished\n");
     
     // Filter words which have a weighted mean < 5%
-    filter.byWeightedMean(tags, blacklist);
-        
+    filter.byWeightedMean(tags, blacklist,0.0d);
+    log.info("weigthing and filtering finished\n");    
+    
     writer_taglist.writeTagListCustomWeight(tags);
     
-    // Maybe outdated
     // Decision with Torsten: Removing all tracks with less than six tags.
-	// pro.deleteTracksWithTagsLessThan(6);
+	//pro.deleteTracksWithTagsLessThan(6);
     
 	/////////////////////////////////
     // End

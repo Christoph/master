@@ -10,7 +10,7 @@ import tags.TagsToCSV;
 
 public class Filter {
 
-	public void byWeightedMean(List<Tag> tags, List<String> blacklist)
+	public void byWeightedMean(List<Tag> tags, List<String> blacklist, double cutoff)
 	{
 	    /////////////////////////////////
 	    // Variables
@@ -28,22 +28,19 @@ public class Filter {
 	    int listeners_min = 0,listeners_max = 0,playcount_min = 0,playcount_max = 0;
 	    double listeners_scale = 0.0, playcount_scale = 0.0;
 	    double q_lastfmweight = 1, q_listeners = 1, q_playlist = 1;
-	    double value, cutoff;
+	    double value;
 	    Boolean print_filtered;
 	    
 		/////////////////////////////////
 		// Configuration
 	    
-	    // Remove all tags below cutoff percent
-	    cutoff = 10;
-	    
 		// Set weights for the weighted normalized weight for each tag/song pair
 		// Lastfmweight
 		q_lastfmweight = 10;
 		// Listeners
-		q_listeners = 2;
+		q_listeners = 10;
 		// Playcount
-		q_playlist = 1;
+		q_playlist = 10;
 		
 		// Print temp files
 		print_filtered = true;

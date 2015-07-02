@@ -217,6 +217,49 @@ public class TagsToCSV {
 		}
 	}
 	
+	public void writeTagOccurrences(List<Tag> tags) {
+
+		createHeader("TagName,Occurrence");
+		
+		Map<String, Integer> occu = new HashMap<String, Integer>();
+		String name = "";
+		int value = 0;
+		
+		for(Tag t: tags)
+    	{
+    		name = t.getTagName();				
+
+    		if(occu.containsKey(name))
+    		{
+    			value = occu.get(name);
+    			
+    			// Sum up the count
+    			occu.put(name, value + 1);
+    		}
+    		else
+    		{
+    			occu.put(name, 1);
+    		}
+    	}
+		
+		try {
+			for(String s: occu.keySet())
+			{
+				writer.write("\""+s+"\","+occu.get(s)+"\n");
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void closeWriteTag() {	
 		try {
 			writer.flush();

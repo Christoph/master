@@ -18,6 +18,7 @@ public class QueryManager {
   private PreparedStatement selectTagsWhichOccurLessOrEqualThan;
   private PreparedStatement selectTagsWithCount;
   private PreparedStatement selectAll;
+  private Statement stmt;
 
   // Constructor
   public QueryManager(Connection conn) {
@@ -29,6 +30,10 @@ public class QueryManager {
       selectTagsWhichOccurLessOrEqualThan = conn.prepareStatement("select * from Tag inner join (select TT.TagID,count(*) as n from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID) as t on Tag.ID = t.TagID Where n <= ?");
       selectTagsWithCount = conn.prepareStatement("select Tag.Name,count(*) as Count from Tag inner join TT on Tag.ID = TT.TagID group by TT.TagID");
       selectAll = conn.prepareStatement("select Track.ID as SongID, Track.Name as SongName, Track.Listeners, Track.Playcount, Tag.ID as TagID, Tag.Name as TagName, TT.Count as TagWeight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID;");
+      selectAll.setFetchSize(10000);
+      
+      stmt = conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY,
+              java.sql.ResultSet.CONCUR_READ_ONLY);
       
     } catch (SQLException e) { 
     	log.severe("Error in the DB constructor."+e.getSQLState()+e.getMessage());
@@ -76,12 +81,17 @@ public class QueryManager {
   public List<Tag> getAll() throws SQLException {
   	List<Tag> data = new ArrayList<Tag>();
   	
-  	ResultSet result = selectAll.executeQuery();
-  	
-  	while(result.next()) {
+  	ResultSet result = stmt.executeQuery("select Track.ID as SongID, Track.Name as SongName, Track.Listeners, Track.Playcount, Tag.ID as TagID, Tag.Name as TagName, TT.Count as TagWeight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID;");
+  	int c = 0;
+  	while(result.next()) {  
+  		c++;
+  		if(c%1000000==0)System.out.println(c);
   		data.add(new Tag(result.getString("TagName").toLowerCase().replace('-', ' '), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners")));
   	}
 
+  	System.out.print("size:");
+  	System.out.println(data.size());
+  	
     // Close huge resultset
     result.close();
   	
@@ -93,10 +103,10 @@ public class QueryManager {
   	
   	ResultSet result = selectAll.executeQuery();
   	
-  	while(result.next()) {  	
+  	while(result.next()) {  
   		writer.writeTag(new Tag(result.getString("TagName").toLowerCase(), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners")));	
   	}
-  	
+
   	writer.closeWriteTag();
   	result.close();
   }
