@@ -100,6 +100,7 @@ public class Core {
     // Algorithm
     
     writer_tags.writeTagList(tags);
+    log.info("Data loaded\n");
     
     // Basic spell checking
     checker.withPhoneticsAndNgrams(tags, blacklist,0.6f,"first");
@@ -108,7 +109,7 @@ public class Core {
     // Find word groups
     complex_grouping.groupBy(tags, blacklist, 3,0.4d,"three");
     complex_grouping.groupBy(tags, blacklist, 2,0.4d,"two");
-    //log.info("complex grouping finished\n");
+    log.info("complex grouping finished\n");
     
     grouping.groupBy(tags, blacklist, 3,0.2d,"three");
     grouping.groupBy(tags, blacklist, 2,0.2d,"two");

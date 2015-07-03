@@ -168,6 +168,8 @@ public class Filter {
 	        */
 	    }
 	    
+	    total_word_occurrence = null;
+	    
 	    // Write temp files
 	    if(print_filtered) 
     	{
@@ -175,6 +177,7 @@ public class Filter {
     		writer_filtered.writeTagWeightMap(filtered_words,tag_words);
     	}
 	    
+	    filtered_words = null;
 	    
 	    double total_weight = 0;
 	    int counter = 0;
@@ -197,10 +200,8 @@ public class Filter {
 	    }
 	    
 	    
-	    helper.removeTagsWithoutWords(tags);
+	    // helper.removeTagsWithoutWords(tags);
 	    
 	    tag_words = null;
-	    total_word_occurrence = null;
-	    filtered_words = null;
 	}
 }

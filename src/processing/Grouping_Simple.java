@@ -87,6 +87,8 @@ public class Grouping_Simple {
 	    	writer_groups.writeTagOccu(word_count);
     	}
 	    
+	    word_count = null;
+	    
 	    if(print_accepted) 
     	{
 	    	writer_acc = new TagsToCSV("accepted_groups_simple_"+filename_suffix+".csv");
@@ -147,6 +149,9 @@ public class Grouping_Simple {
 	      
 	      // Replace tag name
 	      t.setTagName(new_tag.trim());
-	    }
+	    }	
+	    
+	    good_groups = null;
+	    subs = null;
 	}
 }

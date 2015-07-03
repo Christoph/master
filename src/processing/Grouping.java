@@ -104,6 +104,8 @@ public class Grouping {
 			if(strength >= max_o) max_o = strength;
 		}
 		
+		word_count = null;
+		
 		// Normalize
 		for(String s: group_weight.keySet())
 		{
@@ -113,12 +115,16 @@ public class Grouping {
 			if(strength >= acceptance_value) good_groups.put(s, strength);
 		}
 		
+		group_weight = null;
+		
 		// Write temp files
 	    if(print_groups) 
     	{
 	    	writer_groups = new TagsToCSV("groups_complex_"+filename_suffix+".csv");
 	    	writer_groups.writeTagOccu(word_groups);
     	}
+	    
+	    word_groups = null;
 	    
 	    if(print_accepted) 
     	{
@@ -181,5 +187,8 @@ public class Grouping {
 	      // Replace tag name
 	      t.setTagName(new_tag.trim());
 	    }
+	    
+	    subs = null;
+	    good_groups = null;
 	}
 }

@@ -158,6 +158,9 @@ public class SpellChecking {
 	      }
 	    }
 
+	    tag_words = null;
+	    phonetic_groups = null;
+	    
 	    // Export substitution list
 	    if(print_substitutions)
 	    {
@@ -210,8 +213,6 @@ public class SpellChecking {
 	    
 	    helper.removeTagsWithoutWords(tags);
 	    
-	    tag_words = null;
-	    phonetic_groups = null;
 	    substitution_list = null;
 	}
 	

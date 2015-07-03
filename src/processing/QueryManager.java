@@ -80,12 +80,15 @@ public class QueryManager {
   	return data;
   }
   
+  // Maximum track id; limits rows
+  int rows = 50000;
+  
   public List<Tag> getAll() throws SQLException {
   	List<Tag> data = new ArrayList<Tag>();
   	
-  	ResultSet result = stmt.executeQuery("select Track.ID as SongID, Track.Name as SongName, Track.Listeners, Track.Playcount, Tag.ID as TagID, Tag.Name as TagName, TT.Count as TagWeight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID;");
+  	ResultSet result = stmt.executeQuery("select Track.ID as SongID, Track.Name as SongName, Track.Listeners, Track.Playcount, Tag.ID as TagID, Tag.Name as TagName, TT.Count as TagWeight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID where Track.ID < "+rows+";");
   	
-  	while(result.next()) {    		
+  	while(result.next()) {    
   		data.add(new Tag(result.getString("TagName").toLowerCase().replace('-', ' '), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners")));
   	}
 
