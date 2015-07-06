@@ -273,7 +273,7 @@ public class PlainStringSimilarity {
 		return n/d;
   }
   
-  public double jaccard_index(HashSet<String> set1, HashSet<String> set2)
+  public float jaccard_index(HashSet<String> set1, HashSet<String> set2)
   {
   	// Initialize variables
   	HashSet<String> num = new HashSet<String>();
@@ -289,7 +289,7 @@ public class PlainStringSimilarity {
   	
   	// Compute the index
   	int n = num.size();
-  	double d = deno.size();
+  	float d = deno.size();
   	
   	return n/d;
   }

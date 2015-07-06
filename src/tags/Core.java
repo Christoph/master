@@ -73,12 +73,15 @@ public class Core {
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_processed.csv");
     TagsToCSV writer_tags = new TagsToCSV("tags.csv");
+    TagsToCSV writer_tag = new TagsToCSV("Tag.csv");
+    TagsToCSV writer_track = new TagsToCSV("Track.csv");
+    TagsToCSV writer_tt = new TagsToCSV("TT.csv");
     
     //List<String> genres = im.importCSV("dicts/genres.txt");
     List<String> articles = im.importCSV("dicts/article.txt");
     //List<String> moods = im.importCSV("dicts/moods.txt");
-    List<String> preps = im.importCSV("dicts/prep.txt");   
-    List<String> custom = im.importCSV("dicts/custom.txt"); 
+    List<String> preps = im.importCSV("dicts/prep.txt");
+    List<String> custom = im.importCSV("dicts/custom.txt");
     
     // Create word blacklist
     List<String> blacklist = new ArrayList<String>();
@@ -89,15 +92,12 @@ public class Core {
     // Somehow some tags have words without characters...
     blacklist.add("");
     
+	///////////////////////////////// 
+    // Algorithm
+    
     // Get all tags
     List<Tag> tags;
     tags = pro.getAll();
-    
-    // Exports all data
-    //pro.exportAll("tags.csv");
-    
-	///////////////////////////////// 
-    // Algorithm
     
     writer_tags.writeTagList(tags);
     log.info("Data loaded\n");
@@ -124,6 +124,9 @@ public class Core {
     log.info("weigthing and filtering finished\n");    
     
     writer_taglist.writeTagListCustomWeight(tags);
+    writer_tt.writeTableTT(tags);
+    writer_tag.writeTableTag(tags);
+    writer_track.writeTableTrack(tags);
     
 	/////////////////////////////////
     // End

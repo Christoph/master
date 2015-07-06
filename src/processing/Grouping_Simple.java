@@ -17,13 +17,13 @@ public class Grouping_Simple {
 	    TagsToCSV writer_groups;
 	    TagsToCSV writer_acc;
 		
-	    Map<String, Integer> word_count = new HashMap<String, Integer>();
+	    Map<String, Long> word_count = new HashMap<String, Long>();
 	    Map<String, Double> good_groups = new HashMap<String, Double>();
 	    Map<String, Double> subs = new HashMap<String, Double>();
 	    
 	    List<String> words, groups, temp;
 	    
-	    int value;
+	    long value;
 	    double strength, min_o = 1, max_o = 0;
 	    String key, new_tag;
 	    Boolean print_groups, print_accepted;
@@ -35,8 +35,8 @@ public class Grouping_Simple {
 	    acceptance_value = 0.10;
 	    
 		// Print temp files
-	    print_groups = true;
-		print_accepted = true;
+	    print_groups = false;
+		print_accepted = false;
 	    
 		/////////////////////////////////
 		// Algorithm
@@ -59,13 +59,13 @@ public class Grouping_Simple {
 	    		}
 	    		else
 	    		{
-	    			word_count.put(key, 1);
+	    			word_count.put(key, 1l);
 	    		}
 	    	}
 	    }
 	    
 	    // Find min and max
-	    for(int k: word_count.values())
+	    for(long k: word_count.values())
 	    {   	    	
 	    	if(k < min_o) min_o = k;
 	    	if(k >= max_o) max_o = k;

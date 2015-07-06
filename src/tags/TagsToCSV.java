@@ -119,14 +119,14 @@ public class TagsToCSV {
 		}
 	}
 	
-	public void writeTagOccu(Map<String, Integer> groups)
+	public void writeTagOccu(Map<String, Long> word_groups)
 	{		
 	    createHeader("Tag,Occurences");
 		
-		for(String s:groups.keySet())
+		for(String s:word_groups.keySet())
 		{
 			try {
-				writer.write("\""+s+"\" ,"+groups.get(s)+"\n");
+				writer.write("\""+s+"\" ,"+word_groups.get(s)+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -202,6 +202,75 @@ public class TagsToCSV {
 			e.printStackTrace();
 		}
 	}
+	
+	public void writeTableTag(List<Tag> data) {
+		
+		createHeader("ID,\"Name\"");
+
+		for(Tag t:data)
+		{
+			try {
+				writer.write(t.getTagID()+",\""+t.getTagName()+"\""+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeTableTT(List<Tag> data) {
+		
+		createHeader("ID,TrackID,TagID,LastFMWeight,Importance");
+
+		for(Tag t:data)
+		{
+			try {
+				writer.write(t.getTTID()+","+t.getSongID()+","+t.getTagID()+","+t.getLastFMWeight()+","+t.getWeight()+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void writeTableTrack(List<Tag> data) {
+	
+	createHeader("ID,\"Name\",ArtistID,Listeners,Playcount");
+	int temp = 0;
+
+	for(Tag t:data)
+	{
+		try {
+			if(t.getSongID() != temp)
+			{
+				writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getArtistID()+","+t.getListeners()+","+t.getPlaycount()+"\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		temp = t.getSongID();
+	}
+	
+	try {
+		writer.flush();
+		writer.close();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+}
 	
 	public void writeTag(Tag t) {
 		if(head) 

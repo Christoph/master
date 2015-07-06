@@ -31,15 +31,16 @@ print(len(remove))
 # Remove tracks not available in austria
 db.deleteRows(db.Track, remove)
 
+# Removed after discussion with mohsen
 # Find all tracks with less than 6 tags
-groups = tt.groupby("TrackID").count().drop("TagID", 1)
-remove = groups[groups["Count"]<6]
+#groups = tt.groupby("TrackID").count().drop("TagID", 1)
+#remove = groups[groups["Count"]<6]
 
-print("Tracks with less than 6 tags")
-print(len(remove))
+#print("Tracks with less than 6 tags")
+#print(len(remove))
 
 # Remove tracks with less than 6 tags
-db.deleteRows(db.Track, remove)
+# db.deleteRows(db.Track, remove)
 
 # Fetch tables
 tt = db.fetchData(db.query_TT)
@@ -47,7 +48,7 @@ tag = db.fetchData(db.query_Tag)
 
 # Find tags without tracks
 # tt right join tag: Each row with NaN in the TrackID column has no track
-# Not completly sure
+# Not completely sure
 temp = pd.merge(tt, tag, left_on="TagID", right_index=True, how="right").drop(["Count"],1).set_index("TagID")
 remove = temp[~temp["TrackID"].notnull()].drop("TrackID",1)
 

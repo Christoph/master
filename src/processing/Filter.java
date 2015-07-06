@@ -19,11 +19,11 @@ public class Filter {
 	    TagsToCSV writer_filtered;
 		
 	    Map<String, Double> tag_words = new HashMap<String, Double>();
-	    Map<String, Integer> total_word_occurrence = new HashMap<String, Integer>();
+	    Map<String, Long> total_word_occurrence = new HashMap<String, Long>();
 	    Map<String, Double> filtered_words = new HashMap<String, Double>();
 	    
 	    List<String> words;
-	    int listeners, playcount, lastfmweight;
+	    long listeners, playcount, lastfmweight;
 	    String key, new_tag = "";
 	    //int listeners_min = 0,listeners_max = 0,playcount_min = 0,playcount_max = 0;
 	    //double listeners_scale = 0.0, playcount_scale = 0.0;
@@ -44,7 +44,7 @@ public class Filter {
 		q_playlist = 1;
 		
 		// Print temp files
-		print_filtered = true;
+		print_filtered = false;
 
 		/////////////////////////////////
 		// Algorithm	
@@ -146,7 +146,7 @@ public class Filter {
 	    		}
 	    		else
 	    		{
-	    			total_word_occurrence.put(key, 1);
+	    			total_word_occurrence.put(key, (long) 1);
 	    		}
 	    	}
 	    }

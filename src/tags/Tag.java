@@ -1,6 +1,7 @@
 package tags;
 
 public class Tag {
+	private int TTID;
 	private String tagName;
 	private int tagID;
 	private int lastFMWeight;
@@ -9,6 +10,7 @@ public class Tag {
 	private int listeners;
 	private int playcount;
 	private double weight;
+	private int ArtistID;
 	
 	private String originalTagName;
 	
@@ -21,9 +23,12 @@ public class Tag {
 		this.songID = 0;
 		this.songName = "";
 		this.playcount = 0;
+		this.TTID = 0;
+		this.ArtistID = 0;
 	}
 	
-	public Tag(String tagName, int playcount, int tagID, int tagWeight, int songID, String songName, int listeners ) {
+	public Tag(int TTID, String tagName, int playcount, int tagID, int tagWeight, int songID, String songName, int listeners, int ArtistID ) {
+		this.TTID = TTID;
 		this.tagName = tagName;
 		this.playcount = playcount;
 		this.originalTagName = tagName;
@@ -32,6 +37,7 @@ public class Tag {
 		this.songID = songID;
 		this.songName = songName;
 		this.listeners = listeners;
+		this.ArtistID = ArtistID;
 	}
 	
 	public String getTagName() {
@@ -53,7 +59,15 @@ public class Tag {
 	public int getTagID() {
 		return tagID;
 	}
+	
+	public int getTTID() {
+		return TTID;
+	}
 
+	public int getArtistID() {
+		return ArtistID;
+	}
+	
 	public void setTagID(int tagID) {
 		this.tagID = tagID;
 	}

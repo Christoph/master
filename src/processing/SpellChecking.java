@@ -23,14 +23,15 @@ public class SpellChecking {
 	    TagsToCSV writer_subs;
 	    TagsToCSV writer_subs_count;
 		
-	    Map<String, Integer> tag_words = new HashMap<String, Integer>();
+	    Map<String, Long> tag_words = new HashMap<String, Long>();
 	    Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
 	    Map<String, String> substitution_list = new HashMap<String, String>();
 	    
 	    List<String> words;
 	    Set<String> temp;
-	    int value, listener_count, ngram_size;
-	    double similarity;
+	    long value, listener_count;
+	    int ngram_size;
+	    float similarity;
 	    String key, phonetic, new_tag;
 	    Boolean print_substitutions;
 	    HashSet<String> h1, h2;
@@ -61,7 +62,7 @@ public class SpellChecking {
 	    	for(int j = 0; j < words.size(); j++)
 	    	{
 	    		key = words.get(j); 		
-
+	    		
 	    		if(tag_words.containsKey(key))
 	    		{
 	    			value = tag_words.get(key);
@@ -71,7 +72,9 @@ public class SpellChecking {
 	    		}
 	    		else
 	    		{
-	    			tag_words.put(key, tags.get(i).getListeners());
+	    			value = tags.get(i).getListeners();
+	    			
+	    			tag_words.put(key, value);
 	    		}
 	    	}
 	    }
@@ -157,7 +160,7 @@ public class SpellChecking {
 	        }   
 	      }
 	    }
-
+	    
 	    tag_words = null;
 	    phonetic_groups = null;
 	    
@@ -165,7 +168,7 @@ public class SpellChecking {
 	    if(print_substitutions)
 	    {
 	    	Map<String, String> out = new HashMap<String, String>();
-	    	Map<String, Integer> count = new HashMap<String, Integer>();
+	    	Map<String, Long> count = new HashMap<String, Long>();
 	 
 	    	for(String s: substitution_list.keySet())
 	    	{
@@ -186,7 +189,7 @@ public class SpellChecking {
 		      }
 		      else
 		      {
-		    	  count.put(key,1);
+		    	  count.put(key,1l);
 		      }
 	    	}
 	    	

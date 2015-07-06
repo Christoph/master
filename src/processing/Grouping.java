@@ -16,14 +16,14 @@ public class Grouping {
 		TagsToCSV writer_groups;
 		TagsToCSV writer_acc;
 		
-		Map<String, Integer> word_count = new HashMap<String, Integer>();
-		Map<String, Integer> word_groups = new HashMap<String, Integer>();
+		Map<String, Long> word_count = new HashMap<String, Long>();
+		Map<String, Long> word_groups = new HashMap<String, Long>();
 		Map<String, Double> group_weight = new HashMap<String, Double>();
 		Map<String, Double> good_groups = new HashMap<String, Double>();
 	    Map<String, Double> subs = new HashMap<String, Double>();
 	    
 	    List<String> words, groups, temp;
-	    int value;
+	    long value;
 		double nom, deno, strength, min_o = 1, max_o = 0;
 		String key, new_tag;
 		Boolean print_groups, print_accepted;
@@ -32,8 +32,8 @@ public class Grouping {
 		// Configuration
 		
 		// Print temp files
-	    print_groups = true;
-		print_accepted = true;
+	    print_groups = false;
+		print_accepted = false;
 		
 		/////////////////////////////////
 		// Algorithm
@@ -56,7 +56,7 @@ public class Grouping {
 				}
 				else
 				{
-					word_count.put(key, 1);
+					word_count.put(key, 1l);
 				}
 			}
 		}
@@ -75,11 +75,11 @@ public class Grouping {
 					value = word_groups.get(key);
 					
 					// Sum up the count
-					word_groups.put(key, value + 1);
+					word_groups.put(key, value + 1l);
 				}
 				else
 				{
-					word_groups.put(key, 1);
+					word_groups.put(key, 1l);
 				}
 			}
 		}
