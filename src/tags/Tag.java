@@ -104,11 +104,11 @@ public class Tag {
 		this.playcount = playcount;
 	}
 
-	public double getWeight() {
+	public double getImportance() {
 		return weight;
 	}
 
-	public void setWeight(double weight) {
+	public void setImportance(double weight) {
 		this.weight = weight;
 	}
 }

@@ -189,7 +189,7 @@ public class TagsToCSV {
 		for(Tag t:data)
 		{
 			try {
-				writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+","+t.getWeight()+"\n");
+				writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+","+t.getImportance()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -206,11 +206,32 @@ public class TagsToCSV {
 	public void writeTableTag(List<Tag> data) {
 		
 		createHeader("ID,\"Name\"");
+	    Map<String, Integer> tags = new HashMap<String, Integer>();
+	    int ID;
+	    String name;
 
 		for(Tag t:data)
 		{
+			ID = t.getTagID();
+			name = t.getTagName();
+			
+			if(tags.containsKey(name))
+			{
+				if(ID != tags.get(name))
+				{
+					t.setTagID(tags.get(name));
+				}
+			}
+			else
+			{
+				tags.put(name, ID);
+			}
+		}
+		
+		for(String s:tags.keySet())
+		{
 			try {
-				writer.write(t.getTagID()+",\""+t.getTagName()+"\""+"\n");
+				writer.write(tags.get(s)+",\""+s+"\""+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -231,7 +252,7 @@ public class TagsToCSV {
 		for(Tag t:data)
 		{
 			try {
-				writer.write(t.getTTID()+","+t.getSongID()+","+t.getTagID()+","+t.getLastFMWeight()+","+t.getWeight()+"\n");
+				writer.write(t.getTTID()+","+t.getSongID()+","+t.getTagID()+","+t.getLastFMWeight()+","+t.getImportance()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

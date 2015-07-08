@@ -27,7 +27,7 @@ public class Filter {
 	    String key, new_tag = "";
 	    //int listeners_min = 0,listeners_max = 0,playcount_min = 0,playcount_max = 0;
 	    //double listeners_scale = 0.0, playcount_scale = 0.0;
-	    double weight, max_w = 0, min_w = 0;
+	    double importance, max_w = 0, min_w = 0;
 	    double q_lastfmweight = 1, q_listeners = 1, q_playlist = 1;
 	    double value;
 	    Boolean print_filtered;
@@ -92,45 +92,51 @@ public class Filter {
 	    	// Compute the weighted normalized weight
 	    	//t.setWeight((q_lastfmweight*lastfmweight+q_listeners*((listeners-listeners_min)/listeners_scale)+q_playlist*((playcount-playcount_min)/playcount_scale))/(q_lastfmweight+q_listeners+q_playlist));
 	    	
-    		if(t.getTagName().equals("broadside-balladeer"))
-    			key = "broadside-balladeer";
+	    	importance = lastfmweight*(q_listeners*Math.log(listeners)+q_playlist*Math.log(playcount));
+	    	t.setImportance(importance); 
 	    	
-	    	weight = lastfmweight*(q_listeners*Math.log(listeners)+q_playlist*Math.log(playcount));
-	    	t.setWeight(weight);
-	    	
-	    	// Save min and max
-	    	if(weight > max_w) max_w = weight;
-	    	if(weight <= min_w) min_w = weight;
 	    }
 	    
-	    // Create a 1-word-gram/weighted average dict
+	    
+	    // Create a tag/weighted average dict
 	    // Summing up the weights
 	    for(int i = 0;i < tags.size(); i++)
-	    {
-	    	words = string_similarity.create_word_gram(tags.get(i).getTagName(),blacklist);
-	    	
-	    	for(int j = 0; j < words.size(); j++)
-	    	{
-	    		key = words.get(j); 	
-	    		
-	    		//Normalize weight to [0,1]
-	    		weight = (tags.get(i).getWeight())/(max_w);
+	    {	    	    		
+    		importance = tags.get(i).getImportance();
+    		key = tags.get(i).getTagName();
 
-	    		if(tag_words.containsKey(key))
-	    		{
-	    			value = tag_words.get(key);
-	    			
-	    			// Sum up the weight
-	    			tag_words.put(key, value + weight);
-	    		}
-	    		else
-	    		{
-	    			tag_words.put(key, weight);
-	    		}
+    		if(tag_words.containsKey(key))
+    		{
+    			value = tag_words.get(key);
+    			
+    			// Sum up the weight over all songs
+    			tag_words.put(key, value + importance);
+    		}
+    		else
+    		{
+    			tag_words.put(key, importance);
+    		}
+	    }
+	    
+	    // maximum importance of tag_words
+	    for(String s: tag_words.keySet())
+	    {
+	    	if(tag_words.get(s) > max_w)
+	    	{
+	    		max_w = tag_words.get(s);
 	    	}
 	    }
 	    
-	    // Compute total occurrences of all words
+	    // normalizing tags
+	    for(Tag t:tags)
+	    {
+	    	importance = t.getImportance();
+	    	
+	    	t.setImportance(importance/max_w);
+	    }
+	    
+	    /*
+	    // Compute total occurrences of all words 
 	    for(int i = 0;i < tags.size(); i++)
 	    {
 	    	words = string_similarity.create_word_gram(tags.get(i).getTagName(),blacklist);
@@ -151,7 +157,8 @@ public class Filter {
 	    	}
 	    }
 	    
-	    // Compute the weighted normalized mean for each word   
+	    // Compute the weighted normalized mean for each word 
+
 	    for(Iterator<Map.Entry<String, Double>> iterator = tag_words.entrySet().iterator(); iterator.hasNext(); ) 
 	    {
 	        Map.Entry<String, Double> entry = iterator.next();
@@ -159,16 +166,17 @@ public class Filter {
 	        entry.setValue(entry.getValue()/total_word_occurrence.get(entry.getKey()));
 	        
 	        // Delete the entry if its lower than the cutoff
-	        /*
+	       
 	        if(entry.getValue() < cutoff) 
 	        {
 	        	filtered_words.put(entry.getKey(), entry.getValue());
 	        	iterator.remove();
 	        }
-	        */
+	        
 	    }
+		*/
 	    
-	    total_word_occurrence = null;
+	    //total_word_occurrence = null;
 	    
 	    // Write temp files
 	    if(print_filtered) 
@@ -183,6 +191,7 @@ public class Filter {
 	    int counter = 0;
 	    
 	    // Set weights
+	    /*
 	    for(Tag t: tags)
 	    {
 	    	words = string_similarity.create_word_gram(t.getTagName(),blacklist);
@@ -196,9 +205,10 @@ public class Filter {
     			counter++;
 	    	}
 	    	
-	    	t.setWeight(total_weight/counter);
+	    	
+	    	t.setImportance(total_weight/counter);
 	    }
-	    
+	    */
 	    
 	    // helper.removeTagsWithoutWords(tags);
 	    

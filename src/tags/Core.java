@@ -124,9 +124,11 @@ public class Core {
     log.info("weigthing and filtering finished\n");    
     
     writer_taglist.writeTagListCustomWeight(tags);
-    writer_tt.writeTableTT(tags);
+    
+    // Export Tag before TT!
     writer_tag.writeTableTag(tags);
     writer_track.writeTableTrack(tags);
+    writer_tt.writeTableTT(tags);
     
 	/////////////////////////////////
     // End
