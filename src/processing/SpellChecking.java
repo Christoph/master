@@ -44,7 +44,7 @@ public class SpellChecking {
 		//ColognePhonetic phonetic = new ColognePhonetic();
 		
 		// Print substitution list
-		print_substitutions = false;
+		print_substitutions = true;
 		
 		// Set the size for the n-gram distance method
 		ngram_size = 2;

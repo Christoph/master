@@ -97,8 +97,6 @@ public class Filter {
 	    	
 	    }
 	    
-	    
-	    // Create a tag/weighted average dict
 	    // Summing up the weights
 	    for(int i = 0;i < tags.size(); i++)
 	    {	    	    		
@@ -130,7 +128,7 @@ public class Filter {
 	    // normalizing tags
 	    for(Tag t:tags)
 	    {
-	    	importance = t.getImportance();
+	    	importance = tag_words.get(t.getTagName());
 	    	
 	    	t.setImportance(importance/max_w);
 	    }

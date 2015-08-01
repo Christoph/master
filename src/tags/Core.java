@@ -123,12 +123,13 @@ public class Core {
     filter.byWeightedMean(tags, blacklist,0.0d);
     log.info("weigthing and filtering finished\n");    
     
-    writer_taglist.writeTagListCustomWeight(tags);
-    
     // Export Tag before TT!
     writer_tag.writeTableTag(tags);
     writer_track.writeTableTrack(tags);
+    // TrackID72 TagID 785 exists three times!
     writer_tt.writeTableTT(tags);
+    
+    writer_taglist.writeTagListCustomWeight(tags);
     
 	/////////////////////////////////
     // End
