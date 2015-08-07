@@ -1,0 +1,25 @@
+acoustic
+ambient
+blues
+classical
+country
+eletronic
+folk
+hardcore
+hip hop
+indie
+jazz
+latin
+metal
+pop
+pop punk
+punk
+reggae
+rnb
+rock
+soul
+world
+60s
+70s
+80s
+90s
