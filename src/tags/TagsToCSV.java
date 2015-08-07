@@ -248,7 +248,7 @@ public class TagsToCSV {
 	public void writeTableTT(List<Tag> data) {
 		
 		createHeader("ID,TrackID,TagID,LastFMWeight,Importance");
-
+		
 		for(Tag t:data)
 		{
 			try {

@@ -69,11 +69,11 @@ public class Processor {
   	return tags;
   }
   
-  public List<Tag> getAll() {
+  public List<Tag> getAll(List<String> genres) {
   	List<Tag> tags = new ArrayList<Tag>();
   	
   	try {
-			tags = querymanager.getAll();
+			tags = querymanager.getAll(genres);
   	} catch (SQLException e) {
   		log.severe(e.getMessage());
 			e.printStackTrace();

@@ -77,7 +77,15 @@ public class Core {
     TagsToCSV writer_track = new TagsToCSV("Track.csv");
     TagsToCSV writer_tt = new TagsToCSV("TT.csv");
     
-    //List<String> genres = im.importCSV("dicts/genres.txt");
+    // Using spotify genres: Words with 3 chars: dub, emo gay, Jit ,IDM, Mod, MPB, Noh, Oi!, pop, rai, rap, r&b, ska , son, bop, ccm, 
+    // removing a few because of too much substring replacement within the genre list:
+    // emo -> emotional...
+    // mod -> modern...
+    // rai -> praise straight...
+    // son -> song ...
+    // same in the lastfmgenres list
+    // Customgenres is lastfm + spotify without words above and only single words no combinations
+    List<String> genres = im.importCSV("dicts/customgenres.txt");
     List<String> articles = im.importCSV("dicts/article.txt");
     //List<String> moods = im.importCSV("dicts/moods.txt");
     List<String> preps = im.importCSV("dicts/prep.txt");
@@ -97,7 +105,7 @@ public class Core {
     
     // Get all tags
     List<Tag> tags;
-    tags = pro.getAll();
+    tags = pro.getAll(genres);
     
     writer_tags.writeTagList(tags);
     log.info("Data loaded\n");
