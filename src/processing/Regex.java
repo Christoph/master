@@ -3,6 +3,7 @@ package processing;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,7 +12,7 @@ import tags.TagsToCSV;
 
 public class Regex {
 
-	public void separateWords(List<Tag> tags, List<String> list)
+	public void separateWords(List<Tag> tags, Set<String> list)
 	{
 	  	String name = "";
 	  	String join = "";

@@ -4,8 +4,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.*;
 
 import processing.*;
@@ -91,18 +94,21 @@ public class Core {
     // Total consists is a handmade list of words:
     // Handselected moods -> 
     // 
-    List<String> genres = im.importCSV("dicts/spotifygenres.txt");
+    List<String> genres = im.importCSV("dicts/genres.txt");
+    List<String> lastfm = im.importCSV("dicts/lastfmgenres.txt");
+    List<String> spotify = im.importCSV("dicts/spotifygenres.txt");
+    List<String> moods = im.importCSV("dicts/moods.txt");
+    
+    Set<String> total = new HashSet<String>();
+    
     List<String> articles = im.importCSV("dicts/article.txt");
-    //List<String> moods = im.importCSV("dicts/moods.txt");
     List<String> preps = im.importCSV("dicts/prep.txt");
-    //List<String> custom = im.importCSV("dicts/custom.txt");
     
     // Create word blacklist
     List<String> blacklist = new ArrayList<String>();
     
     blacklist.addAll(preps);
     blacklist.addAll(articles);
-    //blacklist.addAll(custom);
     // Somehow some tags have words without characters...
     blacklist.add("");
     
@@ -116,8 +122,17 @@ public class Core {
     writer_tags.writeTagList(tags);
     log.info("Data loaded\n");
     
-    // Word separation with regex
-    regex.separateWords(tags, genres);
+    // Word separation with regex 
+    total.addAll(lastfm);
+    total.addAll(genres);
+    total.addAll(moods);
+    
+    for(String s:spotify)
+    {
+    	total.add(s.toLowerCase());
+    }
+    
+    regex.separateWords(tags, total);
     log.info("Word separation finished\n");
     
     // Basic spell checking
