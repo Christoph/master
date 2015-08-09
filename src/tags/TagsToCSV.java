@@ -359,4 +359,25 @@ public class TagsToCSV {
 			e.printStackTrace();
 		}
 	}
+
+	public void writeSeparation(List<String> separation) {
+		
+		createHeader("Separations");
+		
+		for(String s:separation)
+		{
+			try {
+				writer.write(s+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

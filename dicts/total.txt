@@ -1,0 +1,126 @@
+From mirex removing:
+anger -> banger
+fun -> funk
+sad -> sade, saddle but its so important i take it
+
+
+Adding From moods which are not in mirex
+
+alone
+awake
+blah
+bored
+crazy
+dark
+dirty
+drunk
+energetic
+good
+guilty
+happy
+hyper
+jealous
+lazy
+listless
+loved
+mellow
+quixotic
+sick
+smart
+tired
+weird
+
+
+From lastfm
+
+60s
+70s
+80s
+90s
+acoustic
+ambient
+blues
+classical
+country
+electronic
+folk
+hip hop
+indie
+jazz
+latin
+metal
+pop
+punk
+reggae
+soul
+world
+r&b
+rock
+soul
+
+emo -> emotional problem
+
+Adding hop to separate triphop and hiphop
+hop
+
+Adding chill with appears often
+chill
+
+Adding smooth with is also interesing
+smooth
+
+All from the spotify list except following:
+genre -> probem
+AM pop -> dream pop
+bop -> bebop
+chant -> enchanted
+dj -> very short, djpman, djent
+disco -> discovered
+electro -> only electronic
+g funk -> cyborg funk
+idm -> avidmassrip
+L.A. -> brazi lian punk
+mpb -> fabiompb
+march -> marcha
+mbira -> cambira
+neo prog -> destroys progressive -> mabe only neo
+noh -> nohausin 
+opera -> operation, operatic
+pop rock -> pop rocks has a different meaning
+rave -> travel, grave
+ska -> skateboard
+son -> song
+trot -> trotz
+
+
+from genre list all except: 
+calenda -> calendar
+carol -> carole, carolyna
+chillout vs chill using chill
+desi -> design
+drag -> dragon
+electro vs electronic -> lastfm uses electronic
+emo -> as already mentioned
+gar -> garde, garage
+goa -> goat
+hard -> hardcore
+jig -> wildjigs
+jota -> majota
+kompa -> kompakt
+kriti -> kritisch
+mass -> massive
+mpb -> als mentioned
+noh -> ...
+ondo -> london
+opera -> operation
+pop rock -> pop rocks
+rada -> rader
+rai -> rainbow, rain
+rave -> travel
+reel -> somewhereelse
+scat -> scatter
+sica -> musica
+ska -> skateboard
+smooth jazz -> take single words
+son -> song
+tala -> catalana

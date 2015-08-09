@@ -88,18 +88,21 @@ public class Core {
     // Customgenres is lastfm + spotify without words above and only single words no combinations
     // In addition i removed synonyms and used the lastfm words as basis: lastfm -> electronic spotify -> removed: Electro,electrinica,electronic
     // The lastfm list is without emo and "pop punk". The last one because pop and punk are each separately in the list
-    List<String> genres = im.importCSV("dicts/lastfmgenres.txt");
+    // Total consists is a handmade list of words:
+    // Handselected moods -> 
+    // 
+    List<String> genres = im.importCSV("dicts/spotifygenres.txt");
     List<String> articles = im.importCSV("dicts/article.txt");
     //List<String> moods = im.importCSV("dicts/moods.txt");
     List<String> preps = im.importCSV("dicts/prep.txt");
-    List<String> custom = im.importCSV("dicts/custom.txt");
+    //List<String> custom = im.importCSV("dicts/custom.txt");
     
     // Create word blacklist
     List<String> blacklist = new ArrayList<String>();
     
     blacklist.addAll(preps);
     blacklist.addAll(articles);
-    blacklist.addAll(custom);
+    //blacklist.addAll(custom);
     // Somehow some tags have words without characters...
     blacklist.add("");
     

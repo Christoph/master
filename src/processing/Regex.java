@@ -1,10 +1,13 @@
 package processing;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import tags.Tag;
+import tags.TagsToCSV;
 
 public class Regex {
 
@@ -12,6 +15,11 @@ public class Regex {
 	{
 	  	String name = "";
 	  	String join = "";
+	  	TagsToCSV writer;
+	  	List<String> separation = new ArrayList<String>();
+	  	
+	  	// Debug output
+	  	Boolean print_groups = true;
 	  	
 	    // Create a Pattern object
 	    Pattern r;
@@ -35,12 +43,7 @@ public class Regex {
 		  		m = r.matcher(name);
 		  		
 		  		if(m.find())
-		  		{
-			  		if(s.equals("metal"))
-			  		{
-			  			s = "metal";
-			  		}
-		  			
+		  		{	
 		  			for(int i = 1;i<7;i++)
 		  			{
 		  				if(m.group(i)!=null)
@@ -49,11 +52,14 @@ public class Regex {
 		  				}
 		  			}
 		  			
-					System.out.println("");
-					System.out.println("Song:"+t.getSongName());
-					System.out.println("Old:"+name);
-		  			System.out.println("Match:"+s);
-		  			System.out.println("New:"+join);
+		  			
+		  			separation.add(s+":"+name+"->"+join);
+		  			
+					//System.out.println("");
+					//System.out.println("Song:"+t.getSongName());
+					//System.out.println("Old:"+name);
+		  			//System.out.println("Match:"+s);
+		  			//System.out.println("New:"+join);
 
 		  			name = join;
 		  			
@@ -64,5 +70,14 @@ public class Regex {
 	  		
 	  		t.setTagName(name);
 		}
+		
+		// Write temp files
+	    if(print_groups) 
+    	{	
+	    	Collections.sort(separation);
+	    	
+	    	writer = new TagsToCSV("word_separation.csv");
+	    	writer.writeSeparation(separation);
+    	}
 	}
 }

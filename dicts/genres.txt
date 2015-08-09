@@ -1,8 +1,8 @@
 2 tone
-step garage
-beat
+2-step garage
+4-beat
 4x4 garage
-bit
+8-bit
 acapella
 acid
 acid breaks
@@ -27,7 +27,7 @@ ambient music
 americana
 anarcho punk
 anime music
-anti folk
+anti-folk
 apala
 ape haters
 arab pop
@@ -44,12 +44,12 @@ australian country music
 australian hip hop
 australian pub rock
 austropop
-avant garde
-avant garde jazz
-avant garde metal
-avant garde music
+avant-garde
+avant-garde jazz
+avant-garde metal
+avant-garde music
 axé
-bac bal
+bac-bal
 bachata
 background music
 baggy
@@ -62,7 +62,7 @@ bajourou
 bakersfield sound
 bakou
 bakshy
-bal musette
+bal-musette
 balakadri
 balinese gamelan
 balkan pop
@@ -82,7 +82,7 @@ bass music
 batcave
 batucada
 batuco
-batá rumba
+batá-rumba
 beach music
 beat
 beatboxing
@@ -90,12 +90,12 @@ beautiful music
 bebop
 beiguan
 bel canto
-bend skin
+bend-skin
 benga
 berlin school of electronic music
 bhajan
 bhangra
-bhangra wine
+bhangra-wine
 bhangragga
 bhangramuffin
 big band
@@ -109,14 +109,14 @@ bitcore
 bitpop
 black metal
 blackened death metal
-blue eyed soul
+blue-eyed soul
 bluegrass
 blues
 blues ballad
-blues rock
+blues-rock
 boogie
 boogie woogie
-boogie woogie
+boogie-woogie
 bossa nova
 brass band
 brazilian funk
@@ -131,15 +131,15 @@ british blues
 british invasion
 britpop
 broken beat
-brown eyed soul
+brown-eyed soul
 brukdown
 brutal death metal
 bubblegum dance
 bubblegum pop
 bulerias
-bumba meu boi
+bumba-meu-boi
 bunraku
-burger highlife
+burger-highlife
 burgundian school
 byzantine chant
 ca din tulnic
@@ -148,17 +148,16 @@ ca trù
 cabaret
 cadence
 cadence rampa
-cadence lypso
-café aman
+cadence-lypso
+café-aman
 cai luong
 cajun music
 cakewalk
-calenda
 calentanos
 calgia
 calypso
 calypso jazz
-calypso style baila
+calypso-style baila
 campursari
 canatronic
 candombe
@@ -185,10 +184,9 @@ cardiowave
 carimbó
 cariso
 carnatic music
-carol
 cartageneras
 cassette culture
-casséy co
+casséy-co
 cavacha
 caveman
 caña
@@ -200,7 +198,7 @@ celtic metal
 celtic punk
 celtic reggae
 celtic rock
-cha cha cha
+cha-cha-cha
 chakacha
 chalga
 chamamé
@@ -212,7 +210,7 @@ changuí
 chanson
 chant
 charanga
-charanga vallenata
+charanga-vallenata
 charikawi
 chastushki
 chau van
@@ -224,14 +222,13 @@ chicano rap
 chicha
 chicken scratch
 children's music
-chillout
 chillwave
 chimurenga
 chinese music
 chinese pop
 chinese rock
 chip music
-cho kantrum
+cho-kantrum
 chongak
 chopera
 chorinho
@@ -253,12 +250,12 @@ christian ska
 christmas carol
 christmas music
 chumba
-chut kai pang
+chut-kai-pang
 chutney
 chutney soca
-chutney bhangra
-chutney hip hop
-chutney soca
+chutney-bhangra
+chutney-hip hop
+chutney-soca
 chylandyk
 chzalni
 chèo
@@ -304,10 +301,10 @@ country music
 country pop
 country r&b
 country rock
-country rap
+country-rap
 countrypolitan
 couple de sonneurs
-coupé décalé
+coupé-décalé
 cowpunk
 cretan music
 crossover jazz
@@ -332,9 +329,9 @@ daina
 dalauna
 dance
 dance music
-dance pop
-dance punk
-dance rock
+dance-pop
+dance-punk
+dance-rock
 dancehall
 dangdut
 danger music
@@ -366,7 +363,6 @@ degung
 delta blues
 dementia
 desert rock
-desi
 detroit blues
 detroit techno
 dhamar
@@ -401,7 +397,6 @@ doo wop
 doom metal
 doomcore
 downtempo
-drag
 dream pop
 drone doom
 drone metal
@@ -423,13 +418,12 @@ east coast hip hop
 easy listening
 electric blues
 electric folk
-electro
 electro backbeat
 electro hop
 electro house
 electro punk
-electro industrial
-electro swing
+electro-industrial
+electro-swing
 electroclash
 electrofunk
 electronic
@@ -442,7 +436,6 @@ electronic rock
 electronica
 electropop
 elevator music
-emo
 emo pop
 emo rap
 emocore
@@ -474,8 +467,8 @@ fife and drum blues
 filk
 film score
 filmi
-filmi ghazal
-finger style
+filmi-ghazal
+finger-style
 fjatpangarri
 flamenco
 flamenco rumba
@@ -490,8 +483,8 @@ folk punk
 folk rock
 folktronica
 forró
-franco country
-freak folk
+franco-country
+freak-folk
 freakbeat
 free improvisation
 free jazz
@@ -516,7 +509,7 @@ funkcore
 funky house
 furniture music
 fusion jazz
-funk
+g-funk
 gaana
 gabba
 gabber
@@ -541,7 +534,6 @@ gamewave
 gammeldans
 gandrung
 gangsta rap
-gar
 garage rock
 garrotin
 gavotte
@@ -552,7 +544,7 @@ german folk music
 gharbi
 gharnati
 ghazal
-ghazal song
+ghazal-song
 ghetto house
 ghettotech
 girl group
@@ -561,10 +553,9 @@ glam punk
 glam rock
 glitch
 gnawa
-go go
-goa
+go-go
 goa trance
-gong chime music
+gong-chime music
 goombay
 goregrind
 goshu ondo
@@ -604,7 +595,6 @@ hands up
 hapa haole
 happy hardcore
 haqibah
-hard
 hard bop
 hard house
 hard rock
@@ -622,7 +612,7 @@ heartland rock
 heavy beat
 heavy metal
 hesher
-hi nrg
+hi-nrg
 highlands
 highlife
 highlife fusion
@@ -680,7 +670,7 @@ indo rock
 indonesian pop
 indoyíftika
 industrial death metal
-industrial hip hop
+industrial hip-hop
 industrial metal
 industrial music
 industrial musical
@@ -703,9 +693,9 @@ italo house
 itsmeños
 izvorna bosanska muzika
 j'ouvert
-fusion
-pop
-rock
+j-fusion
+j-pop
+j-rock
 jaipongan
 jaliscienses
 jam band
@@ -723,13 +713,12 @@ jazz blues
 jazz fusion
 jazz metal
 jazz rap
-jazz funk
-jazz rock
+jazz-funk
+jazz-rock
 jegog
 jenkka
 jesus music
 jibaro
-jig
 jig punk
 jing ping
 jingle
@@ -741,7 +730,6 @@ joged bumbung
 joik
 jonnycore
 joropo
-jota
 jtek
 jug band
 jujitsu
@@ -753,7 +741,7 @@ jungle
 junkanoo
 juré
 jùjú
-pop
+k-pop
 kaba
 kabuki
 kachāshī
@@ -775,7 +763,7 @@ kaseko
 katajjaq
 kawachi ondo
 kayōkyoku
-ke kwe
+ke-kwe
 kebyar
 kecak
 kecapi suling
@@ -802,14 +790,12 @@ kléftiko
 kochare
 kolomyjka
 komagaku
-kompa
 konpa
 korean pop
 koumpaneia
 kpanlogo
 krakowiak
 krautrock
-kriti
 kroncong
 krump
 krzesany
@@ -817,7 +803,7 @@ kuduro
 kulintang
 kulning
 kumina
-kun borrk
+kun-borrk
 kundere
 kundiman
 kussundé
@@ -853,10 +839,10 @@ liquid funk
 liquindi
 llanera
 llanto
-lo fi
-lo fi music
+lo-fi
+lo-fi music
 loki djili
-long song
+long-song
 louisiana blues
 louisiana swamp pop
 lounge music
@@ -869,7 +855,7 @@ luk grung
 lullaby
 lundu
 lundum
-base
+m-base
 madchester
 madrigal
 mafioso rap
@@ -878,7 +864,7 @@ magnificat
 mahori
 mainstream jazz
 makossa
-makossa soukous
+makossa-soukous
 malagueñas
 malawian jazz
 malhun
@@ -897,7 +883,7 @@ manila sound
 manouche
 manzuma
 mapouka
-mapouka serré
+mapouka-serré
 marabi
 maracatu
 marga
@@ -908,7 +894,6 @@ marrabenta
 martial industrial
 martinetes
 maskanda
-mass
 matamuerte
 math rock
 mathcore
@@ -939,7 +924,7 @@ memphis soul
 mento
 merengue
 merengue típico moderno
-merengue bomba
+merengue-bomba
 meringue
 merseybeat
 metal
@@ -958,7 +943,7 @@ milonga
 min'yo
 mineras
 mini compas
-mini jazz
+mini-jazz
 minimal techno
 minimalist music
 minimalist trance
@@ -980,7 +965,6 @@ morna
 motorpop
 motown
 mozambique
-mpb
 mugam
 multicultural
 murga
@@ -989,7 +973,7 @@ museve
 mushroom jazz
 music drama
 music hall
-musiqi e assil
+musiqi-e assil
 musique concrète
 mutuashi
 muwashshah
@@ -1016,10 +1000,10 @@ national socialist black metal
 naturalismo
 nederpop
 neo soul
-neo classical metal
-neo medieval
-neo prog
-neo psychedelia
+neo-classical metal
+neo-medieval
+neo-prog
+neo-psychedelia
 neoclassical
 neoclassical music
 neofolk
@@ -1052,7 +1036,6 @@ nightcore
 nintendocore
 nisiótika
 no wave
-noh
 noise music
 noise pop
 noise rock
@@ -1074,12 +1057,10 @@ néo kýma
 obscuro
 oi!
 old school hip hop
-old time
+old-time
 oldies
 olonkho
 oltului
-ondo
-opera
 operatic pop
 oratorio
 orchestra
@@ -1091,13 +1072,13 @@ oriental metal
 ottava rima
 outlaw country
 outsider music
-funk
+p-funk
 pagan metal
 pagan rock
 pagode
 paisley underground
 palm wine
-palm wine
+palm-wine
 pambiche
 panambih
 panchai baja
@@ -1140,22 +1121,21 @@ pop folk
 pop music
 pop punk
 pop rap
-pop rock
 pop sunda
 pornocore
 porro
 post disco
-post britpop
-post disco
-post grunge
-post hardcore
-post industrial
-post metal
-post minimalism
-post punk
-post rock
-post romanticism
-pow wow
+post-britpop
+post-disco
+post-grunge
+post-hardcore
+post-industrial
+post-metal
+post-minimalism
+post-punk
+post-rock
+post-romanticism
+pow-wow
 power electronics
 power metal
 power noise
@@ -1195,15 +1175,13 @@ quadrille
 quan ho
 queercore
 quiet storm
-rada
 raga
 raga rock
 ragga
 ragga jungle
 raggamuffin
 ragtime
-rai
-rake and scrape
+rake-and-scrape
 ramkbach
 ramvong
 ranchera
@@ -1214,12 +1192,10 @@ rapcore
 rara
 rare groove
 rasiya
-rave
 raw rock
 raï
 rebetiko
 red dirt
-reel
 reggae
 reggae fusion
 reggae highlife
@@ -1264,15 +1240,14 @@ salsa erotica
 salsa romantica
 saltarello
 samba
-samba canção
-samba reggae
-samba rock
+samba-canção
+samba-reggae
+samba-rock
 sambai
 sanjo
 sato kagura
 sawt
 saya
-scat
 schlager
 schottisch
 schranz
@@ -1297,7 +1272,7 @@ shalako
 shan'ge
 shango
 shape note
-shibuya kei
+shibuya-kei
 shidaiqu
 shima uta
 shock rock
@@ -1306,33 +1281,29 @@ shoegazer
 shoka
 shomyo
 show tune
-sica
 siguiriyas
 silat
 sinawi
-singer songwriter
+singer-songwriter
 situational
-ska
 ska punk
 skacore
 skald
 skate punk
 skiffle
-slack key guitar
+slack-key guitar
 slide
 slowcore
 sludge metal
 slängpolska
-smooth jazz
 soca
 soft rock
-son
 son montuno
-son batá
+son-batá
 sonata
 songo
-songo salsa
-sophisti pop
+songo-salsa
+sophisti-pop
 soukous
 soul
 soul blues
@@ -1394,7 +1365,6 @@ t'ong guitar
 taarab
 tai tu
 taiwanese pop
-tala
 talempong
 tambu
 tamburitza
@@ -1443,17 +1413,17 @@ tribal house
 trikitixa
 trip hop
 trip rock
-trip hop
+trip-hop
 tropicalia
 tropicalismo
 tropipop
-truck driving country
+truck-driving country
 tumba
-turbo folk
+turbo-folk
 turkish music
 turkish pop
 turntablism
-tuvan throat singing
+tuvan throat-singing
 twee pop
 twist
 two tone
@@ -1509,10 +1479,10 @@ world music
 worldbeat
 xhosa music
 xoomii
-yo pop
+yo-pop
 yodeling
 yukar
-yé yé
+yé-yé
 zajal
 zapin
 zarzuela

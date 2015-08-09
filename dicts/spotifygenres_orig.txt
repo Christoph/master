@@ -49,6 +49,7 @@ American Popular Song
 American Punk
 American Trad Rock
 American Underground
+AM Pop
 Anarchist Punk
 Andalus Classical
 Andean Folk
@@ -110,6 +111,7 @@ Bombara
 Boogaloo
 Boogie Rock
 Boogie Woogie
+Bop
 Bossa Nova
 Brass Band
 Brazilian Folk
@@ -158,6 +160,7 @@ Chamber Jazz
 Chamber Music
 Chamber Pop
 Changui
+Chant
 Chants
 Chanukah
 Charanga
@@ -254,8 +257,10 @@ Dimotiko
 Dirty Blues
 Dirty Rap
 Dirty South
+Disco
 Dixieland
 Dixieland Revival
+DJ
 Djabdong
 Documentary
 Doom Metal
@@ -289,9 +294,12 @@ Electric Delta Blues
 Electric Harmonica Blues
 Electric Memphis Blues
 Electric Texas Blues
+Electro
 Electro Acoustic
 Electro Industrial
 Electro Jazz
+Electronic
+Electronica
 Electro Techno
 Enka
 Environmental
@@ -367,6 +375,7 @@ Georgian Choir
 German Liedermacher
 German Schlager
 German Volksmusik
+G Funk
 Giddha
 Girl Group
 Glam Rock
@@ -415,6 +424,7 @@ Hot Rod Revival
 House
 Hungarian Folk
 Hymns
+IDM
 Illbient
 Impressionist
 Improvisation
@@ -482,6 +492,7 @@ Korean Rock
 Kraut Rock
 Laika
 Lambada
+L.A. Punk
 Latin
 Latin CCM
 Latin Comedy
@@ -508,12 +519,14 @@ Makossa
 Mambo
 Mantras
 Marabi
+March
 Marches
 Mariachi
 Math Rock
 Mbalax
 Mbaqanga
 M Base
+Mbira
 Mbube
 Mbuti Choral
 Medieval
@@ -555,6 +568,7 @@ Morna
 Morning Radio
 Motown
 Movie Themes
+MPB
 Mugam
 Musette
 Musical Comedy
@@ -572,6 +586,7 @@ Neo Classical
 Neo Classical Metal
 Neo Electro
 Neo Glam
+Neo Prog
 Neo Psychedelia
 Neo Romantic
 Neo Soul
@@ -597,6 +612,7 @@ New York Punk
 New York Salsa
 New Zealand Rock
 Nissiotiko
+Noh
 Noise
 Noise Pop
 Noise Rock
@@ -621,6 +637,7 @@ Old School Rap
 Old Timey
 Omutibo
 Onda Grupera
+Opera
 Operettas
 Oratories
 Orchestral
@@ -649,6 +666,7 @@ Pop
 Pop Idol
 Pop Metal
 Pop Rap
+Pop Rock
 Pop Soul
 Pop Underground
 Portuguese Music
@@ -708,6 +726,7 @@ Rap
 Rap Metal
 Rap Rock
 Rapso
+Rave
 R&B
 Read Along Stories
 Reggae
@@ -757,6 +776,7 @@ Shoegaze
 Show Tunes
 Sing Along
 Singer Songwriter
+Ska
 Ska Punk
 Ska Revival
 Skatepunk
@@ -775,6 +795,7 @@ Society Dance Band
 Soft Rock
 Software Sounds
 Solo Instrumental
+Son
 Sonero
 Song Parody
 Songster
@@ -879,6 +900,7 @@ Tribute Albums
 Trip Hop
 Tropical
 Tropicalia
+Trot
 Trova
 Truck Driving Country
 Turkish Folk
