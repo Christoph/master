@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import tags.Tag;
 import tags.TagsToCSV;
 
@@ -87,60 +85,13 @@ public class QueryManager {
   
   public List<Tag> getAll(List<String> genres) throws SQLException {
   	List<Tag> data = new ArrayList<Tag>();
-  	String name = "";
-  	String join = "";
-  	
-    // Create a Pattern object
-    Pattern r;
-
-    // Now create matcher object.
-    Matcher m;
   	
   	//ResultSet result = stmt.executeQuery("select TT.ID as TTID, Track.ArtistID as ArtistID, Track.ID as SongID, Track.Name as SongName, Track.Listeners, Track.Playcount, Tag.ID as TagID, Tag.Name as TagName, TT.Count as TagWeight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID where Track.ID < "+rows+";");
   	ResultSet result = stmt.executeQuery("select TT.ID as TTID, Track.ArtistID as ArtistID, Track.ID as SongID, Track.Name as SongName, Track.Listeners, Track.Playcount, Tag.ID as TagID, Tag.Name as TagName, TT.Count as TagWeight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID;");
   	
   	
-  	while(result.next()) {   
-  		// Get composite tag name
-  		name = result.getString("TagName").toLowerCase().replaceAll("[-_:;]", " ");
-  		
-  		
-  		// Reset join string
-  		join = "";
-  		
-  		for(String s: genres)
-  		{
-  			r = Pattern.compile("(.*\\w+)("+s.toLowerCase()+")|("+s.toLowerCase()+")(\\w+.*)");  
-  			
-  			if(name.equals("songs i like")) 
-  				{
-  					name = "songs i like";
-  				} 
-	  		// Find matches
-	  		m = r.matcher(name);
-	  		
-	  		if(m.find())
-	  		{
-	  			for(int i = 1;i<5;i++)
-	  			{
-	  				if(m.group(i)!=null)
-	  				{
-	  	  				join = join + " " + m.group(i);	
-	  				}
-	  			}
-	  			
-	  			//System.out.println("Old:"+name);
-	  			//System.out.println("Match:"+s);
-	  			//System.out.println("New:"+join);
-	  			
-	  			name = join;
-	  			
-	  			m.reset();
-	  		}
-  		}
-  		
-  		
-  		data.add(new Tag(result.getInt("TTID"), name, result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners"),result.getInt("ArtistID")));
+  	while(result.next()) {   	
+  		data.add(new Tag(result.getInt("TTID"), result.getString("TagName").toLowerCase().replaceAll("[-_:;/]", " "), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners"),result.getInt("ArtistID")));
    	}
 
   	System.out.println("size:");

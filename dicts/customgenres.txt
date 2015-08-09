@@ -11,8 +11,8 @@ indie
 jazz
 latin
 metal
-pop
 pop punk
+pop
 punk
 reggae
 rnb
@@ -25,7 +25,6 @@ world
 90s
 Acadian
 Acappella
-Ambient
 Americana
 Apala
 Armenian
@@ -45,7 +44,6 @@ Bikutsi
 Blaxploitation
 Bluebeat
 Bluegrass
-Blues
 Bolero
 Bollywood
 Bombara
@@ -75,14 +73,12 @@ Chimurenga
 Choral
 Choro
 Christmas
-Classical
 Cocktail
 Comedy
 Compas
 Conjunto
 Cool
 Corrido
-Country
 Cowboy
 Cowpunk
 Creole
@@ -104,9 +100,6 @@ Drill'n'bass
 Dub
 Easter
 Educational
-Electro
-Electronic
-Electronica
 Enka
 Environmental
 Erotica
@@ -117,9 +110,6 @@ Experimental
 Fado
 Fantasy
 Flamenco
-Folk
-Folklore
-Folksongs
 Forro
 Freakbeat
 Freestyle
@@ -157,7 +147,6 @@ Instructional
 Interview
 Inuit
 Jaipongan
-Jazz
 Jibaro
 Jit
 Jive
@@ -172,7 +161,6 @@ Klezmer
 Kora
 Laika
 Lambada
-Latin
 Lounge
 Lullabies
 Madchester
@@ -227,10 +215,8 @@ Pachanga
 Plena
 Poetry
 Polka
-Pop
 Psychedelic
 Psychobilly
-Punk
 Pygmy
 Qawwali
 Quadrille
@@ -245,15 +231,10 @@ Rap
 Rapso
 Rave
 R&B
-Reggae
-Reggaeton
 Relaxation
 Rembetika
 Renaissance
 Rhumba
-Rock
-Rockabilly
-Rocksteady
 Rodeo
 Romantic
 Sadcore
@@ -275,7 +256,6 @@ Soca
 Sonero
 Songster
 Soukous
-Soul
 Soundtrack
 Soundtracks
 Space
@@ -311,8 +291,6 @@ Vocal
 Vocalese
 Waltz
 Women's
-World
-Worldbeat
 Yodeling
 Zouk
 Zydeco

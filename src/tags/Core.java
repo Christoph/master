@@ -70,6 +70,7 @@ public class Core {
     Filter filter = new Filter();
     Grouping_Simple grouping = new Grouping_Simple();
     Grouping complex_grouping = new Grouping();
+    Regex regex = new Regex();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_processed.csv");
     TagsToCSV writer_tags = new TagsToCSV("tags.csv");
@@ -85,7 +86,9 @@ public class Core {
     // son -> song ...
     // same in the lastfmgenres list
     // Customgenres is lastfm + spotify without words above and only single words no combinations
-    List<String> genres = im.importCSV("dicts/customgenres.txt");
+    // In addition i removed synonyms and used the lastfm words as basis: lastfm -> electronic spotify -> removed: Electro,electrinica,electronic
+    // The lastfm list is without emo and "pop punk". The last one because pop and punk are each separately in the list
+    List<String> genres = im.importCSV("dicts/lastfmgenres.txt");
     List<String> articles = im.importCSV("dicts/article.txt");
     //List<String> moods = im.importCSV("dicts/moods.txt");
     List<String> preps = im.importCSV("dicts/prep.txt");
@@ -109,6 +112,10 @@ public class Core {
     
     writer_tags.writeTagList(tags);
     log.info("Data loaded\n");
+    
+    // Word separation with regex
+    regex.separateWords(tags, genres);
+    log.info("Word separation finished\n");
     
     // Basic spell checking
     checker.withPhoneticsAndNgrams(tags, blacklist,0.6f,"first");
