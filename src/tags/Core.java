@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.*;
@@ -70,16 +73,21 @@ public class Core {
     Processor pro = new Processor(dbconf);
     ImportCSV im = new ImportCSV();
     SpellChecking checker = new SpellChecking();
+    SimilarityReplacement similarity = new SimilarityReplacement();
+    SimilarityReplacementWithDistance distance = new SimilarityReplacementWithDistance();
     Filter filter = new Filter();
+    Helper help = new Helper();
     Grouping_Simple grouping = new Grouping_Simple();
     Grouping complex_grouping = new Grouping();
     Regex regex = new Regex();
+    StringLengthComparator slc = new StringLengthComparator();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_processed.csv");
     TagsToCSV writer_tags = new TagsToCSV("tags.csv");
     TagsToCSV writer_tag = new TagsToCSV("Tag.csv");
     TagsToCSV writer_track = new TagsToCSV("Track.csv");
     TagsToCSV writer_tt = new TagsToCSV("TT.csv");
+    TagsToCSV writer_important = new TagsToCSV("tags_important.csv");
     
     // Using spotify genres: Words with 3 chars: dub, emo gay, Jit ,IDM, Mod, MPB, Noh, Oi!, pop, rai, rap, r&b, ska , son, bop, ccm, 
     // removing a few because of too much substring replacement within the genre list:
@@ -99,7 +107,8 @@ public class Core {
     List<String> spotify = im.importCSV("dicts/spotifygenres.txt");
     List<String> moods = im.importCSV("dicts/moods.txt");
     
-    Set<String> total = new HashSet<String>();
+    Set<String> temp = new HashSet<String>();
+    List<String> important_tags = new ArrayList<String>();
     
     List<String> articles = im.importCSV("dicts/article.txt");
     List<String> preps = im.importCSV("dicts/prep.txt");
@@ -118,21 +127,34 @@ public class Core {
     // Get all tags
     List<Tag> tags;
     tags = pro.getAll(genres);
-    
-    writer_tags.writeTagList(tags);
     log.info("Data loaded\n");
     
-    // Word separation with regex 
-    total.addAll(lastfm);
-    total.addAll(genres);
-    total.addAll(moods);
+    // Weighting words without filtering
+    filter.byWeightedMean(tags, blacklist,0.0d);
+    log.info("weigthing and filtering finished\n");
     
-    for(String s:spotify)
-    {
-    	total.add(s.toLowerCase());
-    }
+    // Write out raw tags with weight
+    writer_tags.writeTagListCustomWeight(tags);
     
-    regex.separateWords(tags, total);
+    // Build popular tags dict on raw data
+    important_tags = help.getImportantTags(tags, 0.01);
+    
+    // Add tags to the set
+    temp.addAll(lastfm);
+    temp.addAll(moods);
+    temp.addAll(important_tags);
+
+    // Reset list and add unique tags
+    important_tags.clear();
+    important_tags.addAll(temp);
+
+    // Sort the list: decreasing length
+	Collections.sort(important_tags, slc);
+	writer_important.writeImportantTags(important_tags);
+    log.info("Important tag extraction finished\n"); 
+    
+    // Word separation
+    regex.separateWords(tags, important_tags);
     log.info("Word separation finished\n");
     
     // Basic spell checking
@@ -159,7 +181,8 @@ public class Core {
     // Export Tag before TT!
     writer_tag.writeTableTag(tags);
     writer_track.writeTableTrack(tags);
-    // TrackID72 TagID 785 exists three times!
+    // TrackID 42 TagID 7 exists two times! line 515, 529 in TT
+    
     writer_tt.writeTableTT(tags);
     
     writer_taglist.writeTagListCustomWeight(tags);

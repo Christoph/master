@@ -380,4 +380,25 @@ public class TagsToCSV {
 			e.printStackTrace();
 		}
 	}
+	
+public void writeImportantTags(List<String> tags) {
+		
+		createHeader("Important Tags");
+		
+		for(String s:tags)
+		{
+			try {
+				writer.write(s+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

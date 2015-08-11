@@ -12,7 +12,7 @@ import org.apache.commons.codec.language.DoubleMetaphone;
 import tags.Tag;
 import tags.TagsToCSV;
 
-public class SpellChecking {
+public class SimilarityReplacement {
 	
 	public void withPhoneticsAndNgrams(List<Tag> tags, List<String> blacklist, float threshold, String filename_suffix)
 	{
@@ -23,13 +23,13 @@ public class SpellChecking {
 	    TagsToCSV writer_subs;
 	    TagsToCSV writer_subs_count;
 		
-	    Map<String, Long> tag_words = new HashMap<String, Long>();
+	    Map<String, Double> tag_words = new HashMap<String, Double>();
 	    Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
 	    Map<String, String> substitution_list = new HashMap<String, String>();
 	    
 	    List<String> words;
 	    Set<String> temp;
-	    long value, listener_count;
+	    double value, importance;
 	    int ngram_size;
 	    float similarity;
 	    String key, phonetic, new_tag;
@@ -54,7 +54,7 @@ public class SpellChecking {
 		/////////////////////////////////
 		// Algorithm		
 	    
-	    // Create a 1-word-gram/total listeners dict
+	    // Create a 1-word-gram/max weight dict
 	    for(int i = 0;i < tags.size(); i++)
 	    {
 	    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
@@ -67,12 +67,15 @@ public class SpellChecking {
 	    		{
 	    			value = tag_words.get(key);
 	    			
-	    			// Sum up the count
-	    			tag_words.put(key, value + tags.get(i).getListeners());
+	    			// Find max
+	    			if(value < tags.get(i).getImportance())
+	    			{
+	    				tag_words.put(key, tags.get(i).getImportance());
+	    			}
 	    		}
 	    		else
 	    		{
-	    			value = tags.get(i).getListeners();
+	    			value = tags.get(i).getImportance();
 	    			
 	    			tag_words.put(key, value);
 	    		}
@@ -106,7 +109,7 @@ public class SpellChecking {
 	    for(int i = 0;i < tags.size(); i++)
 	    {
 	      words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
-	    	
+	      
 	      for(int j = 0; j < words.size(); j++)
 	      {
 	    	String tag = words.get(j);
@@ -123,15 +126,17 @@ public class SpellChecking {
 	          // Iterate over those
 	          while(!phonetics.isEmpty())
 	          {
-	            listener_count = 0;
+	            importance = 0;
 	            
-	            // Find the word with the highest listener count
+	            // Find the word with the highest importance count
 	            for(String s: phonetics)
 	            {
-	              if(tag_words.get(s) > listener_count)
+	              
+	            	// Changed to >= because the importance can be 0
+	              if(tag_words.get(s) >= importance)
 	              {
 	                high = s;
-	                listener_count = tag_words.get(s);
+	                importance = tag_words.get(s);
 	              }
 	            }
 	            
@@ -149,7 +154,7 @@ public class SpellChecking {
 	              similarity = psim.jaccard_index(h1, h2);
 	              //similarity = psim.cosine_similarity(h1, h2);
 	              
-	              // Check if the ngram method gives a similarity > 70%
+	              // Check if the ngram method gives a similarity > threshold
 	              if(similarity > threshold)
 	              {
 	                substitution_list.put(word, high);

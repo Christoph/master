@@ -93,6 +93,7 @@ public class Filter {
 	    	//t.setWeight((q_lastfmweight*lastfmweight+q_listeners*((listeners-listeners_min)/listeners_scale)+q_playlist*((playcount-playcount_min)/playcount_scale))/(q_lastfmweight+q_listeners+q_playlist));
 	    	
 	    	importance = lastfmweight*(q_listeners*Math.log(listeners)+q_playlist*Math.log(playcount));
+	    	
 	    	t.setImportance(importance); 
 	    	
 	    }

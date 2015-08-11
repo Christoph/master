@@ -1,5 +1,6 @@
 package processing;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,5 +20,20 @@ public class Helper {
 					iterator.remove();
 				}
 		    }
+	  }
+	  
+	  public List<String> getImportantTags(List<Tag> tags, double threshold)
+	  {
+		  List<String> important = new ArrayList<String>();
+		  
+		  for(Tag t: tags)
+		  {
+			  if(t.getImportance() > threshold)
+			  {
+				  important.add(t.getTagName());
+			  }
+		  }
+		  
+		  return important;
 	  }
 }

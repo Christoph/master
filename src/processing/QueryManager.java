@@ -91,7 +91,7 @@ public class QueryManager {
   	
   	
   	while(result.next()) {   	
-  		data.add(new Tag(result.getInt("TTID"), result.getString("TagName").toLowerCase().replaceAll("[-_:;/]", " "), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners"),result.getInt("ArtistID")));
+  		data.add(new Tag(result.getInt("TTID"), result.getString("TagName").toLowerCase().replaceAll("[-_:;/]", " ").replaceAll("[']", ""), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners"),result.getInt("ArtistID")));
    	}
 
   	System.out.println("size:");
