@@ -28,7 +28,7 @@ public class Helper {
 		  
 		  for(Tag t: tags)
 		  {
-			  if(t.getImportance() > threshold)
+			  if(t.getImportance() > threshold && t.getTagName().length() > 3)
 			  {
 				  important.add(t.getTagName());
 			  }

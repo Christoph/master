@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class TagsToCSV {
 	FileWriter writer;
@@ -49,10 +50,12 @@ public class TagsToCSV {
 		
 	    createHeader("Truth,Replaced");
 		
-		for(String s:exp_subs.keySet())
+	    TreeMap<String, String> out = new TreeMap<String, String>(exp_subs);
+	    
+		for(String s:out.keySet())
 		{
 			try {
-				writer.write("\""+s+"\" ,\""+exp_subs.get(s)+"\"\n");
+				writer.write("\""+s+"\" ,\""+out.get(s)+"\"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

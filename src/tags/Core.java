@@ -72,9 +72,11 @@ public class Core {
     // Variable initialization  
     Processor pro = new Processor(dbconf);
     ImportCSV im = new ImportCSV();
-    SpellChecking checker = new SpellChecking();
-    SimilarityReplacement similarity = new SimilarityReplacement();
-    SimilarityReplacementWithDistance distance = new SimilarityReplacementWithDistance();
+    //SpellChecking similarity = new SpellChecking();
+    //SimilarityReplacement similarity = new SimilarityReplacement();
+    //SimilarityReplacementWithDistance similarity = new SimilarityReplacementWithDistance();
+    //SimilarityReplacementCompleteEditDistance similarity = new SimilarityReplacementCompleteEditDistance();
+    SimilarityComplex similarity = new SimilarityComplex();
     Filter filter = new Filter();
     Helper help = new Helper();
     Grouping_Simple grouping = new Grouping_Simple();
@@ -136,12 +138,31 @@ public class Core {
     // Write out raw tags with weight
     writer_tags.writeTagListCustomWeight(tags);
     
+    // Similarity replacement
+    similarity.withPhoneticsAndNgrams(tags, blacklist,0.7f,"first");
+    log.info("1st similiarity replacement finished\n");
+    
+    // Find word groups
+    complex_grouping.groupBy(tags, blacklist, 3,0.4d,"three");
+    complex_grouping.groupBy(tags, blacklist, 2,0.4d,"two");
+    log.info("complex grouping finished\n");
+    
+    grouping.groupBy(tags, blacklist, 3,0.2d,"three");
+    grouping.groupBy(tags, blacklist, 2,0.2d,"two");
+    log.info("simple grouping finished\n");
+    
+    // Again similarity replacement
+    similarity.withPhoneticsAndNgrams(tags, blacklist,0.65f,"second");
+    log.info("2st similiarity replacement finished\n");
+    
+    // Weighting words without filtering
+    filter.byWeightedMean(tags, blacklist,0.0d);
+    log.info("weigthing and filtering finished\n"); 
+    
     // Build popular tags dict on raw data
-    important_tags = help.getImportantTags(tags, 0.01);
+    important_tags = help.getImportantTags(tags, 0.007);
     
     // Add tags to the set
-    temp.addAll(lastfm);
-    temp.addAll(moods);
     temp.addAll(important_tags);
 
     // Reset list and add unique tags
@@ -154,35 +175,13 @@ public class Core {
     log.info("Important tag extraction finished\n"); 
     
     // Word separation
-    regex.separateWords(tags, important_tags);
+    // Find important words in the unimportant tags
+    //regex.separateWords(tags, important_tags);
     log.info("Word separation finished\n");
-    
-    // Basic spell checking
-    checker.withPhoneticsAndNgrams(tags, blacklist,0.6f,"first");
-    log.info("1st similiarity replacement finished\n");
-    
-    // Find word groups
-    complex_grouping.groupBy(tags, blacklist, 3,0.4d,"three");
-    complex_grouping.groupBy(tags, blacklist, 2,0.4d,"two");
-    log.info("complex grouping finished\n");
-    
-    grouping.groupBy(tags, blacklist, 3,0.2d,"three");
-    grouping.groupBy(tags, blacklist, 2,0.2d,"two");
-    log.info("simple grouping finished\n");
-    
-    // Again spell checking
-    checker.withPhoneticsAndNgrams(tags, blacklist,0.7f,"second");
-    log.info("2st similiarity replacement finished\n");
-    
-    // Weighting words without filtering
-    filter.byWeightedMean(tags, blacklist,0.0d);
-    log.info("weigthing and filtering finished\n");    
     
     // Export Tag before TT!
     writer_tag.writeTableTag(tags);
-    writer_track.writeTableTrack(tags);
-    // TrackID 42 TagID 7 exists two times! line 515, 529 in TT
-    
+    writer_track.writeTableTrack(tags);    
     writer_tt.writeTableTT(tags);
     
     writer_taglist.writeTagListCustomWeight(tags);
