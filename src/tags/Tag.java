@@ -77,6 +77,10 @@ public class Tag {
 	public int getTTID() {
 		return TTID;
 	}
+	
+	public void setTTID(int ID) {
+		this.TTID = ID;
+	}
 
 	public int getArtistID() {
 		return ArtistID;

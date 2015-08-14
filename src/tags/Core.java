@@ -149,7 +149,7 @@ public class Core {
     
     // Weighting words without filtering
     filter.byWeightedMean(tags, blacklist,0.0d);
-    log.info("weigthing and filtering finished\n"); 
+    log.info("Second time importance\n"); 
     
     // Build popular tags dict on raw data
     important_tags = help.getImportantTags(tags, 0.007, 2);
@@ -165,9 +165,14 @@ public class Core {
     log.info("Word separation finished\n");
     
     // Reset index
+    for(int i = 1; i<=tags.size(); i++)
+    {
+    	tags.get(i-1).setTTID(i);
+    }
     
-    
-    // Compute importance again
+    // Weighting words without filtering
+    filter.byWeightedMean(tags, blacklist,0.0d);
+    log.info("Last time importance\n");
     
     // Export Tag before TT!
     writer_tag.writeTableTag(tags);
