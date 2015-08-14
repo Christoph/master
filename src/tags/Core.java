@@ -160,8 +160,8 @@ public class Core {
     
     // Word separation and split tt lines
     // Find important words in the unimportant tags
-    //regex.findImportantWords(tags, important_tags, 0.007);
-    //help.removeTagsWithoutWords(tags);
+    regex.findImportantWords(tags, important_tags, 0.007);
+    help.removeTagsWithoutWords(tags);
     log.info("Word separation finished\n");
     
     // Reset index

@@ -3,6 +3,7 @@ package processing;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,13 +33,13 @@ public class Regex {
     Matcher mr, ml;
 	
     // String, > 0 == right, list of important tags
-	public void matcher(String name, List<String> list)
+	public void matcher(String name, Map<String, Double> list)
 	{
-			for(String s: list)
+			for(Map.Entry<String, Double> entry : list.entrySet())
 			{
   			// Compile patterns
-			l = Pattern.compile("(.*)("+s.toLowerCase()+")(.*)");  
-			r = Pattern.compile("(.*)("+s.toLowerCase()+")(.*)");  
+			l = Pattern.compile("(.*)("+entry.getKey().toLowerCase()+")(.*)");  
+			r = Pattern.compile("(.*)("+entry.getKey().toLowerCase()+")(.*)");  
 			
 	  		// Find matches
 	  		mr = r.matcher(name);
@@ -53,11 +54,6 @@ public class Regex {
 	  			
 	  			if(ls.length() > 0) matcher(ls, list);
 	  			
-	  			if(ms.equals("mexico-lindo y querido"))
-	  			{
-	  				ms = "mexico-lindo y querido";
-	  			}
-	  			
 	  			out.add(ms.replace(" ", "-"));
 	  			
 	  			if(rs.length() > 0) matcher(rs, list);
@@ -71,11 +67,6 @@ public class Regex {
 	  			String rs = ml.group(3).trim();
 	  			
 	  			if(ls.length() > 0) matcher(ls, list);
-
-	  			if(ms.equals("mexico-lindo y querido"))
-	  			{
-	  				ms = "mexico-lindo y querido";
-	  			}
 	  			
 	  			out.add(ms.replace(" ", "-"));
 	  			
@@ -102,7 +93,7 @@ public class Regex {
 	  		out.clear();
 	  		
 	  		// Apply regex
-	  		matcher(name, list);
+	  		//matcher(name, list);
 	  		
 	  		// Rebuild string from out
 	  		for(String s: out)
@@ -131,7 +122,7 @@ public class Regex {
     	}
 	}
 	
-	public void findImportantWords(List<Tag> tags, List<String> words, double threshold)
+	public void findImportantWords(List<Tag> tags, Map<String, Double> words, double threshold)
 	{	  
 		for(Tag t: tags)
 		{
@@ -143,11 +134,6 @@ public class Regex {
 				// Reset join string and out list
 		  		join = "";
 		  		out.clear();
-		  		
-		  		if(name.equals("acoustic-rhythm-guitars"))
-		  		{
-		  			name = "acoustic-rhythm-guitars";
-		  		}
 		  		
 		  		// Apply regex
 		  		matcher(name, words);
