@@ -76,7 +76,7 @@ public class Regex {
   		}
 			
 
-		out.add(name.trim());
+		//out.add(name.replace("-", " ").trim());
 
 	}
 	
@@ -121,35 +121,42 @@ public class Regex {
     	}
 	}
 	
-	public void findWords(List<Tag> tags, List<String> list, float threshold)
-	{
+	public void findImportantWords(List<Tag> tags, List<String> words, double threshold)
+	{	  
 		for(Tag t: tags)
 		{
-			// Set tag name
-			name = t.getTagName();
-			
-			// Reset join string and out list
-	  		join = "";
-	  		out.clear();
-	  		
-	  		// Apply regex
-	  		matcher(name, list);
-	  		
-	  		// Rebuild string from out
-	  		for(String s: out)
-	  		{
-	  			if(s.length() > 0)
-	  			{
-	  				join = join.concat(" "+s);
-	  			}
-	  		}
-	  		
-	  		join = join.trim();
-	  		name = name.trim();
-	  		
-	  		t.setTagName(join);
-	  		
-	  		if(!name.equals(join)) separation.add(name+" -> "+join);
+			if(t.getImportance() <= threshold)
+			{
+				// Set tag name
+				name = t.getTagName();
+				
+				// Reset join string and out list
+		  		join = "";
+		  		out.clear();
+		  		
+		  		if(name.equals("acoustic-rhythm-guitars"))
+		  		{
+		  			name = "acoustic-rhythm-guitars";
+		  		}
+		  		
+		  		// Apply regex
+		  		matcher(name, words);
+		  					
+		  		// Rebuild string from out
+		  		for(String s: out)
+		  		{
+		  			if(s.length() > 0)
+		  			{
+		  				join = join.concat(" "+s);
+		  			}
+		  		}
+		  		
+		  		join = join.trim();
+		  		
+		  		t.setTagName(join);
+		  		
+		  		if(!name.equals(join)&&!join.isEmpty()) separation.add(name+" -> "+join);
+			}
 		}
 		
 		// Write temp files
