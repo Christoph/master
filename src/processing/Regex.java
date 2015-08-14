@@ -2,6 +2,7 @@ package processing;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -124,8 +125,10 @@ public class Regex {
 	
 	public void findImportantWords(List<Tag> tags, Map<String, Double> words, double threshold)
 	{	  
-		for(Tag t: tags)
-		{
+		for(Iterator<Tag> iterator = tags.iterator(); iterator.hasNext();)
+        {
+			Tag t = iterator.next();
+          
 			if(t.getImportance() <= threshold)
 			{
 				// Set tag name
@@ -141,15 +144,12 @@ public class Regex {
 		  		// Rebuild string from out
 		  		for(String s: out)
 		  		{
-		  			if(s.length() > 0)
-		  			{
-		  				join = join.concat(" "+s);
-		  			}
+		  			tags.add(new Tag(1, s, t.getPlaycount(), 1, words.get(s), t.getLastFMWeight(), t.getSongID(), t.getSongName(), t.getListeners(),t.getArtistID())); 	
 		  		}
 		  		
 		  		join = join.trim();
 		  		
-		  		t.setTagName(join);
+		  		iterator.remove();
 		  		
 		  		if(!name.equals(join)&&!join.isEmpty()) separation.add(name+" -> "+join);
 			}

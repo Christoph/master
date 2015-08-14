@@ -97,7 +97,7 @@ public class Core {
     //List<String> moods = im.importCSV("dicts/moods.txt");
     
     Set<String> temp = new HashSet<String>();
-    Map<String, Double> important_tags = new LinkedHashMap<String, Double>();
+    Map<String, String> important_tags = new LinkedHashMap<String, String>();
     
     List<String> articles = im.importCSV("dicts/article.txt");
     List<String> preps = im.importCSV("dicts/prep.txt");
@@ -158,13 +158,14 @@ public class Core {
 	writer_important.writeImportantTags(important_tags);
     log.info("Important tag extraction finished\n"); 
     
-    // Word separation and split tt lines
+    // Word separation
     // Find important words in the unimportant tags
-    regex.findImportantWords(tags, important_tags, 0.007);
+    //regex.findImportantWords(tags, important_tags, 0.007);
     help.removeTagsWithoutWords(tags);
     log.info("Word separation finished\n");
     
     // Reset index
+    
     
     // Compute importance again
     

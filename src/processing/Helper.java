@@ -28,17 +28,19 @@ public class Helper {
 		    }
 	  }
 	  
-	  public Map<String, Double> getImportantTags(List<Tag> tags, double threshold, int minWordLength)
+	  public Map<String, String> getImportantTags(List<Tag> tags, double threshold, int minWordLength)
 	  {
 		  Map<String, Double> important = new HashMap<String, Double>();
+		  Map<String, Integer> tagid = new HashMap<String, Integer>();
 		  List<String> temp = new ArrayList<String>();
-		  Map<String, Double> out = new LinkedHashMap<String, Double>();
+		  Map<String, String> out = new LinkedHashMap<String, String>();
 		  
 		  for(Tag t: tags)
 		  {
 			  if(t.getImportance() > threshold && t.getTagName().length() > minWordLength)
 			  {				  
 				  important.put(t.getTagName(),t.getImportance());
+				  tagid.put(t.getTagName(), t.getTagID());
 				  temp.add(t.getTagName());
 			  }
 		  }
@@ -47,7 +49,7 @@ public class Helper {
 		  
 		  for(String l: temp)
 		  {
-			  out.put(l, important.get(l));
+			  out.put(l, tagid.get(l).toString()+","+important.get(l).toString());
 		  }
 		  
 		  return out;
