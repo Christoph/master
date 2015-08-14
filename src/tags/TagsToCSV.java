@@ -384,14 +384,14 @@ public class TagsToCSV {
 		}
 	}
 	
-public void writeImportantTags(List<String> tags) {
+public void writeImportantTags(Map<String, Double> tags) {
 		
 		createHeader("Important Tags");
 		
-		for(String s:tags)
+		for(Map.Entry<String, Double> entry : tags.entrySet())
 		{
 			try {
-				writer.write(s+"\n");
+				writer.write(entry.getKey()+":"+entry.getValue()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

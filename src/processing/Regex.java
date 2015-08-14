@@ -53,6 +53,11 @@ public class Regex {
 	  			
 	  			if(ls.length() > 0) matcher(ls, list);
 	  			
+	  			if(ms.equals("mexico-lindo y querido"))
+	  			{
+	  				ms = "mexico-lindo y querido";
+	  			}
+	  			
 	  			out.add(ms.replace(" ", "-"));
 	  			
 	  			if(rs.length() > 0) matcher(rs, list);
@@ -67,6 +72,11 @@ public class Regex {
 	  			
 	  			if(ls.length() > 0) matcher(ls, list);
 
+	  			if(ms.equals("mexico-lindo y querido"))
+	  			{
+	  				ms = "mexico-lindo y querido";
+	  			}
+	  			
 	  			out.add(ms.replace(" ", "-"));
 	  			
 	  			if(rs.length() > 0) matcher(rs, list);

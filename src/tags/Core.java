@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -72,17 +73,16 @@ public class Core {
     // Variable initialization  
     Processor pro = new Processor(dbconf);
     ImportCSV im = new ImportCSV();
-    //SpellChecking similarity = new SpellChecking();
+    SpellChecking similarity = new SpellChecking();
     //SimilarityReplacement similarity = new SimilarityReplacement();
     //SimilarityReplacementWithDistance similarity = new SimilarityReplacementWithDistance();
     //SimilarityReplacementCompleteEditDistance similarity = new SimilarityReplacementCompleteEditDistance();
-    SimilarityComplex similarity = new SimilarityComplex();
+    //SimilarityComplex similarity = new SimilarityComplex();
     Filter filter = new Filter();
     Helper help = new Helper();
     Grouping_Simple grouping = new Grouping_Simple();
     Grouping complex_grouping = new Grouping();
     Regex regex = new Regex();
-    StringLengthComparator slc = new StringLengthComparator();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_processed.csv");
     TagsToCSV writer_tags = new TagsToCSV("tags.csv");
@@ -91,13 +91,13 @@ public class Core {
     TagsToCSV writer_tt = new TagsToCSV("TT.csv");
     TagsToCSV writer_important = new TagsToCSV("tags_important.csv");
     
-    List<String> genres = im.importCSV("dicts/genres.txt");
-    List<String> lastfm = im.importCSV("dicts/lastfmgenres.txt");
-    List<String> spotify = im.importCSV("dicts/spotifygenres.txt");
-    List<String> moods = im.importCSV("dicts/moods.txt");
+    //List<String> genres = im.importCSV("dicts/genres.txt");
+    //List<String> lastfm = im.importCSV("dicts/lastfmgenres.txt");
+    //List<String> spotify = im.importCSV("dicts/spotifygenres.txt");
+    //List<String> moods = im.importCSV("dicts/moods.txt");
     
     Set<String> temp = new HashSet<String>();
-    List<String> important_tags = new ArrayList<String>();
+    Map<String, Double> important_tags = new LinkedHashMap<String, Double>();
     
     List<String> articles = im.importCSV("dicts/article.txt");
     List<String> preps = im.importCSV("dicts/prep.txt");
@@ -153,24 +153,20 @@ public class Core {
     
     // Build popular tags dict on raw data
     important_tags = help.getImportantTags(tags, 0.007, 2);
-    
-    // Add tags to the set
-    temp.addAll(important_tags);
-
-    // Reset list and add unique tags
-    important_tags.clear();
-    important_tags.addAll(temp);
 
     // Sort the list: decreasing length
-	Collections.sort(important_tags, slc);
 	writer_important.writeImportantTags(important_tags);
     log.info("Important tag extraction finished\n"); 
     
-    // Word separation
+    // Word separation and split tt lines
     // Find important words in the unimportant tags
-    regex.findImportantWords(tags, important_tags, 0.007);
-    help.removeTagsWithoutWords(tags);
+    //regex.findImportantWords(tags, important_tags, 0.007);
+    //help.removeTagsWithoutWords(tags);
     log.info("Word separation finished\n");
+    
+    // Reset index
+    
+    // Compute importance again
     
     // Export Tag before TT!
     writer_tag.writeTableTag(tags);
