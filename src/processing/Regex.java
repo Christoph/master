@@ -34,9 +34,9 @@ public class Regex {
     Matcher mr, ml;
 	
     // String, > 0 == right, list of important tags
-	public void matcher(String name, Map<String, Double> list)
+	public void matcher(String name, Map<String, String> list)
 	{
-			for(Map.Entry<String, Double> entry : list.entrySet())
+			for(Map.Entry<String, String> entry : list.entrySet())
 			{
   			// Compile patterns
 			l = Pattern.compile("(.*)("+entry.getKey().toLowerCase()+")(.*)");  
@@ -55,7 +55,7 @@ public class Regex {
 	  			
 	  			if(ls.length() > 0) matcher(ls, list);
 	  			
-	  			out.add(ms.replace(" ", "-"));
+	  			out.add(ms);
 	  			
 	  			if(rs.length() > 0) matcher(rs, list);
 	  			
@@ -69,7 +69,7 @@ public class Regex {
 	  			
 	  			if(ls.length() > 0) matcher(ls, list);
 	  			
-	  			out.add(ms.replace(" ", "-"));
+	  			out.add(ms);
 	  			
 	  			if(rs.length() > 0) matcher(rs, list);
 	  			
@@ -123,8 +123,10 @@ public class Regex {
     	}
 	}
 	
-	public void findImportantWords(List<Tag> tags, Map<String, Double> words, double threshold)
+	public void findImportantWords(List<Tag> tags, Map<String, String> words, double threshold)
 	{	  
+		List<Tag> tt = new ArrayList<Tag>();
+		
 		for(Iterator<Tag> iterator = tags.iterator(); iterator.hasNext();)
         {
 			Tag t = iterator.next();
@@ -144,16 +146,27 @@ public class Regex {
 		  		// Rebuild string from out
 		  		for(String s: out)
 		  		{
-		  			tags.add(new Tag(1, s, t.getPlaycount(), 1, words.get(s), t.getLastFMWeight(), t.getSongID(), t.getSongName(), t.getListeners(),t.getArtistID())); 	
+		  			if(s.length() > 0)
+		  			{
+		  				join = join.concat(" "+s);
+		  			} 
+		  			
+		  			String tagid = words.get(s).split(",")[0];
+		  			String importance = words.get(s).split(",")[1];
+		  			
+		  			tt.add(new Tag(1, s.replace(" ", "-"), t.getPlaycount(), Integer.parseInt(tagid), Double.parseDouble(importance), t.getLastFMWeight(), t.getSongID(), t.getSongName(), t.getListeners(),t.getArtistID())); 	
+		  		
 		  		}
 		  		
 		  		join = join.trim();
+
+		  		if(!name.equals(join)&&!join.isEmpty()) separation.add(name+" -> "+join);
 		  		
 		  		iterator.remove();
-		  		
-		  		if(!name.equals(join)&&!join.isEmpty()) separation.add(name+" -> "+join);
 			}
 		}
+		
+		tags.addAll(tt);
 		
 		// Write temp files
 	    if(print_groups) 
