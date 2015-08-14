@@ -40,6 +40,20 @@ public class Tag {
 		this.ArtistID = ArtistID;
 	}
 	
+	public Tag(int TTID, String tagName, int playcount, int tagID, double importance, int LastFMWeight, int songID, String songName, int listeners, int ArtistID ) {
+		this.TTID = TTID;
+		this.tagName = tagName;
+		this.playcount = playcount;
+		this.originalTagName = tagName;
+		this.tagID = tagID;
+		this.weight = importance;
+		this.songID = songID;
+		this.songName = songName;
+		this.listeners = listeners;
+		this.ArtistID = ArtistID;
+		this.lastFMWeight = LastFMWeight;
+	}
+	
 	public String getTagName() {
 		return tagName;
 	}

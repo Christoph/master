@@ -1,15 +1,12 @@
 package processing;
 
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.media.jai.operator.MinDescriptor;
 
 import org.apache.commons.codec.language.DoubleMetaphone;
 
@@ -134,7 +131,7 @@ public class SimilarityComplex {
 	          {
 	        	  word_group.addAll(phonetic_groups.get(c));
 	          }
-
+	
 	          while(!word_group.isEmpty())
 	          {
 	            importance = 0;
@@ -158,20 +155,20 @@ public class SimilarityComplex {
 	              
 	              if(!substitution_list.containsKey(word))
 	              {
-	              similarity = 0;
-	              
-	              h1 = psim.create_n_gram(word, ngram_size);
-	              h2 = psim.create_n_gram(high, ngram_size);
-	              
-	              // Choose distance methods
-	              similarity = psim.jaccard_index(h1, h2);
-	              
-	              // Check if the ngram method gives a similarity > threshold
-	              if(similarity > threshold)
-	              {
-	                substitution_list.put(word, high);
-	                iterator.remove();
-	              }  
+		              similarity = 0;
+		              
+		              h1 = psim.create_n_gram(word, ngram_size);
+		              h2 = psim.create_n_gram(high, ngram_size);
+		              
+		              // Choose distance methods
+		              similarity = psim.jaccard_index(h1, h2);
+		              
+		              // Check if the ngram method gives a similarity > threshold
+		              if(similarity > threshold)
+		              {
+		                substitution_list.put(word, high);
+		                iterator.remove();
+		              }  
 	              }
 	              else
 	              {
@@ -181,23 +178,22 @@ public class SimilarityComplex {
 		              h1 = psim.create_n_gram(word, ngram_size);
 		              h2 = psim.create_n_gram(high, ngram_size);
 		              
-		              similarity = psim.jaccard_index(h1, h2);
-		              
-		              h3 = psim.create_n_gram(substitution_list.get(word), ngram_size);
-		              
-		              similarity2 = psim.jaccard_index(h1, h3);
-		              
-	            	  // Replace old substitution if the new one is better
-		              if(similarity >= similarity2)
-		              {          	  
-			                substitution_list.put(word, high);
-				            iterator.remove();
+			              similarity = psim.jaccard_index(h1, h2);
+			              
+			              h3 = psim.create_n_gram(substitution_list.get(word), ngram_size);
+			              
+			              similarity2 = psim.jaccard_index(h1, h3);
+			              
+		            	  // Replace old substitution if the new one is better
+			              if(similarity >= similarity2)
+			              {          	  
+				                substitution_list.put(word, high);
+					            iterator.remove();
+			              }
 		              }
-	              }
-	            }
-	          }
-	          
-	        }   
+		            }
+		          } 
+		        }   
 	      
 	    tag_words = null;
 	    phonetic_groups = null;

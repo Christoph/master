@@ -91,19 +91,6 @@ public class Core {
     TagsToCSV writer_tt = new TagsToCSV("TT.csv");
     TagsToCSV writer_important = new TagsToCSV("tags_important.csv");
     
-    // Using spotify genres: Words with 3 chars: dub, emo gay, Jit ,IDM, Mod, MPB, Noh, Oi!, pop, rai, rap, r&b, ska , son, bop, ccm, 
-    // removing a few because of too much substring replacement within the genre list:
-    // emo -> emotional...
-    // mod -> modern...
-    // rai -> praise straight...
-    // son -> song ...
-    // same in the lastfmgenres list
-    // Customgenres is lastfm + spotify without words above and only single words no combinations
-    // In addition i removed synonyms and used the lastfm words as basis: lastfm -> electronic spotify -> removed: Electro,electrinica,electronic
-    // The lastfm list is without emo and "pop punk". The last one because pop and punk are each separately in the list
-    // Total consists is a handmade list of words:
-    // Handselected moods -> 
-    // 
     List<String> genres = im.importCSV("dicts/genres.txt");
     List<String> lastfm = im.importCSV("dicts/lastfmgenres.txt");
     List<String> spotify = im.importCSV("dicts/spotifygenres.txt");
@@ -128,7 +115,12 @@ public class Core {
     
     // Get all tags
     List<Tag> tags;
-    tags = pro.getAll(genres);
+    
+    // From DB
+    //tags = pro.getAll(genres);
+    
+    // From csv file
+    tags = im.importTags("raw_tags.csv");
     log.info("Data loaded\n");
     
     // Weighting words without filtering
@@ -160,7 +152,7 @@ public class Core {
     log.info("weigthing and filtering finished\n"); 
     
     // Build popular tags dict on raw data
-    important_tags = help.getImportantTags(tags, 0.007);
+    important_tags = help.getImportantTags(tags, 0.007, 2);
     
     // Add tags to the set
     temp.addAll(important_tags);
@@ -176,7 +168,8 @@ public class Core {
     
     // Word separation
     // Find important words in the unimportant tags
-    //regex.separateWords(tags, important_tags);
+    regex.findImportantWords(tags, important_tags, 0.007);
+    help.removeTagsWithoutWords(tags);
     log.info("Word separation finished\n");
     
     // Export Tag before TT!

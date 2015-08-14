@@ -22,13 +22,13 @@ public class Helper {
 		    }
 	  }
 	  
-	  public List<String> getImportantTags(List<Tag> tags, double threshold)
+	  public List<String> getImportantTags(List<Tag> tags, double threshold, int minWordLength)
 	  {
 		  List<String> important = new ArrayList<String>();
 		  
 		  for(Tag t: tags)
 		  {
-			  if(t.getImportance() > threshold && t.getTagName().length() > 3)
+			  if(t.getImportance() > threshold && t.getTagName().length() > minWordLength)
 			  {
 				  important.add(t.getTagName());
 			  }

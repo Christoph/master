@@ -187,12 +187,12 @@ public class TagsToCSV {
 	
 	public void writeTagListCustomWeight(List<Tag> data) {
 		
-		createHeader("ID,SongID,SongName,Listeners,Playcount,TagID,TagName,LastFMWeight,TagWeight");
+		createHeader("ID,SongID,SongName,Listeners,Playcount,TagID,TagName,LastFMWeight,Importance,ArtistID");
 
 		for(Tag t:data)
 		{
 			try {
-				writer.write(t.getTTID()+","+t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+","+t.getImportance()+"\n");
+				writer.write(t.getTTID()+","+t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+","+t.getImportance()+","+t.getArtistID()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
