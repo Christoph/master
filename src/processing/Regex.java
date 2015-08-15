@@ -123,19 +123,19 @@ public class Regex {
     	}
 	}
 	
-	public void findImportantWords(List<Tag> tags, Map<String, String> words, double threshold)
+	public void findImportantWords(List<Tag> tags, Map<String, String> words, double threshold, int minWordLength)
 	{	  
 		List<Tag> tt = new ArrayList<Tag>();
 		
 		for(Iterator<Tag> iterator = tags.iterator(); iterator.hasNext();)
         {
 			Tag t = iterator.next();
-          
+			
+			// Set tag name
+			name = t.getTagName();
+			
 			if(t.getImportance() <= threshold)
 			{
-				// Set tag name
-				name = t.getTagName();
-				
 				// Reset join string and out list
 		  		join = "";
 		  		out.clear();
@@ -145,7 +145,7 @@ public class Regex {
 		  					
 		  		// Rebuild string from out
 		  		for(String s: out)
-		  		{
+		  		{	
 		  			if(s.length() > 0)
 		  			{
 		  				join = join.concat(" "+s);
@@ -163,6 +163,18 @@ public class Regex {
 		  		if(!name.equals(join)&&!join.isEmpty()) separation.add(name+" -> "+join);
 		  		
 		  		iterator.remove();
+			}
+			else if(t.getImportance() > threshold && name.length() >=  minWordLength)// Fix important tags
+			{			
+				// Reset join string and out list
+		  		join = name.replace(" ", "-");
+		  	
+		  		t.setTagName(join);
+			}
+			else
+			{
+				// Delete tag which is not important and too short.
+				t.setTagName("");
 			}
 		}
 		

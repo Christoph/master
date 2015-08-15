@@ -83,7 +83,7 @@ public class QueryManager {
   // Maximum track id; limits rows
   int rows = 70000;
   
-  public List<Tag> getAll(List<String> genres) throws SQLException {
+  public List<Tag> getAll() throws SQLException {
   	List<Tag> data = new ArrayList<Tag>();
   	
   	//ResultSet result = stmt.executeQuery("select TT.ID as TTID, Track.ArtistID as ArtistID, Track.ID as SongID, Track.Name as SongName, Track.Listeners, Track.Playcount, Tag.ID as TagID, Tag.Name as TagName, TT.Count as TagWeight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID where Track.ID < "+rows+";");

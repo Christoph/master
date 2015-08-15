@@ -73,11 +73,11 @@ public class Core {
     // Variable initialization  
     Processor pro = new Processor(dbconf);
     ImportCSV im = new ImportCSV();
-    SpellChecking similarity = new SpellChecking();
+    //SpellChecking similarity = new SpellChecking();
     //SimilarityReplacement similarity = new SimilarityReplacement();
     //SimilarityReplacementWithDistance similarity = new SimilarityReplacementWithDistance();
     //SimilarityReplacementCompleteEditDistance similarity = new SimilarityReplacementCompleteEditDistance();
-    //SimilarityComplex similarity = new SimilarityComplex();
+    SimilarityComplex similarity = new SimilarityComplex();
     Filter filter = new Filter();
     Helper help = new Helper();
     Grouping_Simple grouping = new Grouping_Simple();
@@ -96,7 +96,6 @@ public class Core {
     //List<String> spotify = im.importCSV("dicts/spotifygenres.txt");
     //List<String> moods = im.importCSV("dicts/moods.txt");
     
-    Set<String> temp = new HashSet<String>();
     Map<String, String> important_tags = new LinkedHashMap<String, String>();
     
     List<String> articles = im.importCSV("dicts/article.txt");
@@ -113,11 +112,19 @@ public class Core {
 	///////////////////////////////// 
     // Algorithm
     
+    // Set importance threshold
+    // 0.007 -> 500 tags
+    // 0.004 -> 1000 tags
+    double threshold = 0.004;
+    
+    // Set minimum word length
+    int minWordLength = 3;
+    
     // Get all tags
     List<Tag> tags;
     
     // From DB
-    //tags = pro.getAll(genres);
+    //tags = pro.getAll();
     
     // From csv file
     tags = im.importTags("raw_tags.csv");
@@ -152,7 +159,7 @@ public class Core {
     log.info("Second time importance\n"); 
     
     // Build popular tags dict on raw data
-    important_tags = help.getImportantTags(tags, 0.007, 2);
+    important_tags = help.getImportantTags(tags, threshold, minWordLength);
 
     // Sort the list: decreasing length
 	writer_important.writeImportantTags(important_tags);
@@ -160,7 +167,7 @@ public class Core {
     
     // Word separation
     // Find important words in the unimportant tags
-    regex.findImportantWords(tags, important_tags, 0.007);
+    regex.findImportantWords(tags, important_tags, threshold, minWordLength);
     help.removeTagsWithoutWords(tags);
     log.info("Word separation finished\n");
     
@@ -170,7 +177,7 @@ public class Core {
     	tags.get(i-1).setTTID(i);
     }
     
-    // Weighting words without filtering
+    // Weighting words as last step
     filter.byWeightedMean(tags, blacklist,0.0d);
     log.info("Last time importance\n");
     

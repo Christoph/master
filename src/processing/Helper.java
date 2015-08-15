@@ -37,7 +37,7 @@ public class Helper {
 		  
 		  for(Tag t: tags)
 		  {
-			  if(t.getImportance() > threshold && t.getTagName().length() > minWordLength)
+			  if(t.getImportance() > threshold && t.getTagName().length() >= minWordLength)
 			  {				  
 				  important.put(t.getTagName(),t.getImportance());
 				  tagid.put(t.getTagName(), t.getTagID());
