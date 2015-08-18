@@ -33,7 +33,7 @@ public class Grouping {
 		
 		// Print temp files
 	    print_groups = false;
-		print_accepted = false;
+		print_accepted = true;
 		
 		/////////////////////////////////
 		// Algorithm

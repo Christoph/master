@@ -36,7 +36,7 @@ public class Grouping_Simple {
 	    
 		// Print temp files
 	    print_groups = false;
-		print_accepted = false;
+		print_accepted = true;
 	    
 		/////////////////////////////////
 		// Algorithm
