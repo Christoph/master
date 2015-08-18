@@ -3,10 +3,12 @@ package processing;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import tags.Tag;
 
@@ -26,6 +28,89 @@ public class Helper {
 					iterator.remove();
 				}
 		    }
+	  }
+	  
+	  public void correctTagsAndIDs(List<Tag> data)
+	  {
+		  	// TagName: TagID
+		  	Map<String, Integer> tags = new HashMap<String, Integer>();
+		  	// "TrackID,TagName": LastFMWeight
+		  	Map<String, Integer> song_name = new HashMap<String, Integer>();
+		  	
+	    	Set<String> used = new HashSet<String>();
+		  	
+		    int ID, weight;
+		    String name, key;
+
+		    // Find maximum LastFMWeight per song/tag pair
+		    for(Tag t: data)
+		    {
+				ID = t.getSongID();
+				name = t.getTagName();
+				key = ID+name;
+				weight = t.getLastFMWeight();
+
+				if(song_name.containsKey(key))
+				{
+					if(weight > song_name.get(key))
+					{
+						song_name.put(key, weight);
+					}
+				}
+				else
+				{
+					song_name.put(key, weight);
+				}
+		    }
+		    
+		    // Resolve multiple equal tags per song
+		    for(Tag t: data)
+		    {
+				ID = t.getSongID();
+				name = t.getTagName();
+				key = ID+name;
+				weight = t.getLastFMWeight();
+
+				if(song_name.containsKey(key))
+				{
+					if(weight < song_name.get(key))
+					{
+						// This marks the tag object as removable
+						t.setTagName("");
+						System.out.println("Too low:"+key);
+					}
+					
+					if(weight == song_name.get(key) && used.contains(key))
+					{
+						// This marks the tag object as removable
+						t.setTagName("");
+						System.out.println("Duplicate:"+key);
+					}
+					else if(weight == song_name.get(key))
+					{
+						used.add(key);
+					}
+				}
+		    }
+		    
+		    // Resolve multiple tag ids
+			for(Tag t:data)
+			{
+				ID = t.getTagID();
+				name = t.getTagName();
+				
+				if(tags.containsKey(name))
+				{
+					if(ID != tags.get(name))
+					{
+						t.setTagID(tags.get(name));
+					}
+				}
+				else
+				{
+					tags.put(name, ID);
+				}
+			}	
 	  }
 	  
 	  public Map<String, String> getImportantTags(List<Tag> tags, double threshold, int minWordLength)

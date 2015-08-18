@@ -78,18 +78,19 @@ public class Core {
     //SimilarityReplacementWithDistance similarity = new SimilarityReplacementWithDistance();
     //SimilarityReplacementCompleteEditDistance similarity = new SimilarityReplacementCompleteEditDistance();
     SimilarityComplex similarity = new SimilarityComplex();
-    Filter filter = new Filter();
+    Weighting weighting = new Weighting();
     Helper help = new Helper();
     Grouping_Simple grouping = new Grouping_Simple();
     Grouping complex_grouping = new Grouping();
     Regex regex = new Regex();
     
-    TagsToCSV writer_taglist = new TagsToCSV("tags_processed.csv");
-    TagsToCSV writer_tags = new TagsToCSV("tags.csv");
+    TagsToCSV writer_taglist = new TagsToCSV("tags_final.csv");
+    TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
+    TagsToCSV writer_tags = new TagsToCSV("tags_raw.csv");
     TagsToCSV writer_tag = new TagsToCSV("Tag.csv");
     TagsToCSV writer_track = new TagsToCSV("Track.csv");
     TagsToCSV writer_tt = new TagsToCSV("TT.csv");
-    TagsToCSV writer_important = new TagsToCSV("tags_important.csv");
+    TagsToCSV writer_important = new TagsToCSV("important_tags.csv");
     
     //List<String> genres = im.importCSV("dicts/genres.txt");
     //List<String> lastfm = im.importCSV("dicts/lastfmgenres.txt");
@@ -115,10 +116,10 @@ public class Core {
     // Set importance threshold
     // 0.007 -> 500 tags
     // 0.004 -> 1000 tags
-    double threshold = 0.004;
+    double threshold = 0.007;
     
     // Set minimum word length
-    int minWordLength = 3;
+    int minWordLength = 4;
     
     // Get all tags
     List<Tag> tags;
@@ -131,11 +132,12 @@ public class Core {
     log.info("Data loaded\n");
     
     // Weighting words without filtering
-    filter.byWeightedMean(tags, blacklist,0.0d);
-    log.info("weigthing and filtering finished\n");
+    weighting.byWeightedMean(tags, blacklist);
+    log.info("First time importance finished\n");
     
     // Write out raw tags with weight
-    writer_tags.writeTagListCustomWeight(tags);
+    writer_tags.writeTagListCustomWeight(tags);    
+    System.out.println("tt0: "+tags.size());
     
     // Similarity replacement
     similarity.withPhoneticsAndNgrams(tags, blacklist,0.7f,"first");
@@ -154,9 +156,13 @@ public class Core {
     similarity.withPhoneticsAndNgrams(tags, blacklist,0.65f,"second");
     log.info("2st similiarity replacement finished\n");
     
+    // Write out cleaned tags with weight
+    writer_cleanup.writeTagListCustomWeight(tags);
+    System.out.println("tt1: "+tags.size());
+    
     // Weighting words without filtering
-    filter.byWeightedMean(tags, blacklist,0.0d);
-    log.info("Second time importance\n"); 
+    weighting.byWeightedMean(tags, blacklist);
+    log.info("Second time importance\n");
     
     // Build popular tags dict on raw data
     important_tags = help.getImportantTags(tags, threshold, minWordLength);
@@ -177,15 +183,15 @@ public class Core {
     	tags.get(i-1).setTTID(i);
     }
     
-    // Weighting words as last step
-    filter.byWeightedMean(tags, blacklist,0.0d);
+    // Weighting words as last step 
+    weighting.byWeightedMean(tags, blacklist);
     log.info("Last time importance\n");
     
-    // Export Tag before TT!
     writer_tag.writeTableTag(tags);
     writer_track.writeTableTrack(tags);    
     writer_tt.writeTableTT(tags);
     
+    // Write out final tags with weight
     writer_taglist.writeTagListCustomWeight(tags);
     
 	/////////////////////////////////

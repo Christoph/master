@@ -256,6 +256,8 @@ public class SimilarityComplex {
 	      t.setTagName(new_tag.trim());
 	    }
 	    
+	    // Resolve errors from replacements
+	    helper.correctTagsAndIDs(tags);
 	    helper.removeTagsWithoutWords(tags);
 	    
 	    substitution_list = null;

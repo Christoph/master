@@ -80,18 +80,13 @@ public class QueryManager {
   	return data;
   }
   
-  // Maximum track id; limits rows
-  int rows = 70000;
-  
   public List<Tag> getAll() throws SQLException {
   	List<Tag> data = new ArrayList<Tag>();
   	
-  	//ResultSet result = stmt.executeQuery("select TT.ID as TTID, Track.ArtistID as ArtistID, Track.ID as SongID, Track.Name as SongName, Track.Listeners, Track.Playcount, Tag.ID as TagID, Tag.Name as TagName, TT.Count as TagWeight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID where Track.ID < "+rows+";");
   	ResultSet result = stmt.executeQuery("select TT.ID as TTID, Track.ArtistID as ArtistID, Track.ID as SongID, Track.Name as SongName, Track.Listeners, Track.Playcount, Tag.ID as TagID, Tag.Name as TagName, TT.Count as TagWeight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID;");
-  	
-  	
-  	while(result.next()) {   	
-  		data.add(new Tag(result.getInt("TTID"), result.getString("TagName").toLowerCase().replaceAll("[#-_:;/]", " ").replaceAll("[']", ""), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName").toLowerCase(), result.getInt("Listeners"),result.getInt("ArtistID")));
+
+  	while(result.next()) {   
+  		data.add(new Tag(result.getInt("TTID"), result.getString("TagName").toLowerCase().replaceAll("[-_:;/]", " ").replaceAll("[']", ""), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName"), result.getInt("Listeners"),result.getInt("ArtistID")));
    	}
 
   	System.out.println("size:");
