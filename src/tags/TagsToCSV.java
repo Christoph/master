@@ -241,49 +241,7 @@ public class TagsToCSV {
 			e.printStackTrace();
 		}
 	}
-	/*
-	public void writeTableTag(List<Tag> data) {
-		
-		createHeader("ID,\"Name\"");
-	    Map<String, Integer> tags = new HashMap<String, Integer>();
-	    int ID;
-	    String name;
 
-		for(Tag t:data)
-		{
-			ID = t.getTagID();
-			name = t.getTagName();
-			
-			if(tags.containsKey(name))
-			{
-				if(ID != tags.get(name))
-				{
-					t.setTagID(tags.get(name));
-				}
-			}
-			else
-			{
-				tags.put(name, ID);
-			}
-		}
-		
-		for(String s:tags.keySet())
-		{
-			try {
-				writer.write(tags.get(s)+",\""+s+"\""+"\n");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		try {
-			writer.flush();
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	*/
 	public void writeTableTT(List<Tag> data) {
 		
 		createHeader("ID,TrackID,TagID,LastFMWeight,Importance");
@@ -308,20 +266,28 @@ public class TagsToCSV {
 	public void writeTableTrack(List<Tag> data) {
 	
 	createHeader("ID,Name,ArtistID,Listeners,Playcount");
-	int temp = 0;
 
+	Map<String, String> tracks = new HashMap<String, String>();
+    String name, numbers;
+	
 	for(Tag t:data)
 	{
+		name = t.getSongID()+","+t.getSongName();
+		numbers = ","+t.getArtistID()+","+t.getListeners()+","+t.getPlaycount();
+		
+		if(!tracks.containsKey(name))
+		{
+			tracks.put(name, numbers);
+		}
+	}
+	
+	for(String s: tracks.keySet())
+	{
 		try {
-			if(t.getSongID() != temp)
-			{
-				writer.write(t.getSongID()+","+t.getSongName()+","+t.getArtistID()+","+t.getListeners()+","+t.getPlaycount()+"\n");
-			}
+				writer.write(s+tracks.get(s)+"\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		temp = t.getSongID();
 	}
 	
 	try {

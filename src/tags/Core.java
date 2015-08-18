@@ -193,6 +193,7 @@ public class Core {
     
     // Write out final tags with weight
     writer_taglist.writeTagListCustomWeight(tags);
+    System.out.println("tt5: "+tags.size());
     
 	/////////////////////////////////
     // End

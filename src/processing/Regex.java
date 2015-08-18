@@ -82,47 +82,6 @@ public class Regex {
 
 	}
 	
-	public void separateWords(List<Tag> tags, List<String> list)
-	{
-		for(Tag t: tags)
-		{
-			// Set tag name
-			name = t.getTagName();
-			
-			// Reset join string and out list
-	  		join = "";
-	  		out.clear();
-	  		
-	  		// Apply regex
-	  		//matcher(name, list);
-	  		
-	  		// Rebuild string from out
-	  		for(String s: out)
-	  		{
-	  			if(s.length() > 0)
-	  			{
-	  				join = join.concat(" "+s);
-	  			}
-	  		}
-	  		
-	  		join = join.trim();
-	  		name = name.trim();
-	  		
-	  		t.setTagName(join);
-	  		
-	  		if(!name.equals(join)) separation.add(name+" -> "+join);
-		}
-		
-		// Write temp files
-	    if(print_groups) 
-    	{	
-	    	Collections.sort(separation);
-	    	
-	    	writer = new TagsToCSV("word_separation.csv");
-	    	writer.writeSeparation(separation);
-    	}
-	}
-	
 	public void findImportantWords(List<Tag> tags, Map<String, String> words, double threshold, int minWordLength)
 	{	  
 		List<Tag> tt = new ArrayList<Tag>();
