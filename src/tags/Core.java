@@ -132,7 +132,7 @@ public class Core {
     log.info("Data loaded\n");
     
     // Weighting words without filtering
-    weighting.byWeightedMean(tags, blacklist);
+    weighting.byWeightedMean(tags, blacklist,"first");
     log.info("First time importance finished\n");
     
     // Write out raw tags with weight
@@ -161,7 +161,7 @@ public class Core {
     System.out.println("tt1: "+tags.size());
     
     // Weighting words without filtering
-    weighting.byWeightedMean(tags, blacklist);
+    weighting.byWeightedMean(tags, blacklist,"second");
     log.info("Second time importance\n");
     
     // Build popular tags dict on raw data
@@ -184,7 +184,7 @@ public class Core {
     }
     
     // Weighting words as last step 
-    weighting.byWeightedMean(tags, blacklist);
+    weighting.byWeightedMean(tags, blacklist,"third");
     log.info("Last time importance\n");
     
     writer_tag.writeTableTag(tags);

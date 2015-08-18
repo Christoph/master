@@ -77,14 +77,12 @@ public class Helper {
 					{
 						// This marks the tag object as removable
 						t.setTagName("");
-						System.out.println("Too low:"+key);
 					}
 					
 					if(weight == song_name.get(key) && used.contains(key))
 					{
 						// This marks the tag object as removable
 						t.setTagName("");
-						System.out.println("Duplicate:"+key);
 					}
 					else if(weight == song_name.get(key))
 					{

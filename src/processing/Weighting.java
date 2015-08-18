@@ -1,26 +1,34 @@
 package processing;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import tags.Tag;
+import tags.TagsToCSV;
 
 public class Weighting {
 
-	public void byWeightedMean(List<Tag> tags, List<String> blacklist)
+	public void byWeightedMean(List<Tag> tags, List<String> blacklist, String prefix)
 	{
 	    /////////////////////////////////
 	    // Variables
 	    Map<String, Double> tag_words = new HashMap<String, Double>();
 	    
+	  	TagsToCSV writer;
+	  	List<String> weights = new ArrayList<String>();
+	  	Set<String> temp = new HashSet<String>();
+	    
 	    long listeners, playcount, lastfmweight;
 	    String key;
-	    //int listeners_min = 0,listeners_max = 0,playcount_min = 0,playcount_max = 0;
-	    //double listeners_scale = 0.0, playcount_scale = 0.0;
 	    double importance, max_w = 0;
 	    double q_listeners = 1, q_playlist = 1;
 	    double value;
+	    Boolean print_groups;
 	    
 		/////////////////////////////////
 		// Configuration
@@ -30,6 +38,9 @@ public class Weighting {
 		q_listeners = 1;
 		// Playcount
 		q_playlist = 1;
+		
+		// Verbose
+		print_groups = true;	
 
 		/////////////////////////////////
 		// Algorithm	
@@ -89,7 +100,21 @@ public class Weighting {
 	    	importance = tag_words.get(t.getTagName());
 	    	
 	    	t.setImportance(importance/max_w);
+	    	
+	    	weights.add(t.getTagName()+","+importance);
 	    }
+	    
+	    // Write temp files
+	    if(print_groups) 
+    	{	
+	    	// Remove duplicates and sort
+	    	temp.addAll(weights);
+	    	weights.addAll(temp);
+	    	Collections.sort(weights);
+	    	
+	    	writer = new TagsToCSV("importance_"+prefix+".csv");
+	    	writer.writeSeparation(weights);
+    	}
   
 	    tag_words = null;
 	}
