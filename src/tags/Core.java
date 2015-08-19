@@ -132,8 +132,8 @@ public class Core {
     //tags = pro.getAll();
     
     // From csv file
-    //tags = im.importTags("raw_spotify_tags.csv");
-    tags = im.importTags("raw_subset_tags.csv");
+    tags = im.importTags("raw_spotify_tags.csv");
+    //tags = im.importTags("raw_subset_tags.csv");
     log.info("Data loaded\n");
     
     // Weighting words without filtering
@@ -172,15 +172,15 @@ public class Core {
     // Build popular tags dict on raw data
     important_tags = help.getImportantTags(tags, threshold, minWordLength);
 
-    // Sort the list: decreasing length
-	writer_important.writeImportantTags(important_tags);
-    log.info("Important tag extraction finished\n"); 
-    
     // Remove subjective tags
     for(String s: subjective)
     {
     	important_tags.remove(s);
     }
+    
+    // Sort the list: decreasing length
+	writer_important.writeImportantTags(important_tags);
+    log.info("Important tag extraction finished\n"); 
     
     // Word separation
     // Find important words in the unimportant tags
