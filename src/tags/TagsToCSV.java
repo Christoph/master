@@ -386,6 +386,27 @@ public class TagsToCSV {
 		}
 	}
 	
+	public void writeImportance(List<String> importance) {
+		
+		createHeader("Importance");
+		
+		for(String s:importance)
+		{
+			try {
+				writer.write(s.trim()+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 public void writeImportantTags(Map<String, String> tags) {
 		
 		createHeader("TagName, TagID, Importance");

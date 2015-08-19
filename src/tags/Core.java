@@ -71,7 +71,7 @@ public class Core {
     
     /////////////////////////////////
     // Variable initialization  
-    Processor pro = new Processor(dbconf);
+    //Processor pro = new Processor(dbconf);
     ImportCSV im = new ImportCSV();
     //SpellChecking similarity = new SpellChecking();
     //SimilarityReplacement similarity = new SimilarityReplacement();
@@ -101,13 +101,16 @@ public class Core {
     
     List<String> articles = im.importCSV("dicts/article.txt");
     List<String> preps = im.importCSV("dicts/prep.txt");
+    List<String> custom = im.importCSV("dicts/custom.txt");
     
     // Create word blacklist
     List<String> blacklist = new ArrayList<String>();
     
     blacklist.addAll(preps);
     blacklist.addAll(articles);
-    // Somehow some tags have words without characters...
+    // Ignoring single characters
+    blacklist.addAll(custom);
+    // Special character
     blacklist.add("");
     
 	///////////////////////////////// 
@@ -171,6 +174,9 @@ public class Core {
 	writer_important.writeImportantTags(important_tags);
     log.info("Important tag extraction finished\n"); 
     
+    // Remove subjective tags
+    
+    
     // Word separation
     // Find important words in the unimportant tags
     regex.findImportantWords(tags, important_tags, threshold, minWordLength);
@@ -193,13 +199,13 @@ public class Core {
     
     // Write out final tags with weight
     writer_taglist.writeTagListCustomWeight(tags);
-    System.out.println("tt5: "+tags.size());
+    System.out.println("TT5: "+tags.size());
     
 	/////////////////////////////////
     // End
     
     // Close all
-    pro.closeAll();
+    //pro.closeAll();
     
     log.info("END");
   }

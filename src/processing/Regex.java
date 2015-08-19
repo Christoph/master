@@ -87,9 +87,22 @@ public class Regex {
 		List<Tag> tt = new ArrayList<Tag>();
 		int tt3 = 0, tt2 = 0, tt4 = 0;
 		
+	    //	Debug stuff
+	    int psize = tags.size();
+	    int part = psize/20;
+	    int iter = 0;
+	    
+	    System.out.println("size of tags: "+psize);
+		
 		for(Iterator<Tag> iterator = tags.iterator(); iterator.hasNext();)
         {
 			Tag t = iterator.next();
+			
+			iter++;
+	    	  if(iter%part == 0)
+	    	  {
+	    		  System.out.print("->"+iter);
+	    	  }
 			
 			// Set tag name
 			name = t.getTagName();
@@ -148,7 +161,7 @@ public class Regex {
 		
 		tags.addAll(tt);
 		
-		System.out.println("TT2: "+tt2);
+		System.out.println("\nTT2: "+tt2);
 		System.out.println("TT3: "+tt3);
 		System.out.println("TT4: "+tt4);
 		

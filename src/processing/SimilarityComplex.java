@@ -86,6 +86,8 @@ public class SimilarityComplex {
 	    	}
 	    }
 	    
+	    System.out.println("word/weight dict created");
+	    
 	    // Create phonetic dictionary
 	    for(String k: tag_words.keySet())
 	    {	    	
@@ -108,10 +110,25 @@ public class SimilarityComplex {
 	    		phonetic_groups.put(phonetic, temp);
 	    	}
 	    }
-	    	
+	    
+	    System.out.println("phonetic dict created");
+	    
+	    //	Debug stuff
+	    int psize = phonetic_groups.size();
+	    int part = psize/20;
+	    int iter = 0;
+	    
+	    System.out.println("phonetic dict size:"+psize);
+	    
 	    // Iterate over all phonetic codes
 	      for(String phon: phonetic_groups.keySet())
 	      {
+	    	  iter++;
+	    	  if(iter%part == 0)
+	    	  {
+	    		  System.out.print("->"+iter);
+	    	  }
+	    	  
 	        group.clear();
 	        word_group.clear();
 	    	
@@ -198,6 +215,8 @@ public class SimilarityComplex {
 	    tag_words = null;
 	    phonetic_groups = null;
 	    
+	    System.out.println("\nsubstitution dict created");
+	    
 	    // Export substitution list
 	    if(print_substitutions)
 	    {
@@ -234,6 +253,8 @@ public class SimilarityComplex {
 	    	writer_subs_count.writeTagOccu(count);
 	    }
 	    
+	    System.out.println("export finished");
+	    
 	    // Replace tags corresponding to the subs dict
 	    for(Tag t: tags)
 	    {
@@ -255,6 +276,8 @@ public class SimilarityComplex {
 
 	      t.setTagName(new_tag.trim());
 	    }
+	    
+	    System.out.println("replacement finished");
 	    
 	    // Resolve errors from replacements
 	    helper.correctTagsAndIDs(tags);

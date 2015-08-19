@@ -101,7 +101,7 @@ public class Weighting {
 	    	
 	    	t.setImportance(importance/max_w);
 	    	
-	    	weights.add(t.getTagName()+","+importance);
+	    	weights.add(t.getTagName()+","+importance/max_w);
 	    }
 	    
 	    // Write temp files
@@ -109,11 +109,14 @@ public class Weighting {
     	{	
 	    	// Remove duplicates and sort
 	    	temp.addAll(weights);
+	    	
+	    	weights.clear();
+	    	
 	    	weights.addAll(temp);
 	    	Collections.sort(weights);
 	    	
 	    	writer = new TagsToCSV("importance_"+prefix+".csv");
-	    	writer.writeSeparation(weights);
+	    	writer.writeImportance(weights);
     	}
   
 	    tag_words = null;
