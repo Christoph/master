@@ -118,6 +118,7 @@ public class Weighting {
 	    	writer = new TagsToCSV("importance_"+prefix+".csv");
 	    	writer.writeImportance(weights);
     	}
+    	
   
 	    tag_words = null;
 	}

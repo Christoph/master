@@ -71,7 +71,7 @@ public class Core {
     
     /////////////////////////////////
     // Variable initialization  
-    //Processor pro = new Processor(dbconf);
+    Processor pro = new Processor(dbconf);
     ImportCSV im = new ImportCSV();
     //SpellChecking similarity = new SpellChecking();
     //SimilarityReplacement similarity = new SimilarityReplacement();
@@ -102,6 +102,7 @@ public class Core {
     List<String> articles = im.importCSV("dicts/article.txt");
     List<String> preps = im.importCSV("dicts/prep.txt");
     List<String> custom = im.importCSV("dicts/custom.txt");
+    List<String> subjective = im.importCSV("dicts/subjective.txt");;
     
     // Create word blacklist
     List<String> blacklist = new ArrayList<String>();
@@ -131,7 +132,8 @@ public class Core {
     //tags = pro.getAll();
     
     // From csv file
-    tags = im.importTags("raw_tags.csv");
+    //tags = im.importTags("raw_spotify_tags.csv");
+    tags = im.importTags("raw_subset_tags.csv");
     log.info("Data loaded\n");
     
     // Weighting words without filtering
@@ -175,7 +177,10 @@ public class Core {
     log.info("Important tag extraction finished\n"); 
     
     // Remove subjective tags
-    
+    for(String s: subjective)
+    {
+    	important_tags.remove(s);
+    }
     
     // Word separation
     // Find important words in the unimportant tags
@@ -205,7 +210,7 @@ public class Core {
     // End
     
     // Close all
-    //pro.closeAll();
+    pro.closeAll();
     
     log.info("END");
   }
