@@ -116,7 +116,7 @@ public class Weighting {
 	    	Collections.sort(weights);
 	    	
 	    	writer = new TagsToCSV("importance_"+prefix+".csv");
-	    	writer.writeImportance(weights);
+	    	writer.writeLines(weights,"importance");
     	}
     	
   

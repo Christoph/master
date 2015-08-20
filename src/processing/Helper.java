@@ -132,7 +132,15 @@ public class Helper {
 		  
 		  for(String l: temp)
 		  {
-			  out.put(l, tagid.get(l).toString()+","+important.get(l).toString());
+			  if(tagid.get(l) != null)
+			  {
+				  out.put(l, tagid.get(l).toString()+","+important.get(l).toString());
+			  }
+			  else
+			  {
+				  out.put(l, "Additional Tag");
+			  }
+			  
 		  }
 		  
 		  return out;

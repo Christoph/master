@@ -93,7 +93,6 @@ public class Core {
     TagsToCSV writer_important = new TagsToCSV("important_tags.csv");
     
     //List<String> genres = im.importCSV("dicts/genres.txt");
-    //List<String> lastfm = im.importCSV("dicts/lastfmgenres.txt");
     //List<String> spotify = im.importCSV("dicts/spotifygenres.txt");
     //List<String> moods = im.importCSV("dicts/moods.txt");
     
@@ -103,7 +102,8 @@ public class Core {
     List<String> preps = im.importCSV("dicts/prep.txt");
     List<String> custom = im.importCSV("dicts/custom.txt");
     List<String> subjective = im.importCSV("dicts/subjective.txt");
-    List<String> replacements = im.importCSV("dicts/replacements.txt");
+    List<String> synonyms = im.importCSV("dicts/synonyms.txt");
+    List<String> messedup = im.importCSV("dicts/messedgroups.txt");
     
     // Create word blacklist
     List<String> blacklist = new ArrayList<String>();
@@ -124,7 +124,7 @@ public class Core {
     double threshold = 0.006;
     
     // Set minimum word length
-    int minWordLength = 4;
+    int minWordLength = 3;
     
     // Get all tags
     List<Tag> tags;
@@ -170,7 +170,8 @@ public class Core {
     // Start after similarity and grouping
     tags = im.importTags("tags_cleaned.csv");
 
-    // Custom regex
+    // Synonym replacing regex
+    regex.replaceCustomWords(tags, synonyms);
     
     // Weighting words without filtering
     weighting.byWeightedMean(tags, blacklist,"second");
@@ -200,6 +201,9 @@ public class Core {
     {
     	tags.get(i-1).setTTID(i);
     }
+    
+    // Messed up groups replacement
+    regex.replaceCustomWords(tags, messedup);
     
     // Weighting words as last step 
     weighting.byWeightedMean(tags, blacklist,"third");

@@ -19,10 +19,13 @@ public class Regex {
 	String ls = "";
 	String ms = "";
 	String rs = "";
+	
+	String e ="";
   	
   	TagsToCSV writer;
   	List<String> separation = new ArrayList<String>();
   	List<String> numbers = new ArrayList<String>();
+  	List<String> replacements = new ArrayList<String>();
   	public List<String> out = new ArrayList<String>();
   	Helper help = new Helper();
   	
@@ -40,10 +43,21 @@ public class Regex {
 	{
 			for(Map.Entry<String, String> entry : list.entrySet())
 			{
+			// Fetch data	
+			e = entry.getKey().toLowerCase();
+				
   			// Compile patterns
-			l = Pattern.compile("(.*)("+entry.getKey().toLowerCase()+")(.*)");  
-			r = Pattern.compile("(.*)("+entry.getKey().toLowerCase()+")(.*)");  
-			
+			if(e.length() > 3)
+			{
+				l = Pattern.compile("(.*)("+e+")(.*)");  
+				r = Pattern.compile("(.*)("+e+")(.*)");  
+			}
+			else
+			{
+				l = Pattern.compile("(\\s)("+e+")(\\s)");  
+				r = Pattern.compile("(\\s)("+e+")(\\s)"); 
+			}
+
 	  		// Find matches
 	  		mr = r.matcher(name);
 	  		ml = l.matcher(name);
@@ -80,6 +94,8 @@ public class Regex {
   		}
 			
 
+		//Removing this line let the matcher only use words from the list of important words
+		//All other words will be removed
 		//out.add(name.replace("-", " ").trim());
 
 	}
@@ -89,12 +105,6 @@ public class Regex {
 		String name, reg, rep, temp;
 		String[] row;
 		
-	    // Create a Pattern object
-	    Pattern pattern;
-
-	    // Now create matcher object.
-	    Matcher match;
-		
 		for(Tag t: tags)
 		{
 			name = t.getTagName();
@@ -102,15 +112,25 @@ public class Regex {
 			for(String p: patterns)
 			{
 				row = p.split(",");
-				reg = row[0];
-				rep = row[1];
+				reg = "\\s"+row[0]+"\\s";
+				rep = " "+row[1].trim()+" ";
 		 
 		  		temp = name.replaceAll(reg, rep);
-		  		System.out.println(name+" -> "+temp);
+		  		
+		  		if(!name.equals(temp)) replacements.add(name+" -> "+temp);
 		  		
 		  		t.setTagName(temp);
 			}
 		}
+		
+		// Write temp files
+	    if(print_groups)
+    	{	
+	    	Collections.sort(replacements);
+
+	    	writer = new TagsToCSV("replacements.csv");
+	    	writer.writeLines(replacements,"replacements");
+    	}
 	}
 	
 	public void findImportantWords(List<Tag> tags, Map<String, String> words, double threshold, int minWordLength)
@@ -192,11 +212,9 @@ public class Regex {
 		
 		tags.addAll(tt);
 		
-		System.out.println("\nTT2: "+tt2);
-		numbers.add("");
-		System.out.println("TT3: "+tt3);
-		numbers.add("");
-		System.out.println("TT4: "+tt4);
+		numbers.add("Number of important tags:"+tt2);
+		numbers.add("Number of tags with an importance < threshold"+tt3);
+		numbers.add("Number of unimportant tags (importance >= threshold and length >= 4):"+tt4);
 		
 	    help.removeTagsWithoutWords(tags);
 	    
@@ -208,10 +226,10 @@ public class Regex {
 	    	Collections.sort(separation);
 	    	
 	    	writer = new TagsToCSV("word_separation.csv");
-	    	writer.writeSeparation(separation);
+	    	writer.writeLines(separation,"separations");
 	    	
 	    	writer = new TagsToCSV("numbers.csv");
-	    	writer.writeSeparation(numbers);
+	    	writer.writeLines(numbers,"Stats");
     	}
 	}
 }

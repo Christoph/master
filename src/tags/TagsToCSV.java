@@ -364,36 +364,15 @@ public class TagsToCSV {
 			e.printStackTrace();
 		}
 	}
-
-	public void writeSeparation(List<String> separation) {
+	
+	public void writeLines(List<String> data, String header) {
 		
-		createHeader("Separations");
+		createHeader(header);
 		
-		for(String s:separation)
+		for(String s:data)
 		{
 			try {
 				writer.write(s+"\n");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		try {
-			writer.flush();
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void writeImportance(List<String> importance) {
-		
-		createHeader("Importance");
-		
-		for(String s:importance)
-		{
-			try {
-				writer.write(s.trim()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
