@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.media.jai.operator.MinDescriptor;
-
 import org.apache.commons.codec.language.DoubleMetaphone;
 
 import tags.Tag;

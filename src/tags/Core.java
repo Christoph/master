@@ -71,7 +71,7 @@ public class Core {
     
     /////////////////////////////////
     // Variable initialization  
-    Processor pro = new Processor(dbconf);
+    //Processor pro = new Processor(dbconf);
     ImportCSV im = new ImportCSV();
     //SpellChecking similarity = new SpellChecking();
     //SimilarityReplacement similarity = new SimilarityReplacement();
@@ -85,8 +85,8 @@ public class Core {
     Regex regex = new Regex();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_final.csv");
-    TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
-    TagsToCSV writer_tags = new TagsToCSV("tags_raw.csv");
+    //TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
+    //TagsToCSV writer_tags = new TagsToCSV("tags_raw.csv");
     TagsToCSV writer_tag = new TagsToCSV("Tag.csv");
     TagsToCSV writer_track = new TagsToCSV("Track.csv");
     TagsToCSV writer_tt = new TagsToCSV("TT.csv");
@@ -102,7 +102,8 @@ public class Core {
     List<String> articles = im.importCSV("dicts/article.txt");
     List<String> preps = im.importCSV("dicts/prep.txt");
     List<String> custom = im.importCSV("dicts/custom.txt");
-    List<String> subjective = im.importCSV("dicts/subjective.txt");;
+    List<String> subjective = im.importCSV("dicts/subjective.txt");
+    List<String> replacements = im.importCSV("dicts/replacements.txt");
     
     // Create word blacklist
     List<String> blacklist = new ArrayList<String>();
@@ -120,7 +121,7 @@ public class Core {
     // Set importance threshold
     // 0.007 -> 500 tags
     // 0.004 -> 1000 tags
-    double threshold = 0.007;
+    double threshold = 0.006;
     
     // Set minimum word length
     int minWordLength = 4;
@@ -130,7 +131,7 @@ public class Core {
     
     // From DB
     //tags = pro.getAll();
-    
+    /*
     // From csv file
     tags = im.importTags("raw_spotify_tags.csv");
     //tags = im.importTags("raw_subset_tags.csv");
@@ -164,10 +165,17 @@ public class Core {
     // Write out cleaned tags with weight
     writer_cleanup.writeTagListCustomWeight(tags);
     System.out.println("tt1: "+tags.size());
+     */
+    
+    // Start after similarity and grouping
+    tags = im.importTags("tags_cleaned.csv");
+
+    // Custom regex
     
     // Weighting words without filtering
     weighting.byWeightedMean(tags, blacklist,"second");
     log.info("Second time importance\n");
+
     
     // Build popular tags dict on raw data
     important_tags = help.getImportantTags(tags, threshold, minWordLength);
@@ -185,7 +193,6 @@ public class Core {
     // Word separation
     // Find important words in the unimportant tags
     regex.findImportantWords(tags, important_tags, threshold, minWordLength);
-    help.removeTagsWithoutWords(tags);
     log.info("Word separation finished\n");
     
     // Reset index
@@ -204,13 +211,12 @@ public class Core {
     
     // Write out final tags with weight
     writer_taglist.writeTagListCustomWeight(tags);
-    System.out.println("TT5: "+tags.size());
     
 	/////////////////////////////////
     // End
     
     // Close all
-    pro.closeAll();
+    //pro.closeAll();
     
     log.info("END");
   }

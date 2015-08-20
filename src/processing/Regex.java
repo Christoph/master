@@ -22,7 +22,9 @@ public class Regex {
   	
   	TagsToCSV writer;
   	List<String> separation = new ArrayList<String>();
+  	List<String> numbers = new ArrayList<String>();
   	public List<String> out = new ArrayList<String>();
+  	Helper help = new Helper();
   	
   	// Debug output
   	Boolean print_groups = true;
@@ -82,6 +84,35 @@ public class Regex {
 
 	}
 	
+	public void replaceCustomWords(List<Tag> tags, List<String> patterns)
+	{
+		String name, reg, rep, temp;
+		String[] row;
+		
+	    // Create a Pattern object
+	    Pattern pattern;
+
+	    // Now create matcher object.
+	    Matcher match;
+		
+		for(Tag t: tags)
+		{
+			name = t.getTagName();
+			
+			for(String p: patterns)
+			{
+				row = p.split(",");
+				reg = row[0];
+				rep = row[1];
+		 
+		  		temp = name.replaceAll(reg, rep);
+		  		System.out.println(name+" -> "+temp);
+		  		
+		  		t.setTagName(temp);
+			}
+		}
+	}
+	
 	public void findImportantWords(List<Tag> tags, Map<String, String> words, double threshold, int minWordLength)
 	{	  
 		List<Tag> tt = new ArrayList<Tag>();
@@ -89,7 +120,7 @@ public class Regex {
 		
 	    //	Debug stuff
 	    int psize = tags.size();
-	    int part = psize/20;
+	    int part = psize/50;
 	    int iter = 0;
 	    
 	    System.out.println("size of tags: "+psize);
@@ -107,7 +138,7 @@ public class Regex {
 			// Set tag name
 			name = t.getTagName();
 			
-			if(t.getImportance() <= threshold)
+			if(t.getImportance() < threshold)
 			{
 				// TT3 Save bad rows
 				tt3 += 1;
@@ -140,7 +171,7 @@ public class Regex {
 		  		
 		  		iterator.remove();
 			}
-			else if(t.getImportance() > threshold && name.length() >=  minWordLength)// Fix important tags
+			else if(t.getImportance() >= threshold && name.length() >=  minWordLength)// Fix important tags
 			{	
 				// Save TT2
 				tt2+=1;
@@ -162,8 +193,14 @@ public class Regex {
 		tags.addAll(tt);
 		
 		System.out.println("\nTT2: "+tt2);
+		numbers.add("");
 		System.out.println("TT3: "+tt3);
+		numbers.add("");
 		System.out.println("TT4: "+tt4);
+		
+	    help.removeTagsWithoutWords(tags);
+	    
+	    System.out.println("TT5: "+tags.size());
 		
 		// Write temp files
 	    if(print_groups) 
@@ -172,6 +209,9 @@ public class Regex {
 	    	
 	    	writer = new TagsToCSV("word_separation.csv");
 	    	writer.writeSeparation(separation);
+	    	
+	    	writer = new TagsToCSV("numbers.csv");
+	    	writer.writeSeparation(numbers);
     	}
 	}
 }

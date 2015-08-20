@@ -15,7 +15,7 @@ import tags.TagsToCSV;
 
 public class SimilarityComplex {
 	
-	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(1, 1, 1, 1);
+	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(2, 2, 1, 2);
 	
 	public void withPhoneticsAndNgrams(List<Tag> tags, List<String> blacklist, float threshold, String filename_suffix)
 	{
@@ -115,7 +115,7 @@ public class SimilarityComplex {
 	    
 	    //	Debug stuff
 	    int psize = phonetic_groups.size();
-	    int part = psize/20;
+	    int part = psize/50;
 	    int iter = 0;
 	    
 	    System.out.println("phonetic dict size:"+psize);
