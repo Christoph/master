@@ -1,6 +1,8 @@
 package tags;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.*;
 import java.nio.file.Files;
@@ -8,13 +10,17 @@ import java.util.*;
 
 public class ImportCSV {
 
-  public List<String> importCSV(String data)
+  private List<String> lines;
+
+public List<String> importCSV(String data)
   {
-    List<String> lines = null;
+    lines = new ArrayList<>();
     try {
       File file = new File(data);
-      lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+      lines = Files.readAllLines(file.toPath(), StandardCharsets.ISO_8859_1);
     } catch (IOException e) { e.printStackTrace(); }
+    
+  
 
     return lines;
   }
