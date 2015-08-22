@@ -102,11 +102,13 @@ public class Helper {
 					if(ID != tags.get(name))
 					{
 						t.setTagID(tags.get(name));
+						
+						System.out.println("Duplicate TagID: "+name);
 					}
 				}
 				else
 				{
-					tags.put(name, ID);
+					if(name.length()>0) tags.put(name, ID);
 				}
 			}	
 	  }

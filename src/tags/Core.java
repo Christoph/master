@@ -85,7 +85,7 @@ public class Core {
     Regex regex = new Regex();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_final.csv");
-    TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
+    //TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
     //TagsToCSV writer_tags = new TagsToCSV("tags_raw.csv");
     TagsToCSV writer_tag = new TagsToCSV("Tag.csv");
     TagsToCSV writer_track = new TagsToCSV("Track.csv");
@@ -174,7 +174,7 @@ public class Core {
     tags = im.importTags("tags_cleaned.csv");
 
     // Synonym replacing regex
-    regex.replaceCustomWords(tags, synonyms);
+    regex.replaceCustomWords(tags, synonyms,"synonyms");
     
     // Weighting words without filtering
     weighting.byWeightedMean(tags, blacklist,"second");
@@ -205,7 +205,7 @@ public class Core {
     }
     
     // Messed up groups replacement
-    regex.replaceCustomWords(tags, messedup);
+    regex.replaceCustomWords(tags, messedup,"cleaning");
     
     // Weighting words as last step 
     weighting.byWeightedMean(tags, blacklist,"third");

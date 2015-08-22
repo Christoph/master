@@ -1,8 +1,6 @@
 package tags;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.*;
 import java.nio.file.Files;
@@ -18,8 +16,11 @@ public List<String> importCSV(String data)
     try {
       File file = new File(data);
       
-      // utf_8 on mac and iso_8859_1 on windows
-      lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+      // From tags_cleaned.csv
+      lines = Files.readAllLines(file.toPath(), StandardCharsets.ISO_8859_1);
+      
+      // From raw*.csv
+      //lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
     } catch (IOException e) { e.printStackTrace(); }
 
     return lines;

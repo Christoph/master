@@ -100,7 +100,7 @@ public class Regex {
 
 	}
 	
-	public void replaceCustomWords(List<Tag> tags, List<String> patterns)
+	public void replaceCustomWords(List<Tag> tags, List<String> patterns, String prefix)
 	{
 		String name, reg, rep, temp;
 		String[] row;
@@ -129,9 +129,10 @@ public class Regex {
     	{	
 	    	Collections.sort(replacements);
 
-	    	writer = new TagsToCSV("replacements.csv");
+	    	writer = new TagsToCSV("replacements_"+prefix+".csv");
 	    	writer.writeLines(replacements,"replacements");
     	}
+	    
 	}
 	
 	public void findImportantWords(List<Tag> tags, Map<String, String> words, double threshold, int minWordLength)
@@ -218,8 +219,9 @@ public class Regex {
 		numbers.add("Number of unimportant tags (importance >= threshold and length >= 4): "+tt4);
 		
 	    help.removeTagsWithoutWords(tags);
+	    help.correctTagsAndIDs(tags);
 	    
-	    System.out.println("TT5: "+tags.size());
+	    numbers.add("Number of final tags: "+tags.size());
 		
 		// Write temp files
 	    if(print_groups) 
