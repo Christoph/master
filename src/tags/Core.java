@@ -85,7 +85,7 @@ public class Core {
     Regex regex = new Regex();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_final.csv");
-    //TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
+    TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
     //TagsToCSV writer_tags = new TagsToCSV("tags_raw.csv");
     TagsToCSV writer_tag = new TagsToCSV("Tag.csv");
     TagsToCSV writer_track = new TagsToCSV("Track.csv");
@@ -130,11 +130,8 @@ public class Core {
     List<Tag> tags;
     
     // From DB
-    //tags = pro.getAll();
     /*
-    // From csv file
-    tags = im.importTags("raw_spotify_tags.csv");
-    //tags = im.importTags("raw_subset_tags.csv");
+    tags = pro.getAll();
     log.info("Data loaded\n");
     
     // Weighting words without filtering
@@ -144,6 +141,12 @@ public class Core {
     // Write out raw tags with weight
     writer_tags.writeTagListCustomWeight(tags);    
     System.out.println("tt0: "+tags.size());
+    */
+    /*
+    // From csv file saved above
+    //tags = im.importTags("raw_spotify_tags.csv");
+    tags = im.importTags("raw_subset_tags.csv");
+    log.info("Data loaded\n");
     
     // Similarity replacement
     similarity.withPhoneticsAndNgrams(tags, blacklist,0.7f,"first");
@@ -165,7 +168,7 @@ public class Core {
     // Write out cleaned tags with weight
     writer_cleanup.writeTagListCustomWeight(tags);
     System.out.println("tt1: "+tags.size());
-     */
+    */
     
     // Start after similarity and grouping
     tags = im.importTags("tags_cleaned.csv");
@@ -176,7 +179,6 @@ public class Core {
     // Weighting words without filtering
     weighting.byWeightedMean(tags, blacklist,"second");
     log.info("Second time importance\n");
-
     
     // Build popular tags dict on raw data
     important_tags = help.getImportantTags(tags, threshold, minWordLength);

@@ -17,10 +17,10 @@ public List<String> importCSV(String data)
     lines = new ArrayList<>();
     try {
       File file = new File(data);
-      lines = Files.readAllLines(file.toPath(), StandardCharsets.ISO_8859_1);
+      
+      // utf_8 on mac and iso_8859_1 on windows
+      lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
     } catch (IOException e) { e.printStackTrace(); }
-    
-  
 
     return lines;
   }

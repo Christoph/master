@@ -25,7 +25,7 @@ public class Regex {
   	TagsToCSV writer;
   	List<String> separation = new ArrayList<String>();
   	List<String> numbers = new ArrayList<String>();
-  	List<String> replacements = new ArrayList<String>();
+  	List<String> replacements;
   	public List<String> out = new ArrayList<String>();
   	Helper help = new Helper();
   	
@@ -104,6 +104,7 @@ public class Regex {
 	{
 		String name, reg, rep, temp;
 		String[] row;
+		replacements = new ArrayList<String>();
 		
 		for(Tag t: tags)
 		{
@@ -143,7 +144,7 @@ public class Regex {
 	    int part = psize/50;
 	    int iter = 0;
 	    
-	    System.out.println("size of tags: "+psize);
+	    numbers.add("Number of tags: "+psize);
 		
 		for(Iterator<Tag> iterator = tags.iterator(); iterator.hasNext();)
         {
@@ -212,9 +213,9 @@ public class Regex {
 		
 		tags.addAll(tt);
 		
-		numbers.add("Number of important tags:"+tt2);
-		numbers.add("Number of tags with an importance < threshold"+tt3);
-		numbers.add("Number of unimportant tags (importance >= threshold and length >= 4):"+tt4);
+		numbers.add("Number of important tags: "+tt2);
+		numbers.add("Number of tags with an importance < threshold: "+tt3);
+		numbers.add("Number of unimportant tags (importance >= threshold and length >= 4): "+tt4);
 		
 	    help.removeTagsWithoutWords(tags);
 	    
