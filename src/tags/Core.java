@@ -198,6 +198,8 @@ public class Core {
     regex.findImportantWords(tags, important_tags, threshold, minWordLength);
     log.info("Word separation finished\n");
     
+    regex.replaceCustomWords(tags, synonyms,"after");
+    
     // Reset index
     for(int i = 1; i<=tags.size(); i++)
     {

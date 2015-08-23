@@ -39,15 +39,19 @@ public class Regex {
     Matcher mr, ml;
 	
     // String, > 0 == right, list of important tags
-	public void matcher(String name, Map<String, String> list)
+	public void matcher(String name, Map<String, String> list, int minWordLength)
 	{
+		name = " "+name+" ";
+		
 			for(Map.Entry<String, String> entry : list.entrySet())
 			{
 			// Fetch data	
 			e = entry.getKey().toLowerCase();
 				
   			// Compile patterns
-			if(e.length() > 3)
+			// If bigger than min word length do substring search
+			// else only full word search
+			if(e.length() > minWordLength)
 			{
 				l = Pattern.compile("(.*)("+e+")(.*)");  
 				r = Pattern.compile("(.*)("+e+")(.*)");  
@@ -69,11 +73,11 @@ public class Regex {
 	  			String ms = mr.group(2).trim();
 	  			String rs = mr.group(3).trim();
 	  			
-	  			if(ls.length() > 0) matcher(ls, list);
+	  			if(ls.length() > 0) matcher(ls, list,minWordLength);
 	  			
-	  			out.add(ms);
+	  			out.add(ms.trim());
 	  			
-	  			if(rs.length() > 0) matcher(rs, list);
+	  			if(rs.length() > 0) matcher(rs, list, minWordLength);
 	  			
 	  			name = "";
 	  		} 			  		
@@ -83,11 +87,11 @@ public class Regex {
 	  			String ms = ml.group(2).trim();
 	  			String rs = ml.group(3).trim();
 	  			
-	  			if(ls.length() > 0) matcher(ls, list);
+	  			if(ls.length() > 0) matcher(ls, list, minWordLength);
 	  			
 	  			out.add(ms);
 	  			
-	  			if(rs.length() > 0) matcher(rs, list);
+	  			if(rs.length() > 0) matcher(rs, list, minWordLength);
 	  			
 	  			name = "";
 	  		}
@@ -113,15 +117,20 @@ public class Regex {
 			for(String p: patterns)
 			{
 				row = p.split(",");
-				reg = "\\s"+row[0]+"\\s";
-				rep = " "+row[1].trim()+" ";
+				reg = "\\b"+row[0]+"\\b";
+				rep = row[1].trim();
 		 
 		  		temp = name.replaceAll(reg, rep);
 		  		
-		  		if(!name.equals(temp)) replacements.add(name+" -> "+temp);
+		  		if(!name.equals(temp)) 
+	  			{
+	  				replacements.add(name+" -> "+temp);
+	  			}
 		  		
-		  		t.setTagName(temp);
+		  		name = temp;
 			}
+			
+	  		t.setTagName(name.trim());
 		}
 		
 		// Write temp files
@@ -139,23 +148,12 @@ public class Regex {
 	{	  
 		List<Tag> tt = new ArrayList<Tag>();
 		int tt3 = 0, tt2 = 0, tt4 = 0;
-		
-	    //	Debug stuff
-	    int psize = tags.size();
-	    int part = psize/50;
-	    int iter = 0;
-	    
-	    numbers.add("Number of tags: "+psize);
+
+	    numbers.add("Number of tags: "+tags.size());
 		
 		for(Iterator<Tag> iterator = tags.iterator(); iterator.hasNext();)
         {
 			Tag t = iterator.next();
-			
-			iter++;
-	    	  if(iter%part == 0)
-	    	  {
-	    		  System.out.print("->"+iter);
-	    	  }
 			
 			// Set tag name
 			name = t.getTagName();
@@ -170,7 +168,7 @@ public class Regex {
 		  		out.clear();
 		  		
 		  		// Apply regex
-		  		matcher(name, words);
+		  		matcher(name, words, minWordLength);
 		  					
 		  		// Rebuild string from out
 		  		for(String s: out)
@@ -218,8 +216,8 @@ public class Regex {
 		numbers.add("Number of tags with an importance < threshold: "+tt3);
 		numbers.add("Number of unimportant tags (importance >= threshold and length >= 4): "+tt4);
 		
-	    help.removeTagsWithoutWords(tags);
 	    help.correctTagsAndIDs(tags);
+	    help.removeTagsWithoutWords(tags);
 	    
 	    numbers.add("Number of final tags: "+tags.size());
 		
