@@ -393,7 +393,7 @@ public void writeImportantTags(Map<String, String> tags) {
 		for(Map.Entry<String, String> entry : tags.entrySet())
 		{
 			try {
-				writer.write(entry.getKey().replace(" ", "-")+","+entry.getValue()+"\n");
+				writer.write(entry.getKey()+","+entry.getValue()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -134,7 +134,7 @@ public class Helper {
 		  {
 			  if(tagid.get(l) != null)
 			  {
-				  out.put(l, tagid.get(l).toString()+","+important.get(l).toString());
+				  out.put(l.replace(" ", "-"), tagid.get(l).toString()+","+important.get(l).toString());
 			  }
 			  else
 			  {
