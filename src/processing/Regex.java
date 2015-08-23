@@ -169,7 +169,7 @@ public class Regex {
 		  		
 		  		// Apply regex
 		  		matcher(name, words, minWordLength);
-		  					
+		  		
 		  		// Rebuild string from out
 		  		for(String s: out)
 		  		{	
@@ -192,14 +192,23 @@ public class Regex {
 		  		iterator.remove();
 			}
 			else if(t.getImportance() >= threshold && name.length() >=  minWordLength)// Fix important tags
-			{	
-				// Save TT2
-				tt2+=1;
-				
-				// Reset join string and out list
-		  		join = name.replace(" ", "-");
-		  	
-		  		t.setTagName(join);
+			{			
+				// Check if the word is on the subjective list
+				if(words.containsKey(name))
+				{
+					// Save TT2
+					tt2+=1;
+					
+					// Reset join string and out list
+			  		join = name.replace(" ", "-");
+			  	
+			  		t.setTagName(join);
+				}
+				else
+				{
+					tt4+=1;
+					t.setTagName("");
+				}
 			}
 			else
 			{
