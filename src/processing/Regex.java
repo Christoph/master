@@ -223,7 +223,7 @@ public class Regex {
 		
 		numbers.add("Number of important tags: "+tt2);
 		numbers.add("Number of tags with an importance < threshold: "+tt3);
-		numbers.add("Number of unimportant tags (importance >= threshold and length >= 4): "+tt4);
+		numbers.add("Number of unimportant tags (in subjective list, importance >= "+threshold+" and length >= "+minWordLength+"): "+tt4);
 		
 	    help.correctTagsAndIDs(tags);
 	    help.removeTagsWithoutWords(tags);
