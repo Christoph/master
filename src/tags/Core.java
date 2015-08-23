@@ -91,6 +91,7 @@ public class Core {
     TagsToCSV writer_track = new TagsToCSV("Track.csv");
     TagsToCSV writer_tt = new TagsToCSV("TT.csv");
     TagsToCSV writer_important = new TagsToCSV("important_tags.csv");
+    TagsToCSV writer_important_filtered = new TagsToCSV("important_tags_filtered.csv");
     
     //List<String> genres = im.importCSV("dicts/genres.txt");
     //List<String> spotify = im.importCSV("dicts/spotifygenres.txt");
@@ -182,15 +183,23 @@ public class Core {
     
     // Build popular tags dict on raw data
     important_tags = help.getImportantTags(tags, threshold, minWordLength);
-
+    
+	writer_important.writeImportantTags(important_tags);
+	
     // Remove subjective tags
     for(String s: subjective)
     {
-    	important_tags.remove(s);
+    	if(important_tags.containsKey(s))
+    	{
+        	important_tags.remove(s); 
+    	}
+    	else
+    	{
+    		System.out.println(s);
+    	}
     }
     
-    // Sort the list: decreasing length
-	writer_important.writeImportantTags(important_tags);
+    writer_important_filtered.writeImportantTags(important_tags);
     log.info("Important tag extraction finished\n"); 
     
     // Word separation

@@ -158,6 +158,11 @@ public class Regex {
 			// Set tag name
 			name = t.getTagName();
 			
+			if(name.equals("my-love"))
+			{
+				name = "my-love";
+			}
+			
 			if(t.getImportance() < threshold)
 			{
 				// TT3 Save bad rows
@@ -192,7 +197,7 @@ public class Regex {
 		  		iterator.remove();
 			}
 			else if(t.getImportance() >= threshold && name.length() >=  minWordLength)// Fix important tags
-			{			
+			{		
 				// Check if the word is on the subjective list
 				if(words.containsKey(name))
 				{

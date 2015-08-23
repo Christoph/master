@@ -1,9 +1,9 @@
 package tags;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.*;
-import java.nio.file.Files;
+import java.text.Normalizer;
 import java.util.*;
 
 public class ImportCSV {
@@ -13,16 +13,18 @@ public class ImportCSV {
 public List<String> importCSV(String data)
   {
     lines = new ArrayList<>();
+    BufferedReader br = null;
+    
     try {
-      File file = new File(data);
-      
+      String line;
       // From tags_cleaned.csv
-      lines = Files.readAllLines(file.toPath(), StandardCharsets.ISO_8859_1);
-      
-      // From raw*.csv
-      //lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+      br = new BufferedReader(new FileReader(data));
+		while ((line = br.readLine()) != null) 
+		{
+			lines.add(Normalizer.normalize(line, Normalizer.Form.NFC));
+		}
+		br.close();
     } catch (IOException e) { e.printStackTrace(); }
-
     return lines;
   }
   
