@@ -40,3 +40,29 @@ new_tt = new_tt.drop(track.columns, axis=1)
 # Export tables
 new_track.to_csv("Track.csv")
 new_tt.to_csv("TT.csv")
+
+# SORT ALL TABLES
+
+track = pd.DataFrame.from_csv("Track.csv")
+artist = pd.DataFrame.from_csv("Artist.csv", encoding="latin1")
+tag = pd.DataFrame.from_csv("Tag.csv")
+
+track.sort(["Name"],inplace=True)
+tag.sort(["Name"],inplace=True)
+artist.sort(["Name"],inplace=True)
+
+track.to_csv("Track.csv")
+tag.to_csv("Tag.csv")
+artist.to_csv("Artist.csv")
+
+
+
+
+
+
+
+
+
+
+
+
