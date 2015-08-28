@@ -27,10 +27,12 @@ my-pop-music,pop
 best-downtempo,downtempo
 best-songs-00s,00s
 jazz-vocal-tag,vocal-jazz
+vocal jazz tag,vocal-jazz
 en-espanol-rock,spanish-rock
 genre-downtempo,downtempo
 lounge-home-tres,lounge
 awesome-downtempo,downtempo
 downtempo-influences,downtempo
 singer-songwritergdchill,singer-songwriter
+contemporary-gospel-tag,contemporary-gospel
 r&b,rnb
