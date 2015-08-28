@@ -151,17 +151,22 @@ public class Regex {
 
 	    numbers.add("Number of tags: "+tags.size());
 		
+	    System.out.print(tags.size());
+	    int part = tags.size()/30;
+	    int iter = 0;
+	    
 		for(Iterator<Tag> iterator = tags.iterator(); iterator.hasNext();)
         {
 			Tag t = iterator.next();
 			
+	    	  iter++;
+	    	  if(iter%part == 0)
+	    	  {
+	    		  System.out.print("->"+iter);
+	    	  }
+			
 			// Set tag name
 			name = t.getTagName();
-			
-			if(name.equals("my-love"))
-			{
-				name = "my-love";
-			}
 			
 			if(t.getImportance() < threshold)
 			{

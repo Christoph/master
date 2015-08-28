@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.codec.language.DoubleMetaphone;
-
 import tags.Tag;
 import tags.TagsToCSV;
 
-public class SimilarityComplex {
+public class SimilarityComplexFull {
 	
 	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(1, 1, 1, 1);
 	
@@ -27,28 +25,21 @@ public class SimilarityComplex {
 	    TagsToCSV writer_subs_count;
 		
 	    Map<String, Double> tag_words = new HashMap<String, Double>();
-	    Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
 	    Map<String, String> substitution_list = new HashMap<String, String>();
 	    
-	    Set<String> group = new HashSet<String>();
         Set<String> word_group = new HashSet<String>();
         
 	    List<String> words;
-	    Set<String> temp;
 	    double value, importance;
 	    float similarity, similarity2;
 	    int ngram_size;
-	    String key, phonetic, new_tag;
+	    String key, new_tag;
 	    Boolean print_substitutions;
 	    HashSet<String> h1, h2, h3;
 	    
 		/////////////////////////////////
 		// Configuration
-        
-		// Choose phonetic algorithm
-		DoubleMetaphone phonetic_algorithm = new DoubleMetaphone();
-		//ColognePhonetic phonetic = new ColognePhonetic();
-		
+
 		// Print substitution list
 		print_substitutions = true;
 		
@@ -88,72 +79,31 @@ public class SimilarityComplex {
 	    
 	    System.out.println("word/weight dict created");
 	    
-	    // Create phonetic dictionary
-	    for(String k: tag_words.keySet())
-	    {	    	
-	    	phonetic = phonetic_algorithm.encode(k);
-	    	
-	    	if(phonetic_groups.containsKey(phonetic))
-	    	{
-	    		temp = phonetic_groups.get(phonetic);
-	    		temp.add(k);
-	    		
-	    		phonetic_groups.put(phonetic, temp);
-	    		
-	    	}
-	    	else
-	    	{
-	    		temp = new HashSet<String>();
-	    		
-	    		temp.add(k);
-	    		
-	    		phonetic_groups.put(phonetic, temp);
-	    	}
-	    }
-	    
-	    System.out.println("phonetic dict created");
+	    word_group.addAll(tag_words.keySet());
 	    
 	    //	Debug stuff
-	    int psize = phonetic_groups.size();
+	    int psize = word_group.size();
 	    int part = psize/30;
 	    int iter = 0;
 	    
-	    System.out.println("phonetic dict size:"+psize);
+	    System.out.println("Total tag count:"+word_group.size());
 	    
-	    // Iterate over all phonetic codes
-	      for(String phon: phonetic_groups.keySet())
+	    // Iterate over all tags
+	      for(int i =0; i<word_group.size();i++)
 	      {
 	    	  iter++;
 	    	  if(iter%part == 0)
 	    	  {
 	    		  System.out.print("->"+iter);
 	    	  }
-	    	  
-	        group.clear();
-	        word_group.clear();
-	    	
-	          // Get all words with the same phonetic code
-	          String high = "";
-	          
-	          // Get all phonetics with a edit distance of 1
-	          for(String p: phonetic_groups.keySet())
-	          {
-	        	  if(dla.execute(p, phon)<2)
-	        	  {
-	        		  group.add(p);
-	        	  }
-	          }
-	          
-	          for(String c: group)
-	          {
-	        	  word_group.addAll(phonetic_groups.get(c));
-	          }
 	
 	          while(!word_group.isEmpty())
 	          {
 	            importance = 0;
 	            
-	            // Find the word with the highest importance count
+	            String high = "";
+	            
+				// Find the word with the highest importance count
 	            for(String s: word_group)
 	            {
 	              if(tag_words.get(s) >= importance)
@@ -165,7 +115,7 @@ public class SimilarityComplex {
 	            
 	            word_group.remove(high);
 	            
-	            // Iterate over the phonetic similar words and find similar words with distance methods
+	            // Iterate over all words and find similar words with distance methods
 	            for(Iterator<String> iterator = word_group.iterator(); iterator.hasNext();)
 	            {
 	              String word = iterator.next();
@@ -213,7 +163,6 @@ public class SimilarityComplex {
 		        }   
 	      
 	    tag_words = null;
-	    phonetic_groups = null;
 	    
 	    System.out.println("\nsubstitution dict created");
 	    

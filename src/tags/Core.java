@@ -77,7 +77,8 @@ public class Core {
     //SimilarityReplacement similarity = new SimilarityReplacement();
     //SimilarityReplacementWithDistance similarity = new SimilarityReplacementWithDistance();
     //SimilarityReplacementCompleteEditDistance similarity = new SimilarityReplacementCompleteEditDistance();
-    SimilarityComplex similarity = new SimilarityComplex();
+    //SimilarityComplex similarity = new SimilarityComplex();
+    SimilarityComplexFull similarity = new SimilarityComplexFull();
     Weighting weighting = new Weighting();
     Helper help = new Helper();
     Grouping_Simple grouping = new Grouping_Simple();
@@ -85,7 +86,7 @@ public class Core {
     Regex regex = new Regex();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_final.csv");
-    //TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
+    TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
     //TagsToCSV writer_tags = new TagsToCSV("tags_raw.csv");
     TagsToCSV writer_tag = new TagsToCSV("Tag.csv");
     TagsToCSV writer_track = new TagsToCSV("Track.csv");
@@ -143,10 +144,10 @@ public class Core {
     writer_tags.writeTagListCustomWeight(tags);    
     System.out.println("tt0: "+tags.size());
     */
-    /*
+    
     // From csv file saved above
-    //tags = im.importTags("raw_spotify_tags.csv");
-    tags = im.importTags("raw_subset_tags.csv");
+    tags = im.importTags("raw_spotify_tags.csv");
+    //tags = im.importTags("raw_subset_tags.csv");
     log.info("Data loaded\n");
     
     // Similarity replacement
@@ -169,10 +170,10 @@ public class Core {
     // Write out cleaned tags with weight
     writer_cleanup.writeTagListCustomWeight(tags);
     System.out.println("tt1: "+tags.size());
-    */
+    
     
     // Start after similarity and grouping
-    tags = im.importTags("tags_cleaned.csv");
+    // tags = im.importTags("tags_cleaned.csv");
 
     // Synonym replacing regex
     regex.replaceCustomWords(tags, synonyms,"synonyms");
@@ -206,8 +207,6 @@ public class Core {
     // Find important words in the unimportant tags
     regex.findImportantWords(tags, important_tags, threshold, minWordLength);
     log.info("Word separation finished\n");
-    
-    regex.replaceCustomWords(tags, synonyms,"after");
     
     // Reset index
     for(int i = 1; i<=tags.size(); i++)

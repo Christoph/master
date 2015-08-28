@@ -4,7 +4,7 @@ brasil,brazil
 cover,covers
 00s,2000s
 50s,1950s
-60s,1960s
+60s,1960s 	
 70s,1970s
 80s,1980s
 90s,1990s

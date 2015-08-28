@@ -1,8 +1,9 @@
 package tags;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.Normalizer;
 import java.util.*;
 
@@ -17,12 +18,15 @@ public List<String> importCSV(String data)
     
     try {
       String line;
-      // From tags_cleaned.csv
-      br = new BufferedReader(new FileReader(data));
+      // From tags_cleaned.csv      
+      br = new BufferedReader(new InputStreamReader(
+              new FileInputStream(data), "UTF8"));
+      
 		while ((line = br.readLine()) != null) 
 		{
 			lines.add(Normalizer.normalize(line, Normalizer.Form.NFC));
 		}
+		
 		br.close();
     } catch (IOException e) { e.printStackTrace(); }
     return lines;
