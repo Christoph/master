@@ -51,7 +51,7 @@ public class Regex {
   			// Compile patterns
 			// If bigger than min word length do substring search
 			// else only full word search
-			if(e.length() > minWordLength+1)
+			if(e.length() > minWordLength)
 			{
 				l = Pattern.compile("(.*)("+e+")(.*)");  
 				r = Pattern.compile("(.*)("+e+")(.*)");  
