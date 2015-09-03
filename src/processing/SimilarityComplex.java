@@ -15,7 +15,7 @@ import tags.TagsToCSV;
 
 public class SimilarityComplex {
 	
-	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(1, 1, 1, 1);
+	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(2, 2, 1, 2);
 	
 	public void withPhoneticsAndNgrams(List<Tag> tags, List<String> blacklist, float threshold, String filename_suffix)
 	{

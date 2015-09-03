@@ -34,3 +34,11 @@ awesome-downtempo,downtempo
 downtempo-influences,downtempo
 singer-songwritergdchill,singer-songwriter
 r&b,rnb
+female,female-vocalists
+goth,gothic
+love-songs,love
+male,male-vocalists
+relax,relaxing
+sex,sexy
+vocal-jazz-tag,vocal-jazz
+world-music,world
