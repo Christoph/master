@@ -31,9 +31,6 @@ public class Grouping_Simple {
 		/////////////////////////////////
 		// Configuration
 	    
-	    // Which groups are accepted [0,1]
-	    acceptance_value = 0.10;
-	    
 		// Print temp files
 	    print_groups = false;
 		print_accepted = true;

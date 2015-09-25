@@ -13,7 +13,7 @@ import tags.TagsToCSV;
 
 public class Weighting {
 
-	public void byWeightedMean(List<Tag> tags, List<String> blacklist, String prefix)
+	public void byWeightedMean(List<Tag> tags, String prefix)
 	{
 	    /////////////////////////////////
 	    // Variables

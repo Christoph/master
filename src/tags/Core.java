@@ -3,6 +3,7 @@ package tags;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,8 +16,11 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.*;
 
+import com.sun.net.httpserver.HttpServer;
+
 import processing.*;
 import processing.Filter;
+import server.Server;
 
 public class Core {
 
@@ -46,7 +50,20 @@ public class Core {
       dbconf.load(input);
 
     } catch (IOException e) { e.printStackTrace(); }
+    ////////////////////////////////////////////////////////////////
+    /// SERVER
+    ////////////////////////////////////////////////////////////////
 
+    Server server = new Server();
+
+	try {
+		server.start();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+    
     ////////////////////////////////////////////////////////////////
     /// DATA IMPORT
     ////////////////////////////////////////////////////////////////
@@ -66,7 +83,7 @@ public class Core {
     ////////////////////////////////////////////////////////////////
     /// DATA Processing
     ////////////////////////////////////////////////////////////////
-    
+    /*
     log.info("Data Processing");
     
     /////////////////////////////////
@@ -86,8 +103,8 @@ public class Core {
     Regex regex = new Regex();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_final.csv");
-    //TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
-    //TagsToCSV writer_tags = new TagsToCSV("tags_raw.csv");
+    TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
+    //TagsToCSV writer_tags = new TagsToCSV("tags_Regex.csv");
     TagsToCSV writer_tag = new TagsToCSV("Tag.csv");
     TagsToCSV writer_track = new TagsToCSV("Track.csv");
     TagsToCSV writer_tt = new TagsToCSV("TT.csv");
@@ -135,7 +152,7 @@ public class Core {
     log.info("Data loaded\n");
     
     // Weighting words without filtering
-    weighting.byWeightedMean(tags, blacklist,"first");
+    weighting.byWeightedMean(tags, "first");
     log.info("First time importance finished\n");
     
     // Write out raw tags with weight
@@ -157,8 +174,8 @@ public class Core {
     complex_grouping.groupBy(tags, blacklist, 2,0.4d,"two");
     log.info("complex grouping finished\n");
     
-    grouping.groupBy(tags, blacklist, 3,0.2d,"three");
-    grouping.groupBy(tags, blacklist, 2,0.2d,"two");
+    grouping.groupBy(tags, blacklist, 3,0.1d,"three");
+    grouping.groupBy(tags, blacklist, 2,0.1d,"two");
     log.info("simple grouping finished\n");
     
     // Again similarity replacement
@@ -168,16 +185,16 @@ public class Core {
     // Write out cleaned tags with weight
     writer_cleanup.writeTagListCustomWeight(tags);
     System.out.println("tt1: "+tags.size());
-    */
+    
     
     // Start after similarity and grouping
-    tags = im.importTags("tags_cleaned.csv");
+    //tags = im.importTags("tags_cleaned.csv");
 
     // Synonym replacing regex
     regex.replaceCustomWords(tags, synonyms,"synonyms");
     
     // Weighting words without filtering
-    weighting.byWeightedMean(tags, blacklist,"second");
+    weighting.byWeightedMean(tags, "second");
     log.info("Second time importance\n");
     
     // Build popular tags dict on raw data
@@ -216,7 +233,7 @@ public class Core {
     regex.replaceCustomWords(tags, messedup,"cleaning");
     
     // Weighting words as last step 
-    weighting.byWeightedMean(tags, blacklist,"third");
+    weighting.byWeightedMean(tags ,"third");
     log.info("Last time importance\n");
     
     writer_tag.writeTableTag(tags);
@@ -231,7 +248,7 @@ public class Core {
     
     // Close all
     //pro.closeAll();
-    
+    */
     log.info("END");
   }
 }

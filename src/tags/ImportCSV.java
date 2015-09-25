@@ -13,7 +13,7 @@ public class ImportCSV {
 
 public List<String> importCSV(String data)
   {
-    lines = new ArrayList<>();
+    lines = new ArrayList<String>();
     BufferedReader br = null;
     
     try {
