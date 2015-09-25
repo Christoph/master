@@ -138,6 +138,8 @@ public class Core {
     // Algorithm
     
     // Set importance threshold
+    // 0.007 -> 500 tags
+    // 0.004 -> 1000 tags
     double threshold = 0.006;
     
     // Set minimum word length
@@ -161,9 +163,12 @@ public class Core {
     */
     /*
     // From csv file saved above
-    //tags = im.importTags("raw_spotify_tags.csv");
-    tags = im.importTags("raw_subset_tags.csv");
+    tags = im.importTags("raw_spotify_tags.csv");
+    //tags = im.importTags("raw_subset_tags.csv");
     log.info("Data loaded\n");
+    
+    // This line is here so i dont forget to remove it when i start from the middle
+    TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
     
     // Similarity replacement
     similarity.withPhoneticsAndNgrams(tags, blacklist,0.7f,"first");
