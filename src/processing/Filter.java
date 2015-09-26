@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import tags.Tag;
-import tags.TagsToCSV;
+import core.Tag;
+import core.TagsToCSV;
 
 public class Filter {
 

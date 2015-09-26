@@ -240,7 +240,7 @@ var dataPoints = []
                 labelY: d.y
             })
         })
-        console.log(dataPoints)
+
         // Groups
         var bin = _bodyG.selectAll(".hexagon")
             .data(data.filter(visibiltyFilter).filter(function(d) { return d.length > 1; }), function(d) { return d[0]; })

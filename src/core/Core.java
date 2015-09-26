@@ -1,4 +1,4 @@
-package tags;
+package core;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,7 +27,11 @@ public class Core {
   private static final Logger log = Logger.getLogger("Logger");
 
   public static void main(String[] args) {
-  // Initializing the logger
+	  
+    ////////////////////////////////////////////////////////////////
+    /// Initialization
+    ////////////////////////////////////////////////////////////////
+	  
 	Handler handler;
 
 	try {
@@ -50,6 +54,8 @@ public class Core {
       dbconf.load(input);
 
     } catch (IOException e) { e.printStackTrace(); }
+    
+    
     ////////////////////////////////////////////////////////////////
     /// SERVER
     ////////////////////////////////////////////////////////////////
@@ -81,12 +87,18 @@ public class Core {
     
     log.info("Import Finished");
     */
+	
     ////////////////////////////////////////////////////////////////
     /// DATA Processing
     ////////////////////////////////////////////////////////////////
     
     log.info("Data Processing");
     
+    Workflow work = new Workflow();
+    
+    work.full();
+    
+    /*
     /////////////////////////////////
     // Variable initialization  
     //Processor pro = new Processor(dbconf);
@@ -162,7 +174,7 @@ public class Core {
     System.out.println("tt0: "+tags.size());
     */
     
-    
+    /*
     // From csv file saved above
     //tags = im.importTags("raw_spotify_tags.csv");
     tags = im.importTags("raw_subset_tags.csv");
@@ -256,7 +268,7 @@ public class Core {
     
     // Close all
     //pro.closeAll();
-    
+    */
     log.info("END");
   }
 }

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import tags.Tag;
-import tags.TagsToCSV;
+import core.Tag;
+import core.TagsToCSV;
 
 public class QueryManager {
 	// Initialize logger

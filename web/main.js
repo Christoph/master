@@ -16,8 +16,15 @@ socket.on('disconnect', function() {
 });
 
 $("#request").click(function() {
-socket.emit('test', "test text");
-console.log('Request: test text');
+
+    var jsonObj = {
+        '@class': "server.SecondTestObject",
+        text: "christoph",
+        number: 1
+    };
+
+    // Sends event object and @class is not necessary
+    socket.emit('test', jsonObj);
 });
 
 

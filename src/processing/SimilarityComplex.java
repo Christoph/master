@@ -10,8 +10,8 @@ import java.util.Set;
 
 import org.apache.commons.codec.language.DoubleMetaphone;
 
-import tags.Tag;
-import tags.TagsToCSV;
+import core.Tag;
+import core.TagsToCSV;
 
 public class SimilarityComplex {
 	

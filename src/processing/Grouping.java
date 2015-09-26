@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import tags.Tag;
-import tags.TagsToCSV;
+import core.Tag;
+import core.TagsToCSV;
 
 public class Grouping {
 	public void groupBy(List<Tag> tags, int size, double acceptance_value, String filename_suffix) {

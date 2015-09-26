@@ -1,4 +1,4 @@
-package tags;
+package core;
 
 public class Tag {
 	private int TTID;

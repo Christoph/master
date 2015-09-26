@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import tags.Tag;
-import tags.TagsToCSV;
+import core.Tag;
+import core.TagsToCSV;
 
 public class Regex {
 

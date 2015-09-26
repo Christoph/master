@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import tags.Tag;
+import core.Tag;
 
 public class Processor {
 	//Initialize logger
