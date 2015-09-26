@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import core.ImportCSV;
 import core.Tag;
@@ -16,7 +18,7 @@ public class Workflow {
 	
 	private static final Logger log = Logger.getLogger("Logger");
 	
-	public void full()
+	public List<String> full()
 	{
 		 /////////////////////////////////
 	    // Variable initialization  
@@ -106,7 +108,7 @@ public class Workflow {
 	    help.removeBlacklistedWords(tags, blacklist);
 	    
 	    // Similarity replacement
-	    similarity.withPhoneticsAndNgrams(tags, 0.70f,"first");
+	    //similarity.withPhoneticsAndNgrams(tags, 0.70f,"first");
 	    log.info("1st similiarity replacement finished\n");
 	    
 	    // Find word groups
@@ -119,7 +121,7 @@ public class Workflow {
 	    log.info("simple grouping finished\n");
 	    
 	    // Again similarity replacement
-	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"second");
+	    //similarity.withPhoneticsAndNgrams(tags, 0.65f,"second");
 	    log.info("2st similiarity replacement finished\n");
 	    
 	    // Write out cleaned tags with weight
@@ -159,7 +161,7 @@ public class Workflow {
 	    
 	    // Word separation
 	    // Find important words in the unimportant tags
-	    regex.findImportantWords(tags, important_tags, threshold, minWordLength);
+	    //regex.findImportantWords(tags, important_tags, threshold, minWordLength);
 	    log.info("Word separation finished\n");
 	    
 	    // Reset index
@@ -181,5 +183,27 @@ public class Workflow {
 	    
 	    // Write out final tags with weight
 	    writer_taglist.writeTagListCustomWeight(tags);
+	    
+	    
+		///////////////////////////////// 
+	    // TO JSON
+	    List<String> list = new ArrayList<String>();
+	    
+	    //ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+	    ObjectWriter ow = new ObjectMapper().writer();
+	    
+	    try {
+	    	
+	    	for(Tag t: tags)
+	    	{
+	    		list.add(ow.writeValueAsString(t));
+	    	}
+			
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    return list;
 	}
 }

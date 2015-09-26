@@ -24,7 +24,7 @@ $("#request").click(function() {
     };
 
     // Sends event object and @class is not necessary
-    socket.emit('test', jsonObj);
+    socket.emit('json', jsonObj);
 });
 
 

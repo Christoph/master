@@ -60,7 +60,6 @@ public class Core {
     /// SERVER
     ////////////////////////////////////////////////////////////////
 
-    /*
     Server server = new Server();
 
 	try {
@@ -69,7 +68,6 @@ public class Core {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-	*/
     
     ////////////////////////////////////////////////////////////////
     /// DATA IMPORT
@@ -92,11 +90,13 @@ public class Core {
     /// DATA Processing
     ////////////////////////////////////////////////////////////////
     
+    /*
     log.info("Data Processing");
     
     Workflow work = new Workflow();
     
     work.full();
+    */
     
     /*
     /////////////////////////////////

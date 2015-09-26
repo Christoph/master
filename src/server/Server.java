@@ -1,8 +1,17 @@
 package server;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import processing.Workflow;
+
 import com.corundumstudio.socketio.listener.*;
+import com.corundumstudio.socketio.protocol.Packet;
+import com.corundumstudio.socketio.protocol.PacketEncoder;
+import com.corundumstudio.socketio.protocol.PacketType;
 import com.corundumstudio.socketio.*;
-import com.corundumstudio.*;
+
+import core.Tag;
 
 public class Server {
     public void start() throws Exception {
@@ -25,15 +34,22 @@ public class Server {
 			}
         });
         
-        server.addEventListener("test1", SecondTestObject.class, new DataListener<SecondTestObject>() {
+        final Workflow work = new Workflow();
+        
+        server.addEventListener("json", SecondTestObject.class, new DataListener<SecondTestObject>() {
 
 			public void onData(SocketIOClient arg0, SecondTestObject data,
 					AckRequest arg2) throws Exception {
-				arg0.sendEvent("response", data.getText().toUpperCase());
 				
-				System.out.println("Event 1");
-				System.out.println(data.getText());
-				System.out.println(data.getNumber());
+				System.out.println("start");
+				arg0.sendEvent("response", "started");
+				
+				List<String> temp = work.full();
+
+				arg0.sendEvent("response", temp.toString());
+				
+				System.out.println("finished");
+				arg0.sendEvent("response", "finished");
 				
 			}
         });
