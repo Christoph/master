@@ -54,6 +54,7 @@ public class Core {
     /// SERVER
     ////////////////////////////////////////////////////////////////
 
+    /*
     Server server = new Server();
 
 	try {
@@ -62,7 +63,7 @@ public class Core {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-
+	*/
     
     ////////////////////////////////////////////////////////////////
     /// DATA IMPORT
@@ -83,7 +84,7 @@ public class Core {
     ////////////////////////////////////////////////////////////////
     /// DATA Processing
     ////////////////////////////////////////////////////////////////
-    /*
+    
     log.info("Data Processing");
     
     /////////////////////////////////
@@ -103,7 +104,6 @@ public class Core {
     Regex regex = new Regex();
     
     TagsToCSV writer_taglist = new TagsToCSV("tags_final.csv");
-    TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
     //TagsToCSV writer_tags = new TagsToCSV("tags_Regex.csv");
     TagsToCSV writer_tag = new TagsToCSV("Tag.csv");
     TagsToCSV writer_track = new TagsToCSV("Track.csv");
@@ -161,36 +161,39 @@ public class Core {
     writer_tags.writeTagListCustomWeight(tags);    
     System.out.println("tt0: "+tags.size());
     */
-    /*
+    
+    
     // From csv file saved above
-    tags = im.importTags("raw_spotify_tags.csv");
-    //tags = im.importTags("raw_subset_tags.csv");
+    //tags = im.importTags("raw_spotify_tags.csv");
+    tags = im.importTags("raw_subset_tags.csv");
     log.info("Data loaded\n");
     
     // This line is here so i dont forget to remove it when i start from the middle
     TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
     
+    // Removen blacklisted words
+    help.removeBlacklistedWords(tags, blacklist);
+    
     // Similarity replacement
-    similarity.withPhoneticsAndNgrams(tags, blacklist,0.7f,"first");
+    similarity.withPhoneticsAndNgrams(tags, 0.70f,"first");
     log.info("1st similiarity replacement finished\n");
     
     // Find word groups
-    complex_grouping.groupBy(tags, blacklist, 3,0.4d,"three");
-    complex_grouping.groupBy(tags, blacklist, 2,0.4d,"two");
+    complex_grouping.groupBy(tags, 3,0.4d,"three");
+    complex_grouping.groupBy(tags, 2,0.4d,"two");
     log.info("complex grouping finished\n");
     
-    grouping.groupBy(tags, blacklist, 3,0.1d,"three");
-    grouping.groupBy(tags, blacklist, 2,0.1d,"two");
+    grouping.groupBy(tags, 3,0.1d,"three");
+    grouping.groupBy(tags, 2,0.1d,"two");
     log.info("simple grouping finished\n");
     
     // Again similarity replacement
-    similarity.withPhoneticsAndNgrams(tags, blacklist,0.65f,"second");
+    similarity.withPhoneticsAndNgrams(tags, 0.65f,"second");
     log.info("2st similiarity replacement finished\n");
     
     // Write out cleaned tags with weight
     writer_cleanup.writeTagListCustomWeight(tags);
     System.out.println("tt1: "+tags.size());
-    
     
     // Start after similarity and grouping
     //tags = im.importTags("tags_cleaned.csv");
@@ -253,7 +256,7 @@ public class Core {
     
     // Close all
     //pro.closeAll();
-    */
+    
     log.info("END");
   }
 }

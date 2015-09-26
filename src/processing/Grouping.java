@@ -8,7 +8,7 @@ import tags.Tag;
 import tags.TagsToCSV;
 
 public class Grouping {
-	public void groupBy(List<Tag> tags, List<String> blacklist, int size, double acceptance_value, String filename_suffix) {
+	public void groupBy(List<Tag> tags, int size, double acceptance_value, String filename_suffix) {
 		/////////////////////////////////
 		// Variables
 		PlainStringSimilarity psim = new PlainStringSimilarity();
@@ -41,7 +41,7 @@ public class Grouping {
 		// Create a 1-word-gram/total occurrences
 		for(int i = 0;i < tags.size(); i++)
 		{
-			words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
+			words = psim.create_word_gram(tags.get(i).getTagName());
 			
 			for(int j = 0; j < words.size(); j++)
 			{
@@ -64,7 +64,7 @@ public class Grouping {
 		// Create a n-word-gram/total occurrences
 		for(int i = 0;i < tags.size(); i++)
 		{
-			words = psim.create_word_n_gram(tags.get(i).getTagName(),size,blacklist);
+			words = psim.create_word_n_gram(tags.get(i).getTagName(),size);
 			
 			for(int j = 0; j < words.size(); j++)
 			{
@@ -87,7 +87,7 @@ public class Grouping {
 		// Compute binding strength
 		for(String k: word_groups.keySet())
 		{
-			words = psim.create_word_gram(k,blacklist);
+			words = psim.create_word_gram(k);
 			deno = 0;
 			
 			for(String s: words)
@@ -135,8 +135,8 @@ public class Grouping {
 	    // Replace tag groups
 	    for(Tag t: tags)
 	    {	    	
-		  groups = psim.create_word_n_gram(t.getTagName(),size,blacklist);
-		  words = psim.create_word_gram(t.getTagName(),blacklist);
+		  groups = psim.create_word_n_gram(t.getTagName(),size);
+		  words = psim.create_word_gram(t.getTagName());
 	      new_tag = "";
 	    	
 	      // Find possible substitutions
@@ -165,7 +165,7 @@ public class Grouping {
 	    		  }
 		      }
 	
-		      temp = psim.create_word_gram(key,blacklist);
+		      temp = psim.create_word_gram(key);
 		      subs.remove(key);
 		      
 		      if(words.containsAll(temp))

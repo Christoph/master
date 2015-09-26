@@ -17,7 +17,7 @@ public class SimilarityComplex {
 	
 	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(2, 2, 1, 2);
 	
-	public void withPhoneticsAndNgrams(List<Tag> tags, List<String> blacklist, float threshold, String filename_suffix)
+	public void withPhoneticsAndNgrams(List<Tag> tags, float threshold, String filename_suffix)
 	{
 	    /////////////////////////////////
 	    // Variables
@@ -61,7 +61,7 @@ public class SimilarityComplex {
 	    // Create a 1-word-gram/max weight dict
 	    for(int i = 0;i < tags.size(); i++)
 	    {
-	    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
+	    	words = psim.create_word_gram(tags.get(i).getTagName());
 	    	
 	    	for(int j = 0; j < words.size(); j++)
 	    	{
@@ -88,7 +88,7 @@ public class SimilarityComplex {
 	    
 	    // Create phonetic dictionary
 	    for(String k: tag_words.keySet())
-	    {	    	
+	    {
 	    	phonetic = phonetic_algorithm.encode(k);
 	    	
 	    	if(phonetic_groups.containsKey(phonetic))
@@ -248,7 +248,7 @@ public class SimilarityComplex {
 	    // Replace tags corresponding to the subs dict
 	    for(Tag t: tags)
 	    {
-	      words = psim.create_word_gram(t.getTagName(),blacklist);
+	      words = psim.create_word_gram(t.getTagName());
 	      new_tag = "";
 	    	
 	      for(String w: words)

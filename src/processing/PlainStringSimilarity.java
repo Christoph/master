@@ -36,45 +36,42 @@ public class PlainStringSimilarity {
   
   public List<String> create_word_gram(String text) {
   	// Initialize variables
-    List<String> set = new ArrayList<String>();
+    List<String> list = new ArrayList<String>();
     
     if(!text.contains(" "))
     {
-    	set.add(text);
+    	list.add(text);
     }
     else
     {   	
     	for(String s: text.split("\\s+"))
     	{
-    		set.add(s);
+    		list.add(s);
     	}
     }
     
-    return set;
+    return list;
   }
   
   public List<String> create_word_gram(String text, List<String> blacklist) {
   	// Initialize variables
-    List<String> set = new ArrayList<String>();
-    
-    // Replace all - with spaces to have a consistent basis
-    //text = text.replace('-', ' ');
+    List<String> list = new ArrayList<String>();
     
     if(!text.contains(" "))
     {
-    	set.add(text);
+    	list.add(text);
     }
     else
     {   	
     	for(String s: text.split("\\s+"))
     	{
-    		set.add(s);
+    		list.add(s);
     	}
     }
     
-    set.removeAll(blacklist);
+    list.removeAll(blacklist);
     
-    return set;
+    return list;
   }
   
   public List<String> create_word_n_gram(String text, int n, List<String> blacklist) {
@@ -116,6 +113,44 @@ public class PlainStringSimilarity {
     
     return gram;
   }
+  
+  public List<String> create_word_n_gram(String text, int n) {
+	  	// Initialize variables
+	    List<String> set = new ArrayList<String>();
+	    List<String> gram = new ArrayList<String>();
+	    int c = 0;
+	    int l;
+	    String temp = "";
+
+	    if(text.contains(" "))
+	    {
+	    	text = text.toLowerCase();
+	    	
+	    	for(String s: text.split("\\s+"))
+	    	{
+	    		set.add(s);
+	    	}
+	    	
+	    	l = set.size();
+	    	
+	    	c = l + 1 - n;
+	    	
+	    	// Create a list of word-n-grams
+	      for(int i = 0;i<c;i++)
+	      {
+	      	for(int j = 0;j<n;j++) 
+	      	{
+	      		temp = temp.concat(set.get(i+j))+" ";
+	      	}
+	      	temp = temp.trim();
+	      	gram.add(temp);
+	      	
+	      	temp = "";
+	      }
+	    }
+	    
+	    return gram;
+	  }
   
   public List<String> create_total_word_gram(String text) {
   	// Initialize variables

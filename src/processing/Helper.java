@@ -30,6 +30,32 @@ public class Helper {
 		    }
 	  }
 	  
+	  public void removeBlacklistedWords(List<Tag> tags, List<String> blacklist)
+	  {
+		  String name, uptated;    
+		  List<String> list = new ArrayList<String>();
+		  PlainStringSimilarity psim = new PlainStringSimilarity();
+		  
+		  for(Tag tag: tags)
+		  {
+			  name = tag.getTagName();
+			  uptated = "";
+			  
+			  list = psim.create_word_gram(name);
+			  
+			  list.removeAll(blacklist);
+			  
+			  for(String s: list)
+			  {
+				  uptated = uptated + " " + s;
+			  }
+			  
+			  tag.setTagName(uptated.trim());
+		  }
+		  
+		  removeTagsWithoutWords(tags);
+	  }
+	  
 	  public void correctTagsAndIDs(List<Tag> data)
 	  {
 		  	// TagName: TagID

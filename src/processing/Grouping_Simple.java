@@ -9,7 +9,7 @@ import tags.TagsToCSV;
 
 public class Grouping_Simple {
 	
-	public void groupBy(List<Tag> tags, List<String> blacklist, int size, double acceptance_value, String filename_suffix) {
+	public void groupBy(List<Tag> tags, int size, double acceptance_value, String filename_suffix) {
 	    /////////////////////////////////
 	    // Variables
 		PlainStringSimilarity psim = new PlainStringSimilarity();
@@ -41,7 +41,7 @@ public class Grouping_Simple {
 	    // Create a n-word-gram/total occurrences
 	    for(int i = 0;i < tags.size(); i++)
 	    {
-	    	words = psim.create_word_n_gram(tags.get(i).getTagName(),size,blacklist);
+	    	words = psim.create_word_n_gram(tags.get(i).getTagName(),size);
 	    	
 	    	for(int j = 0; j < words.size(); j++)
 	    	{
@@ -95,8 +95,8 @@ public class Grouping_Simple {
 	    // Replace tag groups
 	    for(Tag t: tags)
 	    {	    	
-		  groups = psim.create_word_n_gram(t.getTagName(),size,blacklist);
-		  words = psim.create_word_gram(t.getTagName(),blacklist);
+		  groups = psim.create_word_n_gram(t.getTagName(),size);
+		  words = psim.create_word_gram(t.getTagName());
 	      new_tag = "";
 	    	
 	      // Find possible substitutions
@@ -125,7 +125,7 @@ public class Grouping_Simple {
 	    		  }
 		      }
 	
-		      temp = psim.create_word_gram(key,blacklist);
+		      temp = psim.create_word_gram(key);
 		      subs.remove(key);
 		      
 		      if(words.containsAll(temp))
