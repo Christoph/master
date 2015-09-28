@@ -17,24 +17,24 @@ function hexPlot() {
     var _chart = {};
     var formatCount = d3.format(".0f");
     var formatImportance = d3.format(".4f");
+    var dataPoints = [];
     var _width = 500, _height = 500, 
         _margins = {top: 30, left: 50, right: 50, bottom: 40},
         _binSize = 20,
         _title,
         _xName, _yName,
         _dimension, _dim, _text,
-        _data = [],
+        _data,
         _area,
         _x, _y,
         _xAxis, _yAxis,
         _xDomain, _yDomain,
         _hexbin,
         _zoom,
-        _group, _dict,
+        _dict,
         _color = ["lightblue", "#3a3e4a"],
         _svg, _bodyG;
 
-var dataPoints = []
 
     //
     //
@@ -44,8 +44,6 @@ var dataPoints = []
     
     _chart.render = function () {
         if (!_svg) {
-           initializeData();
-
            definitions();
 
            initializeSkeleton();
@@ -59,26 +57,6 @@ var dataPoints = []
     
     //
     //
-    // Data
-    //
-    //
-    
-    function initializeData()
-    {
-        // Create dict with second axis values  as key
-        var temp = d3.map(_dimension.top(Infinity), function(d) { return d[_dim]; });
-
-        // Group tags by second axis
-        _group = _dimension.group();
-
-        // Scatter data
-        _group.top(Infinity).forEach(function(d, i) {
-            _data.push({x: d.key, y: d.value , text: temp.get(d.key)[_text] });
-        });
-    }
-    
-    //
-    //
     // Definitions
     //
     //
@@ -87,7 +65,7 @@ var dataPoints = []
     {
         // Color scale
         _color = d3.scale.linear()
-            .domain([0,_group.all().length])
+            .domain([0,4])
             .range(_color)
             .interpolate(d3.interpolateLab);
 
@@ -227,7 +205,7 @@ var dataPoints = []
 
     function renderBins() {
         // Prepare data structure
-        var data = _hexbin([].map.call(_group.all().filter(function(d) { return d.value > 0; }), function(d) { return scalePoint([d.key, d.value]); }));
+        var data = _hexbin([].map.call(_data, function(d) { return scalePoint([d.x, d.y]); }));
 
         // Get data for the relaxation function
         dataPoints = [];
@@ -301,7 +279,7 @@ var dataPoints = []
             .remove();
 
         // Update text
-        d3.select(".records").text("show all tags: "+_group.all().filter(function(d) { return d.value > 0; }).length);
+        d3.select(".records").text("show all tags: "+_data.length);
         relax();
 }
 
@@ -336,7 +314,7 @@ var dataPoints = []
     }
 
     function getXDomain() {
-        return d3.extent(_data, function(d) { return d.x });
+        return d3.extent(_data, function(d) { return d.y });
     }
 
     function getYDomain() {
@@ -344,12 +322,12 @@ var dataPoints = []
     }
 
     function getCurrentXDomain() {
-        var domain = d3.extent(_dimension.top(Infinity), function(d) { return d[_dim] });
+        var domain = d3.extent(_data, function(d) { return d.x });
         return [domain[0]-(_xDomain[1]/15),domain[1]+(_xDomain[1]/15)];
     }
 
     function getCurrentYDomain() {
-        var domain = d3.extent(_group.all().filter(function(d) { return d.value > 0; }), function(d) { return d.value }); 
+        var domain = d3.extent(_data, function(d) { return d.y }); 
         return [domain[0]-(_yDomain[1]/20),domain[1]+(_yDomain[1]/20)];
     }
 
@@ -462,13 +440,11 @@ var dataPoints = []
         return _chart;
     };
 
-    _chart.dimension = function (d, x, t) {
-        if (arguments.length < 3) {
-            return _dimension, _dim, _text;
+    _chart.json = function (d) {
+        if (arguments.length < 1) {
+            return _data;
         }
-        _dimension = d;
-        _dim = x;
-        _text = t;
+        _data = d;
         return _chart;
     };
 
@@ -511,8 +487,8 @@ function histogram() {
         _xAxis, _yAxis,
         _xName, _yName,
         _svg,
-        _group,
-        _bins,
+        _data,
+        _bins, _binWidth,
         _ticks,
         _dimension,
         _filter, 
@@ -522,7 +498,7 @@ function histogram() {
         _histOccu,
         _xHist,
         _isNumeric,
-        _useDomain, _useProperty, _useFilter, _filtered,
+        _useDomain, _useProperty, _filter, _filtered,
         _brush, _gBrush,
         _bodyG;
     
@@ -537,10 +513,6 @@ function histogram() {
     
     _chart.render = function () {
         if (!_svg) {
-            chooseType();
-
-            initializeData();
-
             definitions();
 
             initialzeSkeleton();
@@ -548,41 +520,6 @@ function histogram() {
 
         renderBars();
     };
- 
-    //
-    //
-    // Choose bin type
-    //
-    //
-    
-    function chooseType()
-    {
-        if(_isNumeric == true)
-        {
-            _useDomain = getXDomain;
-            _useProperty = "key";
-            _useFilter = filterNumeric;
-
-        }
-        else
-        {
-            _useDomain = getXOccurenceDomain;
-            _useProperty = "value";
-            _useFilter = filterText;
-        }
-    }
-
-    //
-    //
-    // Data
-    //
-    //
-    
-    function initializeData()
-    {
-        // Crossfilter
-        _group = _filter.group();
-    }
 
     //
     //
@@ -594,21 +531,19 @@ function histogram() {
     {
         // Get X scaling
         _x = d3.scale.linear()
-            .domain(_useDomain()).nice()
-            .range([0, quadrantWidth()]);
-
-        // Get hist bin scaling
-        _xHist = d3.scale.linear()
-            .domain(getXDomain())
+            .domain(getXDomain()).nice()
             .range([0, quadrantWidth()]);
 
         // Histogram bins
         _ticks = _x.ticks(_bins);
 
+        // Compute bin width
+        _binWidth = quadrantWidth() / _bins;
+
         // Generate histogram data
         _hist = d3.layout.histogram()
                 .bins(_ticks)
-                (_group.top(Infinity).map(function(d) { return d[_useProperty]; }));
+                (_data.map(function(d) { return d.value; }));
 
         // Get Y scaling
          _y = d3.scale.linear()
@@ -748,8 +683,8 @@ function histogram() {
         // Update histogram data
         _hist = d3.layout.histogram()
                 .bins(_ticks)
-                (_group.top(Infinity).filter(function(d) { return d.value>0; }).map(function(d) { return d[_useProperty]; }));
-        
+                (_data.map(function(d) { return d.value; }));
+
         // Update
         var bar = _bodyG.selectAll(".bar")
             .data(_hist)
@@ -759,11 +694,11 @@ function histogram() {
 
         bar.select("rect")
             .attr("x", 1)
-            .attr("width", _x(_hist[0].dx) - 1)
+            .attr("width", _binWidth)
             .attr("height", function(d) { return yStart() - _y(d.y); });
             
         bar.select("text")
-            .attr("x", _x(_hist[0].dx) / 2)
+            .attr("x", _binWidth / 2)
             .text(function(d) { return _formatCount(d.y); });
 
         // Exit
@@ -804,11 +739,7 @@ function histogram() {
     }
 
     function getXDomain() {
-        return d3.extent(_group.top(Infinity), function(d) { return d.key; });
-    }
-
-    function getXOccurenceDomain() {
-        return d3.extent(_group.top(Infinity), function(d) { return d.value; });
+        return d3.extent(_data, function(d) { return d.value; });
     }
 
     function getYDomain() {
@@ -856,13 +787,13 @@ function histogram() {
       if ((extent1[1] - extent1[0]) < inc) {
           extent1[1] = extent1[0];
         _brush.clear();
-        _filter.filterAll();
+        filterAll();
         _reloadAll();
       }
       else
       {
         // Filter
-        _useFilter(extent1);        
+        filter(extent1);        
 
         // Rerender everything except this chart
         _reloadAll();
@@ -874,21 +805,15 @@ function histogram() {
           .call(_brush.event);
     }
 
-    // Numeric filter
-    function filterNumeric(extent1)
+    // Filter
+    function filter(extent1)
     {
-        _filter.filter(extent1);
+        console.log(extent1);
     }
 
-    // Text filter
-    function filterText(extent1)
+    function filterAll()
     {
-        
-        _filtered = [].map.call(_group.all().filter(function(d) { return d.value >= extent1[0] && d.value < extent1[1] }), function(d) { return d.key; })
-
-        _filter.filter(function(d) {
-              return _filtered.indexOf(d) > -1;
-        });
+        console.log("All");
     }
 
     // Update while brushing
@@ -897,7 +822,7 @@ function histogram() {
         if (!d3.event.sourceEvent) return; // only transition after input
 
         // Filter
-        _useFilter(_brush.extent());        
+        filter(_brush.extent());        
 
         // Rerender everything except this chart
         _reloadAll();
@@ -939,13 +864,6 @@ function histogram() {
         return _chart;
     };
 
-    _chart.dimension = function (d,f) {
-        if (arguments.length<2) return _dimension, _filter;
-        _dimension = d;
-        _filter = f;
-        return _chart;
-    };
-
     _chart.reloadAll = function (f) {
         if (!arguments.length) return _reloadAll;
         _reloadAll = f;
@@ -955,6 +873,12 @@ function histogram() {
     _chart.area = function (a) {
         if (!arguments.length) return _chartDiv;
         _chartDiv = a;
+        return _chart;
+    };
+
+    _chart.json = function (d) {
+        if (!arguments.length) return _data;
+        _data = d;
         return _chart;
     };
 

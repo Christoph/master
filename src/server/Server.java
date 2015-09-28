@@ -47,7 +47,7 @@ public class Server {
 				List<String> temp = work.full();
 
 				arg0.sendEvent("response", temp.toString());
-				
+					
 				System.out.println("finished");
 				arg0.sendEvent("response", "finished");
 				

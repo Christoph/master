@@ -1,6 +1,7 @@
 
 // Socket test
 
+/*
 var socket = io.connect('http://localhost:9092');
 
 socket.on('connect', function() {
@@ -26,106 +27,70 @@ $("#request").click(function() {
     // Sends event object and @class is not necessary
     socket.emit('json', jsonObj);
 });
+*/
 
+data = [
+{
+    x: 0.8,
+    text: "ROck Song",
+    y: 100
+},
+{
+    x: 0.7,
+    text: "Pop Song",
+    y: 90
+},
+{
+    x: 0.1,
+    text: "Custom Song",
+    y: 10
+}
+];
 
-// Import data
-//d3.csv("tags_final.csv")
-d3.csv("tags_cleaned.csv")
-//d3.csv("raw_spotify.csv")
-.row(function(d) {
-    return { id: +d.ID, tagName: d.TagName, importance: +d.Importance , songName: d.SongName, last: +d.LastFMWeight };
-})
-.get(function(error, tags) {
-    //Due to the asyncronity of d3.import, the data is only available within this function
-    //
-    // START
-    //
-    //
+data_hist = [
+{
+    value: 1.0,
+    attribute: "ROck Song"
+},
+{
+    value: 0.1,
+    attribute: "Bla Song"
+},
+{
+    value: 0.2,
+    attribute: "Pop Song"
+},
+{
+    value: 0.5,
+    attribute: "Custom Song"
+}
+];
+
+var hex1 = hexPlot()
+    .area("#hex1")
+    .height(550)
+    .width(580)
+    .json(data)
+    .binSize(25)
+    .axisNames("Importance", "Occurrence")
+    .colors(["#80A1C1", "#3a3e4a"]);
+
+var hist1 = histogram()
+    .area("#hist1")
+    .height(250)
+    .width(580)
+    .json(data_hist)
+    .reloadAll(renderAll)
+    .bins(10)
+    .axisNames("Importance", "#")
+    .title("Importance Histogram");
     
-    // 
-    //
-    // Data
-    //
-    //
-    
-    // Crossfilter 
-    var cf = crossfilter(tags);
-    
-    //  By name crossfilter and mapping
-    var byName = cf.dimension(function(d) { return d.tagName; });
-    var filterByName = cf.dimension(function(d) { return d.tagName; });
 
-    var byImportance = cf.dimension(function(d) { return d.importance; });
-    var filterByImportance = cf.dimension(function(e) { return e.importance; });
+function renderAll()
+{
+    // Render
+    hex1.render();
+    hist1.render();
+}
 
-    var byLastFM = cf.dimension(function(d) { return d.last; })
-    var filterByLastFM = cf.dimension(function(d) { return d.last; })
-
-
-    //
-    //
-    // Visualizition
-    //
-    //
-    
-    // Create variables
-    var hex1 = hexPlot()
-        .area("#hex1")
-        .height(550)
-        .width(580)
-        .dimension(byImportance,"importance", "tagName")
-        .binSize(25)
-        .axisNames("Importance", "Occurrence")
-        .colors(["#80A1C1", "#3a3e4a"]);
-
-    var hex2 = hexPlot()
-        .area("#hex2")
-        .height(550)
-        .width(580)
-        //.dimension(byLastFM ,"last", "tagName")
-        .dimension(byImportance,"importance", "tagName")
-        .binSize(25)
-        .axisNames("Importance", "Occurrence")
-        //.axisNames("LastFMWeight", "Occurrence")
-        .colors(["lightgreen", "#3a3e4a"]);
-    
-    var hist1 = histogram()
-        .area("#hist1")
-        .height(250)
-        .width(580)
-        .isNumeric(true)
-        //.dimension(byLastFM,filterByLastFM)
-        .dimension(byImportance,filterByImportance)
-        .reloadAll(renderAll)
-        .bins(20)
-        .axisNames("Importance", "#")
-        //.axisNames("LastFMWeight", "#")
-        .title("Importance Histogram");
-        //.title("LastFMWeight Histogram");
-
-    var hist2 = histogram()
-        .area("#hist2")
-        .height(250)
-        .width(580)
-        .isNumeric(false)
-        .dimension(byName,filterByName)
-        .reloadAll(renderAll)
-        .bins(30)
-        .axisNames("Occurrence", "#")
-        .title("Occurrence Histogram");
-
-   function renderAll()
-   {
-        // Render
-        hex1.render();
-        hex2.render();
-        hist1.render();
-        hist2.render();
-   }
-
-   renderAll();
-
-    //
-    //
-    // END
-});
+renderAll();
