@@ -8,7 +8,7 @@ socket.on('connect', function() {
 });
 
 socket.on('response', function(data) {
-    console.log("Response: "+data)
+    console.log(JSON.parse(data));
 });
 
 socket.on('disconnect', function() {
