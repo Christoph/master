@@ -19,7 +19,6 @@ socket.on('disconnect', function() {
 $("#request").click(function() {
 
     var jsonObj = {
-        '@class': "server.SecondTestObject",
         text: "christoph",
         number: 1
     };
