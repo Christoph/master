@@ -1,15 +1,14 @@
 package processing;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
+import server.ScatterJson;
 import core.ImportCSV;
 import core.Tag;
 import core.TagsToCSV;
@@ -17,8 +16,65 @@ import core.TagsToCSV;
 public class Workflow {
 	
 	private static final Logger log = Logger.getLogger("Logger");
+    private Helper help = new Helper();
+    
+    // Full data set
+    private List<ScatterJson> data;
+    
+    // Filtered data sets
+    //private static List<ScatterJson> hex1;
+    //private static List<ScatterJson> hist1;
+    
+    // Mapping
+    Map<String, List<ScatterJson>> charts = new HashMap<String, List<ScatterJson>>();
+    
+	public void init(List<String> list)
+	{
+		data = new ArrayList<ScatterJson>();
+		
+		data.add(new ScatterJson("1", 1, 2));
+		data.add(new ScatterJson("2", 4, 6));
+		data.add(new ScatterJson("3", 6, 2));
+		data.add(new ScatterJson("4", 3, 3));
+		data.add(new ScatterJson("5", 5, 8));
+		data.add(new ScatterJson("6", 8, 4));
+		data.add(new ScatterJson("7", 1, 3));
+		data.add(new ScatterJson("8", 1, 7));
+		
+		for(String s: list)
+		{
+			charts.put(s, new ArrayList<ScatterJson>());
+			charts.get(s).addAll(data);
+		}
+	}
 	
-	public List<String> full()
+	// Data to chart mappings	
+	public String updateData(String chart) {	
+		return help.objectToJsonString(charts.get(chart));
+	}
+	
+	// Filter function
+	public void filter(double lower, double upper, String chart)
+	{		
+		// Clear filtered list
+		charts.get(chart).clear();
+		
+		if(lower == upper)
+		{
+			// Show all
+			charts.get(chart).addAll(data);
+		}
+		else
+		{
+			// Apply new filter
+			charts.get(chart).addAll(data.stream()
+				    .filter(p -> p.getX() >= lower)
+				    .filter(p -> p.getX() < upper)
+				    .collect(Collectors.toList()));
+		}
+	}	
+	
+	public String full()
 	{
 		 /////////////////////////////////
 	    // Variable initialization  
@@ -31,7 +87,7 @@ public class Workflow {
 	    SimilarityComplex similarity = new SimilarityComplex();
 	    //SimilarityComplexFull similarity = new SimilarityComplexFull();
 	    Weighting weighting = new Weighting();
-	    Helper help = new Helper();
+
 	    Grouping_Simple grouping = new Grouping_Simple();
 	    Grouping complex_grouping = new Grouping();
 	    Regex regex = new Regex();
@@ -187,23 +243,9 @@ public class Workflow {
 	    
 		///////////////////////////////// 
 	    // TO JSON
-	    List<String> list = new ArrayList<String>();
 	    
-	    //ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-	    ObjectWriter ow = new ObjectMapper().writer();
-	    
-	    try {
-	    	
-	    	for(Tag t: tags)
-	    	{
-	    		list.add(ow.writeValueAsString(t));
-	    	}
-			
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    
-	    return list;
+	    return help.objectToJsonString(tags);
 	}
+
+
 }

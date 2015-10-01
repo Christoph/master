@@ -1,75 +1,93 @@
+// Socket initialization
 
-// Socket test
+// Connect to server
+var socket = io.connect('http://localhost:9092',{
+        reconnection: false
+        });
 
-/*
-var socket = io.connect('http://localhost:9092');
-
+// Status events
 socket.on('connect', function() {
-    console.log("Connected")
-});
-
-socket.on('response', function(data) {
-    console.log(JSON.parse(data));
+    console.log("Connected");
+    socket.emit("initialize","init");
 });
 
 socket.on('disconnect', function() {
-    console.log("Disconnected")
+    console.log("Disconnected");
 });
 
-$("#request").click(function() {
+// Data events
 
-    var jsonObj = {
-        text: "christoph",
-        number: 1
+// Initialize data structures
+data_hex1 = [];
+data_hist1 = [];
+
+// Update #hex1
+socket.on("#hex1", function(d) {
+    temp = JSON.parse(d);
+    data_hex1.length = 0;
+
+    temp.forEach(function(e) {
+        data_hex1.push({
+            x: e.x,
+            y: e.y,
+            text: e.text
+        });
+    });
+    hex1.render();
+});
+
+// Update #hist1
+socket.on("#hist1", function(d) {
+    temp = JSON.parse(d);
+    data_hist1.length = 0;
+
+    temp.forEach(function(e) {
+        data_hist1.push({
+            value: e.x,
+            attribute: e.text
+        });
+    });
+    hist1.render();
+});
+
+// Filter
+function filter(extend, chartDiv)
+{
+    var json = {
+        lower: extend[0],
+        upper: extend[1],
+        chartDiv: chartDiv
     };
 
-    // Sends event object and @class is not necessary
-    socket.emit('json', jsonObj);
+    socket.emit("filter", json);
+}
+
+
+
+
+// Dynamic events
+
+// Button
+$("#request").click(function() {
+
+    /*
+    var json = {
+        lower: extend[0],
+        upper: extend[1],
+        chartDiv: chartDiv
+    };
+    */
+
+    socket.emit("filter", "test");
 });
-*/
 
-data = [
-{
-    x: 0.8,
-    text: "ROck Song",
-    y: 100
-},
-{
-    x: 0.7,
-    text: "Pop Song",
-    y: 90
-},
-{
-    x: 0.1,
-    text: "Custom Song",
-    y: 10
-}
-];
 
-data_hist = [
-{
-    value: 1.0,
-    attribute: "ROck Song"
-},
-{
-    value: 0.1,
-    attribute: "Bla Song"
-},
-{
-    value: 0.2,
-    attribute: "Pop Song"
-},
-{
-    value: 0.5,
-    attribute: "Custom Song"
-}
-];
-
+// Visualization
 var hex1 = hexPlot()
     .area("#hex1")
     .height(550)
     .width(580)
-    .json(data)
+    .json(data_hex1)
     .binSize(25)
     .axisNames("Importance", "Occurrence")
     .colors(["#80A1C1", "#3a3e4a"]);
@@ -78,8 +96,8 @@ var hist1 = histogram()
     .area("#hist1")
     .height(250)
     .width(580)
-    .json(data_hist)
-    .reloadAll(renderAll)
+    .json(data_hist1)
+    .filter(filter)
     .bins(10)
     .axisNames("Importance", "#")
     .title("Importance Histogram");
@@ -88,8 +106,6 @@ var hist1 = histogram()
 function renderAll()
 {
     // Render
-    hex1.render();
-    hist1.render();
+    //hex1.render();
+    //hist1.render();
 }
-
-renderAll();

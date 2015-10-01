@@ -1,10 +1,13 @@
 package server;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 
 import processing.Workflow;
@@ -21,35 +24,59 @@ public class Transport {
 	}
 
 	public void initialize()
-	{
-		server.addEventListener("test", SecondTestObject.class, new DataListener<SecondTestObject>() {
+	{	
+		List<String> charts = new ArrayList<String>();
+		
+		// Define all charts
+		charts.add("#hex1");
+		charts.add("#hist1");
+		
+		// Connection
+		server.addConnectListener(new ConnectListener() {
+			
+			public void onConnect(SocketIOClient client) {
+				System.out.println("Connected to :"+client.toString());
+			}
+		});
+		
+		// Get data
+		server.addEventListener("initialize", String.class, new DataListener<String>() {
 
-			public void onData(SocketIOClient arg0, SecondTestObject data,
+			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
-				arg0.sendEvent("response", data.getText().toUpperCase());
 				
-				System.out.println("Event 0");
-				System.out.println(data.getText());
-				System.out.println(data.getNumber());
-				
+				if(data.equals("init"))
+				{					
+					// Initialize data
+					work.init(charts);
+					
+					for(String chart: charts)
+					{
+						client.sendEvent(chart, work.updateData(chart));
+					}
+				}
+				else
+				{
+					System.out.println(data);
+				}
 			}
         });
-        
-        server.addEventListener("json", SecondTestObject.class, new DataListener<SecondTestObject>() {
+		
+		// Filter
+        server.addEventListener("filter", FilterJson.class, new DataListener<FilterJson>() {
 
-			public void onData(SocketIOClient arg0, SecondTestObject data,
+			public void onData(SocketIOClient client, FilterJson data,
 					AckRequest arg2) throws Exception {
 				
-				System.out.println("start");
-				arg0.sendEvent("response", "started");
-				
-				List<String> temp = work.full();
-
-				arg0.sendEvent("response", temp.toString());
+				// Redraw all except himself
+				for(String chart: charts.stream()
+					    .filter(p -> !p.contains(data.getChartDiv()))
+					    .collect(Collectors.toList()))
+				{
+					work.filter(data.getLower(), data.getUpper(), chart);
 					
-				System.out.println("finished");
-				arg0.sendEvent("response", "finished");
-				
+					client.sendEvent(chart, work.updateData(chart));
+				}
 			}
         });
 	}

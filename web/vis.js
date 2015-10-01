@@ -280,7 +280,7 @@ function hexPlot() {
 
         // Update text
         d3.select(".records").text("show all tags: "+_data.length);
-        relax();
+        //relax();
 }
 
     //
@@ -493,12 +493,10 @@ function histogram() {
         _dimension,
         _filter, 
         _chartDiv,
-        _reloadAll,
         _hist,
         _histOccu,
         _xHist,
         _isNumeric,
-        _useDomain, _useProperty, _filter, _filtered,
         _brush, _gBrush,
         _bodyG;
     
@@ -538,7 +536,7 @@ function histogram() {
         _ticks = _x.ticks(_bins);
 
         // Compute bin width
-        _binWidth = quadrantWidth() / _bins;
+        _binWidth = (quadrantWidth() / (_ticks.length - 1))-1;
 
         // Generate histogram data
         _hist = d3.layout.histogram()
@@ -575,8 +573,7 @@ function histogram() {
                 .attr("height", _height)
                 .attr("width", _width)
                 .style("background-color", "white")
-                .attr("class", "chart")
-                .on("brush", _reloadAll);
+                .attr("class", "chart");
 
         // title
         _svg.append("text")
@@ -787,16 +784,12 @@ function histogram() {
       if ((extent1[1] - extent1[0]) < inc) {
           extent1[1] = extent1[0];
         _brush.clear();
-        filterAll();
-        _reloadAll();
+        removeFilter();
       }
       else
       {
         // Filter
         filter(extent1);        
-
-        // Rerender everything except this chart
-        _reloadAll();
       }
 
       // Transition
@@ -808,12 +801,12 @@ function histogram() {
     // Filter
     function filter(extent1)
     {
-        console.log(extent1);
+        _filter(extent1, _chartDiv);
     }
 
-    function filterAll()
+    function removeFilter()
     {
-        console.log("All");
+        _filter([0,0], _chartDiv);
     }
 
     // Update while brushing
@@ -822,12 +815,9 @@ function histogram() {
         if (!d3.event.sourceEvent) return; // only transition after input
 
         // Filter
-        filter(_brush.extent());        
-
-        // Rerender everything except this chart
-        _reloadAll();
-
+        //filter(_brush.extent());        
     }
+
     // 
     //
     // External function
@@ -864,12 +854,12 @@ function histogram() {
         return _chart;
     };
 
-    _chart.reloadAll = function (f) {
-        if (!arguments.length) return _reloadAll;
-        _reloadAll = f;
+    _chart.filter = function (f) {
+        if (!arguments.length) return _filter;
+        _filter = f;
         return _chart;
     };
-
+    
     _chart.area = function (a) {
         if (!arguments.length) return _chartDiv;
         _chartDiv = a;
