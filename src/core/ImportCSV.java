@@ -32,21 +32,60 @@ public List<String> importCSV(String data)
     return lines;
   }
   
-  public List<Tag> importTags(String data)
+  public List<TagLast> importLastTags(String data)
   {
     List<String> lines;
     String[] temp;
-    List<Tag> tags = new ArrayList<Tag>();
-    
+
     lines = importCSV(data);
+    
+	List<TagLast> tags = new ArrayList<TagLast>();
     
     for(String l: lines)
     {
     	temp = l.split(",");
-    	
-  		tags.add(new Tag(Integer.parseInt(temp[0]), temp[6].replace("\"", ""), Integer.parseInt(temp[4]), Integer.parseInt(temp[5]), Double.parseDouble(temp[8]), Integer.parseInt(temp[7]), Integer.parseInt(temp[1]),temp[2].replace("\"", ""), Integer.parseInt(temp[3]),Integer.parseInt(temp[9])));
-   	}
+
+    	tags.add(new TagLast(Integer.parseInt(temp[0]), temp[6].replace("\"", ""), Integer.parseInt(temp[4]), Integer.parseInt(temp[5]), Double.parseDouble(temp[8]), Integer.parseInt(temp[7]), Integer.parseInt(temp[1]),temp[2].replace("\"", ""), Integer.parseInt(temp[3]),Integer.parseInt(temp[9])));
+
+    }
+    return tags;
+  }
+  
+  public List<TagMovie> importMovieTags(String data)
+  {
+    List<String> lines;
+    String[] temp;
+
+    lines = importCSV(data);
     
+	List<TagMovie> tags = new ArrayList<TagMovie>();
+    
+    for(String l: lines)
+    {
+    	temp = l.split(",");
+
+    	tags.add(new TagMovie(Integer.parseInt(temp[0]), temp[1], Integer.parseInt(temp[7]), Integer.parseInt(temp[15]), temp[16], Integer.parseInt(temp[18]), Integer.parseInt(temp[17]), Integer.parseInt(temp[19]),0d));
+
+    }
+    return tags;
+  }
+  
+  public List<TagBook> importBookTags(String data)
+  {
+    List<String> lines;
+    String[] temp;
+
+    lines = importCSV(data);
+    
+	List<TagBook> tags = new ArrayList<TagBook>();
+    
+    for(String l: lines)
+    {
+    	temp = l.split(",");
+
+    	tags.add(new TagBook(Integer.parseInt(temp[0]), temp[1], temp[4], Integer.parseInt(temp[5]), Integer.parseInt(temp[6]), Integer.parseInt(temp[7]), 0d));
+
+    }
     return tags;
   }
 }

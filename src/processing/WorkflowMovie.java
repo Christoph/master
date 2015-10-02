@@ -8,43 +8,36 @@ import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import server.ScatterJson;
 import core.ImportCSV;
-import core.Tag;
+import core.TagLast;
 import core.TagsToCSV;
 
-public class Workflow {
+public class WorkflowMovie {
 	
+	// Initialize variables and classes
 	private static final Logger log = Logger.getLogger("Logger");
     private Helper help = new Helper();
+    ImportCSV im = new ImportCSV();
     
     // Full data set
-    private List<ScatterJson> data;
-    
-    // Filtered data sets
-    //private static List<ScatterJson> hex1;
-    //private static List<ScatterJson> hist1;
+    private List<TagLast> tags;
     
     // Mapping
-    Map<String, List<ScatterJson>> charts = new HashMap<String, List<ScatterJson>>();
+    Map<String, List<TagLast>> charts = new HashMap<String, List<TagLast>>();
     
 	public void init(List<String> list)
 	{
-		data = new ArrayList<ScatterJson>();
+	    // Load data
+	    tags = im.importLastTags("raw_subset_tags.csv");
+	    //tags = im.importTags("raw_movie_tags.csv", "movie");
+	    //tags = im.importTags("raw_bookmark_tags.csv", "last");
+	    log.info("Data loaded\n");
 		
-		data.add(new ScatterJson("1", 1, 2));
-		data.add(new ScatterJson("2", 4, 6));
-		data.add(new ScatterJson("3", 6, 2));
-		data.add(new ScatterJson("4", 3, 3));
-		data.add(new ScatterJson("5", 5, 8));
-		data.add(new ScatterJson("6", 8, 4));
-		data.add(new ScatterJson("7", 1, 3));
-		data.add(new ScatterJson("8", 1, 7));
-		
+	    // Create chart specific dataset
 		for(String s: list)
 		{
-			charts.put(s, new ArrayList<ScatterJson>());
-			charts.get(s).addAll(data);
+			charts.put(s, new ArrayList<TagLast>());
+			charts.get(s).addAll(tags);
 		}
 	}
 	
@@ -62,15 +55,17 @@ public class Workflow {
 		if(lower == upper)
 		{
 			// Show all
-			charts.get(chart).addAll(data);
+			charts.get(chart).addAll(tags);
 		}
 		else
 		{
+			/*
 			// Apply new filter
-			charts.get(chart).addAll(data.stream()
+			charts.get(chart).addAll(tags‚.stream()
 				    .filter(p -> p.getX() >= lower)
 				    .filter(p -> p.getX() < upper)
 				    .collect(Collectors.toList()));
+				    */
 		}
 	}	
 	
@@ -79,7 +74,6 @@ public class Workflow {
 		 /////////////////////////////////
 	    // Variable initialization  
 	    //Processor pro = new Processor(dbconf);
-	    ImportCSV im = new ImportCSV();
 	    //SpellChecking similarity = new SpellChecking();
 	    //SimilarityReplacement similarity = new SimilarityReplacement();
 	    //SimilarityReplacementWithDistance similarity = new SimilarityReplacementWithDistance();
@@ -135,7 +129,7 @@ public class Workflow {
 	    int minWordLength = 3;
 	    
 	    // Get all tags
-	    List<Tag> tags;
+	    //List<Tag> tags;
 	    
 	    // From DB
 	    /*
@@ -150,13 +144,7 @@ public class Workflow {
 	    writer_tags.writeTagListCustomWeight(tags);    
 	    System.out.println("tt0: "+tags.size());
 	    */
-	    
-	    
-	    // From csv file saved above
-	    //tags = im.importTags("raw_spotify_tags.csv");
-	    tags = im.importTags("raw_subset_tags.csv");
-	    log.info("Data loaded\n");
-	    
+	     
 	    // This line is here so i dont forget to remove it when i start from the middle
 	    TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
 	    
@@ -168,12 +156,12 @@ public class Workflow {
 	    log.info("1st similiarity replacement finished\n");
 	    
 	    // Find word groups
-	    complex_grouping.groupBy(tags, 3,0.4d,"three");
-	    complex_grouping.groupBy(tags, 2,0.4d,"two");
+	    complex_grouping.groupBy(tags, 3,0.4d,"three", false);
+	    complex_grouping.groupBy(tags, 2,0.4d,"two", false);
 	    log.info("complex grouping finished\n");
 	    
-	    grouping.groupBy(tags, 3,0.1d,"three");
-	    grouping.groupBy(tags, 2,0.1d,"two");
+	    grouping.groupBy(tags, 3,0.1d,"three", false);
+	    grouping.groupBy(tags, 2,0.1d,"two", false);
 	    log.info("simple grouping finished\n");
 	    
 	    // Again similarity replacement
@@ -223,7 +211,7 @@ public class Workflow {
 	    // Reset index
 	    for(int i = 1; i<=tags.size(); i++)
 	    {
-	    	tags.get(i-1).setTTID(i);
+	    	tags.get(i-1).setID(i);
 	    }
 	    
 	    // Messed up groups replacement

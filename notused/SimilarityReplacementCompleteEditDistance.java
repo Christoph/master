@@ -11,14 +11,14 @@ import java.util.Set;
 
 import org.apache.commons.codec.language.DoubleMetaphone;
 
-import core.Tag;
+import core.TagLast;
 import core.TagsToCSV;
 
 public class SimilarityReplacementCompleteEditDistance {
 	
 	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(1, 1, 1, 1);
 	
-	public void withPhoneticsAndNgrams(List<Tag> tags, List<String> blacklist, float threshold, int minStringLength, String filename_suffix)
+	public void withPhoneticsAndNgrams(List<TagLast> tags, List<String> blacklist, float threshold, int minStringLength, String filename_suffix)
 	{
 	    /////////////////////////////////
 	    // Variables
@@ -279,7 +279,7 @@ public class SimilarityReplacementCompleteEditDistance {
 	    }
 	    
 	    // Replace tags corresponding to the subs dict
-	    for(Tag t: tags)
+	    for(TagLast t: tags)
 	    {
 	      words = psim.create_word_gram(t.getTagName(),blacklist);
 	      new_tag = "";

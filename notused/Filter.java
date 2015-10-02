@@ -5,12 +5,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import core.Tag;
+import core.TagLast;
 import core.TagsToCSV;
 
 public class Filter {
 
-	public void byWeightedMean(List<Tag> tags, List<String> blacklist, double cutoff)
+	public void byWeightedMean(List<TagLast> tags, List<String> blacklist, double cutoff)
 	{
 	    /////////////////////////////////
 	    // Variables
@@ -75,7 +75,7 @@ public class Filter {
 	    // playcount_scale = (playcount_max - playcount_min) / 100.0;
 
 	    // Compute a weighted normalized weight for each tag/song pair
-	    for(Tag t: tags)
+	    for(TagLast t: tags)
 	    {
 	    	listeners = t.getListeners();
 	    	playcount = t.getPlaycount();
@@ -127,7 +127,7 @@ public class Filter {
 	    }
 	    
 	    // normalizing tags
-	    for(Tag t:tags)
+	    for(TagLast t:tags)
 	    {
 	    	importance = tag_words.get(t.getTagName());
 	    	

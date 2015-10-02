@@ -15,15 +15,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 import core.Tag;
+import core.TagLast;
 
 public class Helper {
 	
 	   StringLengthComparator slc = new StringLengthComparator();
 	  
-	  public void removeTagsWithoutWords(List<Tag> tags)
+	  public void removeTagsWithoutWords(List<? extends Tag> tags)
 	  {
 		    // Remove tags with no words    
-		    for(Iterator<Tag> iterator = tags.iterator(); iterator.hasNext();)
+		    for(Iterator<? extends Tag> iterator = tags.iterator(); iterator.hasNext();)
 		    {
 				Tag t = iterator.next();
 				  
@@ -34,7 +35,7 @@ public class Helper {
 		    }
 	  }
 	  
-	  public void removeBlacklistedWords(List<Tag> tags, List<String> blacklist)
+	  public void removeBlacklistedWords(List<? extends Tag> tags, List<String> blacklist)
 	  {
 		  String name, uptated;    
 		  List<String> list = new ArrayList<String>();
@@ -60,7 +61,7 @@ public class Helper {
 		  removeTagsWithoutWords(tags);
 	  }
 	  
-	  public void correctTagsAndIDs(List<Tag> data)
+	  public void correctTagsAndIDs(List<TagLast> data)
 	  {
 		  	// TagName: TagID
 		  	Map<String, Integer> tags = new HashMap<String, Integer>();
@@ -73,9 +74,9 @@ public class Helper {
 		    String name, key;
 
 		    // Find maximum LastFMWeight per song/tag pair
-		    for(Tag t: data)
+		    for(TagLast t: data)
 		    {
-				ID = t.getSongID();
+				ID = t.getCarrierID();
 				name = t.getTagName();
 				key = ID+name;
 				weight = t.getLastFMWeight();
@@ -94,9 +95,9 @@ public class Helper {
 		    }
 		    
 		    // Resolve multiple equal tags per song
-		    for(Tag t: data)
+		    for(TagLast t: data)
 		    {
-				ID = t.getSongID();
+				ID = t.getCarrierID();
 				name = t.getTagName();
 				key = ID+name;
 				weight = t.getLastFMWeight();
@@ -122,7 +123,7 @@ public class Helper {
 		    }
 		    
 		    // Resolve multiple tag ids
-			for(Tag t:data)
+			for(TagLast t:data)
 			{
 				ID = t.getTagID();
 				name = t.getTagName();
@@ -141,7 +142,7 @@ public class Helper {
 			}	
 	  }
 	  
-	  public Map<String, String> getImportantTags(List<Tag> tags, double threshold, int minWordLength)
+	  public Map<String, String> getImportantTags(List<? extends Tag> tags, double threshold, int minWordLength)
 	  {
 		  Map<String, Double> important = new HashMap<String, Double>();
 		  Map<String, Integer> tagid = new HashMap<String, Integer>();

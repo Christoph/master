@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import core.Tag;
+import core.TagLast;
 import core.TagsToCSV;
 
 public class Regex {
@@ -104,7 +105,7 @@ public class Regex {
 
 	}
 	
-	public void replaceCustomWords(List<Tag> tags, List<String> patterns, String prefix)
+	public void replaceCustomWords(List<? extends Tag> tags, List<String> patterns, String prefix)
 	{
 		String name, reg, rep, temp;
 		String[] row;
@@ -144,9 +145,9 @@ public class Regex {
 	    
 	}
 	
-	public void findImportantWords(List<Tag> tags, Map<String, String> words, double threshold, int minWordLength)
+	public void findImportantWords(List<TagLast> tags, Map<String, String> words, double threshold, int minWordLength)
 	{	  
-		List<Tag> tt = new ArrayList<Tag>();
+		List<TagLast> tt = new ArrayList<TagLast>();
 		int tt3 = 0, tt2 = 0, tt4 = 0;
 
 	    numbers.add("Number of tags: "+tags.size());
@@ -155,9 +156,9 @@ public class Regex {
 	    int part = tags.size()/30;
 	    int iter = 0;
 	    
-		for(Iterator<Tag> iterator = tags.iterator(); iterator.hasNext();)
+		for(Iterator<TagLast> iterator = tags.iterator(); iterator.hasNext();)
         {
-			Tag t = iterator.next();
+			TagLast t = iterator.next();
 			
 	    	  iter++;
 	    	  if(iter%part == 0)
@@ -191,7 +192,7 @@ public class Regex {
 		  			String tagid = words.get(s).split(",")[0];
 		  			String importance = words.get(s).split(",")[1];
 		  			
-		  			tt.add(new Tag(1, s.replace(" ", "-"), t.getPlaycount(), Integer.parseInt(tagid), Double.parseDouble(importance), t.getLastFMWeight(), t.getSongID(), t.getSongName(), t.getListeners(),t.getArtistID())); 	
+		  			tt.add(new TagLast(1, s.replace(" ", "-"), t.getPlaycount(), Integer.parseInt(tagid), Double.parseDouble(importance), t.getLastFMWeight(), t.getCarrierID(), t.getCarrierName(), t.getListeners(),t.getArtistID())); 	
 		  		
 		  		}
 		  		

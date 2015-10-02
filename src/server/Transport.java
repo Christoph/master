@@ -10,14 +10,14 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 
-import processing.Workflow;
+import processing.WorkflowLast;
 
 public class Transport {
 
-	private Workflow work;
+	private WorkflowLast work;
 	private SocketIOServer server;
 	
-	protected Transport(Workflow work, SocketIOServer server) {
+	protected Transport(WorkflowLast work, SocketIOServer server) {
 		super();
 		this.work = work;
 		this.server = server;
@@ -52,7 +52,9 @@ public class Transport {
 					
 					for(String chart: charts)
 					{
+						System.out.println("update start");
 						client.sendEvent(chart, work.updateData(chart));
+						System.out.println("update end");
 					}
 				}
 				else
@@ -73,7 +75,7 @@ public class Transport {
 					    .filter(p -> !p.contains(data.getChartDiv()))
 					    .collect(Collectors.toList()))
 				{
-					work.filter(data.getLower(), data.getUpper(), chart);
+					work.filter(data.getLower(), data.getUpper(), chart, "bla");
 					
 					client.sendEvent(chart, work.updateData(chart));
 				}

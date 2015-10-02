@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import core.Tag;
+import core.TagLast;
 import core.TagsToCSV;
 
 public class SimilarityComplexFull {
 	
 	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(1, 1, 1, 1);
 	
-	public void withPhoneticsAndNgrams(List<Tag> tags, List<String> blacklist, float threshold, String filename_suffix)
+	public void withPhoneticsAndNgrams(List<TagLast> tags, List<String> blacklist, float threshold, String filename_suffix)
 	{
 	    /////////////////////////////////
 	    // Variables
@@ -205,7 +205,7 @@ public class SimilarityComplexFull {
 	    System.out.println("export finished");
 	    
 	    // Replace tags corresponding to the subs dict
-	    for(Tag t: tags)
+	    for(TagLast t: tags)
 	    {
 	      words = psim.create_word_gram(t.getTagName(),blacklist);
 	      new_tag = "";

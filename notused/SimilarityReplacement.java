@@ -1,6 +1,5 @@
 package processing;
 
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,14 +9,12 @@ import java.util.Set;
 
 import org.apache.commons.codec.language.DoubleMetaphone;
 
-import core.Tag;
+import core.TagLast;
 import core.TagsToCSV;
 
-public class SimilarityReplacementWithDistance {
+public class SimilarityReplacement {
 	
-	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(1, 1, 1, 1);
-	
-	public void withPhoneticsAndNgrams(List<Tag> tags, List<String> blacklist, float threshold, String filename_suffix)
+	public void withPhoneticsAndNgrams(List<TagLast> tags, List<String> blacklist, float threshold, String filename_suffix)
 	{
 	    /////////////////////////////////
 	    // Variables
@@ -112,7 +109,7 @@ public class SimilarityReplacementWithDistance {
 	    for(int i = 0;i < tags.size(); i++)
 	    {
 	      words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
-	    	
+	      
 	      for(int j = 0; j < words.size(); j++)
 	      {
 	    	String tag = words.get(j);
@@ -124,23 +121,7 @@ public class SimilarityReplacementWithDistance {
 	          String code = phonetic_algorithm.encode(tag);
 	          String high = "";
 	          
-	          // Get all phonetics with a edit distance of 1
-	          Set<String> group = new HashSet<String>();
-	          
-	          for(String p: phonetic_groups.keySet())
-	          {
-	        	  if(dla.execute(p, code)<2)
-	        	  {
-	        		  group.add(p);
-	        	  }
-	          }
-	          
-	          Set<String> phonetics = new HashSet<String>();
-	          
-	          for(String c: group)
-	          {
-	        	  phonetics.addAll(phonetic_groups.get(c));
-	          }
+	          Set<String> phonetics = phonetic_groups.get(code);
 	          
 	          // Iterate over those
 	          while(!phonetics.isEmpty())
@@ -150,6 +131,8 @@ public class SimilarityReplacementWithDistance {
 	            // Find the word with the highest importance count
 	            for(String s: phonetics)
 	            {
+	              
+	            	// Changed to >= because the importance can be 0
 	              if(tag_words.get(s) >= importance)
 	              {
 	                high = s;
@@ -223,7 +206,7 @@ public class SimilarityReplacementWithDistance {
 	    }
 	    
 	    // Replace tags corresponding to the subs dict
-	    for(Tag t: tags)
+	    for(TagLast t: tags)
 	    {
 	      words = psim.create_word_gram(t.getTagName(),blacklist);
 	      new_tag = "";

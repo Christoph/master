@@ -8,7 +8,7 @@ import core.Tag;
 import core.TagsToCSV;
 
 public class Grouping {
-	public void groupBy(List<Tag> tags, int size, double acceptance_value, String filename_suffix) {
+	public void groupBy(List<? extends Tag> tags, int size, double acceptance_value, String filename_suffix, Boolean verbose) {
 		/////////////////////////////////
 		// Variables
 		PlainStringSimilarity psim = new PlainStringSimilarity();
@@ -32,8 +32,8 @@ public class Grouping {
 		// Configuration
 		
 		// Print temp files
-	    print_groups = false;
-		print_accepted = true;
+	    print_groups = verbose;
+		print_accepted = verbose;
 		
 		/////////////////////////////////
 		// Algorithm

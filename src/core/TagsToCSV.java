@@ -143,11 +143,11 @@ public class TagsToCSV {
 		}
 	}
 	
-	public void writeTagNames(List<Tag> data) {
+	public void writeTagNames(List<TagLast> data) {
 		
     createHeader("Original,Processed");
 
-		for(Tag t:data)
+		for(TagLast t:data)
 		{
 			try {
 				writer.write(t.getOriginalTagName()+" ,"+t.getTagName()+"\n");
@@ -164,14 +164,14 @@ public class TagsToCSV {
 		}
 	}
 	
-	public void writeTagList(List<Tag> data) {
+	public void writeTagList(List<TagLast> data) {
 		
 		createHeader("SongID,SongName,Listeners,Playcount,TagID,TagName,LastFMWeight");
 
-		for(Tag t:data)
+		for(TagLast t:data)
 		{
 			try {
-				writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+"\n");
+				writer.write(t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -185,14 +185,14 @@ public class TagsToCSV {
 		}
 	}
 	
-	public void writeTagListCustomWeight(List<Tag> data) {
+	public void writeTagListCustomWeight(List<TagLast> data) {
 		
 		createHeader("ID,SongID,SongName,Listeners,Playcount,TagID,TagName,LastFMWeight,Importance,ArtistID");
 
-		for(Tag t:data)
+		for(TagLast t:data)
 		{
 			try {
-				writer.write(t.getTTID()+","+t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+","+t.getImportance()+","+t.getArtistID()+"\n");
+				writer.write(t.getID()+","+t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+","+t.getImportance()+","+t.getArtistID()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -206,7 +206,7 @@ public class TagsToCSV {
 		}
 	}
 	
-	public void writeTableTag(List<Tag> data) {
+	public void writeTableTag(List<TagLast> data) {
 		
 		createHeader("ID,Name,Importance");
 		
@@ -214,7 +214,7 @@ public class TagsToCSV {
 	    double importance;
 	    String name;
 		
-		for(Tag t:data)
+		for(TagLast t:data)
 		{
 			name = t.getTagID()+","+t.getTagName();
 			importance = t.getImportance();
@@ -242,14 +242,14 @@ public class TagsToCSV {
 		}
 	}
 
-	public void writeTableTT(List<Tag> data) {
+	public void writeTableTT(List<TagLast> data) {
 		
 		createHeader("ID,TrackID,TagID,LastFMWeight,Importance");
 		
-		for(Tag t:data)
+		for(TagLast t:data)
 		{
 			try {
-				writer.write(t.getTTID()+","+t.getSongID()+","+t.getTagID()+","+t.getLastFMWeight()+","+t.getImportance()+"\n");
+				writer.write(t.getID()+","+t.getCarrierID()+","+t.getTagID()+","+t.getLastFMWeight()+","+t.getImportance()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -263,16 +263,16 @@ public class TagsToCSV {
 		}
 	}
 
-	public void writeTableTrack(List<Tag> data) {
+	public void writeTableTrack(List<TagLast> data) {
 	
 	createHeader("ID,Name,ArtistID,Listeners,Playcount");
 
 	Map<String, String> tracks = new HashMap<String, String>();
     String name, numbers;
 	
-	for(Tag t:data)
+	for(TagLast t:data)
 	{
-		name = t.getSongID()+","+t.getSongName();
+		name = t.getCarrierID()+","+t.getCarrierName();
 		numbers = ","+t.getArtistID()+","+t.getListeners()+","+t.getPlaycount();
 		
 		if(!tracks.containsKey(name))
@@ -298,7 +298,7 @@ public class TagsToCSV {
 	}
 }
 	
-	public void writeTag(Tag t) {
+	public void writeTag(TagLast t) {
 		if(head) 
 		{
 			createHeader("SongID,SongName,Listeners,Playcount,TagID,TagName,TagLastFMWeight");
@@ -306,13 +306,13 @@ public class TagsToCSV {
 		}
 		
 		try {
-			writer.write(t.getSongID()+",\""+t.getSongName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+"\n");
+			writer.write(t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+"\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void writeTagOccurrences(List<Tag> tags) {
+	public void writeTagOccurrences(List<TagLast> tags) {
 
 		createHeader("TagName,Occurrence");
 		
@@ -320,7 +320,7 @@ public class TagsToCSV {
 		String name = "";
 		int value = 0;
 		
-		for(Tag t: tags)
+		for(TagLast t: tags)
     	{
     		name = t.getTagName();				
 

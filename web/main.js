@@ -9,6 +9,7 @@ var socket = io.connect('http://localhost:9092',{
 socket.on('connect', function() {
     console.log("Connected");
     socket.emit("initialize","init");
+
 });
 
 socket.on('disconnect', function() {
@@ -23,14 +24,15 @@ data_hist1 = [];
 
 // Update #hex1
 socket.on("#hex1", function(d) {
+    console.log("#hex1 data");
     temp = JSON.parse(d);
     data_hex1.length = 0;
 
     temp.forEach(function(e) {
         data_hex1.push({
-            x: e.x,
-            y: e.y,
-            text: e.text
+            x: e.importance,
+            y: e.lastFMWeight,
+            text: e.tagName
         });
     });
     hex1.render();
@@ -38,13 +40,14 @@ socket.on("#hex1", function(d) {
 
 // Update #hist1
 socket.on("#hist1", function(d) {
+    console.log("#hist1 data");
     temp = JSON.parse(d);
     data_hist1.length = 0;
 
     temp.forEach(function(e) {
         data_hist1.push({
-            value: e.x,
-            attribute: e.text
+            value: e.importance,
+            attribute: e.tagName
         });
     });
     hist1.render();
@@ -53,6 +56,7 @@ socket.on("#hist1", function(d) {
 // Filter
 function filter(extend, chartDiv)
 {
+    console.log("Filter");
     var json = {
         lower: extend[0],
         upper: extend[1],

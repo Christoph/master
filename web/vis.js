@@ -211,11 +211,11 @@ function hexPlot() {
         dataPoints = [];
         data.filter(visibiltyFilter).filter(function(d) { return d.length == 1; }).forEach(function(d) {
             dataPoints.push({
-                x: d.x,
-                y: d.y,
+                x: d[0][0],
+                y: d[0][1],
                 label: _dict.get(d[0]).text,
-                labelX: d.x,
-                labelY: d.y
+                labelX: d[0][0],
+                labelY: d[0][1]
             })
         })
 

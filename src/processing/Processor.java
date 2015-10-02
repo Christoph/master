@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import core.Tag;
-
 public class Processor {
 	//Initialize logger
 	private Logger log = Logger.getLogger("Logger");
@@ -69,17 +67,13 @@ public class Processor {
   	return tags;
   }
   
-  public List<Tag> getAll() {
-  	List<Tag> tags = new ArrayList<Tag>();
-  	
+  public void getAll() {
   	try {
-			tags = querymanager.getAll();
+			querymanager.getAll();
   	} catch (SQLException e) {
   		log.severe(e.getMessage());
 			e.printStackTrace();
 		}
-  	
-  	return tags;
   }
   
   public List<String> exportAll(String file) {

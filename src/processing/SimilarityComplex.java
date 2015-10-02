@@ -17,12 +17,11 @@ public class SimilarityComplex {
 	
 	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(2, 2, 1, 2);
 	
-	public void withPhoneticsAndNgrams(List<Tag> tags, float threshold, String filename_suffix)
+	public void withPhoneticsAndNgrams(List<? extends Tag> tags, float threshold, String filename_suffix, Boolean verbose)
 	{
 	    /////////////////////////////////
 	    // Variables
 	    PlainStringSimilarity psim = new PlainStringSimilarity();
-	    Helper helper = new Helper();
 	    TagsToCSV writer_subs;
 	    TagsToCSV writer_subs_count;
 		
@@ -50,7 +49,7 @@ public class SimilarityComplex {
 		//ColognePhonetic phonetic = new ColognePhonetic();
 		
 		// Print substitution list
-		print_substitutions = true;
+		print_substitutions = verbose;
 		
 		// Set the size for the n-gram distance method
 		ngram_size = 2;
@@ -266,10 +265,6 @@ public class SimilarityComplex {
 
 	      t.setTagName(new_tag.trim());
 	    }
-	    
-	    // Resolve errors from replacements
-	    helper.correctTagsAndIDs(tags);
-	    helper.removeTagsWithoutWords(tags);
 	    
 	    substitution_list = null;
 	}

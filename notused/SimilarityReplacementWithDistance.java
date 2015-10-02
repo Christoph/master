@@ -1,5 +1,6 @@
 package processing;
 
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,12 +10,14 @@ import java.util.Set;
 
 import org.apache.commons.codec.language.DoubleMetaphone;
 
-import core.Tag;
+import core.TagLast;
 import core.TagsToCSV;
 
-public class SpellChecking {
+public class SimilarityReplacementWithDistance {
 	
-	public void withPhoneticsAndNgrams(List<Tag> tags, List<String> blacklist, float threshold, String filename_suffix)
+	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(1, 1, 1, 1);
+	
+	public void withPhoneticsAndNgrams(List<TagLast> tags, List<String> blacklist, float threshold, String filename_suffix)
 	{
 	    /////////////////////////////////
 	    // Variables
@@ -23,13 +26,13 @@ public class SpellChecking {
 	    TagsToCSV writer_subs;
 	    TagsToCSV writer_subs_count;
 		
-	    Map<String, Long> tag_words = new HashMap<String, Long>();
+	    Map<String, Double> tag_words = new HashMap<String, Double>();
 	    Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
 	    Map<String, String> substitution_list = new HashMap<String, String>();
 	    
 	    List<String> words;
 	    Set<String> temp;
-	    long value, listener_count;
+	    double value, importance;
 	    int ngram_size;
 	    float similarity;
 	    String key, phonetic, new_tag;
@@ -54,7 +57,7 @@ public class SpellChecking {
 		/////////////////////////////////
 		// Algorithm		
 	    
-	    // Create a 1-word-gram/total listeners dict
+	    // Create a 1-word-gram/max weight dict
 	    for(int i = 0;i < tags.size(); i++)
 	    {
 	    	words = psim.create_word_gram(tags.get(i).getTagName(),blacklist);
@@ -67,12 +70,15 @@ public class SpellChecking {
 	    		{
 	    			value = tag_words.get(key);
 	    			
-	    			// Sum up the count
-	    			tag_words.put(key, value + tags.get(i).getListeners());
+	    			// Find max
+	    			if(value < tags.get(i).getImportance())
+	    			{
+	    				tag_words.put(key, tags.get(i).getImportance());
+	    			}
 	    		}
 	    		else
 	    		{
-	    			value = tags.get(i).getListeners();
+	    			value = tags.get(i).getImportance();
 	    			
 	    			tag_words.put(key, value);
 	    		}
@@ -118,20 +124,36 @@ public class SpellChecking {
 	          String code = phonetic_algorithm.encode(tag);
 	          String high = "";
 	          
-	          Set<String> phonetics = phonetic_groups.get(code);
+	          // Get all phonetics with a edit distance of 1
+	          Set<String> group = new HashSet<String>();
+	          
+	          for(String p: phonetic_groups.keySet())
+	          {
+	        	  if(dla.execute(p, code)<2)
+	        	  {
+	        		  group.add(p);
+	        	  }
+	          }
+	          
+	          Set<String> phonetics = new HashSet<String>();
+	          
+	          for(String c: group)
+	          {
+	        	  phonetics.addAll(phonetic_groups.get(c));
+	          }
 	          
 	          // Iterate over those
 	          while(!phonetics.isEmpty())
 	          {
-	            listener_count = 0;
+	            importance = 0;
 	            
-	            // Find the word with the highest listener count
+	            // Find the word with the highest importance count
 	            for(String s: phonetics)
 	            {
-	              if(tag_words.get(s) > listener_count)
+	              if(tag_words.get(s) >= importance)
 	              {
 	                high = s;
-	                listener_count = tag_words.get(s);
+	                importance = tag_words.get(s);
 	              }
 	            }
 	            
@@ -149,7 +171,7 @@ public class SpellChecking {
 	              similarity = psim.jaccard_index(h1, h2);
 	              //similarity = psim.cosine_similarity(h1, h2);
 	              
-	              // Check if the ngram method gives a similarity > 70%
+	              // Check if the ngram method gives a similarity > threshold
 	              if(similarity > threshold)
 	              {
 	                substitution_list.put(word, high);
@@ -201,7 +223,7 @@ public class SpellChecking {
 	    }
 	    
 	    // Replace tags corresponding to the subs dict
-	    for(Tag t: tags)
+	    for(TagLast t: tags)
 	    {
 	      words = psim.create_word_gram(t.getTagName(),blacklist);
 	      new_tag = "";

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import core.Tag;
+import core.TagLast;
 import core.TagsToCSV;
 
 public class QueryManager {
@@ -80,22 +80,25 @@ public class QueryManager {
   	return data;
   }
   
-  public List<Tag> getAll() throws SQLException {
-  	List<Tag> data = new ArrayList<Tag>();
+  public void getAll() throws SQLException {
+  	List<TagLast> data = new ArrayList<TagLast>();
   	
   	ResultSet result = stmt.executeQuery("select TT.ID as TTID, Track.ArtistID as ArtistID, Track.ID as SongID, Track.Name as SongName, Track.Listeners, Track.Playcount, Tag.ID as TagID, Tag.Name as TagName, TT.Count as TagWeight from TT inner join Track on TT.TrackID = Track.ID inner join Tag on TT.TagID = Tag.ID;");
 
   	while(result.next()) {   
-  		data.add(new Tag(result.getInt("TTID"), result.getString("TagName").toLowerCase().replaceAll("[-_:;/]", " ").replaceAll("[']", ""), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName"), result.getInt("Listeners"),result.getInt("ArtistID")));
-   	}
+  		//data.add(new TagLast(result.getInt("TTID"), result.getString("TagName").toLowerCase().replaceAll("[-_:;/]", " ").replaceAll("[']", ""), result.getInt("Playcount"), result.getInt("TagID"), result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName"), result.getInt("Listeners"),result.getInt("ArtistID")));
+  		data.add(new TagLast(result.getInt("TTID"), result.getString("TagName"), result.getInt("Playcount"), result.getInt("TagID"), 0d, result.getInt("TagWeight"), result.getInt("SongID"),result.getString("SongName"), result.getInt("Listeners"),result.getInt("ArtistID")));
+  	  
+  	}
 
   	System.out.println("size:");
   	System.out.println(data.size());
   	
-    // Close huge resultset
-    result.close();
+    TagsToCSV writer = new TagsToCSV("raw_subset_tags.csv");
+    writer.writeTagListCustomWeight(data);
   	
-  	return data;
+    // Close huge result set
+    result.close();
   }
   
   public void exportAll(String file) throws SQLException {
