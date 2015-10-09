@@ -1,15 +1,15 @@
 package processing;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import core.ImportCSV;
-import core.TagLast;
+import core.TagMovie;
 import core.TagsToCSV;
 
 public class WorkflowMovie {
@@ -20,142 +20,83 @@ public class WorkflowMovie {
     ImportCSV im = new ImportCSV();
     
     // Full data set
-    private List<TagLast> tags;
+    private List<TagMovie> tags;
     
-    // Mapping
-    Map<String, List<TagLast>> charts = new HashMap<String, List<TagLast>>();
-    
-	public void init(List<String> list)
+	public void init()
 	{
+		log.info("Initialize\n");
+		
 	    // Load data
-	    tags = im.importLastTags("raw_subset_tags.csv");
-	    //tags = im.importTags("raw_movie_tags.csv", "movie");
-	    //tags = im.importTags("raw_bookmark_tags.csv", "last");
-	    log.info("Data loaded\n");
-		
-	    // Create chart specific dataset
-		for(String s: list)
-		{
-			charts.put(s, new ArrayList<TagLast>());
-			charts.get(s).addAll(tags);
-		}
-	}
-	
-	// Data to chart mappings	
-	public String updateData(String chart) {	
-		return help.objectToJsonString(charts.get(chart));
-	}
-	
-	// Filter function
-	public void filter(double lower, double upper, String chart)
-	{		
-		// Clear filtered list
-		charts.get(chart).clear();
-		
-		if(lower == upper)
-		{
-			// Show all
-			charts.get(chart).addAll(tags);
-		}
-		else
-		{
-			/*
-			// Apply new filter
-			charts.get(chart).addAll(tags‚.stream()
-				    .filter(p -> p.getX() >= lower)
-				    .filter(p -> p.getX() < upper)
-				    .collect(Collectors.toList()));
-				    */
-		}
-	}	
-	
-	public String full()
-	{
-		 /////////////////////////////////
-	    // Variable initialization  
-	    //Processor pro = new Processor(dbconf);
-	    //SpellChecking similarity = new SpellChecking();
-	    //SimilarityReplacement similarity = new SimilarityReplacement();
-	    //SimilarityReplacementWithDistance similarity = new SimilarityReplacementWithDistance();
-	    //SimilarityReplacementCompleteEditDistance similarity = new SimilarityReplacementCompleteEditDistance();
-	    SimilarityComplex similarity = new SimilarityComplex();
-	    //SimilarityComplexFull similarity = new SimilarityComplexFull();
-	    Weighting weighting = new Weighting();
+	    tags = im.importMovieTags("raw_movie_tags.csv");
 
-	    Grouping_Simple grouping = new Grouping_Simple();
-	    Grouping complex_grouping = new Grouping();
-	    Regex regex = new Regex();
-	    
-	    TagsToCSV writer_taglist = new TagsToCSV("tags_final.csv");
-	    //TagsToCSV writer_tags = new TagsToCSV("tags_Regex.csv");
-	    TagsToCSV writer_tag = new TagsToCSV("Tag.csv");
-	    TagsToCSV writer_track = new TagsToCSV("Track.csv");
-	    TagsToCSV writer_tt = new TagsToCSV("TT.csv");
-	    TagsToCSV writer_important = new TagsToCSV("important_tags.csv");
-	    TagsToCSV writer_important_filtered = new TagsToCSV("important_tags_filtered.csv");
-	    
-	    //List<String> genres = im.importCSV("dicts/genres.txt");
-	    //List<String> spotify = im.importCSV("dicts/spotifygenres.txt");
-	    //List<String> moods = im.importCSV("dicts/moods.txt");
-	    
-	    Map<String, String> important_tags = new LinkedHashMap<String, String>();
-	    
+	    log.info("Data loaded\n");
+	}
+	
+/*
+	Nice method to filter a map
+
+	charts.get(chart).addAll(tags.stream()
+		    .filter(p -> p.getImportance() >= lower)
+		    .filter(p -> p.getImportance() < upper)
+		    .collect(Collectors.toList()));
+*/
+	
+	public void nlpPipeline()
+	{
+		log.info("NLP Pipeline\n");
+		
+		/////////////////////////////////
+	    // Variable initialization  
+	    SimilarityComplex similarity = new SimilarityComplex();
+	    WeightingMovie weighting = new WeightingMovie();
+
+	    TagsToCSV writer = new TagsToCSV("tags_nlp_pipeline.csv");
+		
+	    // Create word blacklist
 	    List<String> articles = im.importCSV("dicts/article.txt");
 	    List<String> preps = im.importCSV("dicts/prep.txt");
 	    List<String> custom = im.importCSV("dicts/custom.txt");
-	    List<String> subjective = im.importCSV("dicts/subjective.txt");
-	    List<String> synonyms = im.importCSV("dicts/synonyms.txt");
-	    List<String> messedup = im.importCSV("dicts/messedgroups.txt");
-	    
-	    // Create word blacklist
 	    List<String> blacklist = new ArrayList<String>();
 	    
 	    blacklist.addAll(preps);
 	    blacklist.addAll(articles);
-	    // Ignoring single characters
 	    blacklist.addAll(custom);
-	    // Special character
 	    blacklist.add("");
-	    
-		///////////////////////////////// 
+
+		/////////////////////////////////
 	    // Algorithm
 	    
-	    // Set importance threshold
-	    // 0.007 -> 500 tags
-	    // 0.004 -> 1000 tags
-	    double threshold = 0.006;
+	    // replace/remove characters
 	    
-	    // Set minimum word length
-	    int minWordLength = 3;
-	    
-	    // Get all tags
-	    //List<Tag> tags;
-	    
-	    // From DB
-	    /*
-	    tags = pro.getAll();
-	    log.info("Data loaded\n");
-	    
-	    // Weighting words without filtering
-	    weighting.byWeightedMean(tags, "first");
-	    log.info("First time importance finished\n");
-	    
-	    // Write out raw tags with weight
-	    writer_tags.writeTagListCustomWeight(tags);    
-	    System.out.println("tt0: "+tags.size());
-	    */
-	     
-	    // This line is here so i dont forget to remove it when i start from the middle
-	    TagsToCSV writer_cleanup = new TagsToCSV("tags_cleaned.csv");
-	    
-	    // Removen blacklisted words
+	    // Remove blacklisted words
 	    help.removeBlacklistedWords(tags, blacklist);
 	    
+	    // Weighting
+	    weighting.importance(tags, "weighting_nlp", true);
+		log.info("Weighting finished\n");
+	    /*
+	    
 	    // Similarity replacement
-	    //similarity.withPhoneticsAndNgrams(tags, 0.70f,"first");
+	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"first", false);
+	    
+	    // Resolve errors from replacements
+	    help.correctTagsAndIDs(tags);
+	    help.removeTagsWithoutWords(tags);
 	    log.info("1st similiarity replacement finished\n");
 	    
-	    // Find word groups
+	    // Output
+	    writer.writeTagListCustomWeight(tags);
+	    */
+	}
+	/*
+	public void grouping()
+	{
+	    Grouping_Simple grouping = new Grouping_Simple();
+	    Grouping complex_grouping = new Grouping();
+	
+	    TagsToCSV writer = new TagsToCSV("tags_grouping.csv");
+	    
+		// Find word groups
 	    complex_grouping.groupBy(tags, 3,0.4d,"three", false);
 	    complex_grouping.groupBy(tags, 2,0.4d,"two", false);
 	    log.info("complex grouping finished\n");
@@ -164,17 +105,54 @@ public class WorkflowMovie {
 	    grouping.groupBy(tags, 2,0.1d,"two", false);
 	    log.info("simple grouping finished\n");
 	    
+	    // Output
+	    writer.writeTagListCustomWeight(tags);
+	}
+	
+	public void regex()
+	{
+		/////////////////////////////////
+	    // Variable initialization  
+		
+	    WeightingLast weighting = new WeightingLast();
+	    SimilarityComplex similarity = new SimilarityComplex();
+	    Regex regex = new Regex();
+	    
+	    TagsToCSV writer_tags = new TagsToCSV("tags_Regex.csv");
+	    TagsToCSV writer_important = new TagsToCSV("important_tags.csv");
+	    TagsToCSV writer_important_filtered = new TagsToCSV("important_tags_filtered.csv");
+	    
+	    Map<String, String> important_tags = new LinkedHashMap<String, String>();
+	    
+	    List<String> subjective = im.importCSV("dicts/subjective.txt");
+	    List<String> synonyms = im.importCSV("dicts/synonyms.txt");
+	    List<String> messedup = im.importCSV("dicts/messedgroups.txt");
+	    
+		///////////////////////////////// 
+	    // Parameter
+	    
+	    // Set importance threshold
+	    double threshold = 0.006;
+	    
+	    // Set minimum word length
+	    int minWordLength = 3;
+
+		///////////////////////////////// 
+	    // Algorithm
+	    
 	    // Again similarity replacement
-	    //similarity.withPhoneticsAndNgrams(tags, 0.65f,"second");
+	    // TODO should be replaced with regex
+	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"second", false);
+	    
+	    // Resolve errors from replacements
+	    help.correctTagsAndIDs(tags);
+	    help.removeTagsWithoutWords(tags);
 	    log.info("2st similiarity replacement finished\n");
 	    
-	    // Write out cleaned tags with weight
-	    writer_cleanup.writeTagListCustomWeight(tags);
-	    System.out.println("tt1: "+tags.size());
 	    
-	    // Start after similarity and grouping
-	    //tags = im.importTags("tags_cleaned.csv");
-
+	    
+	    
+	    
 	    // Synonym replacing regex
 	    regex.replaceCustomWords(tags, synonyms,"synonyms");
 	    
@@ -205,7 +183,7 @@ public class WorkflowMovie {
 	    
 	    // Word separation
 	    // Find important words in the unimportant tags
-	    //regex.findImportantWords(tags, important_tags, threshold, minWordLength);
+	    regex.findImportantWords(tags, important_tags, threshold, minWordLength);
 	    log.info("Word separation finished\n");
 	    
 	    // Reset index
@@ -221,19 +199,43 @@ public class WorkflowMovie {
 	    weighting.byWeightedMean(tags ,"third");
 	    log.info("Last time importance\n");
 	    
+	    // Output
+	    writer_tags.writeTagListCustomWeight(tags);
+	}
+	
+	public void exportInTableFormat()
+	{
+	    TagsToCSV writer_tag = new TagsToCSV("Tag.csv");
+	    TagsToCSV writer_track = new TagsToCSV("Track.csv");
+	    TagsToCSV writer_tt = new TagsToCSV("TT.csv");
+		
 	    writer_tag.writeTableTag(tags);
 	    writer_track.writeTableTrack(tags);    
 	    writer_tt.writeTableTT(tags);
-	    
-	    // Write out final tags with weight
-	    writer_taglist.writeTagListCustomWeight(tags);
-	    
-	    
-		///////////////////////////////// 
-	    // TO JSON
-	    
+	}
+	
+	*/
+
+	public String getJSON()
+	{
 	    return help.objectToJsonString(tags);
 	}
 
+	public void getDbData()
+	{
+	    // Load config files
+	    InputStream input = null;
+	    
+		Properties dbconf = new Properties();
+	    try {
 
+	      input = new FileInputStream("config.db");
+	      dbconf.load(input);
+
+	    } catch (IOException e) { e.printStackTrace(); }
+		
+		Processor proc = new Processor(dbconf);
+		
+		proc.getAll();
+	}
 }

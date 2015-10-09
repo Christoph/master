@@ -1,6 +1,5 @@
 package server;
 
-import processing.WorkflowLast;
 import com.corundumstudio.socketio.*;
 
 
@@ -12,8 +11,7 @@ public class Server {
         config.setHostname("localhost");
         config.setPort(9092);
         final SocketIOServer server = new SocketIOServer(config);
-    	WorkflowLast work = new WorkflowLast();
-    	Transport transport = new Transport(work, server);
+    	Transport transport = new Transport(server);
     	
     	// Start transport layer
     	transport.initialize();

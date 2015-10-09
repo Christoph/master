@@ -17,24 +17,24 @@ function hexPlot() {
     var _chart = {};
     var formatCount = d3.format(".0f");
     var formatImportance = d3.format(".4f");
-    var dataPoints = [];
     var _width = 500, _height = 500, 
         _margins = {top: 30, left: 50, right: 50, bottom: 40},
         _binSize = 20,
         _title,
         _xName, _yName,
         _dimension, _dim, _text,
-        _data,
+        _data = [],
         _area,
         _x, _y,
         _xAxis, _yAxis,
         _xDomain, _yDomain,
-        _hexbin,
+        _hexbin, _dict,
         _zoom,
-        _dict,
+        _group, 
         _color = ["lightblue", "#3a3e4a"],
         _svg, _bodyG;
 
+var dataPoints = []
 
     //
     //
@@ -44,6 +44,8 @@ function hexPlot() {
     
     _chart.render = function () {
         if (!_svg) {
+           initializeData();
+
            definitions();
 
            initializeSkeleton();
@@ -57,29 +59,42 @@ function hexPlot() {
     
     //
     //
+    // Data
+    //
+    //
+    
+    function initializeData()
+    {
+        // Group tags by second axis
+        _group = _dimension.group();
+
+        _dict = d3.map(_group.all(), function(d) { return d.key; })
+    }
+    
+    //
+    //
     // Definitions
     //
     //
     
     function definitions()
     {
+        _xDomain = d3.extent(_dimension.top(Infinity), function(d) { return d[_dim]; });
+        _yDomain = d3.extent(_group.all(), function(d) { return d.value; });
+
         // Color scale
         _color = d3.scale.linear()
-            .domain([0,4])
+            .domain([0,_group.all().length])
             .range(_color)
             .interpolate(d3.interpolateLab);
 
         // Get X scaling
-        _xDomain = d3.extent(_data, function(d) { return d.x; });
-
         _x = d3.scale.linear()
             .domain(_xDomain).nice()
             .range([0,quadrantWidth()]);
 
         
         // Get Y scaling
-        _yDomain = d3.extent(_data, function(d) { return d.y; });
-
         _y = d3.scale.linear()
             .domain(_yDomain).nice()
             .range([quadrantHeight(),0]);
@@ -104,9 +119,6 @@ function hexPlot() {
             .y(_y)
             .scaleExtent(d3.extent(_yDomain.concat(_xDomain)))
             .on("zoom", zoomed);
-
-        // Set initial mapping
-        _dict = d3.map(_data.map(function(d) { return {point: scalePoint([d.x, d.y]), text: d.text}; }), function(d) { return d.point; });
     }
 
     // 
@@ -139,7 +151,7 @@ function hexPlot() {
         _svg.append("text")
             .attr("class", "records")
             .attr("text-anchor", "start")
-            .attr("x",_width - 220)
+            .attr("x",_width - 120)
             .attr("y", 25)
             .on("click", showAll);
 
@@ -205,7 +217,13 @@ function hexPlot() {
 
     function renderBins() {
         // Prepare data structure
-        var data = _hexbin([].map.call(_data, function(d) { return scalePoint([d.x, d.y]); }));
+        var temp = _dimension.top(Infinity).map(function(d) { return {point: scalePoint([d[_dim], _dict.get(d[_text]).value]), text: d[_text]}; });
+
+        var data = _hexbin([].map.call(temp, function(d) { return d.point; }));
+        var dict = d3.map(temp, function(d) { return d.point; });
+
+        // erase temp
+        temp.length = 0;
 
         // Get data for the relaxation function
         dataPoints = [];
@@ -213,12 +231,11 @@ function hexPlot() {
             dataPoints.push({
                 x: d[0][0],
                 y: d[0][1],
-                label: _dict.get(d[0]).text,
+                label: dict.get(d[0]).text,
                 labelX: d[0][0],
                 labelY: d[0][1]
             })
         })
-
         // Groups
         var bin = _bodyG.selectAll(".hexagon")
             .data(data.filter(visibiltyFilter).filter(function(d) { return d.length > 1; }), function(d) { return d[0]; })
@@ -279,8 +296,8 @@ function hexPlot() {
             .remove();
 
         // Update text
-        d3.select(".records").text("show all tags: "+_data.length);
-        //relax();
+        d3.select(".records").text("show all tags: "+_group.all().filter(function(d) { return d.value > 0; }).length);
+        relax();
 }
 
     //
@@ -313,21 +330,13 @@ function hexPlot() {
         return _height - _margins.top - _margins.bottom;
     }
 
-    function getXDomain() {
-        return d3.extent(_data, function(d) { return d.y });
-    }
-
-    function getYDomain() {
-        return d3.extent(_data, function(d) { return d.y });
-    }
-
     function getCurrentXDomain() {
-        var domain = d3.extent(_data, function(d) { return d.x });
+        var domain = d3.extent(_dimension.top(Infinity), function(d) { return d[_dim] });
         return [domain[0]-(_xDomain[1]/15),domain[1]+(_xDomain[1]/15)];
     }
 
     function getCurrentYDomain() {
-        var domain = d3.extent(_data, function(d) { return d.y }); 
+        var domain = d3.extent(_group.all().filter(function(d) { return d.value > 0; }), function(d) { return d.value }); 
         return [domain[0]-(_yDomain[1]/20),domain[1]+(_yDomain[1]/20)];
     }
 
@@ -344,11 +353,7 @@ function hexPlot() {
     
     // Zoom functions
     function zoomed() {
-      // Update mapping
-      _dict = d3.map(_data.map(function(d) { return {point: scalePoint([d.x, d.y]), text: d.text}; }), function(d) { return d.point; });
-
       renderBins();
-
       _svg.select(".x.axis").call(_xAxis);
       _svg.select(".y.axis").call(_yAxis);
 
@@ -416,6 +421,15 @@ function hexPlot() {
     //
     //
 
+    _chart.updateData = function()
+    {
+        // Re render
+        renderBins();
+
+        // Reset zoom
+        reset();
+    }
+
     _chart.width = function (w) {
         if (!arguments.length) return _width;
         _width = w;
@@ -440,11 +454,13 @@ function hexPlot() {
         return _chart;
     };
 
-    _chart.json = function (d) {
-        if (arguments.length < 1) {
-            return _data;
+    _chart.dimension = function (d, x, t) {
+        if (arguments.length < 3) {
+            return _dimension, _dim, _text;
         }
-        _data = d;
+        _dimension = d;
+        _dim = x;
+        _text = t;
         return _chart;
     };
 
@@ -487,16 +503,18 @@ function histogram() {
         _xAxis, _yAxis,
         _xName, _yName,
         _svg,
-        _data,
-        _bins, _binWidth,
+        _group,
+        _bins,
         _ticks,
         _dimension,
         _filter, 
         _chartDiv,
+        _reloadAll,
         _hist,
         _histOccu,
         _xHist,
         _isNumeric,
+        _useDomain, _useProperty, _useFilter, _filtered,
         _brush, _gBrush,
         _bodyG;
     
@@ -511,6 +529,10 @@ function histogram() {
     
     _chart.render = function () {
         if (!_svg) {
+            chooseType();
+
+            initializeData();
+
             definitions();
 
             initialzeSkeleton();
@@ -518,6 +540,39 @@ function histogram() {
 
         renderBars();
     };
+ 
+    //
+    //
+    // Choose bin type
+    //
+    //
+    
+    function chooseType()
+    {
+        if(_isNumeric == true)
+        {
+            _useDomain = getXDomain;
+            _useFilter = filterNumeric;
+
+        }
+        else
+        {
+            _useDomain = getXOccurenceDomain;
+            _useFilter = filterText;
+        }
+    }
+
+    //
+    //
+    // Data
+    //
+    //
+    
+    function initializeData()
+    {
+        // Crossfilter
+        //_group = _filter.group();
+    }
 
     //
     //
@@ -529,20 +584,22 @@ function histogram() {
     {
         // Get X scaling
         _x = d3.scale.linear()
-            .domain(getXDomain()).nice()
+            .domain(_useDomain()).nice()
+            .range([0, quadrantWidth()]);
+
+        // Get hist bin scaling
+        _xHist = d3.scale.linear()
+            .domain(getXDomain())
             .range([0, quadrantWidth()]);
 
         // Histogram bins
         _ticks = _x.ticks(_bins);
 
-        // Compute bin width
-        _binWidth = (quadrantWidth() / (_ticks.length - 1))-1;
-
         // Generate histogram data
         _hist = d3.layout.histogram()
                 .bins(_ticks)
-                (_data.map(function(d) { return d.value; }));
-
+                (_dimension.top(Infinity).map(function(d) { return d[_useProperty]; }));
+            
         // Get Y scaling
          _y = d3.scale.linear()
         .domain(getYDomain())
@@ -573,7 +630,8 @@ function histogram() {
                 .attr("height", _height)
                 .attr("width", _width)
                 .style("background-color", "white")
-                .attr("class", "chart");
+                .attr("class", "chart")
+                .on("brush", _reloadAll);
 
         // title
         _svg.append("text")
@@ -680,7 +738,7 @@ function histogram() {
         // Update histogram data
         _hist = d3.layout.histogram()
                 .bins(_ticks)
-                (_data.map(function(d) { return d.value; }));
+                (_dimension.top(Infinity).map(function(d) { return d[_useProperty]; }));
 
         // Update
         var bar = _bodyG.selectAll(".bar")
@@ -691,11 +749,11 @@ function histogram() {
 
         bar.select("rect")
             .attr("x", 1)
-            .attr("width", _binWidth)
+            .attr("width", _x(_hist[0].dx) - 1)
             .attr("height", function(d) { return yStart() - _y(d.y); });
             
         bar.select("text")
-            .attr("x", _binWidth / 2)
+            .attr("x", _x(_hist[0].dx) / 2)
             .text(function(d) { return _formatCount(d.y); });
 
         // Exit
@@ -736,7 +794,11 @@ function histogram() {
     }
 
     function getXDomain() {
-        return d3.extent(_data, function(d) { return d.value; });
+        return d3.extent(_dimension.top(Infinity), function(d) { return d[_useProperty]; });
+    }
+
+    function getXOccurenceDomain() {
+        return d3.extent(_group.top(Infinity), function(d) { return d.value; });
     }
 
     function getYDomain() {
@@ -784,12 +846,16 @@ function histogram() {
       if ((extent1[1] - extent1[0]) < inc) {
           extent1[1] = extent1[0];
         _brush.clear();
-        removeFilter();
+        _filter.filterAll();
+        _reloadAll();
       }
       else
       {
         // Filter
-        filter(extent1);        
+        _useFilter(extent1);        
+
+        // Rerender everything except this chart
+        _reloadAll();
       }
 
       // Transition
@@ -798,15 +864,21 @@ function histogram() {
           .call(_brush.event);
     }
 
-    // Filter
-    function filter(extent1)
+    // Numeric filter
+    function filterNumeric(extent1)
     {
-        _filter(extent1, _chartDiv);
+        _filter.filter(extent1);
     }
 
-    function removeFilter()
+    // Text filter
+    function filterText(extent1)
     {
-        _filter([0,0], _chartDiv);
+        
+        _filtered = [].map.call(_group.all().filter(function(d) { return d.value >= extent1[0] && d.value < extent1[1] }), function(d) { return d.key; })
+
+        _filter.filter(function(d) {
+              return _filtered.indexOf(d) > -1;
+        });
     }
 
     // Update while brushing
@@ -815,9 +887,12 @@ function histogram() {
         if (!d3.event.sourceEvent) return; // only transition after input
 
         // Filter
-        //filter(_brush.extent());        
-    }
+        _useFilter(_brush.extent());        
 
+        // Rerender everything except this chart
+        _reloadAll();
+
+    }
     // 
     //
     // External function
@@ -854,21 +929,28 @@ function histogram() {
         return _chart;
     };
 
-    _chart.filter = function (f) {
-        if (!arguments.length) return _filter;
-        _filter = f;
-        return _chart;
-    };
-    
-    _chart.area = function (a) {
-        if (!arguments.length) return _chartDiv;
-        _chartDiv = a;
+    _chart.property = function (p) {
+        if (!arguments.length) return _useProperty;
+        _useProperty = p;
         return _chart;
     };
 
-    _chart.json = function (d) {
-        if (!arguments.length) return _data;
-        _data = d;
+    _chart.dimension = function (d,f) {
+        if (arguments.length<2) return _dimension, _filter;
+        _dimension = d;
+        _filter = f;
+        return _chart;
+    };
+
+    _chart.reloadAll = function (f) {
+        if (!arguments.length) return _reloadAll;
+        _reloadAll = f;
+        return _chart;
+    };
+
+    _chart.area = function (a) {
+        if (!arguments.length) return _chartDiv;
+        _chartDiv = a;
         return _chart;
     };
 

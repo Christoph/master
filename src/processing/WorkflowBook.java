@@ -78,7 +78,7 @@ public class WorkflowBook {
 	    //SimilarityReplacementCompleteEditDistance similarity = new SimilarityReplacementCompleteEditDistance();
 	    SimilarityComplex similarity = new SimilarityComplex();
 	    //SimilarityComplexFull similarity = new SimilarityComplexFull();
-	    Weighting weighting = new Weighting();
+	    WeightingLast weighting = new WeightingLast();
 
 	    Grouping_Simple grouping = new Grouping_Simple();
 	    Grouping complex_grouping = new Grouping();

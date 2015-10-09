@@ -75,7 +75,7 @@ public class WorkflowLast {
 		/////////////////////////////////
 	    // Variable initialization  
 	    SimilarityComplex similarity = new SimilarityComplex();
-	    Weighting weighting = new Weighting();
+	    WeightingLast weighting = new WeightingLast();
 
 	    TagsToCSV writer = new TagsToCSV("tags_nlp_pipeline.csv");
 		
@@ -93,11 +93,13 @@ public class WorkflowLast {
 		/////////////////////////////////
 	    // Algorithm
 	    
+	    // replace/remove characters
+	    
 	    // Remove blacklisted words
 	    help.removeBlacklistedWords(tags, blacklist);
 	    
 	    // Weighting
-	    weighting.byWeightedMean(tags, "weighting_nlp");
+	    weighting.byWeightedMean(tags, "weighting_nlp", false);
 	    
 	    // Similarity replacement
 	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"first", false);
@@ -136,7 +138,7 @@ public class WorkflowLast {
 		/////////////////////////////////
 	    // Variable initialization  
 		
-	    Weighting weighting = new Weighting();
+	    WeightingLast weighting = new WeightingLast();
 	    SimilarityComplex similarity = new SimilarityComplex();
 	    Regex regex = new Regex();
 	    
@@ -179,7 +181,7 @@ public class WorkflowLast {
 	    regex.replaceCustomWords(tags, synonyms,"synonyms");
 	    
 	    // Weighting words without filtering
-	    weighting.byWeightedMean(tags, "second");
+	    weighting.byWeightedMean(tags, "second", false);
 	    log.info("Second time importance\n");
 	    
 	    // Build popular tags dict on raw data
@@ -218,7 +220,7 @@ public class WorkflowLast {
 	    regex.replaceCustomWords(tags, messedup,"cleaning");
 	    
 	    // Weighting words as last step 
-	    weighting.byWeightedMean(tags ,"third");
+	    weighting.byWeightedMean(tags ,"third", false);
 	    log.info("Last time importance\n");
 	    
 	    // Output

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.Normalizer;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class ImportCSV {
 
@@ -55,6 +56,7 @@ public List<String> importCSV(String data)
   {
     List<String> lines;
     String[] temp;
+    String t;
 
     lines = importCSV(data);
     
@@ -62,9 +64,28 @@ public List<String> importCSV(String data)
     
     for(String l: lines)
     {
-    	temp = l.split(",");
+    	t = l.replace(", ", "; ").replace("\"", "");
+    	temp = t.split(",");
+    	temp[16] = temp[16].replace("; ", ", ");
+    	
+    	if(!temp[7].equals("\\N"))
+    	{
+    		try
+    		{
+    			tags.add(new TagMovie(Integer.parseInt(temp[0]), temp[1], Integer.parseInt(temp[7]), Integer.parseInt(temp[15]), temp[16], Integer.parseInt(temp[18]), Integer.parseInt(temp[17]), Integer.parseInt(temp[19]),0d));
+    		}
+    		catch(NumberFormatException e)
+    		{
+    			System.out.println(e.getMessage());
+    			/*
+    			for(String s: temp)
+    			{
+        			System.out.println(s);
+    			}
+    			*/
+    		}
+    	}
 
-    	tags.add(new TagMovie(Integer.parseInt(temp[0]), temp[1], Integer.parseInt(temp[7]), Integer.parseInt(temp[15]), temp[16], Integer.parseInt(temp[18]), Integer.parseInt(temp[17]), Integer.parseInt(temp[19]),0d));
 
     }
     return tags;

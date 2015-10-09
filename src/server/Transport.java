@@ -1,41 +1,32 @@
 package server;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 
-import processing.WorkflowLast;
+import processing.WorkflowMovie;
 
 public class Transport {
 
-	private WorkflowLast work;
+	//private WorkflowLast work;
+	private WorkflowMovie work = new WorkflowMovie();
 	private SocketIOServer server;
+	private Boolean initialized = false;
 	
-	protected Transport(WorkflowLast work, SocketIOServer server) {
+	protected Transport(SocketIOServer server) {
 		super();
-		this.work = work;
 		this.server = server;
 	}
 
 	public void initialize()
-	{	
-		List<String> charts = new ArrayList<String>();
-		
-		// Define all charts
-		charts.add("#hex1");
-		charts.add("#hist1");
-		
+	{			
 		// Connection
 		server.addConnectListener(new ConnectListener() {
 			
 			public void onConnect(SocketIOClient client) {
-				System.out.println("Connected to :"+client.toString());
+				System.out.println("Connected to :"+client.getSessionId());
 			}
 		});
 		
@@ -45,41 +36,33 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				if(data.equals("init"))
-				{					
+				if(!initialized)
+				{
 					// Initialize data
-					work.init(charts);
-					
-					for(String chart: charts)
-					{
-						System.out.println("update start");
-						client.sendEvent(chart, work.updateData(chart));
-						System.out.println("update end");
-					}
+					work.init();
+					initialized = true;
 				}
-				else
-				{
-					System.out.println(data);
-				}
-			}
-        });
-		
-		// Filter
-        server.addEventListener("filter", FilterJson.class, new DataListener<FilterJson>() {
-
-			public void onData(SocketIOClient client, FilterJson data,
-					AckRequest arg2) throws Exception {
 				
-				// Redraw all except himself
-				for(String chart: charts.stream()
-					    .filter(p -> !p.contains(data.getChartDiv()))
-					    .collect(Collectors.toList()))
-				{
-					work.filter(data.getLower(), data.getUpper(), chart, "bla");
-					
-					client.sendEvent(chart, work.updateData(chart));
-				}
+				System.out.println("update start");
+				
+				client.sendEvent("data", work.getJSON());
+				
+				System.out.println("update end");
 			}
         });
+        
+        // Run 
+        server.addEventListener("run", String.class, new DataListener<String>() {
+
+			@Override
+			public void onData(SocketIOClient client, String data, AckRequest arg2)
+					throws Exception {
+				
+				work.nlpPipeline();
+				
+				// Redraw all
+				client.sendEvent("data", work.getJSON());
+			}
+		});
 	}
 }

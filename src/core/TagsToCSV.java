@@ -13,7 +13,7 @@ public class TagsToCSV {
 
 	public TagsToCSV(String file) {
 		try {
-			writer = new FileWriter(file);
+			writer = new FileWriter("output/"+file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
