@@ -50,7 +50,7 @@ public class WeightingLast {
 	    {
 	    	listeners = t.getListeners();
 	    	playcount = t.getPlaycount();
-	    	lastfmweight = t.getLastFMWeight();
+	    	lastfmweight = t.getTagWeight();
 	    	
 	    	// If the playcount is negative I ignore it
 	    	if(playcount <= 0) 

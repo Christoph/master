@@ -6,9 +6,9 @@ public class TagMovie extends Tag{
 	private int tagWeight;
 	
 	public TagMovie(int ID, String title, int rtCriticScore,
-			int rtAudienceScore, String tagName, int tagID, int movieID,
+			int rtAudienceScore, String tagName, String originalTagName, int tagID, int movieID,
 			int tagWeight, double importance) {
-		super(ID, title, tagName, movieID, tagID, importance);
+		super(ID, title, tagName, originalTagName, movieID, tagID, importance);
 		
 		this.rtCriticScore = rtCriticScore;
 		this.rtAudienceScore = rtAudienceScore;

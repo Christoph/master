@@ -1,26 +1,17 @@
 package core;
 
 public class TagLast extends Tag {
-	private int lastFMWeight;
+	private int tagWeight;
 	private int listeners;
 	private int playcount;
 	private int ArtistID;
-	private String originalTagName;
 	
-	public TagLast(int TTID, String tagName, int playcount, int tagID, double importance, int LastFMWeight, int songID, String songName, int listeners, int ArtistID ) {
-		super(TTID, songName, tagName, songID, tagID, importance);
+	public TagLast(int TTID, String tagName, String originalTagName, int playcount, int tagID, double importance, int LastFMWeight, int songID, String songName, int listeners, int ArtistID ) {
+		super(TTID, songName, tagName, originalTagName, songID, tagID, importance);
 		this.playcount = playcount;
 		this.listeners = listeners;
 		this.ArtistID = ArtistID;
-		this.lastFMWeight = LastFMWeight;
-	}
-	
-	public int getLastFMWeight() {
-		return lastFMWeight;
-	}
-	
-	public String getOriginalTagName() {
-		return originalTagName;
+		this.tagWeight = LastFMWeight;
 	}
 
 	public int getArtistID() {
@@ -41,5 +32,13 @@ public class TagLast extends Tag {
 
 	public void setPlaycount(int playcount) {
 		this.playcount = playcount;
+	}
+
+	public int getTagWeight() {
+		return tagWeight;
+	}
+
+	public void setTagWeight(int tagWeight) {
+		this.tagWeight = tagWeight;
 	}
 }

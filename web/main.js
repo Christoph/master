@@ -30,7 +30,9 @@ socket.on("data", function(d) {
     console.log(temp);
 
     resetData(cf,[byImportance, filterByImportance]);
+    console.log("Reset finished")
     cf.add(temp);
+    console.log("Add finished")
 
     renderAll();
 });

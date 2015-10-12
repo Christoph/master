@@ -171,7 +171,7 @@ public class TagsToCSV {
 		for(TagLast t:data)
 		{
 			try {
-				writer.write(t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+"\n");
+				writer.write(t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getTagWeight()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -192,7 +192,7 @@ public class TagsToCSV {
 		for(TagLast t:data)
 		{
 			try {
-				writer.write(t.getID()+","+t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+","+t.getImportance()+","+t.getArtistID()+"\n");
+				writer.write(t.getID()+","+t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getTagWeight()+","+t.getImportance()+","+t.getArtistID()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -249,7 +249,7 @@ public class TagsToCSV {
 		for(TagLast t:data)
 		{
 			try {
-				writer.write(t.getID()+","+t.getCarrierID()+","+t.getTagID()+","+t.getLastFMWeight()+","+t.getImportance()+"\n");
+				writer.write(t.getID()+","+t.getCarrierID()+","+t.getTagID()+","+t.getTagWeight()+","+t.getImportance()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -306,7 +306,7 @@ public class TagsToCSV {
 		}
 		
 		try {
-			writer.write(t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getLastFMWeight()+"\n");
+			writer.write(t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getTagWeight()+"\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

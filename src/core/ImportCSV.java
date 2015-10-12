@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.Normalizer;
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class ImportCSV {
 
@@ -46,7 +45,7 @@ public List<String> importCSV(String data)
     {
     	temp = l.split(",");
 
-    	tags.add(new TagLast(Integer.parseInt(temp[0]), temp[6].replace("\"", ""), Integer.parseInt(temp[4]), Integer.parseInt(temp[5]), Double.parseDouble(temp[8]), Integer.parseInt(temp[7]), Integer.parseInt(temp[1]),temp[2].replace("\"", ""), Integer.parseInt(temp[3]),Integer.parseInt(temp[9])));
+    	tags.add(new TagLast(Integer.parseInt(temp[0]), temp[6].replace("\"", ""), temp[6].replace("\"", ""), Integer.parseInt(temp[4]), Integer.parseInt(temp[5]), Double.parseDouble(temp[8]), Integer.parseInt(temp[7]), Integer.parseInt(temp[1]),temp[2].replace("\"", ""), Integer.parseInt(temp[3]),Integer.parseInt(temp[9])));
 
     }
     return tags;
@@ -72,7 +71,7 @@ public List<String> importCSV(String data)
     	{
     		try
     		{
-    			tags.add(new TagMovie(Integer.parseInt(temp[0]), temp[1], Integer.parseInt(temp[7]), Integer.parseInt(temp[15]), temp[16], Integer.parseInt(temp[18]), Integer.parseInt(temp[17]), Integer.parseInt(temp[19]),0d));
+    			tags.add(new TagMovie(Integer.parseInt(temp[0]), temp[1], Integer.parseInt(temp[7]), Integer.parseInt(temp[15]), temp[16], temp[16], Integer.parseInt(temp[18]), Integer.parseInt(temp[17]), Integer.parseInt(temp[19]),0d));
     		}
     		catch(NumberFormatException e)
     		{
@@ -104,7 +103,7 @@ public List<String> importCSV(String data)
     {
     	temp = l.split(",");
 
-    	tags.add(new TagBook(Integer.parseInt(temp[0]), temp[1], temp[4], Integer.parseInt(temp[5]), Integer.parseInt(temp[6]), Integer.parseInt(temp[7]), 0d));
+    	tags.add(new TagBook(Integer.parseInt(temp[0]), temp[1], temp[4], temp[4], Integer.parseInt(temp[5]), Integer.parseInt(temp[6]), Integer.parseInt(temp[7]), 0d));
 
     }
     return tags;

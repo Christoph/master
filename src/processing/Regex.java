@@ -192,7 +192,7 @@ public class Regex {
 		  			String tagid = words.get(s).split(",")[0];
 		  			String importance = words.get(s).split(",")[1];
 		  			
-		  			tt.add(new TagLast(1, s.replace(" ", "-"), t.getPlaycount(), Integer.parseInt(tagid), Double.parseDouble(importance), t.getLastFMWeight(), t.getCarrierID(), t.getCarrierName(), t.getListeners(),t.getArtistID())); 	
+		  			tt.add(new TagLast(1, s.replace(" ", "-"), t.getOriginalTagName(), t.getPlaycount(), Integer.parseInt(tagid), Double.parseDouble(importance), t.getTagWeight(), t.getCarrierID(), t.getCarrierName(), t.getListeners(),t.getArtistID())); 	
 		  		
 		  		}
 		  		

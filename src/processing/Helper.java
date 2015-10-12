@@ -61,6 +61,26 @@ public class Helper {
 		  removeTagsWithoutWords(tags);
 	  }
 	  
+	  public void removeReplaceCharactersAndLowerCase(List<? extends Tag> tags, List<String> remove, List<String> replace)
+	  {
+		  String updated;    
+		  
+		  for(Tag tag: tags)
+		  {
+			  // Remove characters
+			  updated = tag.getTagName().toLowerCase().replaceAll(remove.toString(), "");
+			  
+			  // Replace characters
+			  for(String s: replace)
+			  {
+				  String temp[] = s.split(",");
+				  updated = updated.replaceAll(temp[0], temp[1]);
+			  }
+			  
+			  tag.setTagName(updated);
+		  }
+	  }
+	  
 	  public void correctTagsAndIDs(List<TagLast> data)
 	  {
 		  	// TagName: TagID
@@ -79,7 +99,7 @@ public class Helper {
 				ID = t.getCarrierID();
 				name = t.getTagName();
 				key = ID+name;
-				weight = t.getLastFMWeight();
+				weight = t.getTagWeight();
 
 				if(song_name.containsKey(key))
 				{
@@ -100,7 +120,7 @@ public class Helper {
 				ID = t.getCarrierID();
 				name = t.getTagName();
 				key = ID+name;
-				weight = t.getLastFMWeight();
+				weight = t.getTagWeight();
 
 				if(song_name.containsKey(key))
 				{

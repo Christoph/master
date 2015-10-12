@@ -4,13 +4,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import core.ImportCSV;
 import core.TagLast;
@@ -25,50 +23,16 @@ public class WorkflowLast {
     
     // Full data set
     private List<TagLast> tags;
-    
-    // Mapping for filtered data sets
-    Map<String, List<TagLast>> charts = new HashMap<String, List<TagLast>>();
-    
-	public void init(List<String> list)
+	
+	public void init()
 	{
+		log.info("Initialize\n");
+		
 	    // Load data
 	    tags = im.importLastTags("raw_subset_tags.csv");
 
 	    log.info("Data loaded\n");
-		
-	    // Create chart specific data set
-		for(String s: list)
-		{
-			charts.put(s, new ArrayList<TagLast>());
-			charts.get(s).addAll(tags);
-		}
 	}
-	
-	// Data to chart mappings	
-	public String updateData(String chart) {	
-		return help.objectToJsonString(charts.get(chart));
-	}
-	
-	// Filter function
-	public void filter(double lower, double upper, String chart, String dimension)
-	{		
-		// Clear filtered list
-		charts.get(chart).clear();
-		
-		if(lower == upper)
-		{
-			// Show all
-			charts.get(chart).addAll(tags);
-		}
-		else
-		{
-			// Apply new filter
-			charts.get(chart).addAll(tags.stream()
-				    .filter(p -> p.getImportance() >= lower)
-				    .filter(p -> p.getImportance() < upper)
-				    .collect(Collectors.toList()));
-		}
-	}	
 	
 	public void nlpPipeline()
 	{
@@ -89,11 +53,22 @@ public class WorkflowLast {
 	    blacklist.addAll(articles);
 	    blacklist.addAll(custom);
 	    blacklist.add("");
+	    
+	    List<String> remove = new ArrayList<String>();
+	    remove.add("'");
+	    
+	    List<String> replace = new ArrayList<String>();
+	    replace.add("-, ");
+	    replace.add("_, ");
+	    replace.add(":, ");
+	    replace.add(";, ");
+	    replace.add("/, ");
 
 		/////////////////////////////////
 	    // Algorithm
 	    
 	    // replace/remove characters
+	    help.removeReplaceCharactersAndLowerCase(tags, remove, replace);
 	    
 	    // Remove blacklisted words
 	    help.removeBlacklistedWords(tags, blacklist);
@@ -237,7 +212,7 @@ public class WorkflowLast {
 	    writer_track.writeTableTrack(tags);    
 	    writer_tt.writeTableTT(tags);
 	}
-
+	
 	public String getJSON()
 	{
 	    return help.objectToJsonString(tags);
