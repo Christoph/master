@@ -67,11 +67,11 @@ public class WorkflowLast {
 		/////////////////////////////////
 	    // Algorithm
 	    
-	    // replace/remove characters
-	    help.removeReplaceCharactersAndLowerCase(tags, remove, replace);
+	    // Characters
+	    removeReplaceCharacters(tags, remove, replace);
 	    
-	    // Remove blacklisted words
-	    help.removeBlacklistedWords(tags, blacklist);
+	    // Blacklist
+	    removeBlacklistedWords(tags, blacklist);
 	    
 	    // Weighting
 	    weighting.byWeightedMean(tags, "weighting_nlp", false);
@@ -86,6 +86,18 @@ public class WorkflowLast {
 	    
 	    // Output
 	    writer.writeTagListCustomWeight(tags);
+	}
+	
+	public void removeReplaceCharacters(List<TagLast> tags, List<String> remove, List<String> replace)
+	{
+	    // replace/remove characters
+	    help.removeReplaceCharactersAndLowerCase(tags, remove, replace);
+	}
+	
+	public void removeBlacklistedWords(List<TagLast> tags,List<String> blacklist)
+	{
+		// Remove blacklisted words
+	    help.removeBlacklistedWords(tags, blacklist);
 	}
 	
 	public void grouping()
@@ -118,10 +130,8 @@ public class WorkflowLast {
 	    Regex regex = new Regex();
 	    
 	    TagsToCSV writer_tags = new TagsToCSV("tags_Regex.csv");
-	    TagsToCSV writer_important = new TagsToCSV("important_tags.csv");
-	    TagsToCSV writer_important_filtered = new TagsToCSV("important_tags_filtered.csv");
 	    
-	    Map<String, String> important_tags = new LinkedHashMap<String, String>();
+	    Map<String, String> important_tags;
 	    
 	    List<String> subjective = im.importCSV("dicts/subjective.txt");
 	    List<String> synonyms = im.importCSV("dicts/synonyms.txt");
@@ -155,30 +165,11 @@ public class WorkflowLast {
 	    // Synonym replacing regex
 	    regex.replaceCustomWords(tags, synonyms,"synonyms");
 	    
-	    // Weighting words without filtering
-	    weighting.byWeightedMean(tags, "second", false);
-	    log.info("Second time importance\n");
-	    
-	    // Build popular tags dict on raw data
-	    important_tags = help.getImportantTags(tags, threshold, minWordLength);
-	    
-		writer_important.writeImportantTags(important_tags);
+	    // Important words
+	    important_tags = getImportantWords(tags, threshold, minWordLength);
 		
 	    // Remove subjective tags
-	    for(String s: subjective)
-	    {
-	    	if(important_tags.containsKey(s))
-	    	{
-	        	important_tags.remove(s); 
-	    	}
-	    	else
-	    	{
-	    		System.out.println(s);
-	    	}
-	    }
-	    
-	    writer_important_filtered.writeImportantTags(important_tags);
-	    log.info("Important tag extraction finished\n"); 
+	    removeSubjectiveWords(tags, subjective, important_tags);
 	    
 	    // Word separation
 	    // Find important words in the unimportant tags
@@ -200,6 +191,45 @@ public class WorkflowLast {
 	    
 	    // Output
 	    writer_tags.writeTagListCustomWeight(tags);
+	}
+	
+	public Map<String, String> getImportantWords(List<TagLast> tags, double threshold, int minWordLength)
+	{
+	    TagsToCSV writer_important = new TagsToCSV("important_tags.csv");
+	    WeightingLast weighting = new WeightingLast();
+	    Map<String, String> important_tags = new LinkedHashMap<String, String>();
+		
+		// Weighting words
+	    weighting.byWeightedMean(tags, "second", false);
+	    log.info("Second time importance\n");
+	    
+	    // Build popular tags dict on raw data
+	    important_tags = help.getImportantTags(tags, threshold, minWordLength);
+	    
+		writer_important.writeImportantTags(important_tags);
+		
+		return important_tags;
+	}
+	
+	public void removeSubjectiveWords(List<TagLast> tags, List<String> subjective, Map<String, String> important_tags)
+	{
+	    TagsToCSV writer_important_filtered = new TagsToCSV("important_tags_filtered.csv");
+		
+	    // Remove subjective tags
+	    for(String s: subjective)
+	    {
+	    	if(important_tags.containsKey(s))
+	    	{
+	        	important_tags.remove(s); 
+	    	}
+	    	else
+	    	{
+	    		System.out.println(s);
+	    	}
+	    }
+	    
+	    writer_important_filtered.writeImportantTags(important_tags);
+	    log.info("Important tag extraction finished\n"); 
 	}
 	
 	public void exportInTableFormat()
