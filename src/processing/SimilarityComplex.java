@@ -66,21 +66,25 @@ public class SimilarityComplex {
 	    	{
 	    		key = words.get(j); 		
 	    		
-	    		if(tag_words.containsKey(key))
+	    		// Only use words with more than 2 characters and at least one none numeric character
+	    		if(key.length()>=3 && !key.matches("^\\d+$"))
 	    		{
-	    			value = tag_words.get(key);
-	    			
-	    			// Find max
-	    			if(value < tags.get(i).getImportance())
-	    			{
-	    				tag_words.put(key, tags.get(i).getImportance());
-	    			}
-	    		}
-	    		else
-	    		{
-	    			value = tags.get(i).getImportance();
-	    			
-	    			tag_words.put(key, value);
+		    		if(tag_words.containsKey(key))
+		    		{
+		    			value = tag_words.get(key);
+		    			
+		    			// Find max
+		    			if(value < tags.get(i).getImportance())
+		    			{
+		    				tag_words.put(key, tags.get(i).getImportance());
+		    			}
+		    		}
+		    		else
+		    		{
+		    			value = tags.get(i).getImportance();
+		    			
+		    			tag_words.put(key, value);
+		    		}
 	    		}
 	    	}
 	    }
@@ -113,6 +117,8 @@ public class SimilarityComplex {
 	    int part = psize/30;
 	    int iter = 0;
 	    
+	    System.out.println(psize);
+	    
 	    // Iterate over all phonetic codes
 	      for(String phon: phonetic_groups.keySet())
 	      {
@@ -131,7 +137,7 @@ public class SimilarityComplex {
 	          // Get all phonetics with a edit distance of 1
 	          for(String p: phonetic_groups.keySet())
 	          {
-	        	  if(dla.execute(p, phon)<2)
+	        	  if(dla.execute(p, phon)<1)
 	        	  {
 	        		  group.add(p);
 	        	  }

@@ -22,7 +22,10 @@ public class Transport {
 	}
 
 	public void initialize()
-	{			
+	{
+		work.init();
+		work.nlpPipeline();
+		
 		// Connection
 		server.addConnectListener(new ConnectListener() {
 			

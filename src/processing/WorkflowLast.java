@@ -69,20 +69,24 @@ public class WorkflowLast {
 	    
 	    // Characters
 	    removeReplaceCharacters(tags, remove, replace);
+	    log.info("Character editing finished\n");
 	    
 	    // Blacklist
 	    removeBlacklistedWords(tags, blacklist);
+	    log.info("Blacklist finished\n");
 	    
 	    // Weighting
 	    weighting.byWeightedMean(tags, "weighting_nlp", false);
+	    log.info("Weighting finished\n");
 	    
 	    // Similarity replacement
-	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"first", false);
+	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"first", true);
+	    log.info("1st similiarity replacement finished\n");
 	    
 	    // Resolve errors from replacements
 	    help.correctTagsAndIDs(tags);
 	    help.removeTagsWithoutWords(tags);
-	    log.info("1st similiarity replacement finished\n");
+	    log.info("Correction finished\n");
 	    
 	    // Output
 	    writer.writeTagListCustomWeight(tags);
