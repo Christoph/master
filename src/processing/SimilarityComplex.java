@@ -26,6 +26,7 @@ public class SimilarityComplex {
 	    TagsToCSV writer_subs_count;
 		
 	    Map<String, Double> tag_words = new HashMap<String, Double>();
+	    Map<String, HashSet<String>> tag_2grams = new HashMap<String, HashSet<String>>();
 	    Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
 	    Map<String, String> substitution_list = new HashMap<String, String>();
 	    
@@ -57,7 +58,7 @@ public class SimilarityComplex {
 		/////////////////////////////////
 		// Algorithm		
 		
-	    // Create a 1-word-gram/max weight dict
+	    // Create a 1-word-gram/max weight dict and a 1-word-gram/2-character-gram list
 	    for(int i = 0;i < tags.size(); i++)
 	    {
 	    	words = psim.create_word_gram(tags.get(i).getTagName());
@@ -84,6 +85,9 @@ public class SimilarityComplex {
 		    			value = tags.get(i).getImportance();
 		    			
 		    			tag_words.put(key, value);
+		    			
+		    			// Compute the 2-gram for all words
+		    			tag_2grams.put(key, psim.create_n_gram(key, ngram_size));
 		    		}
 	    		}
 	    	}
@@ -128,8 +132,8 @@ public class SimilarityComplex {
 	    		  System.out.print("->"+iter);
 	    	  }
 	    	  
-	        group.clear();
-	        word_group.clear();
+	          group.clear();
+	          word_group.clear();
 	    	
 	          // Get all words with the same phonetic code
 	          String high = "";
@@ -162,57 +166,57 @@ public class SimilarityComplex {
 	              }
 	            }
 	            
+	            // Remove the most important word from the list
+	            // This word is treated as truth
 	            word_group.remove(high);
+	            
+	            // Compute 2-gram character set of the most important word
+	            h2 = tag_2grams.get(high);
 	            
 	            // Iterate over the phonetic similar words and find similar words with distance methods
 	            for(Iterator<String> iterator = word_group.iterator(); iterator.hasNext();)
 	            {
-	              String word = iterator.next();
-	              
-	              if(!substitution_list.containsKey(word))
-	              {
-		              similarity = 0;
+		              String word = iterator.next();
 		              
-		              h1 = psim.create_n_gram(word, ngram_size);
-		              h2 = psim.create_n_gram(high, ngram_size);
-		              
-		              // Choose distance methods
-		              similarity = psim.jaccard_index(h1, h2);
-		              
-		              // Check if the ngram method gives a similarity > threshold
-		              if(similarity > threshold)
+		              if(!substitution_list.containsKey(word))
 		              {
-		                substitution_list.put(word, high);
-		                iterator.remove();
-		              }  
-	              }
-	              else
-	              {
-	            	  similarity = 0;
-	            	  similarity2 = 0;
-		              
-		              h1 = psim.create_n_gram(word, ngram_size);
-		              h2 = psim.create_n_gram(high, ngram_size);
-		              
+			              similarity = 0;
+			              
+			              h1 = tag_2grams.get(word);
+			              
+			              // Choose distance methods
 			              similarity = psim.jaccard_index(h1, h2);
 			              
-			              h3 = psim.create_n_gram(substitution_list.get(word), ngram_size);
-			              
-			              similarity2 = psim.jaccard_index(h1, h3);
-			              
-		            	  // Replace old substitution if the new one is better
-			              if(similarity >= similarity2)
-			              {          	  
-				                substitution_list.put(word, high);
-					            iterator.remove();
-			              }
+			              // Check if the ngram method gives a similarity > threshold
+			              if(similarity > threshold)
+			              {
+			                substitution_list.put(word, high);
+			                iterator.remove();
+			              }  
 		              }
-		            }
-		          } 
-		        }   
-	      
-	    tag_words = null;
-	    phonetic_groups = null;
+		              else
+		              {
+		            	  similarity = 0;
+		            	  similarity2 = 0;
+			              
+			              h1 = tag_2grams.get(word);
+			              h3 = tag_2grams.get(substitution_list.get(word));
+			              
+			              similarity = psim.jaccard_index(h1, h2);
+			              similarity2 = psim.jaccard_index(h1, h3);
+				              
+			            	  // Replace old substitution if the new one is better
+				              if(similarity >= similarity2)
+				              {          
+				            	  System.out.println(word+":"+similarity2+"->"+similarity);
+				            	  
+					              substitution_list.put(word, high);
+						          iterator.remove();
+				              }
+			            }
+	            	}
+	          } 
+		}   
 	    
 	    // Export substitution list
 	    if(print_substitutions)

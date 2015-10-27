@@ -1,5 +1,8 @@
 package core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Tag {
 	private int ID;
 	private String carrierName;
@@ -8,6 +11,7 @@ public class Tag {
 	private int carrierID;
 	private int tagID;
 	private double importance;
+	private List<String> history;
 	
 	public Tag(int ID, String carrier, String tagName, String originalTagName, int carrierID,
 			int tagID, double importance) {
@@ -19,6 +23,8 @@ public class Tag {
 		this.tagID = tagID;
 		this.importance = importance;
 		this.originalTagName = originalTagName;
+		
+		this.history = new ArrayList<String>();
 	}
 	
 	public int getID() {
@@ -37,6 +43,9 @@ public class Tag {
 		return tagName;
 	}
 	public void setTagName(String tagName) {
+		// Add each change in the tag name to the history
+		if(!history.contains(tagName)) history.add(tagName);
+		
 		this.tagName = tagName;
 	}
 	public int getCarrierID() {
@@ -63,5 +72,10 @@ public class Tag {
 	public void setOriginalTagName(String originalTagName) {
 		this.originalTagName = originalTagName;
 	}
-	
+	public List<String> getHistory() {
+		return history;
+	}
+	public void addHistoryStep(String step) {
+		history.add(step);
+	}
 }

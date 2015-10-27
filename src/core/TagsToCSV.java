@@ -206,6 +206,30 @@ public class TagsToCSV {
 		}
 	}
 	
+	public void writeTagListWithHistory(List<TagLast> data) {
+		
+		createHeader("ID,SongID,SongName,Listeners,Playcount,TagID,TagName,LastFMWeight,Importance,ArtistID,History");
+		String temp = "";
+
+		for(TagLast t:data)
+		{
+			try {
+				temp = t.getHistory().toString();
+				
+				writer.write(t.getID()+","+t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getTagWeight()+","+t.getImportance()+","+t.getArtistID()+","+temp+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void writeTableTag(List<TagLast> data) {
 		
 		createHeader("ID,Name,Importance");

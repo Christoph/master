@@ -30,6 +30,12 @@ public class WorkflowLast {
 		
 	    // Load data
 	    tags = im.importLastTags("raw_subset_tags.csv");
+	    
+	    // Set first history step
+	    for(TagLast t: tags)
+	    {
+	    	t.addHistoryStep(t.getOriginalTagName());
+	    }
 
 	    log.info("Data loaded\n");
 	}
@@ -89,7 +95,7 @@ public class WorkflowLast {
 	    log.info("Correction finished\n");
 	    
 	    // Output
-	    writer.writeTagListCustomWeight(tags);
+	    writer.writeTagListWithHistory(tags);
 	}
 	
 	public void removeReplaceCharacters(List<TagLast> tags, List<String> remove, List<String> replace)
