@@ -15,7 +15,6 @@ import core.TagsToCSV;
 
 public class SimilarityComplex {
 	
-	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(2, 2, 1, 2);
     PlainStringSimilarity psim = new PlainStringSimilarity();
 	
     Map<String, Double> tag_words = new HashMap<String, Double>();
@@ -31,7 +30,6 @@ public class SimilarityComplex {
 	    TagsToCSV writer_subs;
 	    TagsToCSV writer_subs_count;
 	    
-	    Set<String> group = new HashSet<String>();
         Set<String> word_group = new HashSet<String>();
         
 	    List<String> words;
@@ -131,28 +129,10 @@ public class SimilarityComplex {
 	    		  System.out.print("->"+iter);
 	    	  }
 	    	  
-	          group.clear();
 	          word_group.clear();
 	    	
 	          // Get all words with the same phonetic code
 	          String high = "";
-	          
-	          /*
-	          // Get all phonetics with a edit distance of 1
-	          for(String p: phonetic_groups.keySet())
-	          {
-	        	  if(dla.execute(p, phon)<1)
-	        	  {
-	        		  group.add(p);
-	        	  }
-	          }
-	          
-	          // Get all corresponding groups
-	          for(String c: group)
-	          {
-	        	  word_group.addAll(phonetic_groups.get(c));
-	          }
-	          */
 	          
 	          word_group.addAll(phonetic_groups.get(phon));
 	          
@@ -188,75 +168,6 @@ public class SimilarityComplex {
 		          
 		          findSimilarities(word_group, high, threshold);
 		        }
-	          /*
-	          while(!word_group.isEmpty())
-	          {
-	            importance = 0;
-	            
-	            // Find most important words
-	            
-	            // Find the word with the highest importance count
-	            for(String s: word_group)
-	            {
-	              if(tag_words.get(s) >= importance)
-	              {
-	                high = s;
-	                importance = tag_words.get(s);
-	              }
-	            }
-	            
-	            // Remove the most important word from the list
-	            // This word is treated as truth
-	            word_group.remove(high);
-	            
-	            // Compute 2-gram character set of the most important word
-	            h2 = tag_2grams.get(high);
-	            
-	            // Iterate over the phonetic similar words and find similar words with distance methods
-	            for(Iterator<String> iterator = word_group.iterator(); iterator.hasNext();)
-	            {
-		              String word = iterator.next();
-		              
-		              if(!substitution_list.containsKey(word))
-		              {
-			              similarity = 0;
-			              
-			              h1 = tag_2grams.get(word);
-			              
-			              // Choose distance methods
-			              similarity = psim.jaccard_index(h1, h2);
-			              
-			              // Check if the ngram method gives a similarity > threshold
-			              if(similarity > threshold)
-			              {
-			                substitution_list.put(word, high);
-			                iterator.remove();
-			              }  
-		              }
-		              
-		              else
-		              {
-		            	  similarity = 0;
-		            	  similarity2 = 0;
-			              
-			              h1 = tag_2grams.get(word);
-			              h3 = tag_2grams.get(substitution_list.get(word));
-			              
-			              similarity = psim.jaccard_index(h1, h2);
-			              similarity2 = psim.jaccard_index(h1, h3);
-				              
-		            	  // Replace old substitution if the new one is better
-			              if(similarity >= similarity2)
-			              {          
-			            	  System.out.println(word+":"+similarity2+"->"+similarity);
-			            	  
-				              substitution_list.put(word, high);
-					          iterator.remove();
-			              }
-			           }
-	            	}
-	          } 
-	          */
 		}   
 	    
 	    // Export substitution list
