@@ -16,19 +16,20 @@ import core.TagsToCSV;
 public class SimilarityComplex {
 	
 	DamerauLevenshteinAlgorithm dla = new DamerauLevenshteinAlgorithm(2, 2, 1, 2);
+    PlainStringSimilarity psim = new PlainStringSimilarity();
 	
-	public void withPhoneticsAndNgrams(List<? extends Tag> tags, float threshold, String filename_suffix, Boolean verbose)
+    Map<String, Double> tag_words = new HashMap<String, Double>();
+    Map<String, HashSet<String>> tag_2grams = new HashMap<String, HashSet<String>>();
+    Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
+    Map<String, String> substitution_list = new HashMap<String, String>();
+	
+	public void withPhoneticsAndNgrams(List<? extends Tag> tags, float threshold, String filename_suffix, List<String> whiteList, Boolean verbose)
 	{
 	    /////////////////////////////////
 	    // Variables
-	    PlainStringSimilarity psim = new PlainStringSimilarity();
+
 	    TagsToCSV writer_subs;
 	    TagsToCSV writer_subs_count;
-		
-	    Map<String, Double> tag_words = new HashMap<String, Double>();
-	    Map<String, HashSet<String>> tag_2grams = new HashMap<String, HashSet<String>>();
-	    Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
-	    Map<String, String> substitution_list = new HashMap<String, String>();
 	    
 	    Set<String> group = new HashSet<String>();
         Set<String> word_group = new HashSet<String>();
@@ -36,11 +37,9 @@ public class SimilarityComplex {
 	    List<String> words;
 	    Set<String> temp;
 	    double value, importance;
-	    float similarity, similarity2;
 	    int ngram_size;
 	    String key, phonetic, new_tag;
 	    Boolean print_substitutions;
-	    HashSet<String> h1, h2, h3;
 	    
 		/////////////////////////////////
 		// Configuration
@@ -138,6 +137,7 @@ public class SimilarityComplex {
 	          // Get all words with the same phonetic code
 	          String high = "";
 	          
+	          /*
 	          // Get all phonetics with a edit distance of 1
 	          for(String p: phonetic_groups.keySet())
 	          {
@@ -147,14 +147,53 @@ public class SimilarityComplex {
 	        	  }
 	          }
 	          
+	          // Get all corresponding groups
 	          for(String c: group)
 	          {
 	        	  word_group.addAll(phonetic_groups.get(c));
 	          }
-	
+	          */
+	          
+	          word_group.addAll(phonetic_groups.get(phon));
+	          
+	          // Find white listed words and prioritize them
+		      for(String s: whiteList)
+		      {
+		    	  if(word_group.contains(s))
+		    	  {
+	        		  word_group.remove(s);
+	        		  
+			          findSimilarities(word_group, s, threshold);
+		    	  }
+		      }
+	          
+	          	// Go over all remaining words
+		  		while(!word_group.isEmpty())
+		        {
+		          importance = 0;
+		          
+		          // Find the word with the highest importance count
+		          for(String s: word_group)
+		          {
+		        	if(tag_words.get(s) >= importance)
+		            {
+		              high = s;
+		              importance = tag_words.get(s);
+		            }
+		          }
+		          
+		          // Remove the most important word from the list
+		          // This word is treated as truth
+		          word_group.remove(high);
+		          
+		          findSimilarities(word_group, high, threshold);
+		        }
+	          /*
 	          while(!word_group.isEmpty())
 	          {
 	            importance = 0;
+	            
+	            // Find most important words
 	            
 	            // Find the word with the highest importance count
 	            for(String s: word_group)
@@ -194,6 +233,7 @@ public class SimilarityComplex {
 			                iterator.remove();
 			              }  
 		              }
+		              
 		              else
 		              {
 		            	  similarity = 0;
@@ -205,17 +245,18 @@ public class SimilarityComplex {
 			              similarity = psim.jaccard_index(h1, h2);
 			              similarity2 = psim.jaccard_index(h1, h3);
 				              
-			            	  // Replace old substitution if the new one is better
-				              if(similarity >= similarity2)
-				              {          
-				            	  System.out.println(word+":"+similarity2+"->"+similarity);
-				            	  
-					              substitution_list.put(word, high);
-						          iterator.remove();
-				              }
-			            }
+		            	  // Replace old substitution if the new one is better
+			              if(similarity >= similarity2)
+			              {          
+			            	  System.out.println(word+":"+similarity2+"->"+similarity);
+			            	  
+				              substitution_list.put(word, high);
+					          iterator.remove();
+			              }
+			           }
 	            	}
 	          } 
+	          */
 		}   
 	    
 	    // Export substitution list
@@ -277,6 +318,59 @@ public class SimilarityComplex {
 	    }
 	    
 	    substitution_list = null;
+	}
+	
+	private void findSimilarities(Set<String> word_group, String high, float threshold)
+	{
+	    HashSet<String> h1, h2, h3;
+	    float similarity, similarity2;
+		
+        // Compute 2-gram character set of the most important word
+        h2 = tag_2grams.get(high);
+	    
+	      // Iterate over the phonetic similar words and find similar words with distance methods
+	      for(Iterator<String> iterator = word_group.iterator(); iterator.hasNext();)
+	      {
+	              String word = iterator.next();
+	              
+	              if(!substitution_list.containsKey(word))
+	              {
+		              similarity = 0;
+		              
+		              h1 = tag_2grams.get(word);
+		              
+		              // Choose distance methods
+		              similarity = psim.jaccard_index(h1, h2);
+		              
+		              // Check if the ngram method gives a similarity > threshold
+		              if(similarity > threshold)
+		              {
+		                substitution_list.put(word, high);
+		                iterator.remove();
+		              }  
+	              }
+	              
+	              else
+	              {
+	            	  similarity = 0;
+	            	  similarity2 = 0;
+		              
+		              h1 = tag_2grams.get(word);
+		              h3 = tag_2grams.get(substitution_list.get(word));
+		              
+		              similarity = psim.jaccard_index(h1, h2);
+		              similarity2 = psim.jaccard_index(h1, h3);
+			              
+	            	  // Replace old substitution if the new one is better
+		              if(similarity >= similarity2)
+		              {          
+		            	  System.out.println(word+":"+similarity2+"->"+similarity);
+		            	  
+			              substitution_list.put(word, high);
+				          iterator.remove();
+		              }
+		           }
+	      	}
 	}
 	
 }

@@ -53,8 +53,11 @@ public class WorkflowLast {
 	    List<String> articles = im.importCSV("dicts/article.txt");
 	    List<String> preps = im.importCSV("dicts/prep.txt");
 	    List<String> custom = im.importCSV("dicts/custom.txt");
-	    List<String> blacklist = new ArrayList<String>();
 	    
+	    List<String> whiteList = new ArrayList<String>();
+	    whiteList.add("favoritas");
+	    
+	    List<String> blacklist = new ArrayList<String>();
 	    blacklist.addAll(preps);
 	    blacklist.addAll(articles);
 	    blacklist.addAll(custom);
@@ -86,7 +89,7 @@ public class WorkflowLast {
 	    log.info("Weighting finished\n");
 	    
 	    // Similarity replacement
-	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"first", true);
+	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"first", whiteList, true);
 	    log.info("1st similiarity replacement finished\n");
 	    
 	    // Resolve errors from replacements
@@ -161,7 +164,7 @@ public class WorkflowLast {
 	    
 	    // Again similarity replacement
 	    // TODO should be replaced with regex
-	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"second", false);
+	    //similarity.withPhoneticsAndNgrams(tags, 0.65f,"second", false);
 	    
 	    // Resolve errors from replacements
 	    help.correctTagsAndIDs(tags);
