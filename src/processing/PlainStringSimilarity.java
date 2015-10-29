@@ -84,8 +84,6 @@ public class PlainStringSimilarity {
 
     if(text.contains(" "))
     {
-    	text = text.toLowerCase();
-    	
     	for(String s: text.split("\\s+"))
     	{
     		set.add(s);
@@ -124,8 +122,6 @@ public class PlainStringSimilarity {
 
 	    if(text.contains(" "))
 	    {
-	    	text = text.toLowerCase();
-	    	
 	    	for(String s: text.split("\\s+"))
 	    	{
 	    		set.add(s);
