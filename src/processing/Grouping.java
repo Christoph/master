@@ -8,11 +8,12 @@ import core.Tag;
 import core.TagsToCSV;
 
 public class Grouping {
-	public void groupBy(List<? extends Tag> tags, int size, double acceptance_value, String filename_suffix, Boolean verbose) {
+	
+	PlainStringSimilarity psim = new PlainStringSimilarity();
+	
+	public void jaccard(List<? extends Tag> tags, int size, double acceptance_value, Boolean verbose) {
 		/////////////////////////////////
 		// Variables
-		PlainStringSimilarity psim = new PlainStringSimilarity();
-		
 		TagsToCSV writer_groups;
 		TagsToCSV writer_acc;
 		
@@ -20,12 +21,11 @@ public class Grouping {
 		Map<String, Long> word_groups = new HashMap<String, Long>();
 		Map<String, Double> group_weight = new HashMap<String, Double>();
 		Map<String, Double> good_groups = new HashMap<String, Double>();
-	    Map<String, Double> subs = new HashMap<String, Double>();
 	    
-	    List<String> words, groups, temp;
+	    List<String> words;
 	    long value;
 		double nom, deno, strength, min_o = 1, max_o = 0;
-		String key, new_tag;
+		String key;
 		Boolean print_groups, print_accepted;
 		
 		/////////////////////////////////
@@ -38,7 +38,7 @@ public class Grouping {
 		/////////////////////////////////
 		// Algorithm
 		
-		// Create a 1-word-gram/total occurrences
+		// Create a 1-word-gram/total occurrences dict
 		for(int i = 0;i < tags.size(); i++)
 		{
 			words = psim.create_word_gram(tags.get(i).getTagName());
@@ -91,7 +91,7 @@ public class Grouping {
 			deno = 0;
 			
 			for(String s: words)
-			{
+			{	
 				deno = deno + word_count.get(s);
 			}
 			
@@ -104,8 +104,6 @@ public class Grouping {
 			if(strength >= max_o) max_o = strength;
 		}
 		
-		word_count = null;
-		
 		// Normalize
 		for(String s: group_weight.keySet())
 		{
@@ -115,24 +113,120 @@ public class Grouping {
 			if(strength >= acceptance_value) good_groups.put(s, strength);
 		}
 		
-		group_weight = null;
-		
 		// Write temp files
 	    if(print_groups) 
     	{
-	    	writer_groups = new TagsToCSV("groups_complex_"+filename_suffix+".csv");
+	    	writer_groups = new TagsToCSV("groups_jaccard_"+size+".csv");
 	    	writer_groups.writeTagOccu(word_groups);
     	}
 	    
-	    word_groups = null;
-	    
 	    if(print_accepted) 
     	{
-	    	writer_acc = new TagsToCSV("accepted_groups_complex_"+filename_suffix+".csv");
+	    	writer_acc = new TagsToCSV("accepted_jaccard_complex_"+size+".csv");
 	    	writer_acc.writeGroups(good_groups);
     	}
 	    
 	    // Replace tag groups
+	    replaceGroups(tags, good_groups, size);
+	    
+	}
+	
+	public void frequency(List<? extends Tag> tags, int size, double acceptance_value, Boolean verbose) {
+	    /////////////////////////////////
+	    // Variables
+		PlainStringSimilarity psim = new PlainStringSimilarity();
+		
+	    TagsToCSV writer_groups;
+	    TagsToCSV writer_acc;
+		
+	    Map<String, Long> word_count = new HashMap<String, Long>();
+	    Map<String, Double> good_groups = new HashMap<String, Double>();
+	    
+	    List<String> words;
+	    
+	    long value;
+	    double strength, min_o = 1, max_o = 0;
+	    String key;
+	    Boolean print_groups, print_accepted;
+	    
+		/////////////////////////////////
+		// Configuration
+	    
+		// Print temp files
+	    print_groups = verbose;
+		print_accepted = verbose;
+	    
+		/////////////////////////////////
+		// Algorithm
+		
+	    // Create a n-word-gram/total occurrences
+	    for(int i = 0;i < tags.size(); i++)
+	    {
+	    	words = psim.create_word_n_gram(tags.get(i).getTagName(),size);
+	    	
+	    	for(int j = 0; j < words.size(); j++)
+	    	{
+	    		key = words.get(j); 		
+
+	    		if(word_count.containsKey(key))
+	    		{
+	    			value = word_count.get(key);
+	    			
+	    			// Sum up the count
+	    			word_count.put(key, value + 1);
+	    		}
+	    		else
+	    		{
+	    			word_count.put(key, 1l);
+	    		}
+	    	}
+	    }
+	    
+	    // Find min and max
+	    for(long k: word_count.values())
+	    {   	    	
+	    	if(k < min_o) min_o = k;
+	    	if(k >= max_o) max_o = k;
+	    }
+	    
+	    // Normalize the range and move the accepted groups
+	    for(String s: word_count.keySet())
+	    {
+	    	strength = (word_count.get(s)-min_o)/(max_o - min_o);
+	    	
+	    	// Set acceptance border
+	    	if(strength >= acceptance_value) good_groups.put(s, strength);
+	    }
+	    
+	    // Write temp files
+	    if(print_groups) 
+    	{
+	    	writer_groups = new TagsToCSV("groups_frequency_"+size+".csv");
+	    	writer_groups.writeTagOccu(word_count);
+    	}
+	    
+	    word_count = null;
+	    
+	    if(print_accepted) 
+    	{
+	    	writer_acc = new TagsToCSV("accepted_groups_frequency_"+size+".csv");
+	    	writer_acc.writeGroups(good_groups);
+    	}
+	    
+	    // Replace tag groups
+	    replaceGroups(tags, good_groups, size);
+	    
+	}
+	
+	private void replaceGroups(List<? extends Tag> tags, Map<String, Double> good_groups, int size)
+	{
+	    Map<String, Double> subs = new HashMap<String, Double>();
+	    
+	    List<String> words, groups, temp;
+		double max_o = 0;
+		String key, new_tag;
+		
+		// Replace tag groups
 	    for(Tag t: tags)
 	    {	    	
 		  groups = psim.create_word_n_gram(t.getTagName(),size);
@@ -187,8 +281,5 @@ public class Grouping {
 	      // Replace tag name
 	      t.setTagName(new_tag.trim());
 	    }
-	    
-	    subs = null;
-	    good_groups = null;
 	}
 }

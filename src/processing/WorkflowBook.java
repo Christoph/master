@@ -80,8 +80,7 @@ public class WorkflowBook {
 	    //SimilarityComplexFull similarity = new SimilarityComplexFull();
 	    WeightingLast weighting = new WeightingLast();
 
-	    Grouping_Simple grouping = new Grouping_Simple();
-	    Grouping complex_grouping = new Grouping();
+	    Grouping grouping = new Grouping();
 	    Regex regex = new Regex();
 	    
 	    TagsToCSV writer_taglist = new TagsToCSV("tags_final.csv");
@@ -154,12 +153,12 @@ public class WorkflowBook {
 	    log.info("1st similiarity replacement finished\n");
 	    
 	    // Find word groups
-	    complex_grouping.groupBy(tags, 3,0.4d,"three", false);
-	    complex_grouping.groupBy(tags, 2,0.4d,"two", false);
+	    grouping.jaccard(tags, 3,0.4d,false);
+	    grouping.jaccard(tags, 2,0.4d,false);
 	    log.info("complex grouping finished\n");
 	    
-	    grouping.groupBy(tags, 3,0.1d,"three", false);
-	    grouping.groupBy(tags, 2,0.1d,"two",false);
+	    grouping.frequency(tags, 3,0.1d,false);
+	    grouping.frequency(tags, 2,0.1d,false);
 	    log.info("simple grouping finished\n");
 	    
 	    // Again similarity replacement

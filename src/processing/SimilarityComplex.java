@@ -227,8 +227,6 @@ public class SimilarityComplex {
 
 	      t.setTagName(new_tag.trim());
 	    }
-	    
-	    substitution_list = null;
 	}
 	
 	private void findSimilarities(Set<String> word_group, String high, float threshold)

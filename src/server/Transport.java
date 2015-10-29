@@ -24,7 +24,8 @@ public class Transport {
 	public void initialize()
 	{
 		work.init();
-		work.nlpPipeline();
+		//work.nlpPipeline();
+		work.grouping();
 		
 		// Connection
 		server.addConnectListener(new ConnectListener() {

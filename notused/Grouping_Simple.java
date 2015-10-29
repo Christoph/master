@@ -9,7 +9,7 @@ import core.TagsToCSV;
 
 public class Grouping_Simple {
 	
-	public void groupBy(List<? extends Tag> tags, int size, double acceptance_value, String filename_suffix, Boolean verbose) {
+	public void groupBy(List<? extends Tag> tags, int size, double acceptance_value, Boolean verbose) {
 	    /////////////////////////////////
 	    // Variables
 		PlainStringSimilarity psim = new PlainStringSimilarity();
@@ -80,7 +80,7 @@ public class Grouping_Simple {
 	    // Write temp files
 	    if(print_groups) 
     	{
-	    	writer_groups = new TagsToCSV("groups_simple_"+filename_suffix+".csv");
+	    	writer_groups = new TagsToCSV("groups_simple_"+size+".csv");
 	    	writer_groups.writeTagOccu(word_count);
     	}
 	    
@@ -88,7 +88,7 @@ public class Grouping_Simple {
 	    
 	    if(print_accepted) 
     	{
-	    	writer_acc = new TagsToCSV("accepted_groups_simple_"+filename_suffix+".csv");
+	    	writer_acc = new TagsToCSV("accepted_groups_simple_"+size+".csv");
 	    	writer_acc.writeGroups(good_groups);
     	}
 	    

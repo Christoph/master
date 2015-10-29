@@ -55,7 +55,7 @@ public class WorkflowLast {
 	    List<String> custom = im.importCSV("dicts/custom.txt");
 	    
 	    List<String> whiteList = new ArrayList<String>();
-	    whiteList.add("favoritas");
+	    //whiteList.add("favoritas");
 	    
 	    List<String> blacklist = new ArrayList<String>();
 	    blacklist.addAll(preps);
@@ -90,13 +90,12 @@ public class WorkflowLast {
 	    
 	    // Similarity replacement
 	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"first", whiteList, true);
-	    log.info("1st similiarity replacement finished\n");
 	    
 	    // Resolve errors from replacements
 	    help.correctTagsAndIDs(tags);
 	    help.removeTagsWithoutWords(tags);
-	    log.info("Correction finished\n");
-	    
+	    log.info("1st similiarity replacement finished\n");
+
 	    // Output
 	    writer.writeTagListWithHistory(tags);
 	}
@@ -115,19 +114,24 @@ public class WorkflowLast {
 	
 	public void grouping()
 	{
-	    Grouping_Simple grouping = new Grouping_Simple();
-	    Grouping complex_grouping = new Grouping();
+	    Grouping grouping = new Grouping();
+	    
+	    int maxGroupSize = 3;
 	
 	    TagsToCSV writer = new TagsToCSV("tags_grouping.csv");
 	    
 		// Find word groups
-	    complex_grouping.groupBy(tags, 3,0.4d,"three", false);
-	    complex_grouping.groupBy(tags, 2,0.4d,"two", false);
-	    log.info("complex grouping finished\n");
+	    for(int i = 2; i<=maxGroupSize;i++)
+	    {
+	    	grouping.jaccard(tags, i,0.4d, true);
+	    }
+	    log.info("jaccard grouping finished\n");
 	    
-	    grouping.groupBy(tags, 3,0.1d,"three", false);
-	    grouping.groupBy(tags, 2,0.1d,"two", false);
-	    log.info("simple grouping finished\n");
+	    for(int i = 2; i<=maxGroupSize;i++)
+	    {
+		    grouping.frequency(tags, i,0.1d, true);
+	    }
+	    log.info("frequency grouping finished\n");
 	    
 	    // Output
 	    writer.writeTagListCustomWeight(tags);
