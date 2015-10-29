@@ -134,15 +134,20 @@ public class WorkflowLast {
 		// Find word groups
 	    for(int i = 2; i<=maxGroupSize;i++)
 	    {
-	    	grouping.jaccard(tags, i,0.4d, true);
+	    	grouping.jaccard(tags, i, 0.4d, true);
 	    }
 	    log.info("jaccard grouping finished\n");
 	    
 	    for(int i = 2; i<=maxGroupSize;i++)
 	    {
-		    grouping.frequency(tags, i,0.1d, true);
+	    	grouping.frequency(tags, i, 0.1d, true);
 	    }
 	    log.info("frequency grouping finished\n");
+	    
+	    // Find oneword groups and replace them by the group
+	    // hardrock -> hard-rock
+	    grouping.findGroups(tags, true);
+	    log.info("group searching finished\n");
 	    
 	    // Output
 	    writer.writeTagListCustomWeight(tags);
@@ -154,7 +159,6 @@ public class WorkflowLast {
 	    // Variable initialization  
 		
 	    WeightingLast weighting = new WeightingLast();
-	    SimilarityComplex similarity = new SimilarityComplex();
 	    Regex regex = new Regex();
 	    
 	    TagsToCSV writer_tags = new TagsToCSV("tags_Regex.csv");
@@ -176,19 +180,6 @@ public class WorkflowLast {
 
 		///////////////////////////////// 
 	    // Algorithm
-	    
-	    // Again similarity replacement
-	    // TODO should be replaced with regex
-	    //similarity.withPhoneticsAndNgrams(tags, 0.65f,"second", false);
-	    
-	    // Resolve errors from replacements
-	    help.correctTagsAndIDs(tags);
-	    help.removeTagsWithoutWords(tags);
-	    log.info("2st similiarity replacement finished\n");
-	    
-	    
-	    
-	    
 	    
 	    // Synonym replacing regex
 	    regex.replaceCustomWords(tags, synonyms,"synonyms");

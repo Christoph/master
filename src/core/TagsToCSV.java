@@ -122,6 +122,27 @@ public class TagsToCSV {
 		}
 	}
 	
+	public void writeFound(List<String> groups)
+	{		
+	    createHeader("Found -> Group");
+		
+		for(String s:groups)
+		{
+			try {
+				writer.write(s+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void writeTagOccu(Map<String, Long> word_groups)
 	{		
 	    createHeader("Tag,Occurences");
