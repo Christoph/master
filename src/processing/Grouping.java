@@ -218,20 +218,39 @@ public class Grouping {
 	    
 	}
 	
+	public void whitelist(List<? extends Tag> tags, List<String> whitelist, int maxGroupSize)
+	{
+	    Map<String, Double> good_groups = new HashMap<String, Double>();
+		
+	    for(int i = 2; i<=maxGroupSize;i++)
+	    {
+		    for(String s: whitelist)
+		    {
+		    	if(s.split(" ").length == i)
+		    	{
+			    	good_groups.put(s, 1d);
+		    	}
+		    }
+		    
+			replaceGroups(tags, good_groups, i);
+			
+			good_groups.clear();
+	    }
+	}
+	
 	private void replaceGroups(List<? extends Tag> tags, Map<String, Double> good_groups, int size)
 	{
 	    Map<String, Double> subs = new HashMap<String, Double>();
 	    
-	    List<String> words, groups, temp;
+	    List<String> groups;
 		double max_o = 0;
-		String key, new_tag;
+		String key, name;
 		
 		// Replace tag groups
 	    for(Tag t: tags)
 	    {	    	
-		  groups = psim.create_word_n_gram(t.getTagName(),size);
-		  words = psim.create_word_gram(t.getTagName());
-	      new_tag = "";
+	    	name = t.getTagName();
+	    	groups = psim.create_word_n_gram(name,size);
 	    	
 	      // Find possible substitutions
 	      for(String s : groups)
@@ -259,27 +278,16 @@ public class Grouping {
 	    		  }
 		      }
 	
-		      temp = psim.create_word_gram(key);
 		      subs.remove(key);
 		      
-		      if(words.containsAll(temp))
+		      if(name.contains(key))
 		      {
-			      words.removeAll(temp);
-			      
-			      key = key.replace(" ", "-");
-			      
-			      new_tag = new_tag+" "+key;
-		      }  
+			      name = name.replaceAll(key, key.replace(" ", "-"));
+		      }
+		      
 	      } while(subs.size() > 0);
 	      
-	      // Add missing single word tags
-	      for(String s : words)
-	      {
-	    	  new_tag = new_tag+" "+s;
-	      }
-	      
-	      // Replace tag name
-	      t.setTagName(new_tag.trim());
+	      t.setTagName(name);
 	    }
 	}
 }

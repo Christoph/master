@@ -54,8 +54,8 @@ public class WorkflowLast {
 	    List<String> preps = im.importCSV("dicts/prep.txt");
 	    List<String> custom = im.importCSV("dicts/custom.txt");
 	    
-	    List<String> whiteList = new ArrayList<String>();
-	    //whiteList.add("favoritas");
+	    List<String> whitelist = new ArrayList<String>();
+	    //whitelist.add("favoritas");
 	    
 	    List<String> blacklist = new ArrayList<String>();
 	    blacklist.addAll(preps);
@@ -89,7 +89,7 @@ public class WorkflowLast {
 	    log.info("Weighting finished\n");
 	    
 	    // Similarity replacement
-	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"first", whiteList, true);
+	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"first", whitelist, true);
 	    
 	    // Resolve errors from replacements
 	    help.correctTagsAndIDs(tags);
@@ -119,6 +119,17 @@ public class WorkflowLast {
 	    int maxGroupSize = 3;
 	
 	    TagsToCSV writer = new TagsToCSV("tags_grouping.csv");
+	    
+	    List<String> whitelist = new ArrayList<String>();
+	    //whitelist.add("on synths");
+	    //whitelist.add("Brutal Death Metal");
+	    
+	    // Prioritize whitelist if one exists
+	    if(whitelist.size() > 0)
+	    {
+		    grouping.whitelist(tags, whitelist, maxGroupSize);
+		    log.info("whitelist grouping finished\n");
+	    }
 	    
 		// Find word groups
 	    for(int i = 2; i<=maxGroupSize;i++)
