@@ -19,7 +19,11 @@ public class WorkflowLast {
 	// Initialize variables and classes
 	private static final Logger log = Logger.getLogger("Logger");
     private Helper help = new Helper();
-    ImportCSV im = new ImportCSV();
+    private ImportCSV im = new ImportCSV();
+    private WeightingLast weighting = new WeightingLast();
+    private Regex regex = new Regex();
+    private SimilarityComplex similarity = new SimilarityComplex();
+    Grouping grouping = new Grouping();
     
     // Full data set
     private List<TagLast> tags;
@@ -44,9 +48,6 @@ public class WorkflowLast {
 	{
 		/////////////////////////////////
 	    // Variable initialization  
-	    SimilarityComplex similarity = new SimilarityComplex();
-	    WeightingLast weighting = new WeightingLast();
-
 	    TagsToCSV writer = new TagsToCSV("tags_nlp_pipeline.csv");
 		
 	    // Create word blacklist
@@ -104,28 +105,8 @@ public class WorkflowLast {
 	    writer.writeTagListWithHistory(tags);
 	}
 	
-	public void removeReplaceCharacters(List<TagLast> tags, List<String> remove, List<String> replace)
-	{
-	    // replace/remove characters
-	    help.removeReplaceCharactersAndLowerCase(tags, remove, replace);
-	}
-	
-	public void removeBlacklistedWords(List<TagLast> tags,List<String> blacklist)
-	{
-		// Remove blacklisted words
-	    help.removeBlacklistedWords(tags, blacklist);
-	}
-	
-	public void filterTags(List<TagLast> tags, int minOccu)
-	{
-		// Remove tags which occurre below minOccu times
-		help.removeOutlier(tags, minOccu, true);
-	}
-	
 	public void grouping()
 	{
-	    Grouping grouping = new Grouping();
-	    
 	    int maxGroupSize = 3;
 	
 	    TagsToCSV writer = new TagsToCSV("tags_grouping.csv");
@@ -153,6 +134,10 @@ public class WorkflowLast {
 	    	grouping.frequency(tags, i, 0.1d, true);
 	    }
 	    log.info("frequency grouping finished\n");
+
+	    help.splitCompositeTagLast(tags);
+	    weighting.byWeightedMean(tags ,"second", false);
+	    log.info("Splitting finished\n");
 	    
 	    // Output
 	    writer.writeTagListCustomWeight(tags);
@@ -161,11 +146,7 @@ public class WorkflowLast {
 	public void regex()
 	{
 		/////////////////////////////////
-	    // Variable initialization  
-		
-	    WeightingLast weighting = new WeightingLast();
-	    Regex regex = new Regex();
-	    
+	    // Variable initialization  	    
 	    TagsToCSV writer_tags = new TagsToCSV("tags_Regex.csv");
 	    
 	    Map<String, String> important_tags;
@@ -223,6 +204,24 @@ public class WorkflowLast {
 	    
 	    // Output
 	    writer_tags.writeTagListCustomWeight(tags);
+	}
+	
+	public void removeReplaceCharacters(List<TagLast> tags, List<String> remove, List<String> replace)
+	{
+	    // replace/remove characters
+	    help.removeReplaceCharactersAndLowerCase(tags, remove, replace);
+	}
+	
+	public void removeBlacklistedWords(List<TagLast> tags,List<String> blacklist)
+	{
+		// Remove blacklisted words
+	    help.removeBlacklistedWords(tags, blacklist);
+	}
+	
+	public void filterTags(List<TagLast> tags, int minOccu)
+	{
+		// Remove tags which occurre below minOccu times
+		help.removeOutlier(tags, minOccu, true);
 	}
 	
 	public Map<String, String> getImportantWords(List<TagLast> tags, double threshold, int minWordLength)

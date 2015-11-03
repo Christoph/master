@@ -235,6 +235,8 @@ public class Helper {
 					if(name.length()>0) tags.put(name, ID);
 				}
 			}	
+			
+			  removeTagsWithoutWords(data);
 	  }
 	  
 	  public Map<String, String> getImportantTags(List<? extends Tag> tags, double threshold, int minWordLength)
@@ -270,6 +272,38 @@ public class Helper {
 		  }
 		  
 		  return out;
+	  }
+	  
+	  public void splitCompositeTagLast(List<TagLast> tags)
+	  {
+		  	String name[] = null;
+			List<TagLast> tt = new ArrayList<TagLast>();
+		  
+			  for(TagLast t: tags)
+			  {
+				  name = t.getTagName().split(" ");
+				  
+				  // Replace current name by the first word
+				  t.setTagName(name[0]);
+				  
+				  // Create for all other words new entries
+				  for(int i = 1; i<name.length;i++)
+				  {
+					  tt.add(new TagLast(1, name[i], t.getOriginalTagName(), t.getPlaycount(), t.getTagID(), t.getImportance(), t.getTagWeight(), t.getCarrierID(), t.getCarrierName(), t.getListeners(), t.getArtistID())); 	
+				  }
+			  }
+		  
+		  	// Add all new entries
+		  	tags.addAll(tt);
+		  
+		  	// Fix IDs and so on
+		  	correctTagsAndIDs(tags);
+		  
+		    // Reset index
+		    for(int i = 1; i<=tags.size(); i++)
+		    {
+		    	tags.get(i-1).setID(i);
+		    }
 	  }
 	  
 	  public <T> String objectToJsonString(List<T> list)

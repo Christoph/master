@@ -240,7 +240,6 @@ public class Regex {
 		numbers.add("Number of unimportant tags (in subjective list, importance >= "+threshold+" and length >= "+minWordLength+"): "+tt4);
 		
 	    help.correctTagsAndIDs(tags);
-	    help.removeTagsWithoutWords(tags);
 	    
 	    numbers.add("Number of final tags: "+tags.size());
 		
