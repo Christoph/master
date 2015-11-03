@@ -26,7 +26,7 @@ public class Transport {
 		work.init();
 		work.nlpPipeline();
 		work.grouping();
-		//work.regex();
+		work.regex();
 		
 		// Connection
 		server.addConnectListener(new ConnectListener() {

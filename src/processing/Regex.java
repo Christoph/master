@@ -38,32 +38,40 @@ public class Regex {
   	
     // Create a Pattern object
     Pattern r, l;
+    
+    // Pattern dict
+    Map<String, Pattern> patterns_greedy = new HashMap<String, Pattern>();
+    Map<String, Pattern> patterns_conservative = new HashMap<String, Pattern>();
 
     // Now create matcher object.
     Matcher mr, ml;
 	
     // String, > 0 == right, list of important tags
-	public void matcher(String name, Map<String, String> list, int minWordLength)
+	public void matcher(String name, Map<String, String> list, int minWordLength, Boolean useAllWords)
 	{
 		name = " "+name+" ";
 		
 			for(Map.Entry<String, String> entry : list.entrySet())
 			{
 			// Fetch data	
-			e = entry.getKey().toLowerCase();
+			e = entry.getKey();
 				
   			// Compile patterns
 			// If bigger than min word length do substring search
 			// else only full word search
 			if(e.length() > minWordLength)
 			{
-				l = Pattern.compile("(.*)("+e+")(.*)");  
-				r = Pattern.compile("(.*)("+e+")(.*)");  
+				//l = Pattern.compile("(.*)("+e+")(.*)");  
+				//r = Pattern.compile("(.*)("+e+")(.*)");  
+				l = patterns_greedy.get(e);  
+				r = patterns_greedy.get(e);  
 			}
 			else
 			{
-				l = Pattern.compile("(\\s)("+e+")(\\s)");  
-				r = Pattern.compile("(\\s)("+e+")(\\s)"); 
+				//l = Pattern.compile("(\\s)("+e+")(\\s)");  
+				//r = Pattern.compile("(\\s)("+e+")(\\s)"); 
+				l = patterns_conservative.get(e);  
+				r = patterns_conservative.get(e); 
 			}
 
 	  		// Find matches
@@ -77,11 +85,11 @@ public class Regex {
 	  			String ms = mr.group(2).trim();
 	  			String rs = mr.group(3).trim();
 	  			
-	  			if(ls.length() > 0) matcher(ls, list,minWordLength);
+	  			if(ls.length() > 0) matcher(ls, list,minWordLength, useAllWords);
 	  			
 	  			out.add(ms.trim());
 	  			
-	  			if(rs.length() > 0) matcher(rs, list, minWordLength);
+	  			if(rs.length() > 0) matcher(rs, list, minWordLength, useAllWords);
 	  			
 	  			name = "";
 	  		} 			  		
@@ -91,20 +99,19 @@ public class Regex {
 	  			String ms = ml.group(2).trim();
 	  			String rs = ml.group(3).trim();
 	  			
-	  			if(ls.length() > 0) matcher(ls, list, minWordLength);
+	  			if(ls.length() > 0) matcher(ls, list, minWordLength, useAllWords);
 	  			
 	  			out.add(ms);
 	  			
-	  			if(rs.length() > 0) matcher(rs, list, minWordLength);
+	  			if(rs.length() > 0) matcher(rs, list, minWordLength, useAllWords);
 	  			
 	  			name = "";
 	  		}
   		}
 			
-
 		//Removing this line let the matcher only use words from the list of important words
 		//All other words will be removed
-		//out.add(name.replace("-", " ").trim());
+		if(useAllWords == true) out.add(name.trim());
 
 	}
 	
@@ -113,18 +120,29 @@ public class Regex {
 		String name, reg, rep, temp;
 		String[] row;
 		replacements = new ArrayList<String>();
+		Matcher match;
+		
+		Map<Pattern, String> custom = new HashMap<Pattern, String>();
+		
+		// Precompile patterns
+		for(String p: patterns)
+		{
+			row = p.split(",");
+			reg = "\\b"+row[0]+"\\b";
+			rep = row[1].trim();
+			
+			custom.put(Pattern.compile(reg), rep);
+		}
 		
 		for(Tag t: tags)
 		{
 			name = t.getTagName();
 			
-			for(String p: patterns)
+			for(Map.Entry<Pattern, String> entry : custom.entrySet())
 			{
-				row = p.split(",");
-				reg = "\\b"+row[0]+"\\b";
-				rep = row[1].trim();
-		 
-		  		temp = name.replaceAll(reg, rep);
+				match = entry.getKey().matcher(name);
+				
+				temp = match.replaceAll(entry.getValue());
 		  		
 		  		if(!name.equals(temp)) 
 	  			{
@@ -134,7 +152,7 @@ public class Regex {
 		  		name = temp;
 			}
 			
-	  		t.setTagName(name.trim());
+	  		t.setTagName(name.trim());	
 		}
 		
 		// Write temp files
@@ -148,9 +166,8 @@ public class Regex {
 	    
 	}
 	
-	public void findImportantWords(List<TagLast> tags, Map<String, String> words, double threshold, int minWordLength)
+	public void findImportantWords(List<TagLast> tags, Map<String, String> words, double threshold, int minWordLength, Boolean useAllWords)
 	{	  
-		List<TagLast> tt = new ArrayList<TagLast>();
 		int tt3 = 0, tt2 = 0, tt4 = 0;
 
 	    numbers.add("Number of tags: "+tags.size());
@@ -181,8 +198,15 @@ public class Regex {
 		  		join = "";
 		  		out.clear();
 		  		
+		  		// Precompile patterns
+		  		for(String s: words.keySet())
+		  		{
+		  			patterns_greedy.put(s, Pattern.compile("(.*)("+s.toLowerCase()+")(.*)"));
+		  			patterns_conservative.put(s, Pattern.compile("(\\s)("+s.toLowerCase()+")(\\s)"));
+		  		}
+		  		
 		  		// Apply regex
-		  		matcher(name, words, minWordLength);
+		  		matcher(name, words, minWordLength, useAllWords);
 		  		
 		  		// Rebuild string from out
 		  		for(String s: out)
@@ -190,37 +214,34 @@ public class Regex {
 		  			if(s.length() > 0)
 		  			{
 		  				join = join.concat(" "+s);
-		  			} 
-		  			
-		  			String tagid = words.get(s).split(",")[0];
-		  			String importance = words.get(s).split(",")[1];
-		  			
-		  			tt.add(new TagLast(1, s.replace(" ", "-"), t.getOriginalTagName(), t.getPlaycount(), Integer.parseInt(tagid), Double.parseDouble(importance), t.getTagWeight(), t.getCarrierID(), t.getCarrierName(), t.getListeners(),t.getArtistID())); 	
-		  		
+		  			} 	  		
 		  		}
 		  		
 		  		join = join.trim();
 
-		  		if(!name.equals(join)&&!join.isEmpty()) separation.add(name+" -> "+join);
+		  		// Add the extraction to the output
+		  		if(!name.equals(join)&&!join.isEmpty()) 
+	  			{
+	  				separation.add(name+" -> "+join);
+	  			}
 		  		
-		  		iterator.remove();
+		  		// Set tag name
+		  		t.setTagName(join);
 			}
-			else if(t.getImportance() >= threshold && name.length() >=  minWordLength)// Fix important tags
+			else if(t.getImportance() >= threshold && name.length() >=  minWordLength)
 			{		
 				// Check if the word is on the subjective list
-				if(words.containsKey(name))
+				if(words.containsKey(name)) // Not on the subjective list
 				{
 					// Save TT2
 					tt2+=1;
-					
-					// Reset join string and out list
-			  		join = name.replace(" ", "-");
-			  	
-			  		t.setTagName(join);
 				}
-				else
+				else // On the subjective list
 				{
+					// Save number of unimportant tags
 					tt4+=1;
+					
+					// Delete tag which is not important and too short.
 					t.setTagName("");
 				}
 			}
@@ -228,18 +249,18 @@ public class Regex {
 			{
 				// Save number of unimportant tags
 				tt4+=1;
+				
 				// Delete tag which is not important and too short.
 				t.setTagName("");
 			}
 		}
 		
-		tags.addAll(tt);
-		
 		numbers.add("Number of important tags: "+tt2);
 		numbers.add("Number of tags with an importance < threshold: "+tt3);
-		numbers.add("Number of unimportant tags (in subjective list, importance >= "+threshold+" and length >= "+minWordLength+"): "+tt4);
+		numbers.add("Number of unimportant tags (in subjective list, importance < "+threshold+" and length < "+minWordLength+"): "+tt4);
 		
-	    help.correctTagsAndIDs(tags);
+		help.splitCompositeTagLast(tags);
+		help.correctTagsAndIDs(tags);
 	    
 	    numbers.add("Number of final tags: "+tags.size());
 		

@@ -98,7 +98,6 @@ public class WorkflowLast {
 	    
 	    // Resolve errors from replacements
 	    help.correctTagsAndIDs(tags);
-	    help.removeTagsWithoutWords(tags);
 	    log.info("1st similiarity replacement finished\n");
 
 	    // Output
@@ -135,7 +134,9 @@ public class WorkflowLast {
 	    }
 	    log.info("frequency grouping finished\n");
 
+	    // Split words and compute the importance again
 	    help.splitCompositeTagLast(tags);
+	    
 	    weighting.byWeightedMean(tags ,"second", false);
 	    log.info("Splitting finished\n");
 	    
@@ -156,10 +157,10 @@ public class WorkflowLast {
 	    List<String> messedup = im.importCSV("dicts/messedgroups.txt");
 	    
 		///////////////////////////////// 
-	    // Parameter
+	    // Parameters
 	    
 	    // Set importance threshold
-	    double threshold = 0.006;
+	    double threshold = 0.5;
 	    
 	    // Set minimum word length
 	    int minWordLength = 3;
@@ -167,35 +168,28 @@ public class WorkflowLast {
 		///////////////////////////////// 
 	    // Algorithm
 	    
-	    // Weighting again before thresholding 
-	    weighting.byWeightedMean(tags ,"second", false);
-	    log.info("Second time importance\n");
-	    
 	    // Find oneword groups and replace them by the group
 	    regex.findGroups(tags, true);
 	    log.info("group searching finished\n");
 	    
 	    // Synonym replacing regex
 	    regex.replaceCustomWords(tags, synonyms,"synonyms");
+	    log.info("Synonym replacement finished\n");
 	    
 	    // Important words
 	    important_tags = getImportantWords(tags, threshold, minWordLength);
+	    log.info("important tag exttraction finished\n");
 		
-	    // Remove subjective tags
+	    // Remove subjective tags from important words
 	    removeSubjectiveWords(tags, subjective, important_tags);
+	    log.info("removing subjective words finished\n");
 	    
 	    // Word separation
 	    // Find important words in the unimportant tags
-	    regex.findImportantWords(tags, important_tags, threshold, minWordLength);
+	    regex.findImportantWords(tags, important_tags, threshold, minWordLength, false);
 	    log.info("Word separation finished\n");
 	    
-	    // Reset index
-	    for(int i = 1; i<=tags.size(); i++)
-	    {
-	    	tags.get(i-1).setID(i);
-	    }
-	    
-	    // Messed up groups replacement
+	    // Messed up tags replacement
 	    regex.replaceCustomWords(tags, messedup,"cleaning");
 	    
 	    // Weighting words as last step 
@@ -253,14 +247,9 @@ public class WorkflowLast {
 	    	{
 	        	important_tags.remove(s); 
 	    	}
-	    	else
-	    	{
-	    		System.out.println(s);
-	    	}
 	    }
 	    
 	    writer_important_filtered.writeImportantTags(important_tags);
-	    log.info("Important tag extraction finished\n"); 
 	}
 	
 	public void exportInTableFormat()
