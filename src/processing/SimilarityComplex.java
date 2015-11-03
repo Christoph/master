@@ -22,7 +22,7 @@ public class SimilarityComplex {
     Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
     Map<String, String> substitution_list = new HashMap<String, String>();
 	
-	public void withPhoneticsAndNgrams(List<? extends Tag> tags, float threshold, String filename_suffix, List<String> whiteList, Boolean verbose)
+	public void withPhoneticsAndNgrams(List<? extends Tag> tags, float threshold, String filename_suffix, List<String> whiteList, int minWordSize, Boolean verbose)
 	{
 	    /////////////////////////////////
 	    // Variables
@@ -65,7 +65,8 @@ public class SimilarityComplex {
 	    		key = words.get(j); 		
 	    		
 	    		// Only use words with more than 2 characters and at least one none numeric character
-	    		if(key.length()>=3 && !key.matches("^\\d+$"))
+	    		// TODO: Think about this filter	 
+	    		if(key.length()>=minWordSize && !key.matches("^\\d+$") && !key.matches("^\\d+s$"))
 	    		{
 		    		if(tag_words.containsKey(key))
 		    		{

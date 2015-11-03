@@ -84,12 +84,16 @@ public class WorkflowLast {
 	    removeBlacklistedWords(tags, blacklist);
 	    log.info("Blacklist finished\n");
 	    
+	    // Occurrence filter
+	    filterTags(tags, 2);
+	    log.info("Filtering finished\n");
+	    
 	    // Weighting
-	    weighting.byWeightedMean(tags, "weighting_nlp", false);
+	    weighting.byWeightedMean(tags, "weighting_nlp", true);
 	    log.info("Weighting finished\n");
 	    
 	    // Similarity replacement
-	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"first", whitelist, true);
+	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"first", whitelist, 3, true);
 	    
 	    // Resolve errors from replacements
 	    help.correctTagsAndIDs(tags);
@@ -110,6 +114,12 @@ public class WorkflowLast {
 	{
 		// Remove blacklisted words
 	    help.removeBlacklistedWords(tags, blacklist);
+	}
+	
+	public void filterTags(List<TagLast> tags, int minOccu)
+	{
+		// Remove tags which occurre below minOccu times
+		help.removeOutlier(tags, minOccu, true);
 	}
 	
 	public void grouping()
@@ -134,7 +144,7 @@ public class WorkflowLast {
 		// Find word groups
 	    for(int i = 2; i<=maxGroupSize;i++)
 	    {
-	    	grouping.jaccard(tags, i, 0.4d, true);
+	    	grouping.jaccard(tags, i, 0.4d, 2, true);
 	    }
 	    log.info("jaccard grouping finished\n");
 	    
@@ -143,11 +153,6 @@ public class WorkflowLast {
 	    	grouping.frequency(tags, i, 0.1d, true);
 	    }
 	    log.info("frequency grouping finished\n");
-	    
-	    // Find oneword groups and replace them by the group
-	    // hardrock -> hard-rock
-	    grouping.findGroups(tags, true);
-	    log.info("group searching finished\n");
 	    
 	    // Output
 	    writer.writeTagListCustomWeight(tags);
@@ -180,6 +185,14 @@ public class WorkflowLast {
 
 		///////////////////////////////// 
 	    // Algorithm
+	    
+	    // Weighting again before thresholding 
+	    weighting.byWeightedMean(tags ,"second", false);
+	    log.info("Second time importance\n");
+	    
+	    // Find oneword groups and replace them by the group
+	    regex.findGroups(tags, true);
+	    log.info("group searching finished\n");
 	    
 	    // Synonym replacing regex
 	    regex.replaceCustomWords(tags, synonyms,"synonyms");

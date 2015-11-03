@@ -1,21 +1,17 @@
 package processing;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import core.Tag;
-import core.TagLast;
 import core.TagsToCSV;
 
 public class Grouping {
 	
 	PlainStringSimilarity psim = new PlainStringSimilarity();
 	
-	public void jaccard(List<? extends Tag> tags, int size, double acceptance_value, Boolean verbose) {
+	public void jaccard(List<? extends Tag> tags, int size, double acceptance_value, int minOccurrence, Boolean verbose) {
 		/////////////////////////////////
 		// Variables
 		TagsToCSV writer_groups;
@@ -101,7 +97,8 @@ public class Grouping {
 			
 			nom = word_groups.get(k);
 			strength = nom/deno;
-			group_weight.put(k, strength);
+			//TODO: Work in progress: Filter
+			if(nom > minOccurrence) group_weight.put(k, strength);
 			
 			// Find min max
 			if(strength < min_o) min_o = strength;
@@ -238,65 +235,6 @@ public class Grouping {
 			
 			good_groups.clear();
 	    }
-	}
-	
-	public void findGroups(List<TagLast> tags, Boolean verbose)
-	{
-		Set<String> groups = new HashSet<String>();
-		List<String> output = new ArrayList<String>();
-	    Map<String, String> subs = new HashMap<String, String>();
-	    
-	    TagsToCSV writer;
-		
-		String words[] = null;
-		String name = "";
-		
-		//Find all groups
-		for(Tag t: tags)
-		{
-			if(t.getTagName().contains("-"))
-			{
-				words = t.getTagName().split(" ");
-				
-				for(String s: words)
-				{
-					if(s.contains("-"))
-					{
-						groups.add(s);
-					}
-				}
-			}
-		}
-		
-		// Create substitution list
-		for(String s: groups)
-		{
-			subs.put(s.replace("-", ""), s);
-		}
-		
-		//Find groups
-		for(Tag t: tags)
-		{
-			name = t.getTagName();
-			words = name.split(" +");
-			
-			for(String s: words)
-			{
-				if(subs.keySet().contains(s))
-				{
-					name = name.replace(s, subs.get(s));
-					output.add(s+"->"+subs.get(s));
-				}
-			}
-			
-			t.setTagName(name);
-		}
-		
-	    if(verbose) 
-    	{
-	    	writer = new TagsToCSV("groups_found.csv");
-	    	writer.writeFound(output);
-    	}
 	}
 	
 	private void replaceGroups(List<? extends Tag> tags, Map<String, Double> good_groups, int size)

@@ -153,8 +153,8 @@ public class WorkflowBook {
 	    log.info("1st similiarity replacement finished\n");
 	    
 	    // Find word groups
-	    grouping.jaccard(tags, 3,0.4d,false);
-	    grouping.jaccard(tags, 2,0.4d,false);
+	    grouping.jaccard(tags, 3,0.4d,2,false);
+	    grouping.jaccard(tags, 2,0.4d,2,false);
 	    log.info("complex grouping finished\n");
 	    
 	    grouping.frequency(tags, 3,0.1d,false);

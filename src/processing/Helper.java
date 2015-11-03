@@ -16,10 +16,12 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 import core.Tag;
 import core.TagLast;
+import core.TagsToCSV;
 
 public class Helper {
 	
 	   StringLengthComparator slc = new StringLengthComparator();
+		PlainStringSimilarity psim = new PlainStringSimilarity();
 	  
 	  public void removeTagsWithoutWords(List<? extends Tag> tags)
 	  {
@@ -33,6 +35,79 @@ public class Helper {
 					iterator.remove();
 				}
 		    }
+	  }
+	  
+	  public void removeOutlier(List<? extends Tag> tags, int minOccu, Boolean verbose)
+	  {
+		  	Map<String, Integer> occu = new HashMap<String, Integer>();
+		  	List<String> output = new ArrayList<String>();
+		  	String key = "";
+		  	String temp = "";
+		  	
+		  	int value;
+		    List<String> words;
+			TagsToCSV writer;
+		  	
+		  	for(Tag t: tags)
+		  	{
+		  		words = psim.create_word_gram(t.getTagName());
+		  		
+		  		for(int j = 0; j < words.size(); j++)
+				{
+					key = words.get(j); 	
+		  			
+			  		if(occu.containsKey(key))
+					{
+						value = occu.get(key);
+						
+						// Sum up the count
+						occu.put(key, value + 1);
+					}
+					else
+					{
+						occu.put(key, 1);
+					}
+				}
+		  	}
+		  	
+		    // Remove tags which occurs less than minOccu times 
+		  	for(Tag t: tags)
+		    {
+		  		words = psim.create_word_gram(t.getTagName());
+		  		temp = "";
+				
+		  		for(int j = 0; j < words.size(); j++)
+				{
+					key = words.get(j); 	
+		  			
+					if(occu.get(key) < minOccu)
+					{
+						// Remove word
+						words.set(j, "");
+						
+						// Add to output list
+						output.add(key);
+					}
+				}
+		  		
+		  		// Rebuild tags and save them
+		  		for(String s: words)
+		  		{
+		  			if(s.length()>0)
+		  			{
+		  				temp = temp + s + " ";
+		  			}
+		  		}
+		  		
+		  		t.setTagName(temp.trim());
+		    }
+		  	
+			// Write temp files
+		    if(verbose) 
+	    	{
+		    	writer = new TagsToCSV("filtered_words.csv");
+		    	writer.writeFilteredWords(output);
+	    	}
 	  }
 	  
 	  public void removeBlacklistedWords(List<? extends Tag> tags, List<String> blacklist)

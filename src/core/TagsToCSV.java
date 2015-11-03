@@ -143,6 +143,27 @@ public class TagsToCSV {
 		}
 	}
 	
+	public void writeFilteredWords(List<String> words)
+	{		
+	    createHeader("Filtered Words");
+		
+		for(String s:words)
+		{
+			try {
+				writer.write(s+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void writeTagOccu(Map<String, Long> word_groups)
 	{		
 	    createHeader("Tag,Occurences");
