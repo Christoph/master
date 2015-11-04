@@ -99,7 +99,7 @@ public class WorkflowLast {
 	    // Resolve errors from replacements
 	    help.correctTagsAndIDs(tags);
 	    log.info("1st similiarity replacement finished\n");
-
+	    
 	    // Output
 	    writer.writeTagListWithHistory(tags);
 	}
@@ -160,7 +160,7 @@ public class WorkflowLast {
 	    // Parameters
 	    
 	    // Set importance threshold
-	    double threshold = 0.5;
+	    double threshold = 0.1;
 	    
 	    // Set minimum word length
 	    int minWordLength = 3;
@@ -195,6 +195,9 @@ public class WorkflowLast {
 	    // Weighting words as last step 
 	    weighting.byWeightedMean(tags ,"third", false);
 	    log.info("Last time importance\n");
+	    
+	    // Remove dashes
+	    help.removeDashes(tags);
 	    
 	    // Output
 	    writer_tags.writeTagListCustomWeight(tags);

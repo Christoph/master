@@ -1,4 +1,5 @@
 jazzy,jazz
+vocal,vocalists
 rockin,rock
 brasil,brazil
 cover,covers

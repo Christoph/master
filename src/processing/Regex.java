@@ -61,15 +61,11 @@ public class Regex {
 			// else only full word search
 			if(e.length() > minWordLength)
 			{
-				//l = Pattern.compile("(.*)("+e+")(.*)");  
-				//r = Pattern.compile("(.*)("+e+")(.*)");  
 				l = patterns_greedy.get(e);  
 				r = patterns_greedy.get(e);  
 			}
 			else
 			{
-				//l = Pattern.compile("(\\s)("+e+")(\\s)");  
-				//r = Pattern.compile("(\\s)("+e+")(\\s)"); 
 				l = patterns_conservative.get(e);  
 				r = patterns_conservative.get(e); 
 			}
@@ -142,14 +138,17 @@ public class Regex {
 			{
 				match = entry.getKey().matcher(name);
 				
-				temp = match.replaceAll(entry.getValue());
-		  		
-		  		if(!name.equals(temp)) 
-	  			{
-	  				replacements.add(name+" -> "+temp);
-	  			}
-		  		
-		  		name = temp;
+				if(match.find() && !entry.getValue().equals(name))
+				{
+					temp = match.replaceAll(entry.getValue());
+			  		
+			  		if(!name.equals(temp)) 
+		  			{
+		  				replacements.add(name+" -> "+temp);
+		  			}
+			  		
+			  		name = temp;
+				}
 			}
 			
 	  		t.setTagName(name.trim());	

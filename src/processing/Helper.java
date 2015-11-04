@@ -315,6 +315,18 @@ public class Helper {
 			  }
 	  }
 	  
+	  public void removeDashes(List<? extends Tag> tags)
+	  {
+		  String name = "";
+		  
+		  for(Tag t: tags)
+		  {
+			  name = t.getTagName();
+
+			  t.setTagName(name.replaceAll("\\s*-\\s*", " "));
+		  }
+	  }
+	  
 	  public <T> String objectToJsonString(List<T> list)
 	  {
 		  	List<String> out = new ArrayList<String>();
