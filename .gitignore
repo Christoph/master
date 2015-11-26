@@ -11,4 +11,5 @@ bin/
 log.*
 tags.sql
 *.csv
+*.txt
 target/
