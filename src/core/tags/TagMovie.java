@@ -1,4 +1,4 @@
-package core;
+package core.tags;
 
 public class TagMovie extends Tag{
 	private int rtCriticScore;

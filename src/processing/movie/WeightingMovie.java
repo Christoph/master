@@ -1,4 +1,4 @@
-package processing;
+package processing.movie;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,11 +9,33 @@ import java.util.Map;
 import java.util.Set;
 
 import core.tags.Tag;
+import core.tags.TagMovie;
 import core.tags.TagsToCSV;
 
-public class Weighting {
+public class WeightingMovie {
 
-	public void byWeightedMean(List<Tag> tags, String prefix, Boolean verbose) {
+	public void importance(List<TagMovie> tags, String prefix, Boolean verbose)
+	{
+	    long audienceScore, criticScore, tagWeight;
+	    double importance;
+		
+	    // Compute a weighted normalized weight for each tag/song pair
+	    for(TagMovie t: tags)
+	    {
+	    	audienceScore = t.getRtAudienceScore();
+	    	criticScore = t.getRtCriticScore();
+	    	tagWeight = t.getTagWeight();
+	    		    	
+	    	importance = tagWeight*(audienceScore+criticScore);
+	    	
+	    	t.setImportance(importance); 
+	    	
+	    }
+	    
+	    byWeightedMean(tags, prefix, verbose);
+	}
+	
+	public void byWeightedMean(List<TagMovie> tags, String prefix, Boolean verbose) {
 	    /////////////////////////////////
 	    // Variables
 	    Map<String, Double> tag_words = new HashMap<String, Double>();
@@ -93,5 +115,4 @@ public class Weighting {
 	
 	    tag_words = null;
 	}
-
 }

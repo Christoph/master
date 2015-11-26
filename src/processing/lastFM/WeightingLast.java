@@ -1,4 +1,4 @@
-package processing;
+package processing.lastFM;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import core.TagLast;
-import core.TagsToCSV;
+import core.tags.TagLast;
+import core.tags.TagsToCSV;
 
 public class WeightingLast {
 

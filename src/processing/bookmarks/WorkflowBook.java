@@ -1,4 +1,4 @@
-package processing;
+package processing.bookmarks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,9 +8,14 @@ import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import processing.Grouping;
+import processing.Helper;
+import processing.Regex;
+import processing.Similarity;
+import processing.lastFM.WeightingLast;
 import core.ImportCSV;
-import core.TagBook;
-import core.TagsToCSV;
+import core.tags.TagBook;
+import core.tags.TagsToCSV;
 
 public class WorkflowBook {
 	
@@ -76,7 +81,7 @@ public class WorkflowBook {
 	    //SimilarityReplacement similarity = new SimilarityReplacement();
 	    //SimilarityReplacementWithDistance similarity = new SimilarityReplacementWithDistance();
 	    //SimilarityReplacementCompleteEditDistance similarity = new SimilarityReplacementCompleteEditDistance();
-	    SimilarityComplex similarity = new SimilarityComplex();
+	    Similarity similarity = new Similarity();
 	    //SimilarityComplexFull similarity = new SimilarityComplexFull();
 	    WeightingLast weighting = new WeightingLast();
 

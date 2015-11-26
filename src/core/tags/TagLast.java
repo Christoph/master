@@ -1,4 +1,4 @@
-package core;
+package core.tags;
 
 public class TagLast extends Tag {
 	private int tagWeight;

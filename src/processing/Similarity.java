@@ -10,10 +10,10 @@ import java.util.Set;
 
 import org.apache.commons.codec.language.DoubleMetaphone;
 
-import core.Tag;
-import core.TagsToCSV;
+import core.tags.Tag;
+import core.tags.TagsToCSV;
 
-public class SimilarityComplex {
+public class Similarity {
 	
     PlainStringSimilarity psim = new PlainStringSimilarity();
 	

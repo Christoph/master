@@ -1,4 +1,4 @@
-package processing;
+package processing.movie;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,9 +8,12 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import processing.Helper;
+import processing.Similarity;
 import core.ImportCSV;
-import core.TagMovie;
-import core.TagsToCSV;
+import core.db.Processor;
+import core.tags.TagMovie;
+import core.tags.TagsToCSV;
 
 public class WorkflowMovie {
 	
@@ -47,7 +50,7 @@ public class WorkflowMovie {
 		
 		/////////////////////////////////
 	    // Variable initialization  
-	    SimilarityComplex similarity = new SimilarityComplex();
+	    Similarity similarity = new Similarity();
 	    WeightingMovie weighting = new WeightingMovie();
 
 	    TagsToCSV writer = new TagsToCSV("tags_nlp_pipeline.csv");

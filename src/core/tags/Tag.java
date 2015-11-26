@@ -1,4 +1,4 @@
-package core;
+package core.tags;
 
 import java.util.ArrayList;
 import java.util.List;

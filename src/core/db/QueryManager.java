@@ -1,12 +1,12 @@
-package processing;
+package core.db;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import core.TagLast;
-import core.TagsToCSV;
+import core.tags.TagLast;
+import core.tags.TagsToCSV;
 
 public class QueryManager {
 	// Initialize logger

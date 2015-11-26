@@ -1,4 +1,4 @@
-package core;
+package core.tags;
 
 import java.io.FileWriter;
 import java.io.IOException;

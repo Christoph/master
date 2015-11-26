@@ -1,4 +1,4 @@
-package processing;
+package processing.lastFM;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,19 +10,22 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import processing.Grouping;
+import processing.Similarity;
 import core.ImportCSV;
-import core.TagLast;
-import core.TagsToCSV;
+import core.db.Processor;
+import core.tags.TagLast;
+import core.tags.TagsToCSV;
 
 public class WorkflowLast {
 	
 	// Initialize variables and classes
 	private static final Logger log = Logger.getLogger("Logger");
-    private Helper help = new Helper();
+  	private HelperLast help = new HelperLast();
     private ImportCSV im = new ImportCSV();
     private WeightingLast weighting = new WeightingLast();
-    private Regex regex = new Regex();
-    private SimilarityComplex similarity = new SimilarityComplex();
+    private RegexLast regex = new RegexLast();
+    private Similarity similarity = new Similarity();
     Grouping grouping = new Grouping();
     
     // Full data set

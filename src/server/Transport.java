@@ -6,8 +6,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 
-import processing.WorkflowLast;
-import processing.WorkflowMovie;
+import processing.lastFM.WorkflowLast;
 
 public class Transport {
 

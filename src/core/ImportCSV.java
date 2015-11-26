@@ -7,6 +7,10 @@ import java.io.InputStreamReader;
 import java.text.Normalizer;
 import java.util.*;
 
+import core.tags.TagBook;
+import core.tags.TagLast;
+import core.tags.TagMovie;
+
 public class ImportCSV {
 
   private List<String> lines;
