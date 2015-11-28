@@ -51,16 +51,22 @@ public class Similarity {
 		/////////////////////////////////
 		// Algorithm		
 		
-	    // Create tag/2-character-gram list
+	    // Filter words and create tag/2-character-gram list
 	    for(String s: vocab.keySet())
 	    {
-			// Compute the 2-gram for all words
-			tag_2grams.put(s, psim.create_n_gram(s, ngram_size));
-
+			// Only use words with more than 2 characters and at least one none numeric character
+			if(s.length()>=minWordSize && !s.matches("^\\d+$") && !s.matches("^\\d+s$"))
+			{
+		    	
+				tag_words.put(s, vocab.get(s));
+				
+				// Compute the 2-gram for all words
+				tag_2grams.put(s, psim.create_n_gram(s, ngram_size));
+			}
 	    }
 	    
 	    // Create phonetic dictionary
-	    for(String k: vocab.keySet())
+	    for(String k: tag_words.keySet())
 	    {
 	    	phonetic = phonetic_algorithm.encode(k);
 	    	
@@ -94,7 +100,7 @@ public class Similarity {
 	    	  iter++;
 	    	  if(iter%part == 0)
 	    	  {
-	    		  System.out.print("->"+iter/part+"/30");
+	    		  System.out.println(iter/part+"/30");
 	    	  }
 	    	  
 	    	  // Reset temp variables
@@ -125,10 +131,10 @@ public class Similarity {
 		          // Find the word with the highest importance count
 		          for(String s: word_group)
 		          {
-		        	if(vocab.get(s) >= importance)
+		        	if(tag_words.get(s) >= importance)
 		            {
 		              high = s;
-		              importance = vocab.get(s);
+		              importance = tag_words.get(s);
 		            }
 		          }
 		          

@@ -28,6 +28,28 @@ public class TagsToCSV {
 		}
 	}
 	
+	public void writeStringList(List<String> words, String header)
+	{		
+	    createHeader(header);
+		
+		for(String s:words)
+		{
+			try {
+				writer.write(s+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public void writeSubs(Map<String, String> subs)
 	{
 	    // Prepare data for export

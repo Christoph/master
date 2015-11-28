@@ -139,16 +139,24 @@ public class Helper {
 		  
 		  for(Tag tag: tags)
 		  {
-			  // Remove characters
-			  updated = tag.getTagName().toLowerCase().replaceAll(remove.toString(), "");
+			  updated = tag.getTagName().toLowerCase();
 			  
-			  // Replace characters
-			  for(String s: replace)
+			  // Remove characters
+			  if(remove.size() > 0) 
 			  {
-				  String temp[] = s.split(",");
-				  updated = updated.replaceAll(temp[0], temp[1]);
+				  	updated = updated.replaceAll(remove.toString(), "");
 			  }
 			  
+			  if(replace.size() > 0)
+			  {
+				  // Replace characters
+				  for(String s: replace)
+				  {
+					  String temp[] = s.split(",");
+					  updated = updated.replaceAll(temp[0], temp[1]);
+				  }
+			  }
+
 			  tag.setTagName(updated);
 		  }
 	  }
@@ -220,5 +228,41 @@ public class Helper {
 			}
 			
 			return out.toString();
+	  }
+	  
+	  public void extractCorrectGroupsAndWords(List<? extends Tag> tags, String marker, List<String> groups, List<String> words)
+	  {
+		  List<String> temp;
+		  String shingle[];
+		  String word;
+		  TagsToCSV writer;
+		  
+		  for(Tag t: tags)
+		  {
+			  temp = psim.create_word_gram(t.getTagName());
+			  
+			  for(String s: temp)
+			  {
+				  if(s.contains(marker))
+				  {
+					  word = s.replace(marker, " ");
+					  
+					  if(!groups.contains(word)) groups.add(word);
+					  
+					  shingle = word.split(" ");
+					  
+					  for(String w: shingle)
+					  {
+						  if(!words.contains(w)) words.add(w);
+					  }
+				  }
+			  }
+		  }
+		  
+		  writer = new TagsToCSV("good_groups.csv");
+		  writer.writeStringList(groups, "Groups");
+		  
+		  writer = new TagsToCSV("good_words.csv");
+		  writer.writeStringList(words, "Words");
 	  }
 }

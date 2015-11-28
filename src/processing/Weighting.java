@@ -10,11 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import core.tags.Tag;
 import core.tags.TagsToCSV;
@@ -157,6 +153,8 @@ public class Weighting {
 	  	TagsToCSV writer;
 	    Map<String, Integer> counts = new HashMap<String, Integer>();
 		
+	    vocab.clear();
+	    
 	    // Summing up the occurrences
 	    for(Tag t: tags)
 	    {	    	    		
