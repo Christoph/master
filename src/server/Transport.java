@@ -6,11 +6,12 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 
-import processing.lastFM.WorkflowLast;
+import processing.abstracts.WorkflowAbstract;
 
 public class Transport {
 
-	private WorkflowLast work = new WorkflowLast();
+	private WorkflowAbstract work = new WorkflowAbstract();
+	//private WorkflowLast work = new WorkflowLast();
 	//private WorkflowMovie work = new WorkflowMovie();
 	private SocketIOServer server;
 	private Boolean initialized = false;
@@ -24,8 +25,6 @@ public class Transport {
 	{	
 		work.init();
 		work.nlpPipeline();
-		work.grouping();
-		work.regex();
 		
 		// Connection
 		server.addConnectListener(new ConnectListener() {
@@ -50,7 +49,7 @@ public class Transport {
 				
 				System.out.println("update start");
 				
-				client.sendEvent("data", work.getJSON());
+				//client.sendEvent("data", work.getJSON());
 				
 				System.out.println("update end");
 			}
@@ -66,7 +65,7 @@ public class Transport {
 				work.nlpPipeline();
 				
 				// Redraw all
-				client.sendEvent("data", work.getJSON());
+				//client.sendEvent("data", work.getJSON());
 			}
 		});
 	}

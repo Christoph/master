@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.text.Normalizer;
 import java.util.*;
 
+import core.tags.Tag;
 import core.tags.TagBook;
 import core.tags.TagLast;
 import core.tags.TagMovie;
@@ -50,6 +51,27 @@ public List<String> importCSV(String data)
     	temp = l.split(",");
 
     	tags.add(new TagLast(Integer.parseInt(temp[0]), temp[6].replace("\"", ""), temp[6].replace("\"", ""), Integer.parseInt(temp[4]), Integer.parseInt(temp[5]), Double.parseDouble(temp[8]), Integer.parseInt(temp[7]), Integer.parseInt(temp[1]),temp[2].replace("\"", ""), Integer.parseInt(temp[3]),Integer.parseInt(temp[9])));
+
+    }
+    return tags;
+  }
+  
+  public List<Tag> importAbstracts(String data)
+  {
+    List<String> lines;
+    String[] temp;
+
+    lines = importCSV(data);
+    
+	List<Tag> tags = new ArrayList<Tag>();
+    int counter = 0;
+    for(String l: lines)
+    {
+    	counter++;
+    	
+    	temp = l.split(",");
+
+    	tags.add(new Tag(counter, ""+counter, temp[0], temp[0], counter, counter, 0d));
 
     }
     return tags;

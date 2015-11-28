@@ -2,18 +2,28 @@ package processing;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import core.tags.Tag;
 import core.tags.TagsToCSV;
 
 public class Weighting {
 
-	public void byWeightedMean(List<Tag> tags, String prefix, Boolean verbose) {
+    private PlainStringSimilarity psim = new PlainStringSimilarity();
+	
+	public void byWeightedMeanOfImportance(List<Tag> tags, String prefix, Boolean verbose) {
 	    /////////////////////////////////
 	    // Variables
 	    Map<String, Double> tag_words = new HashMap<String, Double>();
@@ -94,4 +104,124 @@ public class Weighting {
 	    tag_words = null;
 	}
 
+	public void tagsByFrequency(List<? extends Tag> tags)
+	{
+	    String key;
+	    int value;
+	    int max_occ = 0;
+	    Map<String, Integer> counts = new HashMap<String, Integer>();
+	    
+		
+	    // Summing up the occurrences
+	    for(Tag t: tags)
+	    {	    	    		
+			key = t.getTagName();
+	
+			if(counts.containsKey(key))
+			{
+				value = counts.get(key);
+				
+				// Sum up the weight over all songs
+				counts.put(key, value + 1);
+				
+    			// Find max
+    			if(value + 1 > max_occ)
+    			{
+    				max_occ = value + 1;
+    			}
+			}
+			else
+			{
+				counts.put(key, 1);
+			}
+	    }
+	    
+	    // Normalizing frequency and setting it as importance
+	    for(Tag t: tags)
+	    {
+			key = t.getTagName();
+	    	
+	    	t.setImportance(counts.get(key)/max_occ);
+	    }
+	}
+	
+
+	
+	public void vocabByFrequency(List<? extends Tag> tags, Map<String, Double> vocab, String prefix, Boolean verbose)
+	{
+	    String key;
+	    List<String> words;
+	    int counter;
+	    double value;
+	    double max_occ = 0d;
+	  	TagsToCSV writer;
+	    Map<String, Integer> counts = new HashMap<String, Integer>();
+		
+	    // Summing up the occurrences
+	    for(Tag t: tags)
+	    {	    	    		
+			key = t.getTagName();
+	    	words = psim.create_word_gram(key);
+	
+	    	for(String s : words)
+	    	{
+	    		if(counts.containsKey(s))
+				{
+					counter = counts.get(s);
+					
+					// Sum up the weight over all songs
+					counts.put(s, counter + 1);
+					
+	    			// Find max
+	    			if(counter + 1 > max_occ)
+	    			{
+	    				max_occ = counter + 1;
+	    			}
+				}
+				else
+				{
+					counts.put(s, 1);
+				}
+	    	}
+	    }
+	    
+	    // Normalizing frequency and setting it as importance in vocab
+	    for(String s: counts.keySet())
+	    {
+			key = s;
+			value = counts.get(s)/max_occ;
+	    	
+	    	vocab.put(key, value);
+	    }
+	    
+	    // Write temp files
+	    if(verbose) 
+		{	
+	    	writer = new TagsToCSV("vocab_"+prefix+".csv");
+	    	writer.writeVocab(sortByComparator(vocab));
+		}
+	}
+	
+	private static Map<String, Double> sortByComparator(Map<String, Double> unsortMap) {
+
+		// Convert Map to List
+		List<Map.Entry<String, Double>> list = 
+			new LinkedList<Map.Entry<String, Double>>(unsortMap.entrySet());
+
+		// Sort list with comparator, to compare the Map values
+		Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+			public int compare(Map.Entry<String, Double> o1,
+                                           Map.Entry<String, Double> o2) {
+				return (o2.getValue()).compareTo(o1.getValue());
+			}
+		});
+
+		// Convert sorted map back to a Map
+		Map<String, Double> sortedMap = new LinkedHashMap<String, Double>();
+		for (Iterator<Map.Entry<String, Double>> it = list.iterator(); it.hasNext();) {
+			Map.Entry<String, Double> entry = it.next();
+			sortedMap.put(entry.getKey(), entry.getValue());
+		}
+		return sortedMap;
+	}
 }

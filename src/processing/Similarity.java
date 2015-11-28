@@ -22,6 +22,184 @@ public class Similarity {
     Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
     Map<String, String> substitution_list = new HashMap<String, String>();
 	
+    public void withVocab(List<? extends Tag> tags, Map<String, Double> vocab, float threshold, String filename_suffix, List<String> whiteList, int minWordSize, Boolean verbose)
+	{
+	    /////////////////////////////////
+	    // Variables
+
+	    TagsToCSV writer_subs;
+	    TagsToCSV writer_subs_count;
+	    
+        Set<String> word_group = new HashSet<String>();
+        
+	    List<String> words;
+	    Set<String> temp;
+	    double importance;
+	    int ngram_size;
+	    String key, phonetic, new_tag;
+	    
+		/////////////////////////////////
+		// Configuration
+        
+		// Choose phonetic algorithm
+		DoubleMetaphone phonetic_algorithm = new DoubleMetaphone();
+		//ColognePhonetic phonetic = new ColognePhonetic();
+		
+		// Set the size for the n-gram distance method
+		ngram_size = 2;
+		
+		/////////////////////////////////
+		// Algorithm		
+		
+	    // Create tag/2-character-gram list
+	    for(String s: vocab.keySet())
+	    {
+			// Compute the 2-gram for all words
+			tag_2grams.put(s, psim.create_n_gram(s, ngram_size));
+
+	    }
+	    
+	    // Create phonetic dictionary
+	    for(String k: vocab.keySet())
+	    {
+	    	phonetic = phonetic_algorithm.encode(k);
+	    	
+	    	if(phonetic_groups.containsKey(phonetic))
+	    	{
+	    		temp = phonetic_groups.get(phonetic);
+	    		temp.add(k);
+	    		
+	    		phonetic_groups.put(phonetic, temp);
+	    		
+	    	}
+	    	else
+	    	{
+	    		temp = new HashSet<String>();
+	    		
+	    		temp.add(k);
+	    		
+	    		phonetic_groups.put(phonetic, temp);
+	    	}
+	    }
+	    
+	    //	Debug stuff
+	    int psize = phonetic_groups.size();
+	    int part = psize/30;
+	    int iter = 0;
+	    
+	    // Iterate over all phonetic codes
+	      for(String phon: phonetic_groups.keySet())
+	      {
+	    	  // Debug
+	    	  iter++;
+	    	  if(iter%part == 0)
+	    	  {
+	    		  System.out.print("->"+iter/part+"/30");
+	    	  }
+	    	  
+	    	  // Reset temp variables
+	          word_group.clear();
+	          String high = "";
+	    	
+	          // Get all words with the same phonetic code
+	          word_group.addAll(phonetic_groups.get(phon));
+	          
+	          // Find white listed words and prioritize them in the similarity computation
+		      for(String s: whiteList)
+		      {
+		    	  if(word_group.contains(s))
+		    	  {
+		    		  // Remove correct word from list
+	        		  word_group.remove(s);
+	        		  
+	        		  // Find similar words and save them to the substitution list
+			          findSimilarities(word_group, s, threshold);
+		    	  }
+		      }
+	          
+	          	// Go over all remaining words
+		  		while(!word_group.isEmpty())
+		        {
+		          importance = 0;
+		          
+		          // Find the word with the highest importance count
+		          for(String s: word_group)
+		          {
+		        	if(vocab.get(s) >= importance)
+		            {
+		              high = s;
+		              importance = vocab.get(s);
+		            }
+		          }
+		          
+		          // Remove the most important word from the list
+		          // This word is treated as truth
+		          word_group.remove(high);
+		          
+		          // Find similar words and save them to the substitution list
+		          findSimilarities(word_group, high, threshold);
+		        }
+		}   
+	    
+	    // Export substitution list
+	    if(verbose)
+	    {
+	    	Map<String, String> out = new HashMap<String, String>();		 
+	    	Map<String, Long> count = new HashMap<String, Long>();
+	 
+	    	for(String s: substitution_list.keySet())
+	    	{
+	    		String str = substitution_list.get(s);
+	    		if(!s.equals(str))
+	    		{		
+	    			out.put(s,substitution_list.get(s));
+	    		}
+	    	}
+	    	
+	    	for(String s: out.keySet())
+	    	{	    		
+	  	      key = out.get(s);
+
+		      if(count.containsKey(key))
+		      {
+		    	  count.put(key,count.get(key)+1);
+		      }
+		      else
+		      {
+		    	  count.put(key,1l);
+		      }
+	    	}
+	    	
+	    	writer_subs = new TagsToCSV("subs_"+filename_suffix+".csv");
+	    	writer_subs.writeSubs(out);
+	    	
+	    	writer_subs_count = new TagsToCSV("subs_count_"+filename_suffix+".csv");
+	    	writer_subs_count.writeTagOccu(count);
+	    }
+	    
+	    // Replace tags corresponding to the substitution map
+	    for(Tag t: tags)
+	    {
+	      words = psim.create_word_gram(t.getTagName());
+	      new_tag = "";
+	    	
+	      for(String w: words)
+	      {	    	  
+	    	  if(substitution_list.containsKey(w))
+	    	  {
+	    		  new_tag = new_tag + " " + substitution_list.get(w);
+	    	  }
+	    	  else
+	    	  {
+	    		  new_tag = new_tag + " " + w;
+	    	  }
+	        
+	      }
+
+	      t.setTagName(new_tag.trim());
+	    }
+	}
+    
 	public void withPhoneticsAndNgrams(List<? extends Tag> tags, float threshold, String filename_suffix, List<String> whiteList, int minWordSize, Boolean verbose)
 	{
 	    /////////////////////////////////

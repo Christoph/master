@@ -122,6 +122,27 @@ public class TagsToCSV {
 		}
 	}
 	
+	public void writeVocab(Map<String, Double> vocab)
+	{		
+	    createHeader("Tag,Importance");
+		
+		for(String s:vocab.keySet())
+		{
+			try {
+				writer.write("\""+s+"\" ,"+vocab.get(s)+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void writeFound(List<String> groups)
 	{		
 	    createHeader("Found -> Group");
@@ -259,6 +280,30 @@ public class TagsToCSV {
 				temp = t.getHistory().toString();
 				
 				writer.write(t.getID()+","+t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getListeners()+","+t.getPlaycount()+","+t.getTagID()+",\""+t.getTagName()+"\","+t.getTagWeight()+","+t.getImportance()+","+t.getArtistID()+","+temp+"\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeAbstracts(List<Tag> data) {
+		
+		createHeader("ID,PaperID,Title,TagID,TagName,Importance,History");
+		String temp = "";
+
+		for(Tag t:data)
+		{
+			try {
+				temp = t.getHistory().toString();
+				
+				writer.write(t.getID()+","+t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getTagID()+",\""+t.getTagName()+"\","+t.getImportance()+","+temp+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
