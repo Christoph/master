@@ -29,7 +29,7 @@ public class WorkflowAbstract {
     private Map<String, Double> vocab = new HashMap<String, Double>();
     private List<String> good_groups = new ArrayList<String>();
 	private List<String> good_words = new ArrayList<String>();
-    private List<String> blacklist = new ArrayList<String>();
+    //private List<String> blacklist = new ArrayList<String>();
     private List<String> remove = new ArrayList<String>();
     private List<String> replace = new ArrayList<String>();
 	
@@ -38,7 +38,7 @@ public class WorkflowAbstract {
 		log.info("Initialize\n");
 		
 	    // Load data
-	    tags = im.importAbstracts("abstracts.txt");
+	    tags = im.importAbstracts("abstracts_nodashes.txt");
 	    
 	    // Set first history step
 	    for(Tag t: tags)
@@ -65,9 +65,8 @@ public class WorkflowAbstract {
 	    //blacklist.add("");
 	    
 	    remove.add("'");
-	    remove.add("`");
 	    
-	    replace.add("-, ");
+	    //replace.add("-, ");
 	    replace.add("_, ");
 	    replace.add(":, ");
 	    replace.add(";, ");
@@ -97,7 +96,7 @@ public class WorkflowAbstract {
 	    log.info("1st similiarity replacement finished\n");
 	    
 	    // Output
-	    writer.writeAbstracts(tags);
+	    writer.writeTags(tags);
 	}
 	
 	public void grouping()
@@ -105,6 +104,7 @@ public class WorkflowAbstract {
 	    int maxGroupSize = 3;
 	
 	    TagsToCSV writer = new TagsToCSV("tags_grouping.csv");
+	    TagsToCSV writer_final = new TagsToCSV("abstracts.txt");
 	    
 	    // Prioritize whitelist if one exists
 	    if(good_groups.size() > 0)
@@ -126,7 +126,14 @@ public class WorkflowAbstract {
 	    }
 	    log.info("frequency grouping finished\n");
 	    
+	    // Weight again
+	    weighting.vocabByFrequency(tags, vocab, "second", true);
+	    
+	    // Remove dashes
+	    help.removeDashes(tags);
+
 	    // Output
-	    writer.writeAbstracts(tags);
+	    writer.writeTags(tags);
+	    writer_final.writeTags(tags);
 	}
 }

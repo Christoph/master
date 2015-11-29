@@ -228,11 +228,11 @@ public class TagsToCSV {
 		}
 	}
 	
-	public void writeTagNames(List<TagLast> data) {
+	public void writeTagNames(List<Tag> data) {
 		
     createHeader("Original,Processed");
 
-		for(TagLast t:data)
+		for(Tag t:data)
 		{
 			try {
 				writer.write(t.getOriginalTagName()+" ,"+t.getTagName()+"\n");
@@ -315,17 +315,14 @@ public class TagsToCSV {
 		}
 	}
 	
-	public void writeAbstracts(List<Tag> data) {
+	public void writeTags(List<Tag> data) {
 		
-		createHeader("ID,PaperID,Title,TagID,TagName,Importance,History");
-		String temp = "";
+		createHeader("Abstracts");
 
 		for(Tag t:data)
 		{
-			try {
-				temp = t.getHistory().toString();
-				
-				writer.write(t.getID()+","+t.getCarrierID()+",\""+t.getCarrierName()+"\","+t.getTagID()+",\""+t.getTagName()+"\","+t.getImportance()+","+temp+"\n");
+			try {			
+				writer.write(t.getTagName()+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

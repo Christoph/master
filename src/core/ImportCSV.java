@@ -60,6 +60,7 @@ public List<String> importCSV(String data)
   {
     List<String> lines;
     String[] temp;
+    String norm;
 
     lines = importCSV(data);
     
@@ -69,7 +70,8 @@ public List<String> importCSV(String data)
     {
     	counter++;
     	
-    	temp = l.split(",");
+    	norm = Normalizer.normalize(l, Normalizer.Form.NFC);
+    	temp = norm.split(",");
 
     	tags.add(new Tag(counter, ""+counter, temp[0], temp[0], counter, counter, 0d));
 
