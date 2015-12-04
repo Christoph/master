@@ -2,7 +2,11 @@ package core;
 
 import java.io.IOException;
 import java.util.logging.*;
+
+import org.eclipse.swt.widgets.Composite;
+
 import server.Server;
+import gui.userinterface;;
 
 public class Core {
 
@@ -25,6 +29,13 @@ public class Core {
 	
     log.info("Initializing");
     
+    ////////////////////////////////////////////////////////////////
+    /// GUI
+    ////////////////////////////////////////////////////////////////
+
+	userinterface gui = new userinterface();
+	
+	gui.open();
     
     ////////////////////////////////////////////////////////////////
     /// SERVER
@@ -33,7 +44,7 @@ public class Core {
     Server server = new Server();
 
 	try {
-		server.start();
+		//server.start();
 	} catch (Exception e) {
 		e.printStackTrace();
 	}

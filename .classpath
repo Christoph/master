@@ -19,5 +19,8 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
+	<classpathentry kind="lib" path="/Applications/eclipse/plugins/org.eclipse.ui_3.106.1.v20141002-1150.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse/plugins/org.eclipse.ui.forms_3.6.100.v20140422-1825.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -8,44 +8,77 @@
         <link rel="stylesheet" href="./css/nv.d3.min.css"/>
     </head>
     <body>
-<!--
-        <div class="container">
-            <div class="jumbotron" style="text-align: center">
-                <h1> Tag Refinery </h1>
-            </div>
-        </div>
-        //-->
         <div class="container">
           <div class="row">
-            <div class="col-sm-6" style="text-align: center">
-                <h2>Version 1</h2>
-                <button id="request" type="submit">Request</button>
-                 <div id="hex1">
-                 </div>   
+            <div class="col-sm-4" style="text-align: center">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">Overview</div>
+                    </div>
+                    <div class="panel-body">
+                        
+                    </div>
+
+                                    </div>
+                <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Original</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                        <td>@example.com</td>
+                      </tr>
+                      <tr>
+                        <td>Mary</td>
+                        <td>Moe</td>
+                        <td>mary@example.com</td>
+                        <td>mary@example.com</td>
+                      </tr>
+                      <tr>
+                        <td>July</td>
+                        <td>Dooley</td>
+                        <td>july@example.com</td>
+                        <td>july@example.com</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
             </div>
-            <div class="col-sm-6" style="text-align: center">
-                <h2>Version 2</h2>
-                <div id="hex2"> 
-               </div> 
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-6">
-                <div id="hist1"> 
-               </div> 
-            </div>
-            <div class="col-sm-6">
-                <div id="hist2"> 
-               </div> 
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-8">
-            </div>
-            <div class="col-sm-4">
+            <div class="col-sm-8" style="text-align: center">
+                <ul class="nav nav-tabs nav-justified">
+                  <li class="active"><a data-toggle="tab" href="#tab1">1</a></li>
+                  <li><a data-toggle="tab" href="#tab2">2</a></li>
+                  <li><a data-toggle="tab" href="#tab3">3</a></li>
+                </ul>
+                <div class="tab-content">
+                  <div id="tab1" class="tab-pane fade in active">
+                    <h3>HOME</h3>
+                    <p>Some content.</p>
+                    <p>Some content.</p>
+                    <p>Some content.</p>
+                    <p>Some content.</p>
+                  </div>
+                  <div id="tab2" class="tab-pane fade">
+                    <h3>Menu 1</h3>
+                    <p>Some content in menu 1.</p>
+                  </div>
+                  <div id="tab3" class="tab-pane fade">
+                    <h3>Menu 2</h3>
+                    <p>Some content in menu 2.</p>
+                  </div>
+                </div>
             </div>
           </div>
         </div>
+
 
         <script src="./redist/d3.min.js"></script>
         <script src="./redist/jquery.min.js"></script>
@@ -57,6 +90,6 @@
         <script src="./redist/socket.io.js"></script>
         <script src="vis.js"></script>
         <script src="plot.js"></script>
-        <script src="main.js"></script>
+        <script src="main1.js"></script>
     </body>
 </html>
