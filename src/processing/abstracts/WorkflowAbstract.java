@@ -25,7 +25,7 @@ public class WorkflowAbstract {
     Grouping grouping = new Grouping();
     
     // Full data set
-    private List<Tag> tags;
+    public List<Tag> tags;
     private Map<String, Double> vocab = new HashMap<String, Double>();
     private List<String> good_groups = new ArrayList<String>();
 	private List<String> good_words = new ArrayList<String>();
@@ -38,7 +38,7 @@ public class WorkflowAbstract {
 		log.info("Initialize\n");
 		
 	    // Load data
-	    tags = im.importAbstracts("abstracts_nodashes.txt");
+	    tags = im.importAbstracts("abstracts_short.txt");
 	    
 	    // Set first history step
 	    for(Tag t: tags)
@@ -104,6 +104,7 @@ public class WorkflowAbstract {
 	    int maxGroupSize = 3;
 	
 	    TagsToCSV writer = new TagsToCSV("tags_grouping.csv");
+	    TagsToCSV writer_json = new TagsToCSV("data.json");
 	    TagsToCSV writer_final = new TagsToCSV("abstracts.txt");
 	    
 	    // Prioritize whitelist if one exists
@@ -128,6 +129,10 @@ public class WorkflowAbstract {
 	    
 	    // Weight again
 	    weighting.vocabByFrequency(tags, vocab, "second", true);
+	    
+	    // Export vocab
+	    String json = help.objectToJsonString(vocab);
+	    writer_json.writeJson(json, "");
 	    
 	    // Remove dashes
 	    help.removeDashes(tags);

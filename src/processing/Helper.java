@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -221,6 +222,27 @@ public class Helper {
 				for(T t: list)
 				{
 					out.add(ow.writeValueAsString(t));
+				}
+				
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+			
+			return out.toString();
+	  }
+	  
+	  public String objectToJsonString(Map<String, Double> list)
+	  {
+		  	List<String> out = new ArrayList<String>();
+		    
+			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+			//ObjectWriter ow = new ObjectMapper().writer();
+			
+			try {
+				
+				for(Entry<String, Double> entry: list.entrySet())
+				{
+					out.add(ow.writeValueAsString(entry));
 				}
 				
 			} catch (JsonProcessingException e) {

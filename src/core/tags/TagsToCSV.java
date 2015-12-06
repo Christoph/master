@@ -516,6 +516,24 @@ public class TagsToCSV {
 		}
 	}
 	
+	public void writeJson(String json, String header) {
+		
+		if(header.length() > 0) createHeader(header);
+		
+		try {
+			writer.write(json);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 public void writeImportantTags(Map<String, String> tags) {
 		
 		createHeader("TagName, TagID, Importance");

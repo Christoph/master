@@ -13,3 +13,4 @@ tags.sql
 *.csv
 *.txt
 target/
+*.json
