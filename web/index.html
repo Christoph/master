@@ -1,95 +1,57 @@
 <!DOCTYPE html>
+<html ng-app="app">
+  <head>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="./redist/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="app.js"></script>
+    <script src="d3service.js"></script>
+    <script src="bower_components/angular-ui-grid/ui-grid.min.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 
-<html>
-    <head>
-        <title> Tag Refinery </title>
-        <link rel="stylesheet" href="./css/theme.css"/>
-        <link rel="stylesheet" href="./css/custom.css"/>
-        <link rel="stylesheet" href="./css/nv.d3.min.css"/>
-    </head>
-    <body>
-        <div class="container">
+    <link rel="stylesheet" href="./css/theme.css"/>
+    <link rel="stylesheet" href="./css/custom.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-grid/ui-grid.min.css">
+
+  </head>
+  <body ng-controller="appController as appC">
+      <div class="container-fluid">
+          <h2 style="position:relative; left:50%">Tag Refinery</h2>
           <div class="row">
-            <div class="col-sm-4" style="text-align: center">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title">Overview</div>
-                    </div>
-                    <div class="panel-body">
-                        
-                    </div>
-
-                                    </div>
-                <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th>Original</th>
-                        <th>1</th>
-                        <th>2</th>
-                        <th>3</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>John</td>
-                        <td>Doe</td>
-                        <td>john@example.com</td>
-                        <td>@example.com</td>
-                      </tr>
-                      <tr>
-                        <td>Mary</td>
-                        <td>Moe</td>
-                        <td>mary@example.com</td>
-                        <td>mary@example.com</td>
-                      </tr>
-                      <tr>
-                        <td>July</td>
-                        <td>Dooley</td>
-                        <td>july@example.com</td>
-                        <td>july@example.com</td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-            </div>
-            <div class="col-sm-8" style="text-align: center">
-                <ul class="nav nav-tabs nav-justified">
-                  <li class="active"><a data-toggle="tab" href="#tab1">1</a></li>
-                  <li><a data-toggle="tab" href="#tab2">2</a></li>
-                  <li><a data-toggle="tab" href="#tab3">3</a></li>
-                </ul>
-                <div class="tab-content">
-                  <div id="tab1" class="tab-pane fade in active">
-                    <h3>HOME</h3>
-                    <p>Some content.</p>
-                    <p>Some content.</p>
-                    <p>Some content.</p>
-                    <p>Some content.</p>
-                  </div>
-                  <div id="tab2" class="tab-pane fade">
-                    <h3>Menu 1</h3>
-                    <p>Some content in menu 1.</p>
-                  </div>
-                  <div id="tab3" class="tab-pane fade">
-                    <h3>Menu 2</h3>
-                    <p>Some content in menu 2.</p>
-                  </div>
-                </div>
-            </div>
+              <div class="col-sm-5">
+                  <h4 style="position:relative; left:50%">Statistics</h4>
+                  <hr />
+                  <span>Replacements: 123</span></br>
+                  <span>Groups: 123</span></br>
+                  <span>Bla: 123</span></br>
+                  <h4 style="position:relative; left:50%">Data</h4>
+                  <hr />
+                  <div ui-grid="appC.overviewGrid" class="overviewGrid"></div>
+                  <h4 style="position:relative; left:50%">History</h4>
+                  <hr />
+                  <div ui-grid="appC.historyGrid"></div>
+              </div>
+              <div class="col-sm-7">
+                  <uib-tabset justified="true">
+                      <uib-tab heading="Step 1">
+                          <div class="container-fluid">
+                             <div class="row">
+                                 <div class="col-sm-6">
+                                    <div ui-grid="appC.wordGrid"></div>
+                                 </div>
+                                 <div class="col-sm-6">
+                                    <div ui-grid="appC.simGrid"></div>
+                                 </div>
+                             </div>
+                              <h4 style="position:relative; left:50%">Placeholder D3 plot</h4>
+                             <div d3-bars bar-height="20" bar-padding="5" margin="10"></div>
+                          </div>
+                        </uib-tab>
+                        <uib-tab heading="Step 2">Short Labeled Justified content</uib-tab>
+                        <uib-tab heading="Step 3">Long Labeled Justified content</uib-tab>
+                  </uib-tabset>      
+              </div>
           </div>
-        </div>
-
-
-        <script src="./redist/d3.min.js"></script>
-        <script src="./redist/jquery.min.js"></script>
-        <script src="./redist/bootstrap.min.js"></script>
-        <script src="./redist/nv.d3.min.js"></script>
-        <script src="./redist/d3-tip.js"></script>
-        <script src="./redist/hexbin.js"></script>
-        <script src="./redist/crossfilter.min.js"></script>
-        <script src="./redist/socket.io.js"></script>
-        <script src="vis.js"></script>
-        <script src="plot.js"></script>
-        <script src="main1.js"></script>
-    </body>
-</html>
+      </div>
+  </body>
+</html> 

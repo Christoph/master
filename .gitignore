@@ -14,3 +14,4 @@ tags.sql
 *.txt
 target/
 *.json
+/web/bower_components/*
