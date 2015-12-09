@@ -2,7 +2,6 @@ package server;
 
 import com.corundumstudio.socketio.*;
 
-
 public class Server {
     public void start() throws Exception {
     	
