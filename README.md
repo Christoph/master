@@ -1,2 +1,2 @@
-Masterthesis
+tagrefinery-core
 ======
