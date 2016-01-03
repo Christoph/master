@@ -23,27 +23,23 @@ public class Transport {
 	public void initialize()
 	{		
 		work.init();
-		work.nlpPipeline();
-		//work.grouping();
-		//work.regex();
 		
 		// Connection
 		server.addConnectListener(new ConnectListener() {
 			
 			public void onConnect(SocketIOClient client) {
-				System.out.println("Connected to :"+client.getSessionId());
+				
+				client.sendEvent("initalized", work.sendOverview());
 			}
 		});
 		
 		// Get data
-		server.addEventListener("initialize", String.class, new DataListener<String>() {
+		server.addEventListener("getHistory", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				System.out.println(data);
-				
-				client.sendEvent("data", "data");
+				client.sendEvent("history", work.sendHistory(data));
 			}
         });
 	}

@@ -1,20 +1,19 @@
 package processing.lastFM;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import processing.Grouping;
 import processing.Similarity;
 import core.ImportCSV;
-import core.db.Processor;
+import core.json.gridHistory;
+import core.json.gridOverview;
 import core.tags.TagLast;
 import core.tags.TagsToCSV;
 
@@ -254,21 +253,37 @@ public class WorkflowLast {
 	    return help.objectToJsonString(tags);
 	}
 
-	public void getDbData()
+	public String sendOverview()
 	{
-	    // Load config files
-	    InputStream input = null;
+	    Supplier<List<gridOverview>> supplier = () -> new ArrayList<gridOverview>();
+
+	    List<gridOverview> tags_filtered = tags.stream()
+	    		.map(p -> new gridOverview(p.getTagName(), p.getImportance(), p.getCarrierName(), p.getID()))
+	    		.collect(Collectors.toCollection(supplier));
 	    
-		Properties dbconf = new Properties();
-	    try {
+	    return help.objectToJsonString(tags_filtered);
+	}
 
-	      input = new FileInputStream("config.db");
-	      dbconf.load(input);
-
-	    } catch (IOException e) { e.printStackTrace(); }
+	public String sendHistory(String data) {
 		
-		Processor proc = new Processor(dbconf);
-		
-		proc.getAll();
+	    Supplier<List<gridHistory>> supplier = () -> new ArrayList<gridHistory>();
+	    List<Integer> ids = new ArrayList<Integer>();
+	    
+	    if(data.length()>0)
+	    {
+		    String[] temp = data.split(",");
+		    
+		    for(String s: temp)
+		    {
+		    	ids.add(Integer.parseInt(s));
+		    }
+	    }
+	    
+	    List<gridHistory> tags_filtered = tags.stream()
+	    		.filter(p -> ids.contains(p.getID()) )
+	    		.map(p -> new gridHistory(p.getHistory()))
+	    		.collect(Collectors.toCollection(supplier));
+	    
+	    return help.objectToJsonString(tags_filtered);
 	}
 }
