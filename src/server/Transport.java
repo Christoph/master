@@ -6,15 +6,14 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 
-import processing.abstracts.WorkflowAbstract;
+import processing.lastFM.WorkflowLast;
 
 public class Transport {
 
-	private WorkflowAbstract work = new WorkflowAbstract();
-	//private WorkflowLast work = new WorkflowLast();
+	//private WorkflowAbstract work = new WorkflowAbstract();
+	private WorkflowLast work = new WorkflowLast();
 	//private WorkflowMovie work = new WorkflowMovie();
 	private SocketIOServer server;
-	private Boolean initialized = false;
 	
 	protected Transport(SocketIOServer server) {
 		super();
@@ -22,10 +21,11 @@ public class Transport {
 	}
 
 	public void initialize()
-	{	
+	{		
 		work.init();
 		work.nlpPipeline();
-		work.grouping();
+		//work.grouping();
+		//work.regex();
 		
 		// Connection
 		server.addConnectListener(new ConnectListener() {
@@ -41,32 +41,10 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				if(!initialized)
-				{
-					// Initialize data
-					work.init();
-					initialized = true;
-				}
+				System.out.println(data);
 				
-				System.out.println("update start");
-				
-				//client.sendEvent("data", work.getJSON());
-				
-				System.out.println("update end");
+				client.sendEvent("data", "data");
 			}
         });
-        
-        // Run 
-        server.addEventListener("run", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data, AckRequest arg2)
-					throws Exception {
-				
-				work.nlpPipeline();
-				
-				// Redraw all
-				//client.sendEvent("data", work.getJSON());
-			}
-		});
 	}
 }

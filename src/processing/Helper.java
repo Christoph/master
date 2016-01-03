@@ -35,7 +35,7 @@ public class Helper {
 		    }
 	  }
 	  
-	  public void removeOutlier(List<? extends Tag> tags, int minOccu, Boolean verbose)
+	  public void removeRareWords(List<? extends Tag> tags, int minOccu, Boolean verbose)
 	  {
 		  	Map<String, Integer> occu = new HashMap<String, Integer>();
 		  	List<String> output = new ArrayList<String>();
@@ -104,6 +104,56 @@ public class Helper {
 		    if(verbose) 
 	    	{
 		    	writer = new TagsToCSV("filtered_words.csv");
+		    	writer.writeFilteredWords(output);
+	    	}
+	  }
+	  
+	  public void removeRareComposites(List<? extends Tag> tags, int minOccu, Boolean verbose)
+	  {
+		  	Map<String, Integer> occu = new HashMap<String, Integer>();
+		  	List<String> output = new ArrayList<String>();
+		  	String key = "";
+		  	int value;
+			TagsToCSV writer;
+		  	
+		  	for(Tag t: tags)
+		  	{
+		  		key = t.getTagName();
+	  			
+		  		if(occu.containsKey(key))
+				{
+					value = occu.get(key);
+					
+					// Sum up the count
+					occu.put(key, value + 1);
+				}
+				else
+				{
+					occu.put(key, 1);
+				}
+		  	}
+		  	
+		    // Remove tags which occurs less than minOccu times 
+		  	for(Tag t: tags)
+		    {
+				key = t.getTagName(); 	
+	  			
+				if(occu.get(key) < minOccu)
+				{
+					// Remove tag
+					t.setTagName("");
+					
+					// Add to output list
+					output.add(key);
+				}
+		    }
+		  	
+		  	//removeTagsWithoutWords(tags);
+		  	
+			// Write temp files
+		    if(verbose) 
+	    	{
+		    	writer = new TagsToCSV("filtered_composites.csv");
 		    	writer.writeFilteredWords(output);
 	    	}
 	  }
@@ -208,6 +258,15 @@ public class Helper {
 
 			  t.setTagName(name.replaceAll("\\s*-\\s*", " "));
 		  }
+	  }
+	  
+	  public void addHistoryStep(List<? extends Tag> tags)
+	  {
+		    // Add a history step
+		    for(Tag t: tags)
+		    {
+		    	t.addHistoryStep(t.getTagName());
+		    }
 	  }
 	  
 	  public <T> String objectToJsonString(List<T> list)

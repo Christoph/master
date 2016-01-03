@@ -44,7 +44,7 @@ public class Tag {
 	}
 	public void setTagName(String tagName) {
 		// Add each change in the tag name to the history
-		if(!history.contains(tagName)) history.add(tagName);
+		//if(!history.contains(tagName)) history.add(tagName);
 		
 		this.tagName = tagName;
 	}

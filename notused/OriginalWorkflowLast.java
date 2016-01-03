@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,7 @@ import core.db.Processor;
 import core.tags.TagLast;
 import core.tags.TagsToCSV;
 
-public class WorkflowLast {
+public class OriginalWorkflowLast {
 	
 	// Initialize variables and classes
 	private static final Logger log = Logger.getLogger("Logger");
@@ -29,19 +28,9 @@ public class WorkflowLast {
     private Similarity similarity = new Similarity();
     Grouping grouping = new Grouping();
     
-    // Data
+    // Full data set
     private List<TagLast> tags;
-    private Map<String, Double> vocab = new HashMap<String, Double>();
-    
-    private List<String> whitelist = new ArrayList<String>();
-    private List<String> remove = new ArrayList<String>();
-    private List<String> blacklist = new ArrayList<String>();
 	
-    private List<String> articles = im.importCSV("dicts/article.txt");
-    private List<String> preps = im.importCSV("dicts/prep.txt");
-    private List<String> custom = im.importCSV("dicts/custom.txt");
-    private List<String> replace = new ArrayList<String>();
-    
 	public void init()
 	{
 		log.info("Initialize\n");
@@ -50,7 +39,10 @@ public class WorkflowLast {
 	    tags = im.importLastTags("raw_subset_tags.csv");
 	    
 	    // Set first history step
-	    help.addHistoryStep(tags);
+	    for(TagLast t: tags)
+	    {
+	    	t.addHistoryStep(t.getOriginalTagName());
+	    }
 
 	    log.info("Data loaded\n");
 	}
@@ -60,46 +52,56 @@ public class WorkflowLast {
 		/////////////////////////////////
 	    // Variable initialization  
 	    TagsToCSV writer = new TagsToCSV("tags_nlp_pipeline.csv");
-
+		
+	    // Create word blacklist
+	    List<String> articles = im.importCSV("dicts/article.txt");
+	    List<String> preps = im.importCSV("dicts/prep.txt");
+	    List<String> custom = im.importCSV("dicts/custom.txt");
+	    
+	    List<String> whitelist = new ArrayList<String>();
+	    //whitelist.add("favoritas");
+	    
+	    List<String> blacklist = new ArrayList<String>();
 	    blacklist.addAll(preps);
 	    blacklist.addAll(articles);
 	    blacklist.addAll(custom);
 	    blacklist.add("");
 	    
+	    List<String> remove = new ArrayList<String>();
 	    remove.add("'");
 	    
+	    List<String> replace = new ArrayList<String>();
 	    replace.add("-, ");
 	    replace.add("_, ");
 	    replace.add(":, ");
 	    replace.add(";, ");
 	    replace.add("/, ");
 
-	    int minWordSize = 3;
-	    
 		/////////////////////////////////
 	    // Algorithm
 	    
 	    // Characters
-	    help.removeReplaceCharactersAndLowerCase(tags, remove, replace);
+	    removeReplaceCharacters(tags, remove, replace);
 	    log.info("Character editing finished\n");
 	    
 	    // Blacklist
-	    help.removeBlacklistedWords(tags, blacklist);
+	    removeBlacklistedWords(tags, blacklist);
 	    log.info("Blacklist finished\n");
-
+	    
+	    // Occurrence filter
+	    filterTags(tags, 2);
+	    log.info("Filtering finished\n");
+	    
 	    // Weighting
-	    weighting.vocabByImportance(tags, vocab, "weighting_nlp", true);
+	    weighting.byWeightedMean(tags, "weighting_nlp", true);
 	    log.info("Weighting finished\n");
 	    
 	    // Similarity replacement
-	    similarity.withVocab(tags, vocab, 0.65f, "first", whitelist, minWordSize, true);
+	    similarity.withPhoneticsAndNgrams(tags, 0.65f,"first", whitelist, 3, true);
 	    
 	    // Resolve errors from replacements
 	    help.correctTagsAndIDs(tags);
 	    log.info("1st similiarity replacement finished\n");
-	    
-	    // Add history step
-	    help.addHistoryStep(tags);
 	    
 	    // Output
 	    writer.writeTagListWithHistory(tags);
@@ -203,7 +205,25 @@ public class WorkflowLast {
 	    // Output
 	    writer_tags.writeTagListCustomWeight(tags);
 	}
-
+	
+	public void removeReplaceCharacters(List<TagLast> tags, List<String> remove, List<String> replace)
+	{
+	    // replace/remove characters
+	    help.removeReplaceCharactersAndLowerCase(tags, remove, replace);
+	}
+	
+	public void removeBlacklistedWords(List<TagLast> tags,List<String> blacklist)
+	{
+		// Remove blacklisted words
+	    help.removeBlacklistedWords(tags, blacklist);
+	}
+	
+	public void filterTags(List<TagLast> tags, int minOccu)
+	{
+		// Remove tags which occurre below minOccu times
+		help.removeRareWords(tags, minOccu, true);
+	}
+	
 	public Map<String, String> getImportantWords(List<TagLast> tags, double threshold, int minWordLength)
 	{
 	    TagsToCSV writer_important = new TagsToCSV("important_tags.csv");
