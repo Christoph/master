@@ -14,6 +14,7 @@ import processing.Similarity;
 import core.ImportCSV;
 import core.json.gridHistory;
 import core.json.gridOverview;
+import core.json.gridVocab;
 import core.tags.TagLast;
 import core.tags.TagsToCSV;
 
@@ -32,6 +33,7 @@ public class WorkflowLast {
     private List<TagLast> tags;
     private List<TagLast> groupingTags = new ArrayList<TagLast>();
     private Map<String, Double> vocab = new HashMap<String, Double>();
+    private Map<String, List<String>> vocabClusters = new HashMap<String, List<String>>();
     
     private List<String> whitelistWords = new ArrayList<String>();
     private List<String> whitelistGroups = new ArrayList<String>();
@@ -56,12 +58,23 @@ public class WorkflowLast {
 	    log.info("Data loaded\n");
 	}
 	
-	public void nlpPipeline()
+	public void clustering()
 	{
-		/////////////////////////////////
-	    // Variable initialization  
-	    TagsToCSV writer = new TagsToCSV("tags_nlp_pipeline.csv");
+	    int minWordSize = 3;
 
+	    // Similarity replacement
+	    similarity.withVocab(tags, vocab, 0.65f, "first", whitelistWords, minWordSize, true);
+	    
+	    // Resolve errors from replacements
+	    help.correctTagsAndIDs(tags);
+	    log.info("1st similiarity replacement finished\n");
+	    
+	    // Add history step
+	    help.addHistoryStep(tags);
+	}
+	
+	public void removeReplace()
+	{
 	    blacklist.addAll(preps);
 	    blacklist.addAll(articles);
 	    blacklist.addAll(custom);
@@ -74,12 +87,7 @@ public class WorkflowLast {
 	    replace.add(":, ");
 	    replace.add(";, ");
 	    replace.add("/, ");
-
-	    int minWordSize = 3;
-	    
-		/////////////////////////////////
-	    // Algorithm
-	    
+		
 	    // Characters
 	    help.removeReplaceCharactersAndLowerCase(tags, remove, replace);
 	    log.info("Character editing finished\n");
@@ -87,32 +95,23 @@ public class WorkflowLast {
 	    // Blacklist
 	    help.removeBlacklistedWords(tags, blacklist);
 	    log.info("Blacklist finished\n");
-
-	    // Weighting
-	    weighting.vocabByImportance(tags, vocab, "weighting_nlp", true);
+	}
+	
+	public void weightVocab()
+	{
+	    weighting.vocabByImportance(tags, vocab, "weighting_nlp", false);
 	    log.info("Weighting finished\n");
-	    
-	    // Similarity replacement
-	    similarity.withVocab(tags, vocab, 0.65f, "first", whitelistWords, minWordSize, true);
-	    
-	    // Resolve errors from replacements
-	    help.correctTagsAndIDs(tags);
-	    log.info("1st similiarity replacement finished\n");
-	    
-	    // Add history step
-	    help.addHistoryStep(tags);
-	    
-	    // Output
-	    writer.writeTagListWithHistory(tags);
 	}
 	
 	public void grouping(int maxGroupSize)
 	{
+		// TODO: Initialize all temp datasets -> performance
 		// Temporary dataset
 		groupingTags.clear();
 		
 		for(TagLast t: tags)
 		{
+			// TODO: Change grouping code to List<String> -> Performance
 			groupingTags.add(new TagLast(t));
 		}
 	    
@@ -120,7 +119,7 @@ public class WorkflowLast {
 	    grouping.resetGroups();
 	    
 	    // Set max group size
-	    grouping.setMaxGroupSize(3);
+	    grouping.setMaxGroupSize(maxGroupSize);
 	    
 		// Find word groups
 	    grouping.group(groupingTags, whitelistGroups, 2);
@@ -131,7 +130,10 @@ public class WorkflowLast {
 	{
 	    // Apply groups with current threshold
 		tags.clear();
-		tags.addAll(groupingTags);
+		for(TagLast t: groupingTags)
+		{
+			tags.add(new TagLast(t));
+		}
 	    log.info("Groups applied\n");
 	    
 	    // Split words
@@ -256,11 +258,6 @@ public class WorkflowLast {
 	    writer_track.writeTableTrack(tags);    
 	    writer_tt.writeTableTT(tags);
 	}
-	
-	public String getJSON()
-	{
-	    return help.objectToJsonString(tags);
-	}
 
 	public String sendOverview()
 	{
@@ -270,6 +267,18 @@ public class WorkflowLast {
 	    		.map(p -> new gridOverview(p.getTagName(), p.getImportance(), p.getCarrierName(), p.getID()))
 	    		.collect(Collectors.toCollection(supplier));
 	    
+	    return help.objectToJsonString(tags_filtered);
+	}
+	
+	public String sendVocab()
+	{
+	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
+	    
+	    for(String s: vocab.keySet())
+	    {
+	    	tags_filtered.add(new gridVocab(s, vocab.get(s)));
+	    }
+
 	    return help.objectToJsonString(tags_filtered);
 	}
 

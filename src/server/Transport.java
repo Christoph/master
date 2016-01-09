@@ -24,12 +24,32 @@ public class Transport {
 	{		
 		work.init();
 		
+		// Basic processing
+		work.removeReplace();
+		
+		// Create vocab
+		work.weightVocab();
+		
+		// Compute groups
+		work.grouping(3);
+		
 		// Connection
 		server.addConnectListener(new ConnectListener() {
 			
 			public void onConnect(SocketIOClient client) {
 				
+				// Overview
 				client.sendEvent("initalized", work.sendOverview());
+				
+				// Pre
+				client.sendEvent("vocab", work.sendVocab());
+				
+				// Composite
+				client.sendEvent("frequentGroups", work.sendFrequentGroups());
+				client.sendEvent("uniqueGroups", work.sendUniqueGroups());
+				
+				// Post
+
 			}
 		});
 		
@@ -63,6 +83,7 @@ public class Transport {
 					AckRequest arg2) throws Exception {
 				
 				work.applyGrouping();
+				client.sendEvent("overview", work.sendOverview());
 			}
         });
 	}
