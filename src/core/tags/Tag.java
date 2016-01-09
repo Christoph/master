@@ -27,6 +27,20 @@ public class Tag {
 		this.history = new ArrayList<String>();
 	}
 	
+	public Tag(Tag t) {
+		super();
+		
+		this.ID = t.getID();
+		this.carrierName = t.getCarrierName();
+		this.tagName = t.getTagName();
+		this.carrierID = t.getCarrierID();
+		this.tagID = t.getTagID();
+		this.importance = t.getImportance();
+		this.originalTagName = t.getOriginalTagName();
+		
+		this.history = t.getHistory();
+	}
+	
 	public int getID() {
 		return ID;
 	}

@@ -13,6 +13,15 @@ public class TagLast extends Tag {
 		this.ArtistID = ArtistID;
 		this.tagWeight = LastFMWeight;
 	}
+	
+	public TagLast(TagLast t) {
+		super(t);
+		
+		this.playcount = t.getPlaycount();
+		this.listeners = t.getListeners();
+		this.ArtistID = t.getArtistID();
+		this.tagWeight = t.getTagWeight();
+	}
 
 	public int getArtistID() {
 		return ArtistID;

@@ -30,9 +30,11 @@ public class WorkflowLast {
     
     // Data
     private List<TagLast> tags;
+    private List<TagLast> groupingTags = new ArrayList<TagLast>();
     private Map<String, Double> vocab = new HashMap<String, Double>();
     
-    private List<String> whitelist = new ArrayList<String>();
+    private List<String> whitelistWords = new ArrayList<String>();
+    private List<String> whitelistGroups = new ArrayList<String>();
     private List<String> remove = new ArrayList<String>();
     private List<String> blacklist = new ArrayList<String>();
 	
@@ -91,7 +93,7 @@ public class WorkflowLast {
 	    log.info("Weighting finished\n");
 	    
 	    // Similarity replacement
-	    similarity.withVocab(tags, vocab, 0.65f, "first", whitelist, minWordSize, true);
+	    similarity.withVocab(tags, vocab, 0.65f, "first", whitelistWords, minWordSize, true);
 	    
 	    // Resolve errors from replacements
 	    help.correctTagsAndIDs(tags);
@@ -104,44 +106,51 @@ public class WorkflowLast {
 	    writer.writeTagListWithHistory(tags);
 	}
 	
-	public void grouping()
+	public void grouping(int maxGroupSize)
 	{
-	    int maxGroupSize = 3;
-	
-	    TagsToCSV writer = new TagsToCSV("tags_grouping.csv");
+		// Temporary dataset
+		groupingTags.clear();
+		
+		for(TagLast t: tags)
+		{
+			groupingTags.add(new TagLast(t));
+		}
 	    
-	    List<String> whitelist = new ArrayList<String>();
-	    //whitelist.add("on synths");
-	    //whitelist.add("Brutal Death Metal");
+	    // Reset old groups
+	    grouping.resetGroups();
 	    
-	    // Prioritize whitelist if one exists
-	    if(whitelist.size() > 0)
-	    {
-		    grouping.whitelist(tags, whitelist, maxGroupSize);
-		    log.info("whitelist grouping finished\n");
-	    }
+	    // Set max group size
+	    grouping.setMaxGroupSize(3);
 	    
 		// Find word groups
-	    for(int i = 2; i<=maxGroupSize;i++)
-	    {
-	    	grouping.jaccard(tags, i, 0.4d, 2, true);
-	    }
-	    log.info("jaccard grouping finished\n");
+	    grouping.group(groupingTags, whitelistGroups, 2);
+	    log.info("Grouping finished\n");
+	}
+	
+	public void applyGrouping()
+	{
+	    // Apply groups with current threshold
+		tags.clear();
+		tags.addAll(groupingTags);
+	    log.info("Groups applied\n");
 	    
-	    for(int i = 2; i<=maxGroupSize;i++)
-	    {
-	    	grouping.frequency(tags, i, 0.1d, true);
-	    }
-	    log.info("frequency grouping finished\n");
-
-	    // Split words and compute the importance again
+	    // Split words
 	    help.splitCompositeTagLast(tags);
+	    log.info("Tags splited\n");
 	    
-	    weighting.byWeightedMean(tags ,"second", false);
-	    log.info("Splitting finished\n");
-	    
-	    // Output
-	    writer.writeTagListCustomWeight(tags);
+	    // Compute importance with the new words
+	    weighting.vocabByImportance(tags, vocab, "grouping", false);
+	    log.info("Weigthed\n");
+	}
+	
+	public String sendFrequentGroups()
+	{
+		return grouping.getFrequentGroupsJSON();
+	}
+	
+	public String sendUniqueGroups()
+	{
+		return grouping.getJaccardGroupsJSON();
 	}
 	
 	public void regex()

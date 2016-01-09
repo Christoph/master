@@ -33,13 +33,36 @@ public class Transport {
 			}
 		});
 		
-		// Get data
+		// Get history data
 		server.addEventListener("getHistory", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
 				client.sendEvent("history", work.sendHistory(data));
+			}
+        });
+		
+		// Get all groups
+		server.addEventListener("getGroups", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.grouping(Integer.parseInt(data));
+				
+				client.sendEvent("frequentGroups", work.sendFrequentGroups());
+				client.sendEvent("uniqueGroups", work.sendUniqueGroups());
+			}
+        });
+		
+		// Apply groups to the original data set
+		server.addEventListener("applyGroups", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyGrouping();
 			}
         });
 	}

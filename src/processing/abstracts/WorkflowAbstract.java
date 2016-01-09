@@ -110,20 +110,20 @@ public class WorkflowAbstract {
 	    // Prioritize whitelist if one exists
 	    if(good_groups.size() > 0)
 	    {
-		    grouping.whitelist(tags, good_groups, maxGroupSize);
+		    //grouping.whitelist(tags, good_groups, maxGroupSize);
 		    log.info("whitelist grouping finished\n");
 	    }
 	    
 		// Find word groups
 	    for(int i = 2; i<=maxGroupSize;i++)
 	    {
-	    	grouping.jaccard(tags, i, 0.4d, 2, true);
+	    	//grouping.jaccard(tags, i, 0.4d, 2, true);
 	    }
 	    log.info("jaccard grouping finished\n");
 	    
 	    for(int i = 2; i<=maxGroupSize;i++)
 	    {
-	    	grouping.frequency(tags, i, 0.1d, true);
+	    	//grouping.frequency(tags, i, 0.1d, true);
 	    }
 	    log.info("frequency grouping finished\n");
 	    
