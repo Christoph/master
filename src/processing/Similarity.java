@@ -1,13 +1,8 @@
 package processing;
 
-
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -55,7 +50,7 @@ public class Similarity {
 	    }
 	    
 	    // Sort the vocab by importance
-	    sortedVocab = sortByComparator(sortedVocab);
+	    sortedVocab = Helper.sortByComparator(sortedVocab);
 	    
 	    //	Debug stuff
 	    int psize = sortedVocab.size();
@@ -83,103 +78,103 @@ public class Similarity {
 		}
 	    
 	    // Iterate over the rest of the sorted vocab
-	    //for(String tag: sortedVocab.keySet())
 		for(Iterator<Entry<String, Double>> iterator = sortedVocab.entrySet().iterator(); iterator.hasNext();)
-	      {
+	    {
 			high = iterator.next().getKey();
-			
-	    	  // Debug
-	    	  iter++;
-	    	  if(iter%part == 0)
-	    	  {
-	    		  System.out.println(iter/part+"/30");
-	    	  }
-	          
-	          // Remove the most important word from the list
-	          // This word is treated as truth
-	          iterator.remove();
-	          
-	          // Find similar words and save them to the substitution list
-	          findCluster(sortedVocab, high, clusters);
+		
+			// Debug
+			iter++;
+    	  	if(iter%part == 0)
+    	  	{
+    	  		System.out.println(iter/part+"/30");
+			}
+			  
+			// Remove the most important word from the list
+			// This word is treated as truth
+			iterator.remove();
+			  
+			// Find similar words and save them to the substitution list
+			findCluster(sortedVocab, high, clusters);
 		}   
 	}
 	
-    public void applyClusters(List<? extends Tag> tags, double threshold)
+    public void applyClusters(List<? extends Tag> tags, double threshold, Map<String, Map<String, Double>> clusters)
     {
 	    List<String> words;
-	    String  new_tag;
-	    HashSet<String> h1, h2, h3;
+	    String  new_tag, high, word;
 	    double similarity, similarity2;
     	
-	    /*
-	    if(!substitution_list.containsKey(word))
-        {
-            similarity = 0;
-            
-            h1 = tag_2grams.get(word);
-            
-            // Choose distance methods
-            similarity = psim.jaccard_index(h1, h2);
-            
-            // Add each similar word the the cluster
-            if(similarity > 0)
-            {
-          	  cluster.put(word, similarity);
-            }
-            
-            // Check if the ngram method gives a similarity > threshold
-            if(similarity > threshold)
-            {
-              substitution_list.put(word, high);
-            }  
-        }
-        else
-        {
-      	  similarity = 0;
-      	  similarity2 = 0;
-            
-            h1 = tag_2grams.get(word);
-            h3 = tag_2grams.get(substitution_list.get(word));
-            
-            similarity = psim.jaccard_index(h1, h2);
-            similarity2 = psim.jaccard_index(h1, h3);
-	              
-            // Add each similar word the the cluster
-            if(similarity > 0)
-            {
-          	  cluster.put(word, similarity);
-            }
-            
-      	  // Replace old substitution if the new one is better
-            if(similarity >= similarity2)
-            {          
-          	  System.out.println(word+":"+similarity2+"->"+similarity);
-          	  
-	              substitution_list.put(word, high);
-            }
-         }
-	    */
+	    // Find substitutions with the highest similarity
+	    for(Entry<String, Map<String, Double>> cluster: clusters.entrySet())
+	    {
+	    	high = cluster.getKey();
+	    	
+	    	for(Entry<String, Double> e: cluster.getValue().entrySet())
+	    	{
+	    		word = e.getKey();
+	    		similarity = e.getValue();
+	    		
+	            // Check if similarity > threshold
+	            if(similarity > threshold)
+	            {
+		    		// Add new substitution
+		    		if(!substitution_list.containsKey(word))
+			    	{
+			              substitution_list.put(word, high);
+			    	}
+			    	else
+			    	{
+			    		similarity2 = clusters.get(substitution_list.get(word)).get(word);
+			    		
+			    		// Replace the substitution if the new similarity is bigger than the old one
+			    		if(similarity > similarity2)
+			    		{
+				    		//System.out.println("Replaced substitution for "+word+": "+similarity2+"->"+similarity);
+			    			
+			    			substitution_list.put(word, high);
+			    		}
+			    	}
+	            } 
+	    	}
+	    }
+
+	    // Resolve substitution chains
+	    for(Entry<String,String> e: substitution_list.entrySet())
+	    {
+	    	high = e.getValue();
+	    	
+	    	// Find chains
+	    	if(substitution_list.containsKey(high))
+	    	{
+	    		word = substitution_list.get(high);
+	    		
+	    		//System.out.println("Resolved: "+high+"->"+word);
+	    		
+	    		// Resolve chain
+	    		// A -> B; B -> C   =>   A -> C; B -> C
+	    		e.setValue(word);
+	    	}
+	    }
 	    
     	// Replace tags corresponding to the substitution map
 	    for(Tag t: tags)
 	    {
-	      words = psim.create_word_gram(t.getTagName());
-	      new_tag = "";
+	    	words = psim.create_word_gram(t.getTagName());
+	    	new_tag = "";
 	    	
-	      for(String w: words)
-	      {	    	  
-	    	  if(substitution_list.containsKey(w))
-	    	  {
-	    		  new_tag = new_tag + " " + substitution_list.get(w);
-	    	  }
-	    	  else
-	    	  {
-	    		  new_tag = new_tag + " " + w;
-	    	  }
-	        
-	      }
+	    	for(String w: words)
+	    	{	    	  
+	    		if(substitution_list.containsKey(w))
+	    		{
+	    			new_tag = new_tag + " " + substitution_list.get(w);
+	    		}
+	    		else
+	    		{
+	    			new_tag = new_tag + " " + w;
+	    		}
+	    	}
 
-	      t.setTagName(new_tag.trim());
+	    	t.setTagName(new_tag.trim());
 	    }
     }
     
@@ -211,28 +206,5 @@ public class Similarity {
 	      
 	      // Add cluster to the total list
 	      clusters.put(high, cluster);
-	}
-	
-	private static Map<String, Double> sortByComparator(Map<String, Double> unsortMap) {
-
-		// Convert Map to List
-		List<Map.Entry<String, Double>> list = 
-			new LinkedList<Map.Entry<String, Double>>(unsortMap.entrySet());
-
-		// Sort list with comparator, to compare the Map values
-		Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
-			public int compare(Map.Entry<String, Double> o1,
-                                           Map.Entry<String, Double> o2) {
-				return (o2.getValue()).compareTo(o1.getValue());
-			}
-		});
-
-		// Convert sorted map back to a Map
-		Map<String, Double> sortedMap = new LinkedHashMap<String, Double>();
-		for (Iterator<Map.Entry<String, Double>> it = list.iterator(); it.hasNext();) {
-			Map.Entry<String, Double> entry = it.next();
-			sortedMap.put(entry.getKey(), entry.getValue());
-		}
-		return sortedMap;
 	}
 }

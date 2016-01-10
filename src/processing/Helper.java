@@ -2,9 +2,11 @@ package processing;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -346,4 +348,30 @@ public class Helper {
 		  writer = new TagsToCSV("good_words.csv");
 		  writer.writeStringList(words, "Words");
 	  }
+	  
+		public static Map<String, Double> sortByComparator(Map<String, Double> unsorted) {
+
+			// Variables
+			Map<String, Double> sortedMap = new LinkedHashMap<String, Double>();
+			
+			// Convert map to list
+			List<Map.Entry<String, Double>> list = 
+				new LinkedList<Map.Entry<String, Double>>(unsorted.entrySet());
+
+			// Sort list with comparator
+			// Sort in decreasing order
+			Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+				public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
+					return (o2.getValue()).compareTo(o1.getValue());
+				}
+			});
+
+			// Convert sorted map back to a map
+			for (Iterator<Map.Entry<String, Double>> it = list.iterator(); it.hasNext();) {
+				Map.Entry<String, Double> entry = it.next();
+				sortedMap.put(entry.getKey(), entry.getValue());
+			}
+			
+			return sortedMap;
+		}
 }

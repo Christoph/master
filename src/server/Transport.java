@@ -72,7 +72,6 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				System.out.println(data);
 				work.clustering(Integer.parseInt(data));
 			}
         });
@@ -94,6 +93,7 @@ public class Transport {
 					AckRequest arg2) throws Exception {
 				
 				work.applyClustering(Double.parseDouble(data));
+				client.sendEvent("overview", work.sendOverview());
 			}
         });
 		

@@ -104,7 +104,7 @@ public class WorkflowLast {
 	
 	public void applyClustering(double threshold)
 	{
-		//similarity.applyClusters(tags, threshold);
+		similarity.applyClusters(tags, threshold, vocabClusters);
 	}
 	
 	public void grouping(int maxGroupSize)
