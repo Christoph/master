@@ -30,6 +30,9 @@ public class Transport {
 		// Create vocab
 		work.weightVocab();
 		
+		// Compute clusters
+		work.clustering(3);
+		
 		// Compute groups
 		work.grouping(3);
 		
@@ -60,6 +63,37 @@ public class Transport {
 					AckRequest arg2) throws Exception {
 				
 				client.sendEvent("history", work.sendHistory(data));
+			}
+        });
+		
+		// Compute clusters
+		server.addEventListener("clustering", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				System.out.println(data);
+				work.clustering(Integer.parseInt(data));
+			}
+        });
+		
+		// Get corresponding cluster
+		server.addEventListener("getCluster", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				client.sendEvent("cluster", work.sendCluster(data));
+			}
+        });
+		
+		// Apply clustering threshold
+		server.addEventListener("applyClustering", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyClustering(Double.parseDouble(data));
 			}
         });
 		

@@ -92,7 +92,7 @@ public class WorkflowAbstract {
 	    log.info("Weighting finished\n");
 	    
 	    // Similarity replacement
-	    similarity.withVocab(tags, vocab, 0.70f, "first", good_words, minWordSize, true);
+	    //similarity.withVocab(tags, vocab, 0.70f, "first", good_words, minWordSize, true);
 	    log.info("1st similiarity replacement finished\n");
 	    
 	    // Output

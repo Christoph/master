@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import processing.Grouping;
 import processing.Similarity;
 import core.ImportCSV;
+import core.json.gridCluster;
 import core.json.gridHistory;
 import core.json.gridOverview;
 import core.json.gridVocab;
@@ -33,7 +34,7 @@ public class WorkflowLast {
     private List<TagLast> tags;
     private List<TagLast> groupingTags = new ArrayList<TagLast>();
     private Map<String, Double> vocab = new HashMap<String, Double>();
-    private Map<String, List<String>> vocabClusters = new HashMap<String, List<String>>();
+    private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
     
     private List<String> whitelistWords = new ArrayList<String>();
     private List<String> whitelistGroups = new ArrayList<String>();
@@ -58,12 +59,10 @@ public class WorkflowLast {
 	    log.info("Data loaded\n");
 	}
 	
-	public void clustering()
+	public void clustering(int minWordSize)
 	{
-	    int minWordSize = 3;
-
 	    // Similarity replacement
-	    similarity.withVocab(tags, vocab, 0.65f, "first", whitelistWords, minWordSize, true);
+	    similarity.withVocab(tags, vocab, whitelistWords, minWordSize, vocabClusters);
 	    
 	    // Resolve errors from replacements
 	    help.correctTagsAndIDs(tags);
@@ -101,6 +100,11 @@ public class WorkflowLast {
 	{
 	    weighting.vocabByImportance(tags, vocab, "weighting_nlp", false);
 	    log.info("Weighting finished\n");
+	}
+	
+	public void applyClustering(double threshold)
+	{
+		//similarity.applyClusters(tags, threshold);
 	}
 	
 	public void grouping(int maxGroupSize)
@@ -277,6 +281,18 @@ public class WorkflowLast {
 	    for(String s: vocab.keySet())
 	    {
 	    	tags_filtered.add(new gridVocab(s, vocab.get(s)));
+	    }
+
+	    return help.objectToJsonString(tags_filtered);
+	}
+	
+	public String sendCluster(String tag)
+	{
+	    List<gridCluster> tags_filtered = new ArrayList<gridCluster>();
+	    
+	    for(String s: vocabClusters.get(tag).keySet())
+	    {
+	    	tags_filtered.add(new gridCluster(s, vocabClusters.get(tag).get(s)));
 	    }
 
 	    return help.objectToJsonString(tags_filtered);
