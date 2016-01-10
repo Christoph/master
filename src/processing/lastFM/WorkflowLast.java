@@ -33,7 +33,8 @@ public class WorkflowLast {
     // Data
     private List<TagLast> tags;
     private List<TagLast> groupingTags = new ArrayList<TagLast>();
-    private Map<String, Double> vocab = new HashMap<String, Double>();
+    private Map<String, Double> vocabPre = new HashMap<String, Double>();
+    private Map<String, Double> vocabPost = new HashMap<String, Double>();
     private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
     
     private List<String> whitelistWords = new ArrayList<String>();
@@ -62,14 +63,7 @@ public class WorkflowLast {
 	public void clustering(int minWordSize)
 	{
 	    // Similarity replacement
-	    similarity.withVocab(tags, vocab, whitelistWords, minWordSize, vocabClusters);
-	    
-	    // Resolve errors from replacements
-	    help.correctTagsAndIDs(tags);
-	    log.info("1st similiarity replacement finished\n");
-	    
-	    // Add history step
-	    help.addHistoryStep(tags);
+	    similarity.withVocab(tags, vocabPre, whitelistWords, minWordSize, vocabClusters);
 	}
 	
 	public void removeReplace()
@@ -98,13 +92,23 @@ public class WorkflowLast {
 	
 	public void weightVocab()
 	{
-	    weighting.vocabByImportance(tags, vocab, "weighting_nlp", false);
+	    weighting.vocabByImportance(tags, vocabPre, "weighting_nlp", false);
 	    log.info("Weighting finished\n");
 	}
 	
 	public void applyClustering(double threshold)
 	{
 		similarity.applyClusters(tags, threshold, vocabClusters);
+		
+	    // Resolve errors from replacements
+	    help.correctTagsAndIDs(tags);
+	    
+	    // Compute importance with the new words
+	    weighting.vocabByImportance(tags, vocabPost, "grouping", false);
+	    
+	    // Add history step
+	    help.addHistoryStep(tags);
+	    log.info("Clustering Finished\n");
 	}
 	
 	public void grouping(int maxGroupSize)
@@ -145,8 +149,11 @@ public class WorkflowLast {
 	    log.info("Tags splited\n");
 	    
 	    // Compute importance with the new words
-	    weighting.vocabByImportance(tags, vocab, "grouping", false);
+	    weighting.vocabByImportance(tags, vocabPost, "grouping", false);
 	    log.info("Weigthed\n");
+	    
+	    // Add history step
+	    help.addHistoryStep(tags);
 	}
 	
 	public String sendFrequentGroups()
@@ -278,9 +285,9 @@ public class WorkflowLast {
 	{
 	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
 	    
-	    for(String s: vocab.keySet())
+	    for(String s: vocabPre.keySet())
 	    {
-	    	tags_filtered.add(new gridVocab(s, vocab.get(s)));
+	    	tags_filtered.add(new gridVocab(s, vocabPre.get(s)));
 	    }
 
 	    return help.objectToJsonString(tags_filtered);
@@ -290,9 +297,12 @@ public class WorkflowLast {
 	{
 	    List<gridCluster> tags_filtered = new ArrayList<gridCluster>();
 	    
-	    for(String s: vocabClusters.get(tag).keySet())
+	    if(vocabClusters.containsKey(tag))
 	    {
-	    	tags_filtered.add(new gridCluster(s, vocabClusters.get(tag).get(s)));
+		    for(String s: vocabClusters.get(tag).keySet())
+		    {
+		    	tags_filtered.add(new gridCluster(s, vocabClusters.get(tag).get(s)));
+		    }
 	    }
 
 	    return help.objectToJsonString(tags_filtered);

@@ -94,6 +94,10 @@ public class Transport {
 				
 				work.applyClustering(Double.parseDouble(data));
 				client.sendEvent("overview", work.sendOverview());
+				
+				work.grouping(3);
+				client.sendEvent("frequentGroups", work.sendFrequentGroups());
+				client.sendEvent("uniqueGroups", work.sendUniqueGroups());
 			}
         });
 		
