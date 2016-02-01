@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import processing.Grouping;
 import processing.Similarity;
 import core.ImportCSV;
 import core.json.gridCluster;
+import core.json.gridHist;
 import core.json.gridHistory;
 import core.json.gridOverview;
 import core.json.gridVocab;
@@ -36,6 +38,7 @@ public class WorkflowLast {
     private Map<String, Double> vocabPre = new HashMap<String, Double>();
     private Map<String, Double> vocabPost = new HashMap<String, Double>();
     private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
+    private Map<String, String> importantWords = new HashMap<String, String>();
     
     private List<String> whitelistWords = new ArrayList<String>();
     private List<String> whitelistGroups = new ArrayList<String>();
@@ -90,7 +93,7 @@ public class WorkflowLast {
 	    log.info("Blacklist finished\n");
 	}
 	
-	public void weightVocab()
+	public void weightPreVocab()
 	{
 	    weighting.vocabByImportance(tags, vocabPre, "weighting_nlp", false);
 	    log.info("Weighting finished\n");
@@ -155,16 +158,7 @@ public class WorkflowLast {
 	    // Add history step
 	    help.addHistoryStep(tags);
 	}
-	
-	public String sendFrequentGroups()
-	{
-		return grouping.getFrequentGroupsJSON();
-	}
-	
-	public String sendUniqueGroups()
-	{
-		return grouping.getJaccardGroupsJSON();
-	}
+
 	
 	public void regex()
 	{
@@ -199,16 +193,16 @@ public class WorkflowLast {
 	    log.info("Synonym replacement finished\n");
 	    
 	    // Important words
-	    important_tags = getImportantWords(tags, threshold, minWordLength);
-	    log.info("important tag exttraction finished\n");
+	    //important_tags = getImportantWords(tags, threshold, minWordLength);
+	    //log.info("important tag exttraction finished\n");
 		
 	    // Remove subjective tags from important words
-	    removeSubjectiveWords(tags, subjective, important_tags);
+	    //removeSubjectiveWords(tags, subjective, important_tags);
 	    log.info("removing subjective words finished\n");
 	    
 	    // Word separation
 	    // Find important words in the unimportant tags
-	    regex.findImportantWords(tags, important_tags, threshold, minWordLength, false);
+	    //regex.findImportantWords(tags, important_tags, threshold, minWordLength, false);
 	    log.info("Word separation finished\n");
 	    
 	    // Messed up tags replacement
@@ -224,23 +218,17 @@ public class WorkflowLast {
 	    // Output
 	    writer_tags.writeTagListCustomWeight(tags);
 	}
-
-	public Map<String, String> getImportantWords(List<TagLast> tags, double threshold, int minWordLength)
+	
+	public void weightPostVocab()
 	{
-	    TagsToCSV writer_important = new TagsToCSV("important_tags.csv");
-	    WeightingLast weighting = new WeightingLast();
-	    Map<String, String> important_tags = new LinkedHashMap<String, String>();
-		
-		// Weighting words
-	    weighting.byWeightedMean(tags, "second", false);
-	    log.info("Second time importance\n");
-	    
+	    weighting.vocabByImportance(tags, vocabPost, "weighting_regex", false);
+	    log.info("Weighting finished\n");
+	}
+
+	public void computeImportantWords(double threshold, int minWordLength)
+	{
 	    // Build popular tags dict on raw data
-	    important_tags = help.getImportantTags(tags, threshold, minWordLength);
-	    
-		writer_important.writeImportantTags(important_tags);
-		
-		return important_tags;
+	    importantWords = help.getImportantTags(tags, threshold, minWordLength);
 	}
 	
 	public void removeSubjectiveWords(List<TagLast> tags, List<String> subjective, Map<String, String> important_tags)
@@ -270,6 +258,9 @@ public class WorkflowLast {
 	    writer_tt.writeTableTT(tags);
 	}
 
+	//
+	// All send methods
+	
 	public String sendOverview()
 	{
 	    Supplier<List<gridOverview>> supplier = () -> new ArrayList<gridOverview>();
@@ -307,6 +298,34 @@ public class WorkflowLast {
 
 	    return help.objectToJsonString(tags_filtered);
 	}
+	
+	public String sendSimilarityHistogram()
+	{
+	    List<gridHist> hist = new ArrayList<gridHist>();
+	    Map<Double, Long> temp = new HashMap<Double, Long>();
+	    
+	    for(Entry<String, Map<String, Double>> c: vocabClusters.entrySet())
+	    {
+	    	for(double s: c.getValue().values())
+	    	{
+	    		if(temp.containsKey(s))
+	    		{
+	    			temp.put(s, temp.get(s) + 1);
+	    		}
+	    		else
+	    		{
+	    			temp.put(s, (long) 1);
+	    		}
+	    	}
+	    }
+	    
+	    for(double d: temp.keySet())
+	    {
+	    	hist.add(new gridHist(d, temp.get(d)));
+	    }
+
+	    return help.objectToJsonString(hist);
+	}
 
 	public String sendHistory(String data) {
 		
@@ -328,6 +347,28 @@ public class WorkflowLast {
 	    		.map(p -> new gridHistory(p.getHistory()))
 	    		.collect(Collectors.toCollection(supplier));
 	    
+	    return help.objectToJsonString(tags_filtered);
+	}
+	
+	public String sendFrequentGroups()
+	{
+		return grouping.getFrequentGroupsJSON();
+	}
+	
+	public String sendUniqueGroups()
+	{
+		return grouping.getJaccardGroupsJSON();
+	}
+	
+	public String sendPostVocab()
+	{
+	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
+	    
+	    for(String s: vocabPost.keySet())
+	    {
+	    	tags_filtered.add(new gridVocab(s, vocabPost.get(s)));
+	    }
+
 	    return help.objectToJsonString(tags_filtered);
 	}
 }

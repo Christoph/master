@@ -28,7 +28,7 @@ public class Transport {
 		work.removeReplace();
 		
 		// Create vocab
-		work.weightVocab();
+		work.weightPreVocab();
 		
 		// Compute clusters
 		work.clustering(3);
@@ -45,7 +45,10 @@ public class Transport {
 				client.sendEvent("initalized", work.sendOverview());
 				
 				// Pre
+				// Send vocab
 				client.sendEvent("vocab", work.sendVocab());
+				// Send similarities
+				client.sendEvent("similarities", work.sendSimilarityHistogram());
 				
 				// Composite
 				client.sendEvent("frequentGroups", work.sendFrequentGroups());
@@ -122,6 +125,18 @@ public class Transport {
 				
 				work.applyGrouping();
 				client.sendEvent("overview", work.sendOverview());
+			}
+        });
+		
+		// getImportantWords
+		server.addEventListener("getPostVocab", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.weightPostVocab();
+				
+				client.sendEvent("postVocab", work.sendPostVocab());
 			}
         });
 	}
