@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import core.json.gridCluster;
 import core.json.gridHist;
 import core.json.gridHistory;
 import core.json.gridOverview;
+import core.json.gridRepl;
 import core.json.gridVocab;
 import core.tags.TagLast;
 import core.tags.TagsToCSV;
@@ -38,6 +40,7 @@ public class WorkflowLast {
     private Map<String, Double> vocabPre = new HashMap<String, Double>();
     private Map<String, Double> vocabPost = new HashMap<String, Double>();
     private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
+    private TreeMap<Double, Map<String, String>> simClusters = new TreeMap<Double, Map<String,String>>();
     private Map<String, String> importantWords = new HashMap<String, String>();
     
     private List<String> whitelistWords = new ArrayList<String>();
@@ -65,8 +68,11 @@ public class WorkflowLast {
 	
 	public void clustering(int minWordSize)
 	{
-	    // Similarity replacement
+	    // compute similarities
 	    similarity.withVocab(tags, vocabPre, whitelistWords, minWordSize, vocabClusters);
+	    
+	    // create similarity clusters
+	    createSimClusters();
 	}
 	
 	public void removeReplace()
@@ -325,6 +331,104 @@ public class WorkflowLast {
 	    }
 
 	    return help.objectToJsonString(hist);
+	}
+	
+	// Send 100 entries around the threshold
+	public String sendReplacements(double threshold)
+	{
+	    List<gridRepl> repl = new ArrayList<gridRepl>();
+
+	    double core = simGet(threshold);
+	    double lower = core;
+	    double higher = core;
+	    Boolean init = false;
+	    
+	    // Add core replacements
+	    addElementsToRepl(repl, core);
+	    
+	    // Add one layer around the center until the total number of entries rises above 101
+	    while(repl.size() <= 101 || init == false)
+	    {
+	    	init = true;
+	    	
+	        Entry<Double, Map<String, String>> high = simClusters.higherEntry(higher);
+	        
+	        if(high != null)
+	        {
+		        higher = high.getKey();
+			    addElementsToRepl(repl, higher);
+	        }
+
+	        Entry<Double, Map<String, String>> low = simClusters.lowerEntry(lower);
+	        
+	        if(low != null)
+	        {
+		        lower = low.getKey();
+			    addElementsToRepl(repl, lower);
+	        }
+	    }
+		
+	    return help.objectToJsonString(repl);
+	}
+	
+	private void addElementsToRepl(List<gridRepl> repl, double key)
+	{
+	    for(Entry<String, String> e: simClusters.get(key).entrySet())
+	    {
+	    	repl.add(new gridRepl(e.getKey(), e.getValue(), key));
+	    }
+	}
+	
+	// Get nearest entry from the similarity tree map
+	private double simGet(double key) {
+	    Map<String, String> value = simClusters.get(key);
+	    double entry = key;
+
+	    if (value == null) {
+	        Entry<Double, Map<String, String>> floor = simClusters.floorEntry(key);
+	        Entry<Double, Map<String, String>> ceiling = simClusters.ceilingEntry(key);
+
+	        if ((key - floor.getKey()) < (ceiling.getKey() - key)) {
+	            value = floor.getValue();
+	            entry = floor.getKey();
+	        } else {
+	            value = ceiling.getValue();
+	            entry = ceiling.getKey();
+	        }
+	    }
+
+	    return entry;
+	}
+	
+	private void createSimClusters()
+	{
+		String head = "";
+		String key = "";
+		double value = 0;
+		
+	    for(Entry<String, Map<String, Double>> c: vocabClusters.entrySet())
+	    {
+	    	head = c.getKey();
+	    	
+	    	for(Entry<String, Double> e: c.getValue().entrySet())
+	    	{
+	    		key = e.getKey();
+	    		value = e.getValue();
+	    		
+	    		if(simClusters.containsKey(value))
+	    		{
+	    			simClusters.get(value).put(head, key);
+	    		}
+	    		else
+	    		{
+	    			// Create inner map
+	    			simClusters.put(value, new HashMap<String, String>());
+	    			
+	    			// Add first line
+	    			simClusters.get(value).put(head, key);
+	    		}
+	    	}
+	    }
 	}
 
 	public String sendHistory(String data) {

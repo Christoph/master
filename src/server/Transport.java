@@ -45,6 +45,8 @@ public class Transport {
 				client.sendEvent("initalized", work.sendOverview());
 				
 				// Pre
+				// Send replacements
+				client.sendEvent("replacements", work.sendReplacements(0.65));
 				// Send vocab
 				client.sendEvent("vocab", work.sendVocab());
 				// Send similarities
@@ -86,6 +88,16 @@ public class Transport {
 					AckRequest arg2) throws Exception {
 				
 				client.sendEvent("cluster", work.sendCluster(data));
+			}
+        });
+		
+		// Get replacements around threshold
+		server.addEventListener("getReplacements", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				client.sendEvent("replacements", work.sendReplacements(Double.parseDouble(data)));
 			}
         });
 		
