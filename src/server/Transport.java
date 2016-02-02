@@ -49,6 +49,8 @@ public class Transport {
 				client.sendEvent("replacements", work.sendReplacements(0.65));
 				// Send vocab
 				client.sendEvent("vocab", work.sendVocab());
+				// Send importance
+				client.sendEvent("importance", work.sendImportanceHistogram());
 				// Send similarities
 				client.sendEvent("similarities", work.sendSimilarityHistogram());
 				

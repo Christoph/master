@@ -305,6 +305,32 @@ public class WorkflowLast {
 	    return help.objectToJsonString(tags_filtered);
 	}
 	
+	public String sendImportanceHistogram()
+	{
+	    List<gridHist> hist = new ArrayList<gridHist>();
+	    Map<Double, Long> temp = new HashMap<Double, Long>();
+	    
+	    for(Entry<String, Double> c: vocabPre.entrySet())
+	    {
+    		if(temp.containsKey(c.getValue()))
+    		{
+    			temp.put(c.getValue(), temp.get(c.getValue()) + 1);
+    		}
+    		else
+    		{
+    			temp.put(c.getValue(), (long) 1);
+    		}
+
+	    }
+	    
+	    for(double d: temp.keySet())
+	    {
+	    	hist.add(new gridHist(d, temp.get(d)));
+	    }
+
+	    return help.objectToJsonString(hist);
+	}
+	
 	public String sendSimilarityHistogram()
 	{
 	    List<gridHist> hist = new ArrayList<gridHist>();
