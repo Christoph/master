@@ -349,7 +349,7 @@ public class Helper {
 		  writer.writeStringList(words, "Words");
 	  }
 	  
-		public static Map<String, Double> sortByComparator(Map<String, Double> unsorted) {
+		public static Map<String, Double> sortByComparatorDouble(Map<String, Double> unsorted) {
 
 			// Variables
 			Map<String, Double> sortedMap = new LinkedHashMap<String, Double>();
@@ -369,6 +369,32 @@ public class Helper {
 			// Convert sorted map back to a map
 			for (Iterator<Map.Entry<String, Double>> it = list.iterator(); it.hasNext();) {
 				Map.Entry<String, Double> entry = it.next();
+				sortedMap.put(entry.getKey(), entry.getValue());
+			}
+			
+			return sortedMap;
+		}
+		
+		public static Map<String, Integer> sortByComparatorInteger(Map<String, Integer> unsorted) {
+
+			// Variables
+			Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
+			
+			// Convert map to list
+			List<Map.Entry<String, Integer>> list = 
+				new LinkedList<Map.Entry<String, Integer>>(unsorted.entrySet());
+
+			// Sort list with comparator
+			// Sort in decreasing order
+			Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+				public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+					return (o2.getValue()).compareTo(o1.getValue());
+				}
+			});
+
+			// Convert sorted map back to a map
+			for (Iterator<Map.Entry<String, Integer>> it = list.iterator(); it.hasNext();) {
+				Map.Entry<String, Integer> entry = it.next();
 				sortedMap.put(entry.getKey(), entry.getValue());
 			}
 			

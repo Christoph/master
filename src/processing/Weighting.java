@@ -192,7 +192,7 @@ public class Weighting {
 	    if(verbose) 
 		{	
 	    	writer = new TagsToCSV("vocab_"+prefix+".csv");
-	    	writer.writeVocab(Helper.sortByComparator(vocab));
+	    	writer.writeVocab(Helper.sortByComparatorDouble(vocab));
 		}
 	}
 }

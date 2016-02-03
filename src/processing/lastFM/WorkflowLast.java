@@ -2,7 +2,6 @@ package processing.lastFM;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,12 +35,10 @@ public class WorkflowLast {
     
     // Data
     private List<TagLast> tags;
-    private List<TagLast> groupingTags = new ArrayList<TagLast>();
     private Map<String, Double> vocabPre = new HashMap<String, Double>();
     private Map<String, Double> vocabPost = new HashMap<String, Double>();
     private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
     private TreeMap<Double, Map<String, String>> simClusters = new TreeMap<Double, Map<String,String>>();
-    private Map<String, String> importantWords = new HashMap<String, String>();
     
     private List<String> whitelistWords = new ArrayList<String>();
     private List<String> whitelistGroups = new ArrayList<String>();
@@ -52,6 +49,10 @@ public class WorkflowLast {
     private List<String> preps = im.importCSV("dicts/prep.txt");
     private List<String> custom = im.importCSV("dicts/custom.txt");
     private List<String> replace = new ArrayList<String>();
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Initialization
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
 	public void init()
 	{
@@ -65,6 +66,10 @@ public class WorkflowLast {
 
 	    log.info("Data loaded\n");
 	}
+	
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Preprocessing
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public void clustering(int minWordSize)
 	{
@@ -120,37 +125,33 @@ public class WorkflowLast {
 	    log.info("Clustering Finished\n");
 	}
 	
-	public void grouping(int maxGroupSize)
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Composites
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public void grouping()
 	{
-		// TODO: Initialize all temp datasets -> performance
-		// Temporary dataset
-		groupingTags.clear();
-		
-		for(TagLast t: tags)
-		{
-			// TODO: Change grouping code to List<String> -> Performance
-			groupingTags.add(new TagLast(t));
-		}
-	    
-	    // Reset old groups
-	    grouping.resetGroups();
-	    
+		// Compute all word groups
+	    grouping.group(tags, whitelistGroups);
+	    log.info("Grouping finished\n");
+	}
+	
+	public void setGroupSize(int maxGroupSize)
+	{
 	    // Set max group size
 	    grouping.setMaxGroupSize(maxGroupSize);
-	    
-		// Find word groups
-	    grouping.group(groupingTags, whitelistGroups, 2);
-	    log.info("Grouping finished\n");
+	}
+	
+	public void setWhitelist(List<String> whitelist)
+	{
+	    // Set whitelist
+	    grouping.setWhitelist(whitelist);
 	}
 	
 	public void applyGrouping()
 	{
 	    // Apply groups with current threshold
-		tags.clear();
-		for(TagLast t: groupingTags)
-		{
-			tags.add(new TagLast(t));
-		}
+		grouping.applyGroups(tags);
 	    log.info("Groups applied\n");
 	    
 	    // Split words
@@ -165,6 +166,9 @@ public class WorkflowLast {
 	    help.addHistoryStep(tags);
 	}
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Postprocessing
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public void regex()
 	{
@@ -172,20 +176,9 @@ public class WorkflowLast {
 	    // Variable initialization  	    
 	    TagsToCSV writer_tags = new TagsToCSV("tags_Regex.csv");
 	    
-	    Map<String, String> important_tags;
-	    
-	    List<String> subjective = im.importCSV("dicts/subjective.txt");
+	    //List<String> subjective = im.importCSV("dicts/subjective.txt");
 	    List<String> synonyms = im.importCSV("dicts/synonyms.txt");
 	    List<String> messedup = im.importCSV("dicts/messedgroups.txt");
-	    
-		///////////////////////////////// 
-	    // Parameters
-	    
-	    // Set importance threshold
-	    double threshold = 0.1;
-	    
-	    // Set minimum word length
-	    int minWordLength = 3;
 
 		///////////////////////////////// 
 	    // Algorithm
@@ -234,7 +227,7 @@ public class WorkflowLast {
 	public void computeImportantWords(double threshold, int minWordLength)
 	{
 	    // Build popular tags dict on raw data
-	    importantWords = help.getImportantTags(tags, threshold, minWordLength);
+	    //importantWords = help.getImportantTags(tags, threshold, minWordLength);
 	}
 	
 	public void removeSubjectiveWords(List<TagLast> tags, List<String> subjective, Map<String, String> important_tags)
@@ -252,20 +245,10 @@ public class WorkflowLast {
 	    
 	    writer_important_filtered.writeImportantTags(important_tags);
 	}
-	
-	public void exportInTableFormat()
-	{
-	    TagsToCSV writer_tag = new TagsToCSV("Tag.csv");
-	    TagsToCSV writer_track = new TagsToCSV("Track.csv");
-	    TagsToCSV writer_tt = new TagsToCSV("TT.csv");
-		
-	    writer_tag.writeTableTag(tags);
-	    writer_track.writeTableTrack(tags);    
-	    writer_tt.writeTableTT(tags);
-	}
 
-	//
-	// All send methods
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Send Methods
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public String sendOverview()
 	{
@@ -372,7 +355,7 @@ public class WorkflowLast {
 	    // Add core replacements
 	    addElementsToRepl(repl, core);
 	    
-	    // Add one layer around the center until the total number of entries rises above 101
+	    // Add at least one layer around the center until the total number of entries rises above 101
 	    while(repl.size() <= 101 || init == false)
 	    {
 	    	init = true;
@@ -487,7 +470,17 @@ public class WorkflowLast {
 	
 	public String sendUniqueGroups()
 	{
-		return grouping.getJaccardGroupsJSON();
+		return grouping.getUniqueGroupsJSON();
+	}
+	
+	public String sendFrequentHistogram()
+	{
+		return grouping.getFrequentHistogramJSON();
+	}
+	
+	public String sendUniqueHistogram()
+	{
+		return grouping.getUniqueHistogramJSON();
 	}
 	
 	public String sendPostVocab()

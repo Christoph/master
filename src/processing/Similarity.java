@@ -50,7 +50,7 @@ public class Similarity {
 	    }
 	    
 	    // Sort the vocab by importance
-	    sortedVocab = Helper.sortByComparator(sortedVocab);
+	    sortedVocab = Helper.sortByComparatorDouble(sortedVocab);
 	    
 	    //	Debug stuff
 	    int psize = sortedVocab.size();

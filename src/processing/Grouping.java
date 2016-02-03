@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import core.json.gridGroup;
+import core.json.gridHist;
 import core.tags.Tag;
 import core.tags.TagsToCSV;
 
@@ -15,30 +18,29 @@ public class Grouping {
   	private Helper help = new Helper();
   	
 	// Current group strengths
-	private Map<String, Double> jaccard_group_weight = new HashMap<String, Double>();
-	private Map<String, Double> frequent_group_weight = new HashMap<String, Double>();
+	private TreeMap<Double, Map<String, Integer>> jaccard_groups = new TreeMap<Double, Map<String, Integer>>();
+	private TreeMap<Double, Map<String, Integer>> frequent_groups = new TreeMap<Double, Map<String, Integer>>();
+	private List<String> whitelist = new ArrayList<String>();
 	
-	// Temporary frequent group map
-    Map<String, Double> tempGroup = new HashMap<String, Double>();
-	
+    // Parameters
 	private double jaccardThreshold = 0;
 	private double frequentThreshold = 0;
-	private int maxGroupSize = 1;
+	private int maxGroupSize = 3;
+	private int minOccurrence = 2;
+	private Boolean verbose = false;
 	
-	public void group(List<? extends Tag> tags, List<String> whitelistGroups, int minOccurrence)
+	public void group(List<? extends Tag> tags, List<String> whitelistGroups)
 	{		
-		tempGroup.clear();
+		// Clear old groups
+		jaccard_groups.clear();
+		frequent_groups.clear();
 		
-	    if(whitelistGroups.size() > 0)
-	    {
-		    whitelist(tags, whitelistGroups);
-	    }
-		
-		jaccard(tags, minOccurrence, false);
-		frequency(tags, false);
+		// Compute groups
+		jaccard(tags);
+		frequency(tags);
 	}
 	
-	public void jaccard(List<? extends Tag> tags, int minOccurrence, Boolean verbose) {
+	public void jaccard(List<? extends Tag> tags) {
 	    for(int size = maxGroupSize; size>=2;size--)
 	    {
 			/////////////////////////////////
@@ -129,16 +131,17 @@ public class Grouping {
 			{
 				strength = (groups_strength.get(s)-min_o)/(max_o - min_o);
 				
-		    	// Add to temp map
-				if(strength >= jaccardThreshold)
+		    	// Add all groups
+				if(jaccard_groups.containsKey(strength))
 				{
-			    	tempGroup.put(s, strength);
+					jaccard_groups.get(strength).put(s, size);
 				}
-		    	// Add to output map
-				jaccard_group_weight.put(s, strength);
+				else
+				{
+					jaccard_groups.put(strength, new HashMap<String, Integer>());
+					jaccard_groups.get(strength).put(s, size);
+				}
 			}
-			
-		    replaceGroups(tags, tempGroup, size);
 			
 			// Write temp files
 		    if(verbose) 
@@ -149,7 +152,7 @@ public class Grouping {
 	    }
 	}
 	
-	public void frequency(List<? extends Tag> tags, Boolean verbose) {
+	public void frequency(List<? extends Tag> tags) {
 	    for(int size = maxGroupSize; size>=2;size--)
 	    {	
 		    /////////////////////////////////
@@ -202,17 +205,17 @@ public class Grouping {
 		    {
 		    	strength = (word_count.get(s)-min_o)/(max_o - min_o);
 		    	
-		    	// Add to temp map
-				if(strength >= frequentThreshold)
+		    	// Add all groups
+				if(frequent_groups.containsKey(strength))
 				{
-			    	tempGroup.put(s, strength);
+					frequent_groups.get(strength).put(s, size);
 				}
-				
-		    	// Add to output map
-		    	frequent_group_weight.put(s, strength);
+				else
+				{
+					frequent_groups.put(strength, new HashMap<String, Integer>());
+					frequent_groups.get(strength).put(s, size);
+				}
 		    }
-		    
-		    replaceGroups(tags, tempGroup, size);
 		    
 		    // Write temp files
 		    if(verbose) 
@@ -223,81 +226,65 @@ public class Grouping {
 	    }
 	}
 	
-	public void whitelist(List<? extends Tag> tags, List<String> whitelist)
+	public void applyGroups(List<? extends Tag> tags)
 	{
-	    Map<String, Double> good_groups = new HashMap<String, Double>();
+		TreeMap<Double, Map<String, Integer>> temp = new TreeMap<Double, Map<String, Integer>>();
+		List<String> subs = new ArrayList<String>();
+		String name;
 		
-	    for(int i = 2; i<=maxGroupSize;i++)
-	    {
-		    for(String s: whitelist)
-		    {
-		    	if(s.split(" ").length == i)
-		    	{
-			    	good_groups.put(s, 1d);
-		    	}
-		    }
-			
-			good_groups.clear();
-	    }
-	}
-	
-	private void replaceGroups(List<? extends Tag> tags, Map<String, Double> good_groups, int size)
-	{
-	    Map<String, Double> subs = new HashMap<String, Double>();
-	    
-	    List<String> groups;
-		double max_o = 0;
-		String key, name;
+		// Merge all relevant items into one list
+		for(Entry<Double, Map<String, Integer>> st: frequent_groups.descendingMap().entrySet())
+		{
+			if(st.getKey() >= frequentThreshold)
+			{
+				if(!temp.containsKey(st.getKey()))
+				{
+					temp.put(st.getKey(), new HashMap<String, Integer>());
+				}
+				
+				temp.get(st.getKey()).putAll(st.getValue());
+			}
+		}
 		
-		// Replace tag groups
+		for(Entry<Double, Map<String, Integer>> st: jaccard_groups.descendingMap().entrySet())
+		{
+			if(st.getKey() >= jaccardThreshold)
+			{
+				if(!temp.containsKey(st.getKey()))
+				{
+					temp.put(st.getKey(), new HashMap<String, Integer>());
+				}
+				
+				temp.get(st.getKey()).putAll(st.getValue());
+			}
+		}
+		
+		// Add substitutions in correct order: whitelist > highest group + highest strength > rest
+		if(whitelist.size() > 0)
+		{
+			subs.addAll(whitelist);
+		}
+		
+		for(Entry<Double, Map<String, Integer>> st: temp.descendingMap().entrySet())
+		{
+			subs.addAll(Helper.sortByComparatorInteger(st.getValue()).keySet());
+		}
+		
+		// Replace word groups
 	    for(Tag t: tags)
-	    {	    	
+	    {
 	    	name = t.getTagName();
-	    	groups = psim.create_word_n_gram(name,size);
 	    	
-	      // Find possible substitutions
-	      for(String s : groups)
-	      {
-		      if(good_groups.containsKey(s))
-		      {
-		    	  subs.put(s, good_groups.get(s));
-		      }
-	      }
-	      
-	      do
-	      {
-		      max_o = 0;
-		      key = "";
-		      
-		      // Find maximum
-		      for(String s : subs.keySet())
-		      {
-		    	  double k = subs.get(s);
-		    	  
-		    	  if(k >= max_o) 
-	    		  {
-		    		  max_o = k;
-		    		  key = s;
-	    		  }
-		      }
-	
-		      subs.remove(key);
-		      
-		      if(name.contains(key))
-		      {
-			      name = name.replaceAll(key, key.replace(" ", "-"));
-		      }
-		      
-	      } while(subs.size() > 0);
-	      
-	      t.setTagName(name);
-	    }
-	}
-
-	public void resetGroups()
-	{
-		jaccard_group_weight.clear();
-		frequent_group_weight.clear();
+	    	for(String s: subs)
+	    	{
+	    		if(name.contains(s))
+	    		{
+	    			name = name.replaceAll(s, s.replace(" ", "-"));
+	    		}
+	    	}
+	    	
+	    	t.setTagName(name);
+		}
 	}
 	
 	public double getJaccardThreshold() {
@@ -324,12 +311,23 @@ public class Grouping {
 		this.maxGroupSize = maxGroupSize;
 	}
 
-	public String getJaccardGroupsJSON() {	
+	public List<String> getWhitelist() {
+		return whitelist;
+	}
+
+	public void setWhitelist(List<String> whitelist) {
+		this.whitelist = whitelist;
+	}
+
+	public String getUniqueGroupsJSON() {	
 		List<gridGroup> temp = new ArrayList<gridGroup>();
 		
-		for(String s: jaccard_group_weight.keySet())
+		for(Entry<Double, Map<String, Integer>> s: jaccard_groups.descendingMap().entrySet())
 		{
-			temp.add(new gridGroup(s, jaccard_group_weight.get(s)));
+			for(Entry<String, Integer> e: Helper.sortByComparatorInteger(s.getValue()).entrySet())
+			{
+				temp.add(new gridGroup(e.getKey(), s.getKey()));
+			}
 		}
 		
 		return help.objectToJsonString(temp);
@@ -338,10 +336,47 @@ public class Grouping {
 	public String getFrequentGroupsJSON() {
 		List<gridGroup> temp = new ArrayList<gridGroup>();
 		
-		for(String s: frequent_group_weight.keySet())
+		for(Entry<Double, Map<String, Integer>> s: frequent_groups.descendingMap().entrySet())
 		{
-			temp.add(new gridGroup(s, frequent_group_weight.get(s)));
+			for(Entry<String, Integer> e: Helper.sortByComparatorInteger(s.getValue()).entrySet())
+			{
+				temp.add(new gridGroup(e.getKey(), s.getKey()));
+			}
 		}
 		return help.objectToJsonString(temp);
+	}
+	
+	public String getFrequentHistogramJSON() {	
+	    List<gridHist> hist = new ArrayList<gridHist>();
+	    Map<Double, Long> temp = new HashMap<Double, Long>();
+	    
+	    for(Entry<Double, Map<String, Integer>> c: frequent_groups.entrySet())
+	    {
+    		temp.put(c.getKey(), (long) c.getValue().size());
+	    }
+	    
+	    for(double d: temp.keySet())
+	    {
+	    	hist.add(new gridHist(d, temp.get(d)));
+	    }
+		
+		return help.objectToJsonString(hist);
+	}
+
+	public String getUniqueHistogramJSON() {
+	    List<gridHist> hist = new ArrayList<gridHist>();
+	    Map<Double, Long> temp = new HashMap<Double, Long>();
+	    
+	    for(Entry<Double, Map<String, Integer>> c: jaccard_groups.entrySet())
+	    {
+    		temp.put(c.getKey(), (long) c.getValue().size());
+	    }
+	    
+	    for(double d: temp.keySet())
+	    {
+	    	hist.add(new gridHist(d, temp.get(d)));
+	    }
+		
+		return help.objectToJsonString(hist);
 	}
 }

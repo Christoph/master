@@ -34,7 +34,7 @@ public class Transport {
 		work.clustering(3);
 		
 		// Compute groups
-		work.grouping(3);
+		work.grouping();
 		
 		// Connection
 		server.addConnectListener(new ConnectListener() {
@@ -57,6 +57,9 @@ public class Transport {
 				// Composite
 				client.sendEvent("frequentGroups", work.sendFrequentGroups());
 				client.sendEvent("uniqueGroups", work.sendUniqueGroups());
+				
+				client.sendEvent("frequentStrength", work.sendFrequentHistogram());
+				client.sendEvent("uniqueStrength", work.sendUniqueHistogram());
 				
 				// Post
 
@@ -112,7 +115,7 @@ public class Transport {
 				work.applyClustering(Double.parseDouble(data));
 				client.sendEvent("overview", work.sendOverview());
 				
-				work.grouping(3);
+				work.grouping();
 				client.sendEvent("frequentGroups", work.sendFrequentGroups());
 				client.sendEvent("uniqueGroups", work.sendUniqueGroups());
 			}
@@ -124,7 +127,8 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.grouping(Integer.parseInt(data));
+				work.setGroupSize(Integer.parseInt(data));
+				work.grouping();
 				
 				client.sendEvent("frequentGroups", work.sendFrequentGroups());
 				client.sendEvent("uniqueGroups", work.sendUniqueGroups());

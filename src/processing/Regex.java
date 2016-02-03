@@ -41,6 +41,14 @@ public class Regex {
 
     // Now create matcher object.
   	protected Matcher mr, ml;
+  	
+  	// Parameters
+  	
+    // Set importance threshold
+    private double threshold = 0.1;
+    
+    // Set minimum word length
+    private int minWordLength = 3;
 	
     // String, > 0 == right, list of important tags
 	public void matcher(String name, Map<String, String> list, int minWordLength, Boolean useAllWords)
