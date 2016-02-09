@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import processing.Grouping;
+import processing.Helper;
 import processing.Similarity;
 import core.ImportCSV;
 import core.json.gridCluster;
@@ -265,7 +266,7 @@ public class WorkflowLast {
 	{
 	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
 	    
-	    for(String s: vocabPre.keySet())
+	    for(String s: Helper.sortByComparatorDouble(vocabPre).keySet())
 	    {
 	    	tags_filtered.add(new gridVocab(s, vocabPre.get(s)));
 	    }
@@ -322,7 +323,7 @@ public class WorkflowLast {
 	    for(Entry<String, Map<String, Double>> c: vocabClusters.entrySet())
 	    {
 	    	for(double s: c.getValue().values())
-	    	{
+	    	{ 
 	    		if(temp.containsKey(s))
 	    		{
 	    			temp.put(s, temp.get(s) + 1);
