@@ -43,26 +43,6 @@ public class Transport {
 				
 				// Overview
 				client.sendEvent("initalized", work.sendOverview());
-				
-				// Pre
-				// Send replacements
-				client.sendEvent("replacements", work.sendReplacements(0.65));
-				// Send vocab
-				client.sendEvent("vocab", work.sendVocab());
-				// Send importance
-				client.sendEvent("importance", work.sendImportanceHistogram());
-				// Send similarities
-				client.sendEvent("similarities", work.sendSimilarityHistogram());
-				
-				// Composite
-				client.sendEvent("frequentGroups", work.sendFrequentGroups());
-				client.sendEvent("uniqueGroups", work.sendUniqueGroups());
-				
-				client.sendEvent("frequentStrength", work.sendFrequentHistogram());
-				client.sendEvent("uniqueStrength", work.sendUniqueHistogram());
-				
-				// Post
-
 			}
 		});
 		
@@ -86,13 +66,34 @@ public class Transport {
 			}
         });
 		
-		// Get corresponding cluster
+		// Get spell checking data
+		server.addEventListener("getSpellcheckingData", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				if(data.equals("similarities"))
+				{
+					client.sendEvent("similarities", work.sendSimilarityHistogram());
+				}
+				if(data.equals("vocab"))
+				{
+					client.sendEvent("vocab", work.sendVocab());
+				}
+				if(data.equals("importance"))
+				{
+					client.sendEvent("importance", work.sendImportanceHistogram());
+				}
+			}
+        });
+		
+		// Get cluster of tag
 		server.addEventListener("getCluster", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				client.sendEvent("cluster", work.sendCluster(data));
+					client.sendEvent("cluster", work.sendCluster(data));
 			}
         });
 		
@@ -102,7 +103,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				client.sendEvent("replacements", work.sendReplacements(Double.parseDouble(data)));
+					client.sendEvent("replacements", work.sendReplacements(Double.parseDouble(data)));
 			}
         });
 		
@@ -121,17 +122,28 @@ public class Transport {
 			}
         });
 		
-		// Get all groups
-		server.addEventListener("getGroups", String.class, new DataListener<String>() {
+		// Get unique data
+		server.addEventListener("getCompositeData", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.setGroupSize(Integer.parseInt(data));
-				work.grouping();
-				
-				client.sendEvent("frequentGroups", work.sendFrequentGroups());
-				client.sendEvent("uniqueGroups", work.sendUniqueGroups());
+				if(data.equals("frequentData"))
+				{
+					client.sendEvent("frequentData", work.sendFrequentHistogram());
+				}
+				if(data.equals("frequentGroups"))
+				{
+					client.sendEvent("frequentGroups", work.sendFrequentGroups());
+				}
+				if(data.equals("uniqueData"))
+				{
+					client.sendEvent("uniqueData", work.sendUniqueHistogram());
+				}
+				if(data.equals("uniqueGroups"))
+				{
+					client.sendEvent("uniqueGroups", work.sendUniqueGroups());
+				}
 			}
         });
 		
