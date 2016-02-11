@@ -71,6 +71,35 @@ public class WorkflowLast {
 	    log.info("Data loaded\n");
 	}
 	
+	//OLD
+	
+	public void removeReplace()
+	{
+	    blacklist.addAll(preps);
+	    blacklist.addAll(articles);
+	    blacklist.addAll(custom);
+	    blacklist.add("");
+	    
+	    remove = "'";
+	    
+	    replace.add("-, ");
+	    replace.add("_, ");
+	    replace.add(":, ");
+	    replace.add(";, ");
+	    replace.add("/, ");
+		
+	    // Characters
+	    help.setToLowerCase(tags);
+	    help.removeCharacters(tags, remove);
+	    help.replaceCharacters(tags, replace);
+	    log.info("Character editing finished\n");
+	    
+	    // Blacklist
+	    help.removeBlacklistedWords(tags, blacklist);
+	    log.info("Blacklist finished\n");
+	}
+	
+	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Preprocessing
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,30 +131,29 @@ public class WorkflowLast {
 		help.replaceCharacters(tags, replace);
 	}
 	
-	public void removeReplace()
+	public void applyDictionaryData(String json)
 	{
-	    blacklist.addAll(preps);
-	    blacklist.addAll(articles);
-	    blacklist.addAll(custom);
-	    blacklist.add("");
-	    
-	    remove = "'";
-	    
-	    replace.add("-, ");
-	    replace.add("_, ");
-	    replace.add(":, ");
-	    replace.add(";, ");
-	    replace.add("/, ");
-		
-	    // Characters
-	    help.setToLowerCase(tags);
-	    help.removeCharacters(tags, remove);
-	    help.replaceCharacters(tags, replace);
-	    log.info("Character editing finished\n");
-	    
-	    // Blacklist
-	    help.removeBlacklistedWords(tags, blacklist);
-	    log.info("Blacklist finished\n");
+		List<Map<String, Object>> map = help.jsonStringToList(json);
+		String tag;
+
+		for(int i = 0; i < map.size(); i++)
+		{
+			tag = map.get(i).get("tag")+"";
+			
+			if(tag.contains(" "))
+			{
+				whitelistGroups.add(tag);
+				
+				for(String s: tag.split(" "))
+				{
+					whitelistWords.add(s);
+				}
+			}
+			else
+			{
+				if(!whitelistWords.contains(tag)) whitelistWords.add(tag);
+			}
+		}
 	}
 	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////

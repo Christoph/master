@@ -85,6 +85,16 @@ public class Transport {
 			}
         });
 		
+		// Apply characters to replace
+		server.addEventListener("applyImportedData", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyDictionaryData(data);
+			}
+        });
+		
 		// Get history data
 		server.addEventListener("getHistory", String.class, new DataListener<String>() {
 
