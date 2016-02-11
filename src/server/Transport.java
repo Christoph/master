@@ -38,6 +38,8 @@ public class Transport {
 		// Compute groups
 		work.grouping();
 		
+		work.weightPostVocab();
+		
 		// Connection
 		server.addConnectListener(new ConnectListener() {
 			
@@ -171,7 +173,7 @@ public class Transport {
 			}
         });
 		
-		// Get unique data
+		// Get composite data
 		server.addEventListener("getCompositeData", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
@@ -207,15 +209,20 @@ public class Transport {
 			}
         });
 		
-		// getImportantWords
-		server.addEventListener("getPostVocab", String.class, new DataListener<String>() {
+		// Get postprocessing data
+		server.addEventListener("getPostprocessingData", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.weightPostVocab();
-				
-				client.sendEvent("postVocab", work.sendPostVocab());
+				if(data.equals("postFilterData"))
+				{
+					client.sendEvent("postFilterData", work.sendPostImportanceHistogram());
+				}
+				if(data.equals("postFilterGrid"))
+				{
+					client.sendEvent("postFilterGrid", work.sendPostVocab());
+				}
 			}
         });
 	}
