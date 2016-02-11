@@ -24,6 +24,8 @@ public class Transport {
 	{		
 		work.init();
 		
+		work.preFilter();
+		
 		// Basic processing
 		work.removeReplace();
 		
@@ -45,6 +47,23 @@ public class Transport {
 				client.sendEvent("initalized", work.sendOverview());
 			}
 		});
+		
+		// Get preprocessing data
+		server.addEventListener("getPreprocessingData", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				if(data.equals("preFilterData"))
+				{
+					client.sendEvent("preFilterData", work.sendPreFilterHistogram());
+				}
+				if(data.equals("preFilterGrid"))
+				{
+					client.sendEvent("preFilterGrid", work.sendPreFilter());
+				}
+			}
+        });
 		
 		// Get history data
 		server.addEventListener("getHistory", String.class, new DataListener<String>() {

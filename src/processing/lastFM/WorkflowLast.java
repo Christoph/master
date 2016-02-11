@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import processing.Grouping;
 import processing.Helper;
 import processing.Similarity;
+import processing.Weighting;
 import core.ImportCSV;
 import core.json.gridCluster;
 import core.json.gridHist;
@@ -30,12 +31,14 @@ public class WorkflowLast {
   	private HelperLast help = new HelperLast();
     private ImportCSV im = new ImportCSV();
     private WeightingLast weighting = new WeightingLast();
+    private Weighting weightingGeneral = new Weighting();
     private RegexLast regex = new RegexLast();
     private Similarity similarity = new Similarity();
     Grouping grouping = new Grouping();
     
     // Data
     private List<TagLast> tags;
+    private Map<String, Double> tagsFreq = new HashMap<String, Double>();
     private Map<String, Double> vocabPre = new HashMap<String, Double>();
     private Map<String, Double> vocabPost = new HashMap<String, Double>();
     private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
@@ -71,14 +74,10 @@ public class WorkflowLast {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Preprocessing
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	public void clustering(int minWordSize)
+
+	public void preFilter()
 	{
-	    // compute similarities
-	    similarity.withVocab(tags, vocabPre, whitelistWords, minWordSize, vocabClusters);
-	    
-	    // create similarity clusters
-	    createSimClusters();
+	    weightingGeneral.vocabByFrequency(tags, tagsFreq);
 	}
 	
 	public void removeReplace()
@@ -103,6 +102,19 @@ public class WorkflowLast {
 	    // Blacklist
 	    help.removeBlacklistedWords(tags, blacklist);
 	    log.info("Blacklist finished\n");
+	}
+	
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Spell Checking
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public void clustering(int minWordSize)
+	{
+	    // compute similarities
+	    similarity.withVocab(tags, vocabPre, whitelistWords, minWordSize, vocabClusters);
+	    
+	    // create similarity clusters
+	    createSimClusters();
 	}
 	
 	public void weightPreVocab()
@@ -494,5 +506,43 @@ public class WorkflowLast {
 	    }
 
 	    return help.objectToJsonString(tags_filtered);
+	}
+	
+	public String sendPreFilter()
+	{
+	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
+	    
+	    for(String s: tagsFreq.keySet())
+	    {
+	    	tags_filtered.add(new gridVocab(s, tagsFreq.get(s)));
+	    }
+
+	    return help.objectToJsonString(tags_filtered);
+	}
+	
+	public String sendPreFilterHistogram()
+	{
+	    List<gridHist> hist = new ArrayList<gridHist>();
+	    Map<Double, Long> temp = new HashMap<Double, Long>();
+	    
+	    for(Entry<String, Double> c: tagsFreq.entrySet())
+	    {
+    		if(temp.containsKey(c.getValue()))
+    		{
+    			temp.put(c.getValue(), temp.get(c.getValue()) + 1);
+    		}
+    		else
+    		{
+    			temp.put(c.getValue(), (long) 1);
+    		}
+
+	    }
+	    
+	    for(double d: temp.keySet())
+	    {
+	    	hist.add(new gridHist(d, temp.get(d)));
+	    }
+
+	    return help.objectToJsonString(hist);
 	}
 }

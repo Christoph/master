@@ -96,11 +96,11 @@ public class Weighting {
 	    tag_words = null;
 	}
 
-	public void tagsByFrequency(List<? extends Tag> tags)
+	public void tagsByFrequency(List<? extends Tag> tags, Map<String, Double> tagsFrequency)
 	{
 	    String key;
 	    int value;
-	    int max_occ = 0;
+	    double max_occ = 0;
 	    Map<String, Integer> counts = new HashMap<String, Integer>();
 	    
 		
@@ -128,25 +128,24 @@ public class Weighting {
 			}
 	    }
 	    
-	    // Normalizing frequency and setting it as importance
+	    // Normalizing frequency and saving it
 	    for(Tag t: tags)
 	    {
 			key = t.getTagName();
 	    	
-	    	t.setImportance(counts.get(key)/max_occ);
+			tagsFrequency.put(key, counts.get(key)/max_occ);
 	    }
 	}
 	
 
 	
-	public void vocabByFrequency(List<? extends Tag> tags, Map<String, Double> vocab, String prefix, Boolean verbose)
+	public void vocabByFrequency(List<? extends Tag> tags, Map<String, Double> vocab)
 	{
 	    String key;
 	    List<String> words;
 	    int counter;
 	    double value;
 	    double max_occ = 0d;
-	  	TagsToCSV writer;
 	    Map<String, Integer> counts = new HashMap<String, Integer>();
 		
 	    vocab.clear();
@@ -187,12 +186,5 @@ public class Weighting {
 	    	
 	    	vocab.put(key, value);
 	    }
-	    
-	    // Write temp files
-	    if(verbose) 
-		{	
-	    	writer = new TagsToCSV("vocab_"+prefix+".csv");
-	    	writer.writeVocab(Helper.sortByComparatorDouble(vocab));
-		}
 	}
 }

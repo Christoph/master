@@ -88,7 +88,7 @@ public class WorkflowAbstract {
 	    //log.info("Blacklist finished\n");
 	    
 	    // Weighting
-	    weighting.vocabByFrequency(tags, vocab, "first", true);
+	    //weighting.vocabByFrequency(tags, vocab, "first", true);
 	    log.info("Weighting finished\n");
 	    
 	    // Similarity replacement
@@ -128,7 +128,7 @@ public class WorkflowAbstract {
 	    log.info("frequency grouping finished\n");
 	    
 	    // Weight again
-	    weighting.vocabByFrequency(tags, vocab, "second", true);
+	    //weighting.vocabByFrequency(tags, vocab, "second", true);
 	    
 	    // Export vocab
 	    String json = help.objectToJsonString(vocab);
