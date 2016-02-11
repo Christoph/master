@@ -1,5 +1,6 @@
 package processing;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,7 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -314,6 +318,27 @@ public class Helper {
 			}
 			
 			return out.toString();
+	  }
+	  
+	  // Converts JSON string to an object map
+	  public List<Map<String, Object>> jsonStringToList(String json)
+	  {
+			ObjectMapper mapper = new ObjectMapper();
+
+			List<Map<String, Object>> map = new ArrayList<Map<String, Object>>();
+		  
+			try {
+				// convert JSON string to Map
+				map = mapper.readValue(json, new TypeReference<List<Map<String, Object>>>() {});
+				
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return map;
 	  }
 	  
 	  public String objectToJsonString(Map<String, Double> list)

@@ -88,6 +88,20 @@ public class WorkflowLast {
 	    help.removeCharacters(tags, remove);
 	}
 	
+	public void applyCharactersToReplace(String json)
+	{
+		List<Map<String, Object>> map = help.jsonStringToList(json);
+		
+		replace.clear();
+
+		for(int i = 0; i < map.size(); i++)
+		{
+		    replace.add(map.get(i).get("replace")+","+map.get(i).get("by"));
+		}
+		
+		help.replaceCharacters(tags, replace);
+	}
+	
 	public void removeReplace()
 	{
 	    blacklist.addAll(preps);
@@ -95,7 +109,7 @@ public class WorkflowLast {
 	    blacklist.addAll(custom);
 	    blacklist.add("");
 	    
-	    //remove.add("'");
+	    remove = "'";
 	    
 	    replace.add("-, ");
 	    replace.add("_, ");
