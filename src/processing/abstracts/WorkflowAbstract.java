@@ -80,7 +80,7 @@ public class WorkflowAbstract {
 	    help.extractCorrectGroupsAndWords(tags, "_", good_groups, good_words);
 	    
 	    // Characters
-	    help.removeReplaceCharactersAndLowerCase(tags, remove, replace);
+	    //help.removeReplaceCharactersAndLowerCase(tags, remove, replace);
 	    log.info("Character editing finished\n");
 	    
 	    // Blacklist

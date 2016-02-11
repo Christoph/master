@@ -65,6 +65,16 @@ public class Transport {
 			}
         });
 		
+		// Apply characters to remove
+		server.addEventListener("applyRemoveCharacters", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyCharactersToRemove(data);
+			}
+        });
+		
 		// Get history data
 		server.addEventListener("getHistory", String.class, new DataListener<String>() {
 

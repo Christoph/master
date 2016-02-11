@@ -186,19 +186,43 @@ public class Helper {
 		  removeTagsWithoutWords(tags);
 	  }
 	  
-	  public void removeReplaceCharactersAndLowerCase(List<? extends Tag> tags, List<String> remove, List<String> replace)
+	  public void setToLowerCase(List<? extends Tag> tags)
 	  {
 		  String updated;    
 		  
 		  for(Tag tag: tags)
 		  {
 			  updated = tag.getTagName().toLowerCase();
+
+			  tag.setTagName(updated);
+		  }
+	  }
+	  
+	  public void removeCharacters(List<? extends Tag> tags, String remove)
+	  {
+		  String updated;    
+		  
+		  for(Tag tag: tags)
+		  {
+			  updated = tag.getTagName();
 			  
 			  // Remove characters
-			  if(remove.size() > 0) 
+			  if(remove.length() > 0) 
 			  {
-				  	updated = updated.replaceAll(remove.toString(), "");
+				  	updated = updated.replaceAll(remove, "");
 			  }
+
+			  tag.setTagName(updated);
+		  }
+	  }
+	  
+	  public void replaceCharacters(List<? extends Tag> tags, List<String> replace)
+	  {
+		  String updated;    
+		  
+		  for(Tag tag: tags)
+		  {
+			  updated = tag.getTagName();
 			  
 			  if(replace.size() > 0)
 			  {

@@ -46,7 +46,7 @@ public class WorkflowLast {
     
     private List<String> whitelistWords = new ArrayList<String>();
     private List<String> whitelistGroups = new ArrayList<String>();
-    private List<String> remove = new ArrayList<String>();
+    private String remove = "";
     private List<String> blacklist = new ArrayList<String>();
 	
     private List<String> articles = im.importCSV("dicts/article.txt");
@@ -80,6 +80,14 @@ public class WorkflowLast {
 	    weightingGeneral.vocabByFrequency(tags, tagsFreq);
 	}
 	
+	public void applyCharactersToRemove(String chars)
+	{
+		// Preparing characters to be used as regex
+		remove = "["+chars+"]";
+		
+	    help.removeCharacters(tags, remove);
+	}
+	
 	public void removeReplace()
 	{
 	    blacklist.addAll(preps);
@@ -87,7 +95,7 @@ public class WorkflowLast {
 	    blacklist.addAll(custom);
 	    blacklist.add("");
 	    
-	    remove.add("'");
+	    //remove.add("'");
 	    
 	    replace.add("-, ");
 	    replace.add("_, ");
@@ -96,7 +104,9 @@ public class WorkflowLast {
 	    replace.add("/, ");
 		
 	    // Characters
-	    help.removeReplaceCharactersAndLowerCase(tags, remove, replace);
+	    help.setToLowerCase(tags);
+	    help.removeCharacters(tags, remove);
+	    help.replaceCharacters(tags, replace);
 	    log.info("Character editing finished\n");
 	    
 	    // Blacklist
