@@ -243,7 +243,7 @@ public class Helper {
 	  }
 	  
 	 
-	  public Map<String, String> getImportantTags(List<? extends Tag> tags, double threshold, int minWordLength)
+	  public Map<String, String> getImportantTagsOld(List<? extends Tag> tags, double threshold, int minWordLength)
 	  {
 		  Map<String, Double> important = new HashMap<String, Double>();
 		  Map<String, Integer> tagid = new HashMap<String, Integer>();
@@ -276,6 +276,21 @@ public class Helper {
 		  }
 		  
 		  return out;
+	  }
+	  
+	  public List<String> getImportantTags(Map<String, Double> vocabPost, double threshold)
+	  {
+		  List<String> temp = new ArrayList<String>();
+		  
+		  for(Entry<String,Double> e: vocabPost.entrySet())
+		  {
+			  if(e.getValue() >= threshold)
+			  {
+				  temp.add(e.getKey());
+			  }
+		  }
+		  
+		  return temp;
 	  }
 	  
 	  public void removeDashes(List<? extends Tag> tags)

@@ -184,7 +184,7 @@ public class WorkflowBook {
 	    log.info("Second time importance\n");
 	    
 	    // Build popular tags dict on raw data
-	    important_tags = help.getImportantTags(tags, threshold, minWordLength);
+	    //important_tags = help.getImportantTags(tags, threshold, minWordLength);
 	    
 		writer_important.writeImportantTags(important_tags);
 		

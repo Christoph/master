@@ -43,6 +43,7 @@ public class WorkflowLast {
     private Map<String, Double> vocabPost = new HashMap<String, Double>();
     private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
     private TreeMap<Double, Map<String, String>> simClusters = new TreeMap<Double, Map<String,String>>();
+    private List<String> importantWords = new ArrayList<String>();
     
     private List<String> whitelistWords = new ArrayList<String>();
     private List<String> whitelistGroups = new ArrayList<String>();
@@ -257,7 +258,7 @@ public class WorkflowLast {
 	    log.info("Synonym replacement finished\n");
 	    
 	    // Important words
-	    //important_tags = getImportantWords(tags, threshold, minWordLength);
+	    //Object important_tags = getImportantWords(tags, 1, 3);
 	    //log.info("important tag exttraction finished\n");
 		
 	    // Remove subjective tags from important words
@@ -289,10 +290,10 @@ public class WorkflowLast {
 	    log.info("Weighting finished\n");
 	}
 
-	public void computeImportantWords(double threshold, int minWordLength)
+	public void computeImportantWords(double threshold)
 	{
 	    // Build popular tags dict on raw data
-	    //importantWords = help.getImportantTags(tags, threshold, minWordLength);
+	    importantWords = help.getImportantTags(vocabPost, threshold);
 	}
 	
 	public void removeSubjectiveWords(List<TagLast> tags, List<String> subjective, Map<String, String> important_tags)
@@ -622,5 +623,17 @@ public class WorkflowLast {
 	    }
 
 	    return help.objectToJsonString(hist);
+	}
+	
+	public String sendImportantWords()
+	{
+	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
+	    
+	    for(String s: importantWords)
+	    {
+	    	tags_filtered.add(new gridVocab(s, 0));
+	    }
+
+	    return help.objectToJsonString(tags_filtered);
 	}
 }

@@ -40,6 +40,8 @@ public class Transport {
 		
 		work.weightPostVocab();
 		
+		work.computeImportantWords(0.25);
+		
 		// Connection
 		server.addConnectListener(new ConnectListener() {
 			
@@ -222,6 +224,10 @@ public class Transport {
 				if(data.equals("postFilterGrid"))
 				{
 					client.sendEvent("postFilterGrid", work.sendPostVocab());
+				}
+				if(data.equals("importantWords"))
+				{
+					client.sendEvent("importantWords", work.sendImportantWords());
 				}
 			}
         });
