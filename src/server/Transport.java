@@ -231,5 +231,18 @@ public class Transport {
 				}
 			}
         });
+		
+		// Get output data
+		server.addEventListener("getOutputData", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				if(data.equals("output"))
+				{
+					client.sendEvent("output", work.sendFinal());
+				}
+			}
+        });
 	}
 }

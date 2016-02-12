@@ -324,7 +324,7 @@ public class WorkflowLast {
 	    		.map(p -> new gridOverview(p.getTagName(), p.getImportance(), p.getCarrierName(), p.getID()))
 	    		.collect(Collectors.toCollection(supplier));
 	    
-	    return help.objectToJsonString(tags_filtered);
+	    return help.objectToJsonString(tags_filtered); 
 	}
 	
 	public String sendVocab()
@@ -635,5 +635,16 @@ public class WorkflowLast {
 	    }
 
 	    return help.objectToJsonString(tags_filtered);
+	}
+	
+	public String sendFinal()
+	{
+		Supplier<List<gridOverview>> supplier = () -> new ArrayList<gridOverview>();
+
+	    List<gridOverview> tags_filtered = tags.stream()
+	    		.map(p -> new gridOverview(p.getTagName(), p.getImportance(), p.getCarrierName(), p.getID()))
+	    		.collect(Collectors.toCollection(supplier));
+	    
+	    return help.objectToJsonString(tags_filtered); 
 	}
 }
