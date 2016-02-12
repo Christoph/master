@@ -48,7 +48,7 @@ public class Transport {
 			public void onConnect(SocketIOClient client) {
 				
 				// Overview
-				client.sendEvent("initalized", work.sendOverview());
+				client.sendEvent("connected", "");
 			}
 		});
 		
