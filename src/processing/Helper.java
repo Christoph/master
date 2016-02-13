@@ -25,7 +25,7 @@ import core.tags.TagsToCSV;
 public class Helper {
 	
 	   StringLengthComparator slc = new StringLengthComparator();
-		PlainStringSimilarity psim = new PlainStringSimilarity();
+	   PlainStringSimilarity psim = new PlainStringSimilarity();
 	  
 	  public void removeTagsWithoutWords(List<? extends Tag> tags)
 	  {
@@ -188,58 +188,6 @@ public class Helper {
 		  }
 		  
 		  removeTagsWithoutWords(tags);
-	  }
-	  
-	  public void setToLowerCase(List<? extends Tag> tags)
-	  {
-		  String updated;    
-		  
-		  for(Tag tag: tags)
-		  {
-			  updated = tag.getTagName().toLowerCase();
-
-			  tag.setTagName(updated);
-		  }
-	  }
-	  
-	  public void removeCharacters(List<? extends Tag> tags, String remove)
-	  {
-		  String updated;    
-		  
-		  for(Tag tag: tags)
-		  {
-			  updated = tag.getTagName();
-			  
-			  // Remove characters
-			  if(remove.length() > 0) 
-			  {
-				  	updated = updated.replaceAll(remove, "");
-			  }
-
-			  tag.setTagName(updated);
-		  }
-	  }
-	  
-	  public void replaceCharacters(List<? extends Tag> tags, List<String> replace)
-	  {
-		  String updated;    
-		  
-		  for(Tag tag: tags)
-		  {
-			  updated = tag.getTagName();
-			  
-			  if(replace.size() > 0)
-			  {
-				  // Replace characters
-				  for(String s: replace)
-				  {
-					  String temp[] = s.split(",");
-					  updated = updated.replaceAll(temp[0], temp[1]);
-				  }
-			  }
-
-			  tag.setTagName(updated);
-		  }
 	  }
 	  
 	 

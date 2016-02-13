@@ -23,51 +23,28 @@ public class Transport {
 	public void initialize()
 	{		
 		work.init();
-		
-		work.preFilter();
-		
-		// Basic processing
-		work.removeReplace();
-		
-		// Create vocab
-		work.weightPreVocab();
-		
-		// Compute clusters
-		work.clustering(3);
-		
-		// Compute groups
-		work.grouping();
-		
-		work.weightPostVocab();
-		
-		work.computeImportantWords(0.25);
+
+		work.computePreprocessing();
 		
 		// Connection
 		server.addConnectListener(new ConnectListener() {
 			
 			public void onConnect(SocketIOClient client) {
+				// Preprocessing
+				client.sendEvent("preFilterParams", work.sendPreFilterParams());
+				client.sendEvent("preRemoveParams", work.sendPreRemoveParams());
+				client.sendEvent("preReplaceParams", work.sendPreReplaceParams());
+				client.sendEvent("preDictionaryParams", work.sendPreDictionaryParams());
 				
-				// Overview
-				client.sendEvent("connected", "");
+				// They should be kicked after data import
+				client.sendEvent("preFilterData", work.sendPreFilterHistogram());
+				client.sendEvent("preFilterGrid", work.sendPreFilter());
 			}
 		});
 		
-		// Get preprocessing data
-		server.addEventListener("getPreprocessingData", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-					AckRequest arg2) throws Exception {
-				
-				if(data.equals("preFilterData"))
-				{
-					client.sendEvent("preFilterData", work.sendPreFilterHistogram());
-				}
-				if(data.equals("preFilterGrid"))
-				{
-					client.sendEvent("preFilterGrid", work.sendPreFilter());
-				}
-			}
-        });
+	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	    // Preprocessing
+	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		// Apply characters to remove
 		server.addEventListener("applyRemoveCharacters", String.class, new DataListener<String>() {
@@ -75,7 +52,9 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyCharactersToRemove(data);
+				work.applyPreRemove(data);
+				
+				client.sendEvent("output", work.sendFinal());
 			}
         });
 		
@@ -85,19 +64,33 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyCharactersToReplace(data);
+				work.applyPreReplace(data);
 			}
         });
 		
-		// Apply characters to replace
+		// Apply dictionary
 		server.addEventListener("applyImportedData", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyDictionaryData(data);
+				work.applyPreDictionary(data);
 			}
         });
+		
+		// Apply filter
+		server.addEventListener("applyPrefilter", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyPreFilter(Double.parseDouble(data));
+			}
+        });
+		
+	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	    // Spell Checking
+	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		// Get history data
 		server.addEventListener("getHistory", String.class, new DataListener<String>() {
@@ -105,7 +98,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				client.sendEvent("history", work.sendHistory(data));
+				//client.sendEvent("history", work.sendHistory(data));
 			}
         });
 		
@@ -115,7 +108,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.clustering(Integer.parseInt(data));
+				//work.clustering(Integer.parseInt(data));
 			}
         });
 		
@@ -127,15 +120,15 @@ public class Transport {
 				
 				if(data.equals("similarities"))
 				{
-					client.sendEvent("similarities", work.sendSimilarityHistogram());
+					//client.sendEvent("similarities", work.sendSimilarityHistogram());
 				}
 				if(data.equals("vocab"))
 				{
-					client.sendEvent("vocab", work.sendVocab());
+					//client.sendEvent("vocab", work.sendVocab());
 				}
 				if(data.equals("importance"))
 				{
-					client.sendEvent("importance", work.sendImportanceHistogram());
+					//client.sendEvent("importance", work.sendImportanceHistogram());
 				}
 			}
         });
@@ -146,7 +139,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-					client.sendEvent("cluster", work.sendCluster(data));
+				//client.sendEvent("cluster", work.sendCluster(data));
 			}
         });
 		
@@ -156,7 +149,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-					client.sendEvent("replacements", work.sendReplacements(Double.parseDouble(data)));
+				//client.sendEvent("replacements", work.sendReplacements(Double.parseDouble(data)));
 			}
         });
 		
@@ -166,12 +159,12 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyClustering(Double.parseDouble(data));
-				client.sendEvent("overview", work.sendOverview());
+				//work.applyClustering(Double.parseDouble(data));
+				//client.sendEvent("overview", work.sendOverview());
 				
-				work.grouping();
-				client.sendEvent("frequentGroups", work.sendFrequentGroups());
-				client.sendEvent("uniqueGroups", work.sendUniqueGroups());
+				//work.grouping();
+				//client.sendEvent("frequentGroups", work.sendFrequentGroups());
+				//client.sendEvent("uniqueGroups", work.sendUniqueGroups());
 			}
         });
 		
@@ -183,19 +176,19 @@ public class Transport {
 				
 				if(data.equals("frequentData"))
 				{
-					client.sendEvent("frequentData", work.sendFrequentHistogram());
+					//client.sendEvent("frequentData", work.sendFrequentHistogram());
 				}
 				if(data.equals("frequentGroups"))
 				{
-					client.sendEvent("frequentGroups", work.sendFrequentGroups());
+					//client.sendEvent("frequentGroups", work.sendFrequentGroups());
 				}
 				if(data.equals("uniqueData"))
 				{
-					client.sendEvent("uniqueData", work.sendUniqueHistogram());
+					//client.sendEvent("uniqueData", work.sendUniqueHistogram());
 				}
 				if(data.equals("uniqueGroups"))
 				{
-					client.sendEvent("uniqueGroups", work.sendUniqueGroups());
+					//client.sendEvent("uniqueGroups", work.sendUniqueGroups());
 				}
 			}
         });
@@ -206,8 +199,8 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyGrouping();
-				client.sendEvent("overview", work.sendOverview());
+				//work.applyGrouping();
+				//client.sendEvent("overview", work.sendOverview());
 			}
         });
 		
@@ -219,15 +212,15 @@ public class Transport {
 				
 				if(data.equals("postFilterData"))
 				{
-					client.sendEvent("postFilterData", work.sendPostImportanceHistogram());
+					//client.sendEvent("postFilterData", work.sendPostImportanceHistogram());
 				}
 				if(data.equals("postFilterGrid"))
 				{
-					client.sendEvent("postFilterGrid", work.sendPostVocab());
+					//client.sendEvent("postFilterGrid", work.sendPostVocab());
 				}
 				if(data.equals("importantWords"))
 				{
-					client.sendEvent("importantWords", work.sendImportantWords());
+					//client.sendEvent("importantWords", work.sendImportantWords());
 				}
 			}
         });
@@ -240,7 +233,7 @@ public class Transport {
 				
 				if(data.equals("output"))
 				{
-					client.sendEvent("output", work.sendFinal());
+					//client.sendEvent("output", work.sendFinal());
 				}
 			}
         });

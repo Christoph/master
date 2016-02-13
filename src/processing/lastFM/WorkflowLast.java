@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import processing.Grouping;
 import processing.Helper;
+import processing.Preprocess;
 import processing.Similarity;
 import processing.Weighting;
 import core.ImportCSV;
@@ -34,29 +35,45 @@ public class WorkflowLast {
     private Weighting weightingGeneral = new Weighting();
     private RegexLast regex = new RegexLast();
     private Similarity similarity = new Similarity();
-    Grouping grouping = new Grouping();
-    
-    // Data
-    private List<TagLast> tags;
-    private Map<String, Double> tagsFreq = new HashMap<String, Double>();
-    private Map<String, Double> vocabPre = new HashMap<String, Double>();
-    private Map<String, Double> vocabPost = new HashMap<String, Double>();
-    private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
-    private TreeMap<Double, Map<String, String>> simClusters = new TreeMap<Double, Map<String,String>>();
-    private List<String> importantWords = new ArrayList<String>();
-    
-    private List<String> whitelistWords = new ArrayList<String>();
-    private List<String> whitelistGroups = new ArrayList<String>();
-    private String remove = "";
-    private List<String> blacklist = new ArrayList<String>();
-	
-    private List<String> articles = im.importCSV("dicts/article.txt");
-    private List<String> preps = im.importCSV("dicts/prep.txt");
-    private List<String> custom = im.importCSV("dicts/custom.txt");
-    private List<String> replace = new ArrayList<String>();
+    private Grouping grouping = new Grouping();
+
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Initialization
+    // Parameters
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // Initial dataset
+    private List<TagLast> tags; 
+    
+    // Initialize pipeline steps
+    private Preprocess preprocess = new Preprocess();
+
+	// Create pre vocab
+    private Map<String, Double> vocabPre = new HashMap<String, Double>();
+	
+	// Spell correction
+	private double spellImportance = 0;
+	private double spellSimilarity = 0;
+    private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
+    private TreeMap<Double, Map<String, String>> simClusters = new TreeMap<Double, Map<String,String>>();
+	
+	// Composites
+	private double groupFrequent = 0;
+	private double groupUnique = 0;
+	
+	// Create new post vocab
+    private Map<String, Double> vocabPost = new HashMap<String, Double>();
+	
+	// Postprocessing
+	private double postFilter = 0;
+    private List<String> importantWords = new ArrayList<String>();
+	
+	private List<String> postReplace = new ArrayList<String>();
+	private List<String> postRemove = new ArrayList<String>();
+	
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Load data
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
 	public void init()
@@ -72,89 +89,96 @@ public class WorkflowLast {
 	    log.info("Data loaded\n");
 	}
 	
-	//OLD
-	
-	public void removeReplace()
-	{
-	    blacklist.addAll(preps);
-	    blacklist.addAll(articles);
-	    blacklist.addAll(custom);
-	    blacklist.add("");
-	    
-	    remove = "'";
-	    
-	    replace.add("-, ");
-	    replace.add("_, ");
-	    replace.add(":, ");
-	    replace.add(";, ");
-	    replace.add("/, ");
-		
-	    // Characters
-	    help.setToLowerCase(tags);
-	    help.removeCharacters(tags, remove);
-	    help.replaceCharacters(tags, replace);
-	    log.info("Character editing finished\n");
-	    
-	    // Blacklist
-	    help.removeBlacklistedWords(tags, blacklist);
-	    log.info("Blacklist finished\n");
-	}
-	
-	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Preprocessing
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public void preFilter()
-	{
-	    weightingGeneral.vocabByFrequency(tags, tagsFreq);
-	}
 	
-	public void applyCharactersToRemove(String chars)
+	public void computePreprocessing()
 	{
-		// Preparing characters to be used as regex
-		remove = "["+chars+"]";
+		// Remove characters
+		preprocess.removeCharacters(tags);
 		
-	    help.removeCharacters(tags, remove);
+		// Replace characters
+		preprocess.replaceCharacters(tags);
+		
+		// Compute word frequency
+		preprocess.computeWordFreq(tags);
+		
+		// Update tags
+		preprocess.applyFilter(tags);
+		
+		// Create preFilter vocab
+		weighting.vocabByImportance(tags, vocabPre, "weighting_preFilter", false);
 	}
 	
-	public void applyCharactersToReplace(String json)
+	public void applyPreFilter(double threshold)
+	{
+		// Set threshold
+		preprocess.setFilter(threshold);
+		
+		// Apply
+		computePreprocessing();
+	}
+	
+	public void applyPreRemove(String chars)
+	{
+		// Set characters for removal
+		preprocess.setRemove(chars);
+		
+		// Apply
+		computePreprocessing();
+	}
+	
+	public void applyPreReplace(String json)
 	{
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		
-		replace.clear();
-
-		for(int i = 0; i < map.size(); i++)
-		{
-		    replace.add(map.get(i).get("replace")+","+map.get(i).get("by"));
-		}
+		preprocess.setReplace(map);
 		
-		help.replaceCharacters(tags, replace);
+		// Apply
+		computePreprocessing();
 	}
 	
-	public void applyDictionaryData(String json)
+	public void applyPreDictionary(String json)
 	{
 		List<Map<String, Object>> map = help.jsonStringToList(json);
-		String tag;
-
-		for(int i = 0; i < map.size(); i++)
-		{
-			tag = map.get(i).get("tag")+"";
-			
-			if(tag.contains(" "))
-			{
-				whitelistGroups.add(tag);
-				
-				for(String s: tag.split(" "))
-				{
-					whitelistWords.add(s);
-				}
-			}
-			else
-			{
-				if(!whitelistWords.contains(tag)) whitelistWords.add(tag);
-			}
-		}
+		
+		preprocess.setDictionary(map);
+		
+		// Apply
+		computePreprocessing();
+	}
+	
+	// Send Params
+	public double sendPreFilterParams()
+	{
+		return preprocess.getFilter();
+	}
+	
+	public String sendPreRemoveParams()
+	{
+		return preprocess.getRemove();
+	}
+	
+	public List<String> sendPreReplaceParams()
+	{
+		return preprocess.getReplace();
+	}
+	
+	public List<String> sendPreDictionaryParams()
+	{
+		return preprocess.getDictionary();
+	}
+	
+	// Send Data
+	public String sendPreFilter()
+	{
+	    return help.objectToJsonString(preprocess.preparePreFilter());
+	}
+	
+	public String sendPreFilterHistogram()
+	{
+	    return help.objectToJsonString(preprocess.preparePreFilterHistogram());
 	}
 	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,7 +188,7 @@ public class WorkflowLast {
 	public void clustering(int minWordSize)
 	{
 	    // compute similarities
-	    similarity.withVocab(tags, vocabPre, whitelistWords, minWordSize, vocabClusters);
+	    similarity.withVocab(tags, vocabPre, preprocess.getWhitelistWords(), minWordSize, vocabClusters);
 	    
 	    // create similarity clusters
 	    createSimClusters();
@@ -198,7 +222,7 @@ public class WorkflowLast {
 	public void grouping()
 	{
 		// Compute all word groups
-	    grouping.group(tags, whitelistGroups);
+	    grouping.group(tags, preprocess.getWhitelistGroups());
 	    log.info("Grouping finished\n");
 	}
 	
@@ -561,43 +585,7 @@ public class WorkflowLast {
 	    return help.objectToJsonString(tags_filtered);
 	}
 	
-	public String sendPreFilter()
-	{
-	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
-	    
-	    for(String s: tagsFreq.keySet())
-	    {
-	    	tags_filtered.add(new gridVocab(s, tagsFreq.get(s)));
-	    }
 
-	    return help.objectToJsonString(tags_filtered);
-	}
-	
-	public String sendPreFilterHistogram()
-	{
-	    List<gridHist> hist = new ArrayList<gridHist>();
-	    Map<Double, Long> temp = new HashMap<Double, Long>();
-	    
-	    for(Entry<String, Double> c: tagsFreq.entrySet())
-	    {
-    		if(temp.containsKey(c.getValue()))
-    		{
-    			temp.put(c.getValue(), temp.get(c.getValue()) + 1);
-    		}
-    		else
-    		{
-    			temp.put(c.getValue(), (long) 1);
-    		}
-
-	    }
-	    
-	    for(double d: temp.keySet())
-	    {
-	    	hist.add(new gridHist(d, temp.get(d)));
-	    }
-
-	    return help.objectToJsonString(hist);
-	}
 	
 	public String sendPostImportanceHistogram()
 	{
