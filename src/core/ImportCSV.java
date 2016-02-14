@@ -7,11 +7,6 @@ import java.io.InputStreamReader;
 import java.text.Normalizer;
 import java.util.*;
 
-import core.tags.Tag;
-import core.tags.TagBook;
-import core.tags.TagLast;
-import core.tags.TagMovie;
-
 public class ImportCSV {
 
   private List<String> lines;
@@ -37,101 +32,20 @@ public List<String> importCSV(String data)
     return lines;
   }
   
-  public List<TagLast> importLastTags(String data)
+  public List<Tag> importTags(String data)
   {
     List<String> lines;
     String[] temp;
-
-    lines = importCSV(data);
-    
-	List<TagLast> tags = new ArrayList<TagLast>();
-    
-    for(String l: lines)
-    {
-    	temp = l.split(",");
-
-    	tags.add(new TagLast(Integer.parseInt(temp[0]), temp[6].replace("\"", ""), temp[6].replace("\"", ""), Integer.parseInt(temp[4]), Integer.parseInt(temp[5]), Double.parseDouble(temp[8]), Integer.parseInt(temp[7]), Integer.parseInt(temp[1]),temp[2].replace("\"", ""), Integer.parseInt(temp[3]),Integer.parseInt(temp[9])));
-
-    }
-    return tags;
-  }
-  
-  public List<Tag> importAbstracts(String data)
-  {
-    List<String> lines;
-    String[] temp;
-    String norm;
 
     lines = importCSV(data);
     
 	List<Tag> tags = new ArrayList<Tag>();
-    int counter = 0;
-    for(String l: lines)
-    {
-    	counter++;
-    	
-    	norm = Normalizer.normalize(l, Normalizer.Form.NFC);
-    	temp = norm.split(",");
-
-    	tags.add(new Tag(counter, ""+counter, temp[0], temp[0], counter, counter, 0d));
-
-    }
-    return tags;
-  }
-  
-  public List<TagMovie> importMovieTags(String data)
-  {
-    List<String> lines;
-    String[] temp;
-    String t;
-
-    lines = importCSV(data);
-    
-	List<TagMovie> tags = new ArrayList<TagMovie>();
-    
-    for(String l: lines)
-    {
-    	t = l.replace(", ", "; ").replace("\"", "");
-    	temp = t.split(",");
-    	temp[16] = temp[16].replace("; ", ", ");
-    	
-    	if(!temp[7].equals("\\N"))
-    	{
-    		try
-    		{
-    			tags.add(new TagMovie(Integer.parseInt(temp[0]), temp[1], Integer.parseInt(temp[7]), Integer.parseInt(temp[15]), temp[16], temp[16], Integer.parseInt(temp[18]), Integer.parseInt(temp[17]), Integer.parseInt(temp[19]),0d));
-    		}
-    		catch(NumberFormatException e)
-    		{
-    			System.out.println(e.getMessage());
-    			/*
-    			for(String s: temp)
-    			{
-        			System.out.println(s);
-    			}
-    			*/
-    		}
-    	}
-
-
-    }
-    return tags;
-  }
-  
-  public List<TagBook> importBookTags(String data)
-  {
-    List<String> lines;
-    String[] temp;
-
-    lines = importCSV(data);
-    
-	List<TagBook> tags = new ArrayList<TagBook>();
     
     for(String l: lines)
     {
     	temp = l.split(",");
 
-    	tags.add(new TagBook(Integer.parseInt(temp[0]), temp[1], temp[4], temp[4], Integer.parseInt(temp[5]), Integer.parseInt(temp[6]), Integer.parseInt(temp[7]), 0d));
+    	tags.add(new Tag(temp[0], temp[1], Double.parseDouble(temp[2]),0));
 
     }
     return tags;

@@ -22,17 +22,15 @@ import core.json.gridHistory;
 import core.json.gridOverview;
 import core.json.gridRepl;
 import core.json.gridVocab;
-import core.tags.TagLast;
-import core.tags.TagsToCSV;
+import core.tags.Tag;
 
 public class WorkflowLast {
 	
 	// Initialize variables and classes
 	private static final Logger log = Logger.getLogger("Logger");
-  	private HelperLast help = new HelperLast();
+  	private Helper help = new Helper();
     private ImportCSV im = new ImportCSV();
-    private WeightingLast weighting = new WeightingLast();
-    private Weighting weightingGeneral = new Weighting();
+    private Weighting weighting = new Weighting();
     private RegexLast regex = new RegexLast();
     private Similarity similarity = new Similarity();
     private Grouping grouping = new Grouping();
@@ -42,14 +40,13 @@ public class WorkflowLast {
     // Parameters
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    // Initial dataset
-    private List<TagLast> tags; 
+    // Initial datasets
+    private List<Tag> tags; 
+    private Map<String, Double> vocabPre = new HashMap<String, Double>();
     
     // Initialize pipeline steps
-    private Preprocess preprocess = new Preprocess();
-
-	// Create pre vocab
-    private Map<String, Double> vocabPre = new HashMap<String, Double>();
+    // The index selectes the working copy. 0 = original
+    private Preprocess preprocess = new Preprocess(1);
 	
 	// Spell correction
 	private double spellImportance = 0;
@@ -73,7 +70,7 @@ public class WorkflowLast {
 	
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Load data
+    // Load data - Dataset 0
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
 	public void init()
@@ -81,16 +78,16 @@ public class WorkflowLast {
 		log.info("Initialize\n");
 		
 	    // Load data
-	    tags = im.importLastTags("raw_subset_tags.csv");
+	    tags = im.importTags("reduced_music.csv");
 	    
-	    // Set first history step
-	    help.addHistoryStep(tags);
+	    // Set tags for the first step
+	    help.provideTagsForNextStep(tags, 0);
 
 	    log.info("Data loaded\n");
 	}
 	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Preprocessing
+    // Preprocessing - Dataset 1
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public void computePreprocessing()
@@ -108,7 +105,7 @@ public class WorkflowLast {
 		preprocess.applyFilter(tags);
 		
 		// Create preFilter vocab
-		weighting.vocabByImportance(tags, vocabPre, "weighting_preFilter", false);
+		weighting.vocab(tags, vocabPre, 1);
 	}
 	
 	public void applyPreFilter(double threshold)
@@ -182,7 +179,7 @@ public class WorkflowLast {
 	}
 	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Spell Checking
+    // Spell Checking - Dataset 2
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public void clustering(int minWordSize)
@@ -194,35 +191,24 @@ public class WorkflowLast {
 	    createSimClusters();
 	}
 	
-	public void weightPreVocab()
-	{
-	    weighting.vocabByImportance(tags, vocabPre, "weighting_nlp", false);
-	    log.info("Weighting finished\n");
-	}
-	
 	public void applyClustering(double threshold)
 	{
-		similarity.applyClusters(tags, threshold, vocabClusters);
+		similarity.applyClusters(tags, threshold, vocabClusters, 2);
 		
 	    // Resolve errors from replacements
-	    help.correctTagsAndIDs(tags);
+	    //help.correctTags(tags, 2);
 	    
-	    // Compute importance with the new words
-	    weighting.vocabByImportance(tags, vocabPost, "grouping", false);
-	    
-	    // Add history step
-	    help.addHistoryStep(tags);
 	    log.info("Clustering Finished\n");
 	}
 	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Composites
+    // Composites - Dataset 3
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public void grouping()
 	{
 		// Compute all word groups
-	    grouping.group(tags, preprocess.getWhitelistGroups());
+	    grouping.group(tags, preprocess.getWhitelistGroups(), 3);
 	    log.info("Grouping finished\n");
 	}
 	
@@ -245,15 +231,12 @@ public class WorkflowLast {
 	    log.info("Groups applied\n");
 	    
 	    // Split words
-	    help.splitCompositeTagLast(tags);
+	    help.splitCompositeTagLast(tags, 3);
 	    log.info("Tags splited\n");
 	    
 	    // Compute importance with the new words
-	    weighting.vocabByImportance(tags, vocabPost, "grouping", false);
+	    weighting.vocab(tags, vocabPost, 3);
 	    log.info("Weigthed\n");
-	    
-	    // Add history step
-	    help.addHistoryStep(tags);
 	}
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -264,8 +247,7 @@ public class WorkflowLast {
 	{
 		/////////////////////////////////
 	    // Variable initialization  	    
-	    TagsToCSV writer_tags = new TagsToCSV("tags_Regex.csv");
-	    
+
 	    //List<String> subjective = im.importCSV("dicts/subjective.txt");
 	    List<String> synonyms = im.importCSV("dicts/synonyms.txt");
 	    List<String> messedup = im.importCSV("dicts/messedgroups.txt");

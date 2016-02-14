@@ -6,12 +6,10 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 
-import processing.lastFM.WorkflowLast;
-
 public class Transport {
 
 	//private WorkflowAbstract work = new WorkflowAbstract();
-	private WorkflowLast work = new WorkflowLast();
+	private Workflow work = new Workflow();
 	//private WorkflowMovie work = new WorkflowMovie();
 	private SocketIOServer server;
 	

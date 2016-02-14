@@ -7,10 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import core.Tag;
 import core.json.gridGroup;
 import core.json.gridHist;
-import core.tags.Tag;
-import core.tags.TagsToCSV;
 
 public class Grouping {
 	
@@ -22,15 +21,19 @@ public class Grouping {
 	private TreeMap<Double, Map<String, Integer>> frequent_groups = new TreeMap<Double, Map<String, Integer>>();
 	private List<String> whitelist = new ArrayList<String>();
 	
+	private int index;
+	
     // Parameters
 	private double jaccardThreshold = 0;
 	private double frequentThreshold = 0;
 	private int maxGroupSize = 3;
 	private int minOccurrence = 2;
-	private Boolean verbose = false;
 	
-	public void group(List<? extends Tag> tags, List<String> whitelistGroups)
-	{		
+	public void group(List<? extends Tag> tags, List<String> whitelistGroups, int index)
+	{	
+		// Set index
+		this.index = index;
+		
 		// Clear old groups
 		jaccard_groups.clear();
 		frequent_groups.clear();
@@ -44,9 +47,7 @@ public class Grouping {
 	    for(int size = maxGroupSize; size>=2;size--)
 	    {
 			/////////////////////////////////
-			// Variables
-			TagsToCSV writer_groups;
-			
+			// Variables		
 			Map<String, Long> word_count = new HashMap<String, Long>();
 			Map<String, Long> word_groups = new HashMap<String, Long>();
 			Map<String, Double> groups_strength = new HashMap<String, Double>();
@@ -62,7 +63,7 @@ public class Grouping {
 			// Create a 1-word-gram/total occurrences dict
 			for(int i = 0;i < tags.size(); i++)
 			{
-				words = psim.create_word_gram(tags.get(i).getTagName());
+				words = psim.create_word_gram(tags.get(i).getTag(index));
 				
 				for(int j = 0; j < words.size(); j++)
 				{
@@ -85,7 +86,7 @@ public class Grouping {
 			// Create a n-word-gram/total occurrences
 			for(int i = 0;i < tags.size(); i++)
 			{
-				words = psim.create_word_n_gram(tags.get(i).getTagName(),size);
+				words = psim.create_word_n_gram(tags.get(i).getTag(index),size);
 				
 				for(int j = 0; j < words.size(); j++)
 				{
@@ -142,13 +143,6 @@ public class Grouping {
 					jaccard_groups.get(strength).put(s, size);
 				}
 			}
-			
-			// Write temp files
-		    if(verbose) 
-	    	{
-		    	writer_groups = new TagsToCSV("groups_jaccard_"+size+".csv");
-		    	writer_groups.writeTagOccu(word_groups);
-	    	}
 	    }
 	}
 	
@@ -157,8 +151,6 @@ public class Grouping {
 	    {	
 		    /////////////////////////////////
 		    // Variables	
-		    TagsToCSV writer_groups;
-			
 		    Map<String, Long> word_count = new HashMap<String, Long>();
 		    
 		    List<String> words;
@@ -173,7 +165,7 @@ public class Grouping {
 		    // Create a n-word-gram/total occurrences
 		    for(int i = 0;i < tags.size(); i++)
 		    {
-		    	words = psim.create_word_n_gram(tags.get(i).getTagName(),size);
+		    	words = psim.create_word_n_gram(tags.get(i).getTag(index),size);
 		    	
 		    	for(int j = 0; j < words.size(); j++)
 		    	{
@@ -216,13 +208,6 @@ public class Grouping {
 					frequent_groups.get(strength).put(s, size);
 				}
 		    }
-		    
-		    // Write temp files
-		    if(verbose) 
-	    	{
-		    	writer_groups = new TagsToCSV("groups_frequency_"+size+".csv");
-		    	writer_groups.writeTagOccu(word_count);
-	    	}
 	    }
 	}
 	
@@ -273,7 +258,7 @@ public class Grouping {
 		// Replace word groups
 	    for(Tag t: tags)
 	    {
-	    	name = t.getTagName();
+	    	name = t.getTag(index);
 	    	
 	    	for(String s: subs)
 	    	{
@@ -283,7 +268,7 @@ public class Grouping {
 	    		}
 	    	}
 	    	
-	    	t.setTagName(name);
+	    	t.setTag(index, name);
 		}
 	}
 	

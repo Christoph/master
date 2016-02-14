@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import core.tags.Tag;
+import core.Tag;
 
 public class Similarity {
 	
@@ -21,7 +21,7 @@ public class Similarity {
 	
     Map<String, Double> sortedVocab = new HashMap<String, Double>();
     
-    public void withVocab(List<? extends Tag> tags, Map<String, Double> vocab, List<String> whiteList, int minWordSize, Map<String, Map<String, Double>> clusters)
+    public void withVocab(List<Tag> tags, Map<String, Double> vocab, List<String> whiteList, int minWordSize, Map<String, Map<String, Double>> clusters)
 	{
 	    /////////////////////////////////
 	    // Variables
@@ -98,7 +98,7 @@ public class Similarity {
 		}   
 	}
 	
-    public void applyClusters(List<? extends Tag> tags, double threshold, Map<String, Map<String, Double>> clusters)
+    public void applyClusters(List<? extends Tag> tags, double threshold, Map<String, Map<String, Double>> clusters, int index)
     {
 	    List<String> words;
 	    String  new_tag, high, word;
@@ -159,7 +159,7 @@ public class Similarity {
     	// Replace tags corresponding to the substitution map
 	    for(Tag t: tags)
 	    {
-	    	words = psim.create_word_gram(t.getTagName());
+	    	words = psim.create_word_gram(t.getTag(index));
 	    	new_tag = "";
 	    	
 	    	for(String w: words)
@@ -174,7 +174,7 @@ public class Similarity {
 	    		}
 	    	}
 
-	    	t.setTagName(new_tag.trim());
+	    	t.setTag(index, new_tag.trim());
 	    }
     }
     

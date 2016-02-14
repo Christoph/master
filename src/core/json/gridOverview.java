@@ -4,15 +4,13 @@ public class gridOverview {
 
 	public String tag;
 	public double importance;
-	public String carrier;
-	public int id;
+	public String item;
 	
-	public gridOverview(String tag, double importance, String carrier, int id) {
+	public gridOverview(String tag, String carrier, double importance) {
 		super();
 		this.tag = tag;
 		this.importance = importance;
-		this.carrier = carrier;
-		this.id = id;
+		this.item = carrier;
 	}
 
 	
@@ -33,19 +31,11 @@ public class gridOverview {
 	}
 
 	public String getCarrier() {
-		return carrier;
+		return item;
 	}
 
 	public void setCarrier(String carrier) {
-		this.carrier = carrier;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+		this.item = carrier;
 	}
 
 }

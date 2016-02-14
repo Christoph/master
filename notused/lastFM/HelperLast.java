@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import core.tags.Tag;
 import core.tags.TagLast;
 import processing.Helper;
 

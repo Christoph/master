@@ -6,19 +6,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import core.json.gridHist;
+import core.Tag;
+import core.json.gridHistFreq;
 import core.json.gridVocab;
-import core.tags.Tag;
-import core.tags.TagLast;
 
 public class Preprocess {
 
+	// Variables
+	int index;
+	
 	// Classes
-    private Weighting weighting = new Weighting();
 	private PlainStringSimilarity psim = new PlainStringSimilarity();
+  	private Helper help = new Helper();
 	
     // Data
-    private Map<String, Double> tagsFreq = new HashMap<String, Double>();
+    private Map<String, Long> tagsFreq = new HashMap<String, Long>();
 	
 	// Parameters
 	private double filter;
@@ -28,7 +30,10 @@ public class Preprocess {
     private List<String> whitelistGroups = new ArrayList<String>();
     private List<String> blacklist = new ArrayList<String>();
 	
-	public Preprocess() {
+	public Preprocess(int index) {
+		// Set working copy
+		this.index = index;
+		
 		// Default parameters
 		replace.add("-, ");
 		replace.add("_, ");
@@ -41,15 +46,13 @@ public class Preprocess {
 	}
 	
 	// Create a Word/Occurences map
-	public void computeWordFreq(List<TagLast> tags)
+	public void computeWordFreq(List<Tag> tags)
 	{
-		setToLowerCase(tags);
-		
-		weighting.vocabByFrequency(tags, tagsFreq);
+		help.wordFrequency(tags, tagsFreq, index);
 	}
 
 	// Remove all words below the threshold
-	public void applyFilter(List<TagLast> tags) 
+	public void applyFilter(List<Tag> tags) 
 	{
 	  	String key = "";
 	  	String temp = "";
@@ -59,7 +62,7 @@ public class Preprocess {
 	    {
 		  	for(Tag t: tags)
 		    {
-		  		words = psim.create_word_gram(t.getTagName());
+		  		words = psim.create_word_gram(t.getTag(index));
 		  		temp = "";
 				
 		  		for(int j = 0; j < words.size(); j++)
@@ -82,18 +85,18 @@ public class Preprocess {
 		  			}
 		  		}
 		  		
-		  		t.setTagName(temp.trim());
+		  		t.setTag(index, temp.trim());
 		    }
 	    }
 	}
 	
-	  public void removeCharacters(List<TagLast> tags)
+	  public void removeCharacters(List<Tag> tags)
 	  {
 		  String updated;    
 		  
 		  for(Tag tag: tags)
 		  {
-			  updated = tag.getTagName();
+			  updated = tag.getTag(index);
 			  
 			  // Remove characters
 			  if(remove.length() > 0) 
@@ -101,17 +104,17 @@ public class Preprocess {
 				  	updated = updated.replaceAll("["+remove+"]", "");
 			  }
 	
-			  tag.setTagName(updated);
+			  tag.setTag(index,updated);
 		  }
 	  }
 	  
-	  public void replaceCharacters(List<TagLast> tags)
+	  public void replaceCharacters(List<Tag> tags)
 	  {
 		  String updated;    
 		  
 		  for(Tag tag: tags)
 		  {
-			  updated = tag.getTagName();
+			  updated = tag.getTag(index);
 			  
 			  if(replace.size() > 0)
 			  {
@@ -123,19 +126,19 @@ public class Preprocess {
 				  }
 			  }
 
-			  tag.setTagName(updated);
+			  tag.setTag(index,updated);
 		  }
 	  }
 	  
-	  public void setToLowerCase(List<? extends Tag> tags)
+	  public void setToLowerCase(List<Tag> tags)
 	  {
 		  String updated;    
 		  
 		  for(Tag tag: tags)
 		  {
-			  updated = tag.getTagName().toLowerCase();
+			  updated = tag.getTag(index).toLowerCase();
 
-			  tag.setTagName(updated);
+			  tag.setTag(index,updated);
 		  }
 	  }
 
@@ -151,12 +154,12 @@ public class Preprocess {
 	    return tags_filtered;
 	}
 	
-	public List<gridHist> preparePreFilterHistogram()
+	public List<gridHistFreq> preparePreFilterHistogram()
 	{
-	    List<gridHist> hist = new ArrayList<gridHist>();
-	    Map<Double, Long> temp = new HashMap<Double, Long>();
+	    List<gridHistFreq> hist = new ArrayList<gridHistFreq>();
+	    Map<Long, Long> temp = new HashMap<Long, Long>();
 	    
-	    for(Entry<String, Double> c: tagsFreq.entrySet())
+	    for(Entry<String, Long> c: tagsFreq.entrySet())
 	    {
     		if(temp.containsKey(c.getValue()))
     		{
@@ -169,9 +172,9 @@ public class Preprocess {
 
 	    }
 	    
-	    for(double d: temp.keySet())
+	    for(long d: temp.keySet())
 	    {
-	    	hist.add(new gridHist(d, temp.get(d)));
+	    	hist.add(new gridHistFreq(d, temp.get(d)));
 	    }
 
 	    return hist;

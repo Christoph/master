@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -19,28 +21,161 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-import core.tags.Tag;
-import core.tags.TagsToCSV;
+import core.Tag;
 
 public class Helper {
 	
 	   StringLengthComparator slc = new StringLengthComparator();
 	   PlainStringSimilarity psim = new PlainStringSimilarity();
 	  
-	  public void removeTagsWithoutWords(List<? extends Tag> tags)
+	   public void wordFrequency(List<? extends Tag> tags, Map<String, Long> tagsFrequency, int index)
+		{
+		    String key;
+		    long value;
+		    long max_value = 0;
+		    List<String> words;
+			
+		    // Summing up the occurrences
+		    for(Tag t: tags)
+		    {	    	    		
+				key = t.getTag(index);
+		  		words = psim.create_word_gram(key);
+		  		
+		  		for(String s : words)
+				{
+					if(tagsFrequency.containsKey(s))
+					{
+						value = tagsFrequency.get(s);
+						
+						// Sum up the weight over all songs
+						tagsFrequency.put(s, value + 1);
+						
+		    			// Find max
+		    			if(value + 1 > max_value)
+		    			{
+		    				max_value = value + 1;
+		    			}
+					}
+					else
+					{
+						tagsFrequency.put(s, (long) 1);
+					}
+				}
+		    }
+		}
+	   
+	   public void correctTags(List<Tag> tags, int index)
+		  {
+			  	// "TagName": Weight
+			  	Map<String, Double> song_name = new HashMap<String, Double>();
+			  	
+		    	Set<String> used = new HashSet<String>();
+			  	
+			    double weight;
+			    String key;
+
+			    // Find maximum Weight per song/tag pair
+			    for(Tag t: tags)
+			    {
+					key = t.getTag(index);
+					weight = t.getWeight();
+
+					if(song_name.containsKey(key))
+					{
+						if(weight > song_name.get(key))
+						{
+							song_name.put(key, weight);
+						}
+					}
+					else
+					{
+						song_name.put(key, weight);
+					}
+			    }
+			    
+			    // Resolve multiple equal tags per song
+			    for(Tag t: tags)
+			    {
+					key = t.getTag(index);
+					weight = t.getWeight();
+
+					if(song_name.containsKey(key))
+					{
+						if(weight < song_name.get(key))
+						{
+							// This marks the tag object as removable
+							t.setTag(index, "");
+						}
+						
+						if(weight == song_name.get(key) && used.contains(key))
+						{
+							// This marks the tag object as removable
+							t.setTag(index, "");
+						}
+						else if(weight == song_name.get(key))
+						{
+							used.add(key);
+						}
+					}
+			    }
+				
+				removeTagsWithoutWords(tags, index);
+		  }
+	   
+	   public void splitCompositeTagLast(List<Tag> tags, int index)
+		  {
+			  	String tag = "";
+			  	String name[] = null;
+				List<Tag> tt = new ArrayList<Tag>();
+				List<String> temp;
+			  
+				  for(Tag t: tags)
+				  {
+					  tag = t.getTag(index);
+					  
+					  if(tag.contains(" "))
+					  {
+						  name = tag.split(" ");
+						  
+						  // Replace current name by the first word
+						  t.setTag(index, name[0]);
+						  
+						  // Create for all other words new entries
+						  for(int i = 1; i<name.length;i++)
+						  {
+							  temp = t.getTag();
+							  temp.set(index, name[i]);
+							  
+							  tt.add(new Tag(t.getItem(), temp, t.getWeight(), t.getImportance())); 	
+						  }
+					  }
+				  }
+			  
+				  if(tt.size() > 0)
+				  {
+					  	// Add all new entries
+					  	tags.addAll(tt);
+					  
+					  	// Fix IDs and so on
+					  	//correctTags(tags);
+				  }
+		  }
+	   
+	  public void removeTagsWithoutWords(List<Tag> tags, int index)
 	  {
 		    // Remove tags with no words    
 		    for(Iterator<? extends Tag> iterator = tags.iterator(); iterator.hasNext();)
 		    {
 				Tag t = iterator.next();
 				  
-				if(t.getTagName().length() == 0)
+				if(t.getTag(index).length() == 0)
 				{
 					iterator.remove();
 				}
 		    }
 	  }
 	  
+	  /*
 	  public void removeRareWords(List<? extends Tag> tags, int minOccu, Boolean verbose)
 	  {
 		  	Map<String, Integer> occu = new HashMap<String, Integer>();
@@ -163,8 +298,9 @@ public class Helper {
 		    	writer.writeFilteredWords(output);
 	    	}
 	  }
+	  */
 	  
-	  public void removeBlacklistedWords(List<? extends Tag> tags, List<String> blacklist)
+	  public void removeBlacklistedWords(List<Tag> tags, List<String> blacklist, int index)
 	  {
 		  String name, uptated;    
 		  List<String> list = new ArrayList<String>();
@@ -172,7 +308,7 @@ public class Helper {
 		  
 		  for(Tag tag: tags)
 		  {
-			  name = tag.getTagName();
+			  name = tag.getTag(index);
 			  uptated = "";
 			  
 			  list = psim.create_word_gram(name);
@@ -184,46 +320,10 @@ public class Helper {
 				  uptated = uptated + " " + s;
 			  }
 			  
-			  tag.setTagName(uptated.trim());
+			  tag.setTag(index, uptated.trim());
 		  }
 		  
-		  removeTagsWithoutWords(tags);
-	  }
-	  
-	 
-	  public Map<String, String> getImportantTagsOld(List<? extends Tag> tags, double threshold, int minWordLength)
-	  {
-		  Map<String, Double> important = new HashMap<String, Double>();
-		  Map<String, Integer> tagid = new HashMap<String, Integer>();
-		  List<String> temp = new ArrayList<String>();
-		  Map<String, String> out = new LinkedHashMap<String, String>();
-		  
-		  for(Tag t: tags)
-		  {
-			  if(t.getImportance() >= threshold && t.getTagName().length() >= minWordLength)
-			  {				  
-				  important.put(t.getTagName(),t.getImportance());
-				  tagid.put(t.getTagName(), t.getTagID());
-				  temp.add(t.getTagName());
-			  }
-		  }
-		  
-		  Collections.sort(temp, slc);
-		  
-		  for(String l: temp)
-		  {
-			  if(tagid.get(l) != null)
-			  {
-				  out.put(l.replace(" ", "-"), tagid.get(l).toString()+","+important.get(l).toString());
-			  }
-			  else
-			  {
-				  out.put(l, "Additional Tag");
-			  }
-			  
-		  }
-		  
-		  return out;
+		  removeTagsWithoutWords(tags, index);
 	  }
 	  
 	  public List<String> getImportantTags(Map<String, Double> vocabPost, double threshold)
@@ -241,25 +341,16 @@ public class Helper {
 		  return temp;
 	  }
 	  
-	  public void removeDashes(List<? extends Tag> tags)
+	  public void removeDashes(List<Tag> tags, int index)
 	  {
 		  String name = "";
 		  
 		  for(Tag t: tags)
 		  {
-			  name = t.getTagName();
+			  name = t.getTag(index);
 
-			  t.setTagName(name.replaceAll("\\s*-\\s*", " "));
+			  t.setTag(index, name.replaceAll("\\s*-\\s*", " "));
 		  }
-	  }
-	  
-	  public void addHistoryStep(List<? extends Tag> tags)
-	  {
-		    // Add a history step
-		    for(Tag t: tags)
-		    {
-		    	t.addHistoryStep(t.getTagName());
-		    }
 	  }
 	  
 	  public <T> String objectToJsonString(List<T> list)
@@ -325,16 +416,16 @@ public class Helper {
 			return out.toString();
 	  }
 	  
-	  public void extractCorrectGroupsAndWords(List<? extends Tag> tags, String marker, List<String> groups, List<String> words)
+	  /*
+	  public void extractCorrectGroupsAndWords(List<? extends Tag> tags, String marker, List<String> groups, List<String> words, int index)
 	  {
 		  List<String> temp;
 		  String shingle[];
 		  String word;
-		  TagsToCSV writer;
 		  
 		  for(Tag t: tags)
 		  {
-			  temp = psim.create_word_gram(t.getTagName());
+			  temp = psim.create_word_gram(t.getTag(index));
 			  
 			  for(String s: temp)
 			  {
@@ -353,13 +444,8 @@ public class Helper {
 				  }
 			  }
 		  }
-		  
-		  writer = new TagsToCSV("good_groups.csv");
-		  writer.writeStringList(groups, "Groups");
-		  
-		  writer = new TagsToCSV("good_words.csv");
-		  writer.writeStringList(words, "Words");
 	  }
+	  */
 	  
 		public static Map<String, Double> sortByComparatorDouble(Map<String, Double> unsorted) {
 
@@ -411,5 +497,19 @@ public class Helper {
 			}
 			
 			return sortedMap;
+		}
+
+		public void provideTagsForNextStep(List<Tag> tags, int index) {
+			for(Tag t: tags)
+			{
+				t.setTag(index+1, t.getTag(index));
+			}
+		}
+		
+		public void resetStep(List<Tag> tags, int index) {
+			for(Tag t: tags)
+			{
+				t.setTag(index, t.getTag(index-1));
+			}
 		}
 }

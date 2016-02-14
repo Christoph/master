@@ -3,7 +3,7 @@ package core.tags;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tag {
+public class TagOld {
 	private int ID;
 	private String carrierName;
 	private String tagName;
@@ -13,7 +13,7 @@ public class Tag {
 	private double importance;
 	private List<String> history;
 	
-	public Tag(int ID, String carrier, String tagName, String originalTagName, int carrierID,
+	public TagOld(int ID, String carrier, String tagName, String originalTagName, int carrierID,
 			int tagID, double importance) {
 		super();
 		this.ID = ID;
@@ -27,7 +27,7 @@ public class Tag {
 		this.history = new ArrayList<String>();
 	}
 	
-	public Tag(Tag t) {
+	public TagOld(TagOld t) {
 		super();
 		
 		this.ID = t.getID();

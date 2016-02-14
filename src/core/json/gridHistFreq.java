@@ -1,14 +1,14 @@
 package core.json;
 
-public class gridHist {
+public class gridHistFreq {
 
-	private double value;
+	private long value;
 	private long count;
 	
-	public double getValue() {
+	public long getValue() {
 		return value;
 	}
-	public void setValue(double value) {
+	public void setValue(long value) {
 		this.value = value;
 	}
 	public long getCount() {
@@ -18,7 +18,7 @@ public class gridHist {
 		this.count = count;
 	}
 	
-	public gridHist(double value, long count) {
+	public gridHistFreq(long value, long count) {
 		super();
 		this.value = value;
 		this.count = count;
