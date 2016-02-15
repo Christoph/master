@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -14,15 +13,12 @@ import processing.Grouping;
 import processing.Helper;
 import processing.Preprocess;
 import processing.Regex;
-import processing.Similarity;
+import processing.Spellcorrect;
 import processing.Weighting;
 import core.ImportCSV;
 import core.Tag;
-import core.json.gridCluster;
 import core.json.gridHist;
-import core.json.gridHistory;
 import core.json.gridOverview;
-import core.json.gridRepl;
 import core.json.gridVocab;
 
 public class Workflow {
@@ -33,7 +29,6 @@ public class Workflow {
     private ImportCSV im = new ImportCSV();
     private Weighting weighting = new Weighting();
     private Regex regex = new Regex();
-    private Similarity similarity = new Similarity();
     private Grouping grouping = new Grouping();
 
     
@@ -44,23 +39,16 @@ public class Workflow {
     // Initial datasets
     private List<Tag> tags; 
     private Map<String, Double> vocabPre = new HashMap<String, Double>();
+    private Map<String, Double> vocabPost = new HashMap<String, Double>();
     
     // Initialize pipeline steps
     // The index selects the working copy. 0 = original
     private Preprocess preprocess = new Preprocess(1);
-	
-	// Spell correction
-	private double spellImportance = 0;
-	private double spellSimilarity = 0;
-    private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
-    private TreeMap<Double, Map<String, String>> simClusters = new TreeMap<Double, Map<String,String>>();
-	
+    private Spellcorrect spellcorrect = new Spellcorrect(2);
+
 	// Composites
 	private double groupFrequent = 0;
 	private double groupUnique = 0;
-	
-	// Create new post vocab
-    private Map<String, Double> vocabPost = new HashMap<String, Double>();
 	
 	// Postprocessing
 	private double postFilter = 0;
@@ -80,9 +68,6 @@ public class Workflow {
 		
 	    // Load data
 	    tags = im.importTags("reduced_music.csv");
-	    
-	    // Set tags for the first step
-	    help.provideTagsForNextStep(tags, 0);
 
 	    log.info("Data loaded\n");
 	}
@@ -112,8 +97,12 @@ public class Workflow {
 		
 		// Create preFilter vocab
 		weighting.vocab(tags, vocabPre, 1);
+		
+		// Cluster words for further use
+		spellcorrect.clustering(tags, vocabPre, preprocess.getWhitelistWords());
 	}
 	
+	// Apply changes
 	public void applyPreFilter(double threshold)
 	{
 		// Set threshold
@@ -185,26 +174,60 @@ public class Workflow {
 	}
 	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Spell Checking - Dataset 2
+    // Spell Correction - Dataset 2
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void clustering(int minWordSize)
+	public void computeSpellCorrect()
 	{
-	    // compute similarities
-	    similarity.withVocab(tags, vocabPre, preprocess.getWhitelistWords(), minWordSize, vocabClusters);
-	    
-	    // create similarity clusters
-	    createSimClusters();
+		help.resetStep(tags, 2);
+		
+		spellcorrect.applyClustering(tags);
 	}
 	
-	public void applyClustering(double threshold)
+	// Apply changes
+	public void applySpellImportance(double threshold)
 	{
-		similarity.applyClusters(tags, threshold, vocabClusters, 2);
+		// Set threshold
+		spellcorrect.setSpellImportance(threshold);
 		
-	    // Resolve errors from replacements
-	    //help.correctTags(tags, 2);
-	    
-	    log.info("Clustering Finished\n");
+		// Apply
+		computeSpellCorrect();
+	}
+	
+	public void applySpellSimilarity(double threshold)
+	{
+		// Set threshold
+		spellcorrect.setSpellSimilarity(threshold);
+		
+		// Apply
+		computeSpellCorrect();
+	}
+	
+	// Send Params
+	public double sendSpellImportanceParams()
+	{
+		return spellcorrect.getSpellImportance();
+	}
+	
+	public double sendSpellSimilarityParams()
+	{
+		return spellcorrect.getSpellSimilarity();
+	}
+	
+	// Send Data
+	public String sendCluster(String tag)
+	{
+	    return help.objectToJsonString(spellcorrect.prepareCluster(tag));
+	}
+	
+	public String sendSimilarityHistogram()
+	{
+	    return help.objectToJsonString(spellcorrect.prepareSimilarityHistogram());
+	}
+	
+	public String sendReplacements(double threshold)
+	{
+	    return help.objectToJsonString(spellcorrect.prepareReplacements(threshold));
 	}
 	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -331,20 +354,7 @@ public class Workflow {
 	    return help.objectToJsonString(tags_filtered);
 	}
 	
-	public String sendCluster(String tag)
-	{
-	    List<gridCluster> tags_filtered = new ArrayList<gridCluster>();
-	    
-	    if(vocabClusters.containsKey(tag))
-	    {
-		    for(String s: vocabClusters.get(tag).keySet())
-		    {
-		    	tags_filtered.add(new gridCluster(s, vocabClusters.get(tag).get(s)));
-		    }
-	    }
 
-	    return help.objectToJsonString(tags_filtered);
-	}
 	
 	public String sendImportanceHistogram()
 	{
@@ -370,132 +380,6 @@ public class Workflow {
 	    }
 
 	    return help.objectToJsonString(hist);
-	}
-	
-	public String sendSimilarityHistogram()
-	{
-	    List<gridHist> hist = new ArrayList<gridHist>();
-	    Map<Double, Long> temp = new HashMap<Double, Long>();
-	    
-	    for(Entry<String, Map<String, Double>> c: vocabClusters.entrySet())
-	    {
-	    	for(double s: c.getValue().values())
-	    	{ 
-	    		if(temp.containsKey(s))
-	    		{
-	    			temp.put(s, temp.get(s) + 1);
-	    		}
-	    		else
-	    		{
-	    			temp.put(s, (long) 1);
-	    		}
-	    	}
-	    }
-	    
-	    for(double d: temp.keySet())
-	    {
-	    	hist.add(new gridHist(d, temp.get(d)));
-	    }
-
-	    return help.objectToJsonString(hist);
-	}
-	
-	// Send 100 entries around the threshold
-	public String sendReplacements(double threshold)
-	{
-	    List<gridRepl> repl = new ArrayList<gridRepl>();
-
-	    double core = simGet(threshold);
-	    double lower = core;
-	    double higher = core;
-	    Boolean init = false;
-	    
-	    // Add core replacements
-	    addElementsToRepl(repl, core);
-	    
-	    // Add at least one layer around the center until the total number of entries rises above 101
-	    while(repl.size() <= 101 || init == false)
-	    {
-	    	init = true;
-	    	
-	        Entry<Double, Map<String, String>> high = simClusters.higherEntry(higher);
-	        
-	        if(high != null)
-	        {
-		        higher = high.getKey();
-			    addElementsToRepl(repl, higher);
-	        }
-
-	        Entry<Double, Map<String, String>> low = simClusters.lowerEntry(lower);
-	        
-	        if(low != null)
-	        {
-		        lower = low.getKey();
-			    addElementsToRepl(repl, lower);
-	        }
-	    }
-		
-	    return help.objectToJsonString(repl);
-	}
-	
-	private void addElementsToRepl(List<gridRepl> repl, double key)
-	{
-	    for(Entry<String, String> e: simClusters.get(key).entrySet())
-	    {
-	    	repl.add(new gridRepl(e.getKey(), e.getValue(), key));
-	    }
-	}
-	
-	// Get nearest entry from the similarity tree map
-	private double simGet(double key) {
-	    Map<String, String> value = simClusters.get(key);
-	    double entry = key;
-
-	    if (value == null) {
-	        Entry<Double, Map<String, String>> floor = simClusters.floorEntry(key);
-	        Entry<Double, Map<String, String>> ceiling = simClusters.ceilingEntry(key);
-
-	        if ((key - floor.getKey()) < (ceiling.getKey() - key)) {
-	            value = floor.getValue();
-	            entry = floor.getKey();
-	        } else {
-	            value = ceiling.getValue();
-	            entry = ceiling.getKey();
-	        }
-	    }
-
-	    return entry;
-	}
-	
-	private void createSimClusters()
-	{
-		String head = "";
-		String key = "";
-		double value = 0;
-		
-	    for(Entry<String, Map<String, Double>> c: vocabClusters.entrySet())
-	    {
-	    	head = c.getKey();
-	    	
-	    	for(Entry<String, Double> e: c.getValue().entrySet())
-	    	{
-	    		key = e.getKey();
-	    		value = e.getValue();
-	    		
-	    		if(simClusters.containsKey(value))
-	    		{
-	    			simClusters.get(value).put(head, key);
-	    		}
-	    		else
-	    		{
-	    			// Create inner map
-	    			simClusters.put(value, new HashMap<String, String>());
-	    			
-	    			// Add first line
-	    			simClusters.get(value).put(head, key);
-	    		}
-	    	}
-	    }
 	}
 
 	/*
@@ -554,8 +438,6 @@ public class Workflow {
 
 	    return help.objectToJsonString(tags_filtered);
 	}
-	
-
 	
 	public String sendPostImportanceHistogram()
 	{

@@ -226,20 +226,23 @@ public class Preprocess {
 
 		for(int i = 0; i < map.size(); i++)
 		{
-			tag = map.get(i).get("tag")+"";
+			tag = (String) map.get(i).get("tag");
 			
-			if(tag.contains(" "))
+			if(tag.length() > 0)
 			{
-				whitelistGroups.add(tag);
-				
-				for(String s: tag.split(" "))
+				if(tag.contains(" "))
 				{
-					whitelistWords.add(s);
+					whitelistGroups.add(tag);
+					
+					for(String s: tag.split(" "))
+					{
+						if(!whitelistWords.contains(tag)) whitelistWords.add(s);
+					}
 				}
-			}
-			else
-			{
-				if(!whitelistWords.contains(tag)) whitelistWords.add(tag);
+				else
+				{
+					if(!whitelistWords.contains(tag)) whitelistWords.add(tag);
+				}
 			}
 		}
 	}

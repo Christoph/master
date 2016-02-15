@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import core.Tag;
 
@@ -14,9 +13,7 @@ public class Similarity {
 	
     PlainStringSimilarity psim = new PlainStringSimilarity();
 	
-    Map<String, Double> tag_words = new HashMap<String, Double>();
     Map<String, HashSet<String>> tag_2grams = new HashMap<String, HashSet<String>>();
-    Map<String, Set<String>> phonetic_groups = new HashMap<String, Set<String>>();
     Map<String, String> substitution_list = new HashMap<String, String>();
 	
     Map<String, Double> sortedVocab = new HashMap<String, Double>();
@@ -28,6 +25,8 @@ public class Similarity {
 	    int ngram_size;
 	    String high;
 	    
+	    clusters.clear();
+	    tag_2grams.clear();
 
 		// Set the size for the n-gram distance method
 		ngram_size = 2;
@@ -103,6 +102,8 @@ public class Similarity {
 	    List<String> words;
 	    String  new_tag, high, word;
 	    double similarity, similarity2;
+	    
+	    substitution_list.clear();
     	
 	    // Find substitutions with the highest similarity
 	    for(Entry<String, Map<String, Double>> cluster: clusters.entrySet())

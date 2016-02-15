@@ -34,6 +34,8 @@ public class Helper {
 		    long value;
 		    long max_value = 0;
 		    List<String> words;
+		    
+		    tagsFrequency.clear();
 			
 		    // Summing up the occurrences
 		    for(Tag t: tags)

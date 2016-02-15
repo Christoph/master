@@ -18,25 +18,52 @@ public class Transport {
 		this.server = server;
 	}
 
+	private void sendParams(SocketIOClient client)
+	{
+		// Preprocessing
+		client.sendEvent("preFilterParams", work.sendPreFilterParams());
+		client.sendEvent("preRemoveParams", work.sendPreRemoveParams());
+		client.sendEvent("preReplaceParams", work.sendPreReplaceParams());
+		client.sendEvent("preDictionaryParams", work.sendPreDictionaryParams());
+		
+		// Postprocessing
+		client.sendEvent("spellImportance", work.sendSpellImportanceParams());
+		client.sendEvent("spellSimilarity", work.sendSpellSimilarityParams());
+	}
+	
+	private void sendPreprocessData(SocketIOClient client)
+	{
+		client.sendEvent("preFilterData", work.sendPreFilterHistogram());
+		client.sendEvent("preFilterGrid", work.sendPreFilter());
+	}
+	
+	private void sendSpellcorrectData(SocketIOClient client)
+	{
+		client.sendEvent("similarities", work.sendSimilarityHistogram());
+		client.sendEvent("vocab", work.sendVocab());
+		client.sendEvent("importance", work.sendImportanceHistogram());
+	}
+	
 	public void initialize()
 	{		
+		// This should be done after data import
 		work.init();
 
+		// Compute everything with default values
 		work.computePreprocessing();
+		work.computeSpellCorrect();
 		
 		// Connection
 		server.addConnectListener(new ConnectListener() {
 			
 			public void onConnect(SocketIOClient client) {
-				// Preprocessing
-				client.sendEvent("preFilterParams", work.sendPreFilterParams());
-				client.sendEvent("preRemoveParams", work.sendPreRemoveParams());
-				client.sendEvent("preReplaceParams", work.sendPreReplaceParams());
-				client.sendEvent("preDictionaryParams", work.sendPreDictionaryParams());
+				System.out.println("Connect");
+				// Broadcast parameters
+				sendParams(client);
 				
-				// They should be kicked after data import
-				client.sendEvent("preFilterData", work.sendPreFilterHistogram());
-				client.sendEvent("preFilterGrid", work.sendPreFilter());
+				// Send all the data
+				sendPreprocessData(client);
+				sendSpellcorrectData(client);
 			}
 		});
 		
@@ -52,7 +79,7 @@ public class Transport {
 				
 				work.applyPreRemove(data);
 				
-				client.sendEvent("output", work.sendFinal());
+				sendSpellcorrectData(client);
 			}
         });
 		
@@ -63,6 +90,8 @@ public class Transport {
 					AckRequest arg2) throws Exception {
 				
 				work.applyPreReplace(data);
+				
+				sendSpellcorrectData(client);
 			}
         });
 		
@@ -73,6 +102,8 @@ public class Transport {
 					AckRequest arg2) throws Exception {
 				
 				work.applyPreDictionary(data);
+				
+				sendSpellcorrectData(client);
 			}
         });
 		
@@ -83,51 +114,38 @@ public class Transport {
 					AckRequest arg2) throws Exception {
 				
 				work.applyPreFilter(Double.parseDouble(data));
+				
+				sendSpellcorrectData(client);
 			}
         });
 		
 	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    // Spell Checking
 	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		// Get history data
-		server.addEventListener("getHistory", String.class, new DataListener<String>() {
+
+		// Compute clusters
+		server.addEventListener("applySpellImportance", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				//client.sendEvent("history", work.sendHistory(data));
+				work.applySpellImportance(Double.parseDouble(data));
+				
+				client.sendEvent("output", work.sendOverview(2));
+				System.out.println(data);
 			}
         });
 		
 		// Compute clusters
-		server.addEventListener("clustering", String.class, new DataListener<String>() {
+		server.addEventListener("applySpellSimilarity", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				//work.clustering(Integer.parseInt(data));
-			}
-        });
-		
-		// Get spell checking data
-		server.addEventListener("getSpellcheckingData", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-					AckRequest arg2) throws Exception {
+				work.applySpellSimilarity(Double.parseDouble(data));
 				
-				if(data.equals("similarities"))
-				{
-					//client.sendEvent("similarities", work.sendSimilarityHistogram());
-				}
-				if(data.equals("vocab"))
-				{
-					//client.sendEvent("vocab", work.sendVocab());
-				}
-				if(data.equals("importance"))
-				{
-					//client.sendEvent("importance", work.sendImportanceHistogram());
-				}
+				client.sendEvent("output", work.sendOverview(2));
+				System.out.println(data);
 			}
         });
 		
@@ -137,7 +155,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				//client.sendEvent("cluster", work.sendCluster(data));
+				client.sendEvent("cluster", work.sendCluster(data));
 			}
         });
 		
@@ -147,24 +165,13 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				//client.sendEvent("replacements", work.sendReplacements(Double.parseDouble(data)));
+				client.sendEvent("replacements", work.sendReplacements(Double.parseDouble(data)));
 			}
         });
 		
-		// Apply clustering threshold
-		server.addEventListener("applyClustering", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-					AckRequest arg2) throws Exception {
-				
-				//work.applyClustering(Double.parseDouble(data));
-				//client.sendEvent("overview", work.sendOverview());
-				
-				//work.grouping();
-				//client.sendEvent("frequentGroups", work.sendFrequentGroups());
-				//client.sendEvent("uniqueGroups", work.sendUniqueGroups());
-			}
-        });
+	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	    // Composites
+	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		// Get composite data
 		server.addEventListener("getCompositeData", String.class, new DataListener<String>() {
@@ -233,6 +240,16 @@ public class Transport {
 				{
 					//client.sendEvent("output", work.sendFinal());
 				}
+			}
+        });
+		
+		// Get history data
+		server.addEventListener("getHistory", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				//client.sendEvent("history", work.sendHistory(data));
 			}
         });
 	}
