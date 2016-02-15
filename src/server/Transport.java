@@ -29,6 +29,12 @@ public class Transport {
 		// Postprocessing
 		client.sendEvent("spellImportance", work.sendSpellImportanceParams());
 		client.sendEvent("spellSimilarity", work.sendSpellSimilarityParams());
+		
+		// Composite
+		client.sendEvent("compFrequentParams", work.sendCompFrequentParams());
+		client.sendEvent("compUniqueParams", work.sendCompUniqueParams());
+		client.sendEvent("compSizeParams", work.sendCompSizeParams());
+		client.sendEvent("compSplitParams", work.sendCompSplitParams());
 	}
 	
 	private void sendPreprocessData(SocketIOClient client)
@@ -41,7 +47,15 @@ public class Transport {
 	{
 		client.sendEvent("similarities", work.sendSimilarityHistogram());
 		client.sendEvent("vocab", work.sendVocab());
-		client.sendEvent("importance", work.sendImportanceHistogram());
+		client.sendEvent("importance", work.sendPreVocabHistogram());
+	}
+	
+	private void sendCompositeData(SocketIOClient client)
+	{
+		client.sendEvent("frequentGroups", work.sendFrequentGroups());
+		client.sendEvent("frequentData", work.sendFrequentHistogram());
+		client.sendEvent("uniqueGroups", work.sendUniqueGroups());
+		client.sendEvent("uniqueData", work.sendUniqueHistogram());
 	}
 	
 	public void initialize()
@@ -52,6 +66,7 @@ public class Transport {
 		// Compute everything with default values
 		work.computePreprocessing();
 		work.computeSpellCorrect();
+		work.computeGroups();
 		
 		// Connection
 		server.addConnectListener(new ConnectListener() {
@@ -64,6 +79,7 @@ public class Transport {
 				// Send all the data
 				sendPreprocessData(client);
 				sendSpellcorrectData(client);
+				sendCompositeData(client);
 			}
 		});
 		
@@ -130,9 +146,6 @@ public class Transport {
 					AckRequest arg2) throws Exception {
 				
 				work.applySpellImportance(Double.parseDouble(data));
-				
-				client.sendEvent("output", work.sendOverview(2));
-				System.out.println(data);
 			}
         });
 		
@@ -143,9 +156,6 @@ public class Transport {
 					AckRequest arg2) throws Exception {
 				
 				work.applySpellSimilarity(Double.parseDouble(data));
-				
-				client.sendEvent("output", work.sendOverview(2));
-				System.out.println(data);
 			}
         });
 		
@@ -172,43 +182,50 @@ public class Transport {
 	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    // Composites
 	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		// Get composite data
-		server.addEventListener("getCompositeData", String.class, new DataListener<String>() {
+
+		// Compute clusters
+		server.addEventListener("applyFrequentThreshold", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				if(data.equals("frequentData"))
-				{
-					//client.sendEvent("frequentData", work.sendFrequentHistogram());
-				}
-				if(data.equals("frequentGroups"))
-				{
-					//client.sendEvent("frequentGroups", work.sendFrequentGroups());
-				}
-				if(data.equals("uniqueData"))
-				{
-					//client.sendEvent("uniqueData", work.sendUniqueHistogram());
-				}
-				if(data.equals("uniqueGroups"))
-				{
-					//client.sendEvent("uniqueGroups", work.sendUniqueGroups());
-				}
+				work.applyCompositeFrequent(Double.parseDouble(data));
+				
+				client.sendEvent("output", work.sendOverview(3));
+				System.out.println(data);
 			}
         });
 		
-		// Apply groups to the original data set
-		server.addEventListener("applyGroups", String.class, new DataListener<String>() {
+		// Compute clusters
+		server.addEventListener("applyUniqueThreshold", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				//work.applyGrouping();
-				//client.sendEvent("overview", work.sendOverview());
+				work.applyCompositeUnique(Double.parseDouble(data));
+				
+				client.sendEvent("output", work.sendOverview(3));
+				System.out.println(data);
 			}
         });
 		
+		// Compute clusters
+		server.addEventListener("applyMaxSize", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyCompositeSize(Integer.parseInt(data));
+				
+				client.sendEvent("output", work.sendOverview(3));
+				System.out.println(data);
+			}
+        });
+		
+	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	    // Postprocessing - Dataset 4
+	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 		// Get postprocessing data
 		server.addEventListener("getPostprocessingData", String.class, new DataListener<String>() {
 

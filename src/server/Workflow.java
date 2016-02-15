@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import processing.Grouping;
+import processing.Composite;
 import processing.Helper;
 import processing.Preprocess;
 import processing.Regex;
@@ -29,7 +29,6 @@ public class Workflow {
     private ImportCSV im = new ImportCSV();
     private Weighting weighting = new Weighting();
     private Regex regex = new Regex();
-    private Grouping grouping = new Grouping();
 
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,10 +44,7 @@ public class Workflow {
     // The index selects the working copy. 0 = original
     private Preprocess preprocess = new Preprocess(1);
     private Spellcorrect spellcorrect = new Spellcorrect(2);
-
-	// Composites
-	private double groupFrequent = 0;
-	private double groupUnique = 0;
+    private Composite composite = new Composite(3);
 	
 	// Postprocessing
 	private double postFilter = 0;
@@ -179,9 +175,14 @@ public class Workflow {
 	
 	public void computeSpellCorrect()
 	{
+		// Reset current stage
 		help.resetStep(tags, 2);
 		
+		// Apply clustering
 		spellcorrect.applyClustering(tags);
+		
+		// Compute further data
+		composite.group(tags);
 	}
 	
 	// Apply changes
@@ -230,42 +231,105 @@ public class Workflow {
 	    return help.objectToJsonString(spellcorrect.prepareReplacements(threshold));
 	}
 	
+	public String sendVocab()
+	{
+	    return help.objectToJsonString(help.prepareVocab(vocabPre));
+	}
+	
+	public String sendPreVocabHistogram()
+	{
+	    return help.objectToJsonString(help.prepareVocabHistogram(vocabPre));
+	}
+	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Composites - Dataset 3
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void grouping()
+	public void computeGroups()
 	{
+		help.resetStep(tags, 3);
+		
 		// Compute all word groups
-	    grouping.group(tags, preprocess.getWhitelistGroups(), 3);
-	    log.info("Grouping finished\n");
+	    composite.applyGroups(tags);
 	}
 	
-	public void setGroupSize(int maxGroupSize)
+	// Apply changes
+	public void applyCompositeFrequent(double threshold)
+	{
+		// Set threshold
+		composite.setFrequentThreshold(threshold);
+		
+		// Apply
+		computeGroups();
+	}
+	
+	public void applyCompositeUnique(double threshold)
+	{
+		// Set threshold
+		composite.setJaccardThreshold(threshold);
+		
+		// Apply
+		computeGroups();
+	}
+	
+	public void applyCompositeSize(int maxGroupSize)
 	{
 	    // Set max group size
-	    grouping.setMaxGroupSize(maxGroupSize);
+	    composite.setMaxGroupSize(maxGroupSize);
+	    
+		// Apply
+		computeGroups();
 	}
 	
-	public void setWhitelist(List<String> whitelist)
+	public void applyCompositeSplit(Boolean split)
 	{
-	    // Set whitelist
-	    grouping.setWhitelist(whitelist);
+	    // Set max group size
+	    composite.setSplit(split);
+	    
+		// Apply
+		computeGroups();
+	}
+
+	// Send Params
+	public double sendCompFrequentParams()
+	{
+		return composite.getFrequentThreshold();
 	}
 	
-	public void applyGrouping()
+	public double sendCompUniqueParams()
 	{
-	    // Apply groups with current threshold
-		grouping.applyGroups(tags);
-	    log.info("Groups applied\n");
-	    
-	    // Split words
-	    help.splitCompositeTagLast(tags, 3);
-	    log.info("Tags splited\n");
-	    
-	    // Compute importance with the new words
-	    weighting.vocab(tags, vocabPost, 3);
-	    log.info("Weigthed\n");
+		return composite.getJaccardThreshold();
+	}
+	
+	public int sendCompSizeParams()
+	{
+		return composite.getMaxGroupSize();
+	}
+	
+	public Boolean sendCompSplitParams()
+	{
+		return composite.getSplit();
+	}
+
+	// Send Data
+	public String sendFrequentGroups()
+	{
+		return help.objectToJsonString(composite.prepareFrequentGroups());
+	}
+	
+	public String sendUniqueGroups()
+	{
+		return help.objectToJsonString(composite.prepareUniqueGroups());
+	}
+	
+	public String sendFrequentHistogram()
+	{
+		return help.objectToJsonString(composite.prepareFrequentHistogram());
+	}
+	
+	public String sendUniqueHistogram()
+	{
+		return help.objectToJsonString(composite.prepareUniqueHistogram());
 	}
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -342,45 +406,7 @@ public class Workflow {
 	    return help.objectToJsonString(tags_filtered); 
 	}
 	
-	public String sendVocab()
-	{
-	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
-	    
-	    for(String s: Helper.sortByComparatorDouble(vocabPre).keySet())
-	    {
-	    	tags_filtered.add(new gridVocab(s, vocabPre.get(s)));
-	    }
 
-	    return help.objectToJsonString(tags_filtered);
-	}
-	
-
-	
-	public String sendImportanceHistogram()
-	{
-	    List<gridHist> hist = new ArrayList<gridHist>();
-	    Map<Double, Long> temp = new HashMap<Double, Long>();
-	    
-	    for(Entry<String, Double> c: vocabPre.entrySet())
-	    {
-    		if(temp.containsKey(c.getValue()))
-    		{
-    			temp.put(c.getValue(), temp.get(c.getValue()) + 1);
-    		}
-    		else
-    		{
-    			temp.put(c.getValue(), (long) 1);
-    		}
-
-	    }
-	    
-	    for(double d: temp.keySet())
-	    {
-	    	hist.add(new gridHist(d, temp.get(d)));
-	    }
-
-	    return help.objectToJsonString(hist);
-	}
 
 	/*
 	public String sendHistory(String data) {
@@ -406,63 +432,16 @@ public class Workflow {
 	    return help.objectToJsonString(tags_filtered);
 	}
 	*/
-	
-	public String sendFrequentGroups()
-	{
-		return grouping.getFrequentGroupsJSON();
-	}
-	
-	public String sendUniqueGroups()
-	{
-		return grouping.getUniqueGroupsJSON();
-	}
-	
-	public String sendFrequentHistogram()
-	{
-		return grouping.getFrequentHistogramJSON();
-	}
-	
-	public String sendUniqueHistogram()
-	{
-		return grouping.getUniqueHistogramJSON();
-	}
+
 	
 	public String sendPostVocab()
 	{
-	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
-	    
-	    for(String s: vocabPost.keySet())
-	    {
-	    	tags_filtered.add(new gridVocab(s, vocabPost.get(s)));
-	    }
-
-	    return help.objectToJsonString(tags_filtered);
+	    return help.objectToJsonString(help.prepareVocab(vocabPost));
 	}
 	
-	public String sendPostImportanceHistogram()
+	public String sendPostVocabHistogram()
 	{
-	    List<gridHist> hist = new ArrayList<gridHist>();
-	    Map<Double, Long> temp = new HashMap<Double, Long>();
-	    
-	    for(Entry<String, Double> c: vocabPost.entrySet())
-	    {
-    		if(temp.containsKey(c.getValue()))
-    		{
-    			temp.put(c.getValue(), temp.get(c.getValue()) + 1);
-    		}
-    		else
-    		{
-    			temp.put(c.getValue(), (long) 1);
-    		}
-
-	    }
-	    
-	    for(double d: temp.keySet())
-	    {
-	    	hist.add(new gridHist(d, temp.get(d)));
-	    }
-
-	    return help.objectToJsonString(hist);
+	    return help.objectToJsonString(help.prepareVocabHistogram(vocabPost));
 	}
 	
 	public String sendImportantWords()

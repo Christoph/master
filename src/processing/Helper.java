@@ -22,6 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 import core.Tag;
+import core.json.gridHist;
+import core.json.gridVocab;
 
 public class Helper {
 	
@@ -513,5 +515,43 @@ public class Helper {
 			{
 				t.setTag(index, t.getTag(index-1));
 			}
+		}
+		
+		public List<gridHist> prepareVocabHistogram(Map<String, Double> vocab)
+		{
+		    List<gridHist> hist = new ArrayList<gridHist>();
+		    Map<Double, Long> temp = new HashMap<Double, Long>();
+		    
+		    for(Entry<String, Double> c: vocab.entrySet())
+		    {
+	    		if(temp.containsKey(c.getValue()))
+	    		{
+	    			temp.put(c.getValue(), temp.get(c.getValue()) + 1);
+	    		}
+	    		else
+	    		{
+	    			temp.put(c.getValue(), (long) 1);
+	    		}
+
+		    }
+		    
+		    for(double d: temp.keySet())
+		    {
+		    	hist.add(new gridHist(d, temp.get(d)));
+		    }
+
+		    return hist;
+		}
+		
+		public List<gridVocab> prepareVocab(Map<String, Double> vocab)
+		{
+		    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
+		    
+		    for(String s: vocab.keySet())
+		    {
+		    	tags_filtered.add(new gridVocab(s, vocab.get(s)));
+		    }
+
+		    return tags_filtered;
 		}
 }
