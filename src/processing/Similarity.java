@@ -65,7 +65,7 @@ public class Similarity {
 		    	  iter++;
 		    	  if(iter%part == 0)
 		    	  {
-		    		  System.out.println(iter/part+"/30");
+		    		  System.out.print(iter/part+"/30");
 		    	  }
 				
 				// Remove correct word from list

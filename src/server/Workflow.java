@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.corundumstudio.socketio.SocketIOClient;
+
 import processing.Composite;
 import processing.Helper;
 import processing.Postprocess;
@@ -33,6 +35,8 @@ public class Workflow {
     
     // Data
     private List<Tag> tags; 
+    
+    private Map<String, Long> tagsFreq = new HashMap<String, Long>();
     private Map<String, Double> vocabPre = new HashMap<String, Double>();
     private Map<String, Double> vocabPost = new HashMap<String, Double>();
     
@@ -48,12 +52,21 @@ public class Workflow {
     // Load data - Dataset 0
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-	public void init()
+	public void init(SocketIOClient client)
 	{
 		log.info("Initialize\n");
 		
 	    // Load data
 	    tags = im.importTags("reduced_music.csv");
+	    
+		// Set to lower case
+		help.setToLowerCase(tags, 0);
+		
+		// Compute word frequency
+		help.wordFrequency(tags, tagsFreq, 0);
+		
+		client.sendEvent("preFilterData", sendPreFilterHistogram());
+		client.sendEvent("preFilterGrid", sendPreFilter());
 
 	    log.info("Data loaded\n");
 	}
@@ -62,69 +75,70 @@ public class Workflow {
     // Preprocessing - Dataset 1
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void computePreprocessing()
+	public void computePreprocessing(SocketIOClient client)
 	{
 		help.resetStep(tags, 1);
 		
-		// Set to lower case
-		preprocess.setToLowerCase(tags);
+		// Remove tags
+		preprocess.applyFilter(tags, tagsFreq);
 		
 		// Remove characters
 		preprocess.removeCharacters(tags);
 		
 		// Replace characters
 		preprocess.replaceCharacters(tags);
-		
-		// Compute word frequency
-		preprocess.computeWordFreq(tags);
-		
-		// Update tags
-		preprocess.applyFilter(tags);
-		
+
 		// Create preFilter vocab
 		weighting.vocab(tags, vocabPre, 1);
-		
+
 		// Cluster words for further use
 		spellcorrect.clustering(tags, vocabPre, preprocess.getWhitelistWords());
+		
+		client.sendEvent("similarities", sendSimilarityHistogram());
+		client.sendEvent("vocab", sendVocab());
+		client.sendEvent("importance", sendPreVocabHistogram());
+		client.sendEvent("getReplacements", sendReplacements(spellcorrect.getSpellSimilarity()));
+		
+		computeSpellCorrect(client);
 	}
 	
 	// Apply changes
-	public void applyPreFilter(double threshold)
+	public void applyPreFilter(double threshold, SocketIOClient client)
 	{
 		// Set threshold
 		preprocess.setFilter(threshold);
 		
 		// Apply
-		computePreprocessing();
+		computePreprocessing(client);
 	}
 	
-	public void applyPreRemove(String chars)
+	public void applyPreRemove(String chars, SocketIOClient client)
 	{
 		// Set characters for removal
 		preprocess.setRemove(chars);
 		
 		// Apply
-		computePreprocessing();
+		computePreprocessing(client);
 	}
 	
-	public void applyPreReplace(String json)
+	public void applyPreReplace(String json, SocketIOClient client)
 	{
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		
 		preprocess.setReplace(map);
 		
 		// Apply
-		computePreprocessing();
+		computePreprocessing(client);
 	}
 	
-	public void applyPreDictionary(String json)
+	public void applyPreDictionary(String json, SocketIOClient client)
 	{
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		
 		preprocess.setDictionary(map);
 		
 		// Apply
-		computePreprocessing();
+		computePreprocessing(client);
 	}
 	
 	// Send Params
@@ -151,19 +165,19 @@ public class Workflow {
 	// Send Data
 	public String sendPreFilter()
 	{
-	    return help.objectToJsonString(preprocess.preparePreFilter());
+	    return help.objectToJsonString(preprocess.preparePreFilter(tagsFreq));
 	}
 	
 	public String sendPreFilterHistogram()
 	{
-	    return help.objectToJsonString(preprocess.preparePreFilterHistogram());
+	    return help.objectToJsonString(preprocess.preparePreFilterHistogram(tagsFreq));
 	}
 	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Spell Correction - Dataset 2
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void computeSpellCorrect()
+	public void computeSpellCorrect(SocketIOClient client)
 	{
 		// Reset current stage
 		help.resetStep(tags, 2);
@@ -173,25 +187,32 @@ public class Workflow {
 		
 		// Compute further data
 		composite.group(tags);
+		
+		client.sendEvent("frequentGroups", sendFrequentGroups());
+		client.sendEvent("frequentData", sendFrequentHistogram());
+		client.sendEvent("uniqueGroups", sendUniqueGroups());
+		client.sendEvent("uniqueData", sendUniqueHistogram());
+		
+		computeGroups(client);
 	}
 	
 	// Apply changes
-	public void applySpellImportance(double threshold)
+	public void applySpellImportance(double threshold, SocketIOClient client)
 	{
 		// Set threshold
 		spellcorrect.setSpellImportance(threshold);
 		
 		// Apply
-		computeSpellCorrect();
+		computeSpellCorrect(client);
 	}
 	
-	public void applySpellSimilarity(double threshold)
+	public void applySpellSimilarity(double threshold, SocketIOClient client)
 	{
 		// Set threshold
 		spellcorrect.setSpellSimilarity(threshold);
 		
 		// Apply
-		computeSpellCorrect();
+		computeSpellCorrect(client);
 	}
 	
 	// Send Params
@@ -235,7 +256,7 @@ public class Workflow {
     // Composites - Dataset 3
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void computeGroups()
+	public void computeGroups(SocketIOClient client)
 	{
 		help.resetStep(tags, 3);
 		
@@ -244,43 +265,50 @@ public class Workflow {
 	    
 	    // Provide further data
 	    weighting.vocab(tags, vocabPost, 3);
+	    
+		client.sendEvent("postFilterGrid", sendPostVocab());
+		client.sendEvent("postFilterData", sendPostVocabHistogram());
+		
+		client.sendEvent("output", sendOverview(3));
+		
+		prepareSalvaging(client);
 	}
 	
 	// Apply changes
-	public void applyCompositeFrequent(double threshold)
+	public void applyCompositeFrequent(double threshold, SocketIOClient client)
 	{
 		// Set threshold
 		composite.setFrequentThreshold(threshold);
 		
 		// Apply
-		computeGroups();
+		computeGroups(client);
 	}
 	
-	public void applyCompositeUnique(double threshold)
+	public void applyCompositeUnique(double threshold, SocketIOClient client)
 	{
 		// Set threshold
 		composite.setJaccardThreshold(threshold);
 		
 		// Apply
-		computeGroups();
+		computeGroups(client);
 	}
 	
-	public void applyCompositeSize(int maxGroupSize)
+	public void applyCompositeSize(int maxGroupSize, SocketIOClient client)
 	{
 	    // Set max group size
 	    composite.setMaxGroupSize(maxGroupSize);
 	    
 		// Apply
-		computeGroups();
+		computeGroups(client);
 	}
 	
-	public void applyCompositeSplit(Boolean split)
+	public void applyCompositeSplit(Boolean split, SocketIOClient client)
 	{
 	    // Set max group size
 	    composite.setSplit(split);
 	    
 		// Apply
-		computeGroups();
+		computeGroups(client);
 	}
 
 	// Send Params
@@ -329,68 +357,75 @@ public class Workflow {
     // Postprocessing - Dataset 4
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void prepareSalvaging()
+	public void prepareSalvaging(SocketIOClient client)
 	{
 		postprocess.initializeSalvaging(vocabPost);
+		
+		client.sendEvent("postImportantWords", sendPostImportant());
+		client.sendEvent("postSalvageWords", sendPostSalvage());
 	}
 	
-	public void computeSalvaging()
+	public void computeSalvaging(SocketIOClient client)
 	{
 		postprocess.computeSalvaging(vocabPost);
+		
+		client.sendEvent("postSalvageData", sendPostSalvageData());
 	}
 	
 	// Apply changes
-	public void applySalvaging()
+	public void applySalvaging(SocketIOClient client)
 	{
 		help.resetStep(tags, 4);
 		
 		postprocess.applySalvaging(tags);
+		
+		client.sendEvent("output", sendOverview(4));
 	}
 	
-	public void applyPostFilter(double threshold)
+	public void applyPostFilter(double threshold, SocketIOClient client)
 	{
 		// Set threshold
 		postprocess.setPostFilter(threshold);
 		
 		// Apply
-		prepareSalvaging();
+		prepareSalvaging(client);
 	}
 	
-	public void applyPostReplace(String json)
+	public void applyPostReplace(String json, SocketIOClient client)
 	{
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		
 		postprocess.setPostReplace(map);
 		
 		// Apply
-		prepareSalvaging();
+		prepareSalvaging(client);
 	}
 	
-	public void applyPostLength(int minLength)
+	public void applyPostLength(int minLength, SocketIOClient client)
 	{
 		// Set threshold
 		postprocess.setMinWordLength(minLength);
 		
 		// Apply
-		prepareSalvaging();
+		prepareSalvaging(client);
 	}
 	
-	public void applyPostAll(Boolean all)
+	public void applyPostAll(Boolean all, SocketIOClient client)
 	{
 		// Set threshold
 		postprocess.setUseAllWords(all);
 		
 		// Apply
-		prepareSalvaging();
+		prepareSalvaging(client);
 	}
 	
-	public void applyPostSplit(Boolean split)
+	public void applyPostSplit(Boolean split, SocketIOClient client)
 	{
 		// Set threshold
 		postprocess.setSplitTags(split);
 		
 		// Apply
-		prepareSalvaging();
+		prepareSalvaging(client);
 	}
 	
 	// Send Params

@@ -67,6 +67,18 @@ public class Helper {
 				}
 		    }
 		}
+		  
+	  public void setToLowerCase(List<Tag> tags, int index)
+	  {
+		  String updated;    
+		  
+		  for(Tag tag: tags)
+		  {
+			  updated = tag.getTag(index).toLowerCase();
+
+			  tag.setTag(index,updated);
+		  }
+	  }
 	   
 	   public void correctTags(List<Tag> tags, int index)
 		  {

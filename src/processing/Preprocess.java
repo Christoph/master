@@ -17,10 +17,6 @@ public class Preprocess {
 	
 	// Classes
 	private PlainStringSimilarity psim = new PlainStringSimilarity();
-  	private Helper help = new Helper();
-	
-    // Data
-    private Map<String, Long> tagsFreq = new HashMap<String, Long>();
 	
 	// Parameters
 	private double filter;
@@ -44,15 +40,9 @@ public class Preprocess {
 		setFilter(0d);
 		setRemove("'");
 	}
-	
-	// Create a Word/Occurences map
-	public void computeWordFreq(List<Tag> tags)
-	{
-		help.wordFrequency(tags, tagsFreq, index);
-	}
 
 	// Remove all words below the threshold
-	public void applyFilter(List<Tag> tags) 
+	public void applyFilter(List<Tag> tags, Map<String, Long> tagsFreq) 
 	{
 	  	String key = "";
 	  	String temp = "";
@@ -129,20 +119,8 @@ public class Preprocess {
 			  tag.setTag(index,updated);
 		  }
 	  }
-	  
-	  public void setToLowerCase(List<Tag> tags)
-	  {
-		  String updated;    
-		  
-		  for(Tag tag: tags)
-		  {
-			  updated = tag.getTag(index).toLowerCase();
 
-			  tag.setTag(index,updated);
-		  }
-	  }
-
-	public List<gridVocab> preparePreFilter()
+	public List<gridVocab> preparePreFilter(Map<String, Long> tagsFreq)
 	{
 	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
 	    
@@ -154,7 +132,7 @@ public class Preprocess {
 	    return tags_filtered;
 	}
 	
-	public List<gridHistFreq> preparePreFilterHistogram()
+	public List<gridHistFreq> preparePreFilterHistogram(Map<String, Long> tagsFreq)
 	{
 	    List<gridHistFreq> hist = new ArrayList<gridHistFreq>();
 	    Map<Long, Long> temp = new HashMap<Long, Long>();

@@ -77,27 +77,21 @@ public class Transport {
 	public void initialize()
 	{		
 		// This should be done after data import
-		work.init();
 
-		// Compute everything with default values
-		work.computePreprocessing();
-		work.computeSpellCorrect();
-		work.computeGroups();
-		work.prepareSalvaging();
-		
+
 		// Connection
 		server.addConnectListener(new ConnectListener() {
 			
 			public void onConnect(SocketIOClient client) {
 				System.out.println("Connect");
+				
+				work.init(client);
+				
 				// Broadcast parameters
 				sendParams(client);
 				
-				// Send all the data
-				sendPreprocessData(client);
-				sendSpellcorrectData(client);
-				sendCompositeData(client);
-				sendPostprocessData(client);
+				// Compute everything with default values
+				work.computePreprocessing(client);
 			}
 		});
 		
@@ -111,9 +105,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyPreRemove(data);
-				
-				sendSpellcorrectData(client);
+				work.applyPreRemove(data, client);
 			}
         });
 		
@@ -123,9 +115,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyPreReplace(data);
-				
-				sendSpellcorrectData(client);
+				work.applyPreReplace(data, client);
 			}
         });
 		
@@ -135,9 +125,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyPreDictionary(data);
-				
-				sendSpellcorrectData(client);
+				work.applyPreDictionary(data, client);
 			}
         });
 		
@@ -147,9 +135,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyPreFilter(Double.parseDouble(data));
-				
-				sendSpellcorrectData(client);
+				work.applyPreFilter(Double.parseDouble(data), client);
 			}
         });
 		
@@ -163,7 +149,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applySpellImportance(Double.parseDouble(data));
+				work.applySpellImportance(Double.parseDouble(data), client);
 			}
         });
 		
@@ -173,7 +159,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applySpellSimilarity(Double.parseDouble(data));
+				work.applySpellSimilarity(Double.parseDouble(data), client);
 			}
         });
 		
@@ -206,7 +192,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyCompositeFrequent(Double.parseDouble(data));
+				work.applyCompositeFrequent(Double.parseDouble(data), client);
 			}
         });
 		
@@ -215,7 +201,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyCompositeUnique(Double.parseDouble(data));
+				work.applyCompositeUnique(Double.parseDouble(data), client);
 			}
         });
 		
@@ -224,7 +210,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyCompositeSize(Integer.parseInt(data));
+				work.applyCompositeSize(Integer.parseInt(data), client);
 			}
         });
 		
@@ -233,7 +219,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyCompositeSplit(Boolean.parseBoolean(data));
+				work.applyCompositeSplit(Boolean.parseBoolean(data), client);
 			}
         });
 		
@@ -246,7 +232,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyPostFilter(Double.parseDouble(data));
+				work.applyPostFilter(Double.parseDouble(data), client);
 			}
         });
 		
@@ -255,9 +241,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyPostReplace(data);
-				
-				client.sendEvent("postSalvageWords", work.sendPostSalvage());
+				work.applyPostReplace(data, client);
 			}
         });
 		
@@ -266,7 +250,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyPostLength(Integer.parseInt(data));
+				work.applyPostLength(Integer.parseInt(data), client);
 			}
         });
 		
@@ -275,7 +259,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyPostAll(Boolean.parseBoolean(data));
+				work.applyPostAll(Boolean.parseBoolean(data), client);
 			}
         });
 		
@@ -284,7 +268,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyPostSplit(Boolean.parseBoolean(data));
+				work.applyPostSplit(Boolean.parseBoolean(data), client);
 			}
         });
 		
@@ -293,9 +277,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applySalvaging();
-				
-				client.sendEvent("output", work.sendOverview(4));
+				work.applySalvaging(client);
 			}
         });
 		
@@ -304,11 +286,9 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.computeSalvaging();
+				work.computeSalvaging(client);
 				
 				client.sendEvent("postSalvageData", work.sendPostSalvageData());
-				
-				System.out.println(data);
 			}
         });
 		
