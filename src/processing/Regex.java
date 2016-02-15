@@ -2,9 +2,9 @@ package processing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +21,6 @@ public class Regex {
 	
 	protected String e ="";
   	
-  	protected List<String> separation = new ArrayList<String>();
   	protected List<String> numbers = new ArrayList<String>();
   	protected List<String> replacements;
   	protected List<String> out = new ArrayList<String>();
@@ -40,20 +39,74 @@ public class Regex {
     // Now create matcher object.
   	protected Matcher mr, ml;
   	
-    public void findImportantWords(List<Tag> tags, List<String> importantWords, double threshold, int minWordLength, Boolean useAllWords, int index)
-	{	  
-		int tt3 = 0, tt2 = 0, tt4 = 0;
-
-	    numbers.add("Number of tags: "+tags.size());
-		
-	    System.out.print(tags.size());
-	    int part = tags.size()/30;
+  	// Temporary
+  	
+  	
+  	public void apply(List<Tag> tags, List<String> salvageWords, Map<String, String> salvagedData, Boolean useAllWords, int index) 
+  	{
+  		String tag, newTag;
+  	  	List<String> temp = new ArrayList<String>();
+		String[] words;
+  		
+  		for(Tag t: tags)
+  		{
+  			tag = t.getTag(index);
+  			temp.clear();
+  			newTag = "";
+  			
+  			words = tag.split(" ");
+  			
+  			for(String w: words)
+  			{
+  				if(salvagedData.keySet().contains(w))
+  				{
+  					temp.add(salvagedData.get(w));
+  				}
+  				else if(salvageWords.contains(w))
+  				{
+  					temp.add(w);
+  				}
+  				else
+  				{
+  					if(useAllWords)
+  					{
+  						temp.add(w);
+  					}
+  				}
+  			}
+  			
+	  		// Rebuild string from temp
+	  		for(String s: temp)
+	  		{	
+	  			if(s.length() > 0)
+	  			{
+	  				newTag = newTag.concat(" "+s).trim();
+	  			} 	  		
+	  		}
+  			
+  			t.setTag(index, newTag);
+  		}
+  		
+  		help.removeTagsWithoutWords(tags, index);
+  	}
+  	
+    public void findImportantWords(Map<String, Double> vocabPost, List<String> importantWords, Map<String, String> salvagedData, double threshold, int minWordLength, int index)
+	{	
+    	salvagedData.clear();
+    	
+	    System.out.print(vocabPost.size());
+	    int part = vocabPost.size()/30;
 	    int iter = 0;
+
+  		// Precompile patterns
+  		for(String s: importantWords)
+  		{
+  			patterns_greedy.put(s, Pattern.compile("(.*)("+s+")(.*)"));
+  			patterns_conservative.put(s, Pattern.compile("(\\s)("+s+")(\\s)"));
+  		}
 	    
-		for(Iterator<Tag> iterator = tags.iterator(); iterator.hasNext();)
+		for(Entry<String,Double> e: vocabPost.entrySet())
         {
-			Tag t = iterator.next();
-			
 	    	  iter++;
 	    	  if(iter%part == 0)
 	    	  {
@@ -61,26 +114,16 @@ public class Regex {
 	    	  }
 			
 			// Set tag name
-			name = t.getTag(index);
+			name = e.getKey();
 			
-			if(t.getImportance() < threshold)
+			if(e.getValue() < threshold)
 			{
-				// TT3 Save bad rows
-				tt3 += 1;
-				
 				// Reset join string and out list
 		  		join = "";
 		  		out.clear();
 		  		
-		  		// Precompile patterns
-		  		for(String s: importantWords)
-		  		{
-		  			patterns_greedy.put(s, Pattern.compile("(.*)("+s+")(.*)"));
-		  			patterns_conservative.put(s, Pattern.compile("(\\s)("+s+")(\\s)"));
-		  		}
-		  		
 		  		// Apply regex
-		  		matcher(name, importantWords, minWordLength, useAllWords);
+		  		matcher(name, importantWords, minWordLength);
 		  		
 		  		// Rebuild string from out
 		  		for(String s: out)
@@ -96,50 +139,16 @@ public class Regex {
 		  		// Add the extraction to the output
 		  		if(!name.equals(join)&&!join.isEmpty()) 
 	  			{
-	  				separation.add(name+" -> "+join);
+		  			salvagedData.put(name, join);
 	  			}
-		  		
-		  		// Set tag name
-		  		t.setTag(index, join);
-			}
-			else if(t.getImportance() >= threshold && name.length() >=  minWordLength)
-			{		
-				// Check if the word is on importantWord list
-				if(importantWords.contains(name)) 
-				{
-					// Save TT2
-					tt2+=1;
-				}
-				else // If not -> remove
-				{
-					// Save number of unimportant tags
-					tt4+=1;
-					
-					// Delete tag which is not important and too short.
-					t.setTag(index, "");
-				}
-			}
-			else
-			{
-				// Save number of unimportant tags
-				tt4+=1;
-				
-				// Delete tag which is not important and too short.
-				t.setTag(index, "");
 			}
 		}
-		
-		numbers.add("Number of important tags: "+tt2);
-		numbers.add("Number of tags with an importance < threshold: "+tt3);
-		numbers.add("Number of unimportant tags (in subjective list, importance < "+threshold+" and length < "+minWordLength+"): "+tt4);
-	    
-	    numbers.add("Number of final tags: "+tags.size());
 	}
 	
 	
     
     // String, > 0 == right, list of important tags
-	public void matcher(String name, List<String> importantWords, int minWordLength, Boolean useAllWords)
+	public void matcher(String name, List<String> importantWords, int minWordLength)
 	{
 		name = " "+name+" ";
 		
@@ -170,11 +179,11 @@ public class Regex {
 	  			String ms = mr.group(2).trim();
 	  			String rs = mr.group(3).trim();
 	  			
-	  			if(ls.length() > 0) matcher(ls, importantWords,minWordLength, useAllWords);
+	  			if(ls.length() > 0) matcher(ls, importantWords,minWordLength);
 	  			
 	  			out.add(ms.trim());
 	  			
-	  			if(rs.length() > 0) matcher(rs, importantWords, minWordLength, useAllWords);
+	  			if(rs.length() > 0) matcher(rs, importantWords, minWordLength);
 	  			
 	  			name = "";
 	  		} 			  		
@@ -184,59 +193,19 @@ public class Regex {
 	  			String ms = ml.group(2).trim();
 	  			String rs = ml.group(3).trim();
 	  			
-	  			if(ls.length() > 0) matcher(ls, importantWords, minWordLength, useAllWords);
+	  			if(ls.length() > 0) matcher(ls, importantWords, minWordLength);
 	  			
 	  			out.add(ms);
 	  			
-	  			if(rs.length() > 0) matcher(rs, importantWords, minWordLength, useAllWords);
+	  			if(rs.length() > 0) matcher(rs, importantWords, minWordLength);
 	  			
 	  			name = "";
 	  		}
   		}
-			
-		//Removing this line let the matcher only use words from the list of important words
-		//All other words will be removed
-		if(useAllWords == true) out.add(name.trim());
-
 	}
 	
 	public List<String> replaceCustomWords(List<String> importantWords, List<String> patterns, int index)
 	{
-		/*
-		String reg, rep, temp;
-		String[] row;
-		replacements = new ArrayList<String>();
-		Matcher match;
-		
-		Map<Pattern, String> custom = new HashMap<Pattern, String>();
-		
-		// Precompile patterns
-		for(String p: patterns)
-		{
-			row = p.split(",");
-			reg = "\\b"+row[0]+"\\b";
-			rep = row[1].trim();
-			
-			custom.put(Pattern.compile(reg), rep);
-		}
-		
-		for(String name: importantWords)
-		{
-			for(Map.Entry<Pattern, String> entry : custom.entrySet())
-			{
-				match = entry.getKey().matcher(name);
-				
-				if(match.find() && !entry.getValue().equals(name))
-				{
-					temp = match.replaceAll(entry.getValue());
-			  		
-			  		name = temp;
-				}
-			}
-			
-	  		t.setTag(index, name.trim());	
-		}
-		*/
 		String[] row;
 		
 		for(String s: patterns)

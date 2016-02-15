@@ -41,6 +41,7 @@ public class Transport {
 		client.sendEvent("postAllParams", work.sendPostAllParams());
 		client.sendEvent("postReplaceParams", work.sendPostReplaceParams());
 		client.sendEvent("postLengthParams", work.sendPostLengthParams());
+		client.sendEvent("postSplitParams", work.sendPostSplitParams());
 	}
 	
 	private void sendPreprocessData(SocketIOClient client)
@@ -70,6 +71,7 @@ public class Transport {
 		client.sendEvent("postFilterData", work.sendPostVocabHistogram());
 		client.sendEvent("postImportantWords", work.sendPostImportant());
 		client.sendEvent("postSalvageWords", work.sendPostSalvage());
+		client.sendEvent("postSalvageData", work.sendPostSalvageData());
 	}
 	
 	public void initialize()
@@ -226,6 +228,15 @@ public class Transport {
 			}
         });
 		
+		server.addEventListener("applyCompSplit", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyCompositeSplit(Boolean.parseBoolean(data));
+			}
+        });
+		
 	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    // Postprocessing - Dataset 4
 	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,9 +247,6 @@ public class Transport {
 					AckRequest arg2) throws Exception {
 				
 				work.applyPostFilter(Double.parseDouble(data));
-				
-				client.sendEvent("output", work.sendOverview(4));
-				System.out.println(data);
 			}
         });
 		
@@ -249,8 +257,7 @@ public class Transport {
 				
 				work.applyPostReplace(data);
 				
-				client.sendEvent("output", work.sendOverview(4));
-				System.out.println(data);
+				client.sendEvent("postSalvageWords", work.sendPostSalvage());
 			}
         });
 		
@@ -260,9 +267,6 @@ public class Transport {
 					AckRequest arg2) throws Exception {
 				
 				work.applyPostLength(Integer.parseInt(data));
-				
-				client.sendEvent("output", work.sendOverview(4));
-				System.out.println(data);
 			}
         });
 		
@@ -272,9 +276,15 @@ public class Transport {
 					AckRequest arg2) throws Exception {
 				
 				work.applyPostAll(Boolean.parseBoolean(data));
+			}
+        });
+		
+		server.addEventListener("applyPostSplit", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
 				
-				client.sendEvent("output", work.sendOverview(4));
-				System.out.println(data);
+				work.applyPostSplit(Boolean.parseBoolean(data));
 			}
         });
 		
@@ -286,7 +296,6 @@ public class Transport {
 				work.applySalvaging();
 				
 				client.sendEvent("output", work.sendOverview(4));
-				System.out.println(data);
 			}
         });
 		
@@ -297,7 +306,8 @@ public class Transport {
 				
 				work.computeSalvaging();
 				
-				client.sendEvent("output", work.sendOverview(4));
+				client.sendEvent("postSalvageData", work.sendPostSalvageData());
+				
 				System.out.println(data);
 			}
         });

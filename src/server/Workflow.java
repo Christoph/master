@@ -384,6 +384,15 @@ public class Workflow {
 		prepareSalvaging();
 	}
 	
+	public void applyPostSplit(Boolean split)
+	{
+		// Set threshold
+		postprocess.setSplitTags(split);
+		
+		// Apply
+		prepareSalvaging();
+	}
+	
 	// Send Params
 	public double sendPostFilterParams()
 	{
@@ -405,6 +414,11 @@ public class Workflow {
 		return postprocess.getPostReplace();
 	}
 	
+	public Boolean sendPostSplitParams()
+	{
+		return postprocess.getSplitTags();
+	}
+	
 	// Send Data
 	public String sendPostVocab()
 	{
@@ -424,6 +438,11 @@ public class Workflow {
 	public String sendPostSalvage()
 	{
 	    return help.objectToJsonString(postprocess.prepareSalvageWords());
+	}
+	
+	public String sendPostSalvageData()
+	{
+	    return help.objectToJsonString(postprocess.prepareSalvagedData());
 	}
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
