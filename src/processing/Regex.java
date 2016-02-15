@@ -200,9 +200,10 @@ public class Regex {
 
 	}
 	
-	public void replaceCustomWords(List<? extends Tag> tags, List<String> patterns, int index)
+	public List<String> replaceCustomWords(List<String> importantWords, List<String> patterns, int index)
 	{
-		String name, reg, rep, temp;
+		/*
+		String reg, rep, temp;
 		String[] row;
 		replacements = new ArrayList<String>();
 		Matcher match;
@@ -219,10 +220,8 @@ public class Regex {
 			custom.put(Pattern.compile(reg), rep);
 		}
 		
-		for(Tag t: tags)
+		for(String name: importantWords)
 		{
-			name = t.getTag(index);
-			
 			for(Map.Entry<Pattern, String> entry : custom.entrySet())
 			{
 				match = entry.getKey().matcher(name);
@@ -231,16 +230,25 @@ public class Regex {
 				{
 					temp = match.replaceAll(entry.getValue());
 			  		
-			  		if(!name.equals(temp)) 
-		  			{
-		  				replacements.add(name+" -> "+temp);
-		  			}
-			  		
 			  		name = temp;
 				}
 			}
 			
 	  		t.setTag(index, name.trim());	
 		}
+		*/
+		String[] row;
+		
+		for(String s: patterns)
+		{
+			row = s.split(",");
+			
+			if(importantWords.contains(row[0]))
+			{
+				importantWords.set(importantWords.indexOf(row[0]), row[1]);
+			}
+		}
+		
+		return importantWords;
 	}
 }

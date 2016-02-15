@@ -41,20 +41,20 @@ public class Postprocess {
 		importantWords = help.getImportantTags(vocabPost, postFilter);
 		
 		// Get salvage words
-		//salvageWords = regex.replaceCustomWords(importantWords, postReplace, index);
+		salvageWords = regex.replaceCustomWords(importantWords, postReplace, index);
 	}
 	
 	public void computeSalvaging(Map<String, Double> vocabPost)
 	{
 	    // Find important words in the unimportant tags
-	    //regex.findImportantWords(tags, salvageWords, postFilter, minWordLength, useAllWords, index);
+	    //regex.findImportantWords(salvageWords, postFilter, minWordLength, useAllWords, index);
 	}
 	
 	public void applySalvaging(List<Tag> tags)
 	{
 		//regex.apply(tags);
 		
-		//help.splitCompositeTag(tags, index);
+		help.splitCompositeTag(tags, index);
 		//help.correctTags(tags);
 		
 	    //help.removeDashes(tags, index);
