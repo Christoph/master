@@ -1,13 +1,10 @@
 package processing;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,15 +40,7 @@ public class Regex {
     // Now create matcher object.
   	protected Matcher mr, ml;
   	
-  	// Parameters
-  	
-    // Set importance threshold
-    private double threshold = 0.1;
-    
-    // Set minimum word length
-    private int minWordLength = 3;
-	
-    public void findImportantWords(List<Tag> tags, Map<String, String> words, double threshold, int minWordLength, Boolean useAllWords, int index)
+    public void findImportantWords(List<Tag> tags, List<String> importantWords, double threshold, int minWordLength, Boolean useAllWords, int index)
 	{	  
 		int tt3 = 0, tt2 = 0, tt4 = 0;
 
@@ -84,14 +73,14 @@ public class Regex {
 		  		out.clear();
 		  		
 		  		// Precompile patterns
-		  		for(String s: words.keySet())
+		  		for(String s: importantWords)
 		  		{
-		  			patterns_greedy.put(s, Pattern.compile("(.*)("+s.toLowerCase()+")(.*)"));
-		  			patterns_conservative.put(s, Pattern.compile("(\\s)("+s.toLowerCase()+")(\\s)"));
+		  			patterns_greedy.put(s, Pattern.compile("(.*)("+s+")(.*)"));
+		  			patterns_conservative.put(s, Pattern.compile("(\\s)("+s+")(\\s)"));
 		  		}
 		  		
 		  		// Apply regex
-		  		matcher(name, words, minWordLength, useAllWords);
+		  		matcher(name, importantWords, minWordLength, useAllWords);
 		  		
 		  		// Rebuild string from out
 		  		for(String s: out)
@@ -115,13 +104,13 @@ public class Regex {
 			}
 			else if(t.getImportance() >= threshold && name.length() >=  minWordLength)
 			{		
-				// Check if the word is on the subjective list
-				if(words.containsKey(name)) // Not on the subjective list
+				// Check if the word is on importantWord list
+				if(importantWords.contains(name)) 
 				{
 					// Save TT2
 					tt2+=1;
 				}
-				else // On the subjective list
+				else // If not -> remove
 				{
 					// Save number of unimportant tags
 					tt4+=1;
@@ -143,74 +132,19 @@ public class Regex {
 		numbers.add("Number of important tags: "+tt2);
 		numbers.add("Number of tags with an importance < threshold: "+tt3);
 		numbers.add("Number of unimportant tags (in subjective list, importance < "+threshold+" and length < "+minWordLength+"): "+tt4);
-		
-		help.splitCompositeTagLast(tags, index);
-		//help.correctTags(tags);
 	    
 	    numbers.add("Number of final tags: "+tags.size());
 	}
 	
-	public void findGroups(List<Tag> tags, int index)
-	{
-		Set<String> groups = new HashSet<String>();
-		List<String> output = new ArrayList<String>();
-	    Map<String, String> subs = new HashMap<String, String>();
-		
-		String words[] = null;
-		String name = "";
-		
-		//Find all groups
-		for(Tag t: tags)
-		{
-			if(t.getTag(index).contains("-"))
-			{
-				words = t.getTag(index).split(" ");
-				
-				for(String s: words)
-				{
-					if(s.contains("-"))
-					{
-						groups.add(s);
-					}
-				}
-			}
-		}
-		
-		// Create substitution list
-		for(String s: groups)
-		{
-			subs.put(s.replace("-", ""), s);
-		}
-		
-		//Find groups
-		for(Tag t: tags)
-		{
-			name = t.getTag(index);
-			words = name.split(" +");
-			
-			for(String s: words)
-			{
-				if(subs.keySet().contains(s))
-				{
-					name = name.replace(s, subs.get(s));
-					output.add(s+"->"+subs.get(s));
-				}
-			}
-			
-			t.setTag(index, name);
-		}
-	}
+	
     
     // String, > 0 == right, list of important tags
-	public void matcher(String name, Map<String, String> list, int minWordLength, Boolean useAllWords)
+	public void matcher(String name, List<String> importantWords, int minWordLength, Boolean useAllWords)
 	{
 		name = " "+name+" ";
 		
-			for(Map.Entry<String, String> entry : list.entrySet())
-			{
-			// Fetch data	
-			e = entry.getKey();
-				
+			for(String e: importantWords)
+			{	
   			// Compile patterns
 			// If bigger than min word length do substring search
 			// else only full word search
@@ -236,11 +170,11 @@ public class Regex {
 	  			String ms = mr.group(2).trim();
 	  			String rs = mr.group(3).trim();
 	  			
-	  			if(ls.length() > 0) matcher(ls, list,minWordLength, useAllWords);
+	  			if(ls.length() > 0) matcher(ls, importantWords,minWordLength, useAllWords);
 	  			
 	  			out.add(ms.trim());
 	  			
-	  			if(rs.length() > 0) matcher(rs, list, minWordLength, useAllWords);
+	  			if(rs.length() > 0) matcher(rs, importantWords, minWordLength, useAllWords);
 	  			
 	  			name = "";
 	  		} 			  		
@@ -250,11 +184,11 @@ public class Regex {
 	  			String ms = ml.group(2).trim();
 	  			String rs = ml.group(3).trim();
 	  			
-	  			if(ls.length() > 0) matcher(ls, list, minWordLength, useAllWords);
+	  			if(ls.length() > 0) matcher(ls, importantWords, minWordLength, useAllWords);
 	  			
 	  			out.add(ms);
 	  			
-	  			if(rs.length() > 0) matcher(rs, list, minWordLength, useAllWords);
+	  			if(rs.length() > 0) matcher(rs, importantWords, minWordLength, useAllWords);
 	  			
 	  			name = "";
 	  		}

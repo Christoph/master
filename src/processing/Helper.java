@@ -126,7 +126,7 @@ public class Helper {
 				removeTagsWithoutWords(tags, index);
 		  }
 	   
-	   public void splitCompositeTagLast(List<Tag> tags, int index)
+	   public void splitCompositeTag(List<Tag> tags, int index)
 		  {
 			  	String tag = "";
 			  	String name[] = null;

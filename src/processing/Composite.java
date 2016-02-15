@@ -2,8 +2,10 @@ package processing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
@@ -104,18 +106,69 @@ public class Composite {
 	    		if(name.contains(s))
 	    		{
 	    			name = name.replaceAll(s, s.replace(" ", "-"));
-	    			//name = name.replaceAll(s, s);
 	    		}
 	    	}
 	    	
 	    	t.setTag(index, name);
 		}
 	    
+	    // Find groups without spaces hardrock -> hard-rock
+	    findGroups(tags, index);
+	    
 	    if(split)
 	    {
-	    	help.splitCompositeTagLast(tags, index);
+	    	help.splitCompositeTag(tags, index);
 	    	//help.correctTags(tags, index);
 	    }
+	}
+	
+	private void findGroups(List<Tag> tags, int index)
+	{
+		Set<String> groups = new HashSet<String>();
+	    Map<String, String> subs = new HashMap<String, String>();
+		
+		String words[] = null;
+		String name = "";
+		
+		//Find all groups
+		for(Tag t: tags)
+		{
+			if(t.getTag(index).contains("-"))
+			{
+				words = t.getTag(index).split(" ");
+				
+				for(String s: words)
+				{
+					if(s.contains("-"))
+					{
+						groups.add(s);
+					}
+				}
+			}
+		}
+		
+		// Create substitution list
+		for(String s: groups)
+		{
+			subs.put(s.replace("-", ""), s);
+		}
+		
+		//Find groups
+		for(Tag t: tags)
+		{
+			name = t.getTag(index);
+			words = name.split(" +");
+			
+			for(String s: words)
+			{
+				if(subs.keySet().contains(s))
+				{
+					name = name.replace(s, subs.get(s));
+				}
+			}
+			
+			t.setTag(index, name);
+		}
 	}
 
     public List<gridGroup> prepareUniqueGroups() {	

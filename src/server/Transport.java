@@ -35,6 +35,12 @@ public class Transport {
 		client.sendEvent("compUniqueParams", work.sendCompUniqueParams());
 		client.sendEvent("compSizeParams", work.sendCompSizeParams());
 		client.sendEvent("compSplitParams", work.sendCompSplitParams());
+		
+		// Postprocess
+		client.sendEvent("postFilterParams", work.sendPostFilterParams());
+		client.sendEvent("postAllParams", work.sendPostAllParams());
+		client.sendEvent("postReplaceParams", work.sendPostReplaceParams());
+		client.sendEvent("postLengthParams", work.sendPostLengthParams());
 	}
 	
 	private void sendPreprocessData(SocketIOClient client)
@@ -58,6 +64,14 @@ public class Transport {
 		client.sendEvent("uniqueData", work.sendUniqueHistogram());
 	}
 	
+	private void sendPostprocessData(SocketIOClient client)
+	{
+		client.sendEvent("postFilterGrid", work.sendPostVocab());
+		client.sendEvent("postFilterData", work.sendPostVocabHistogram());
+		client.sendEvent("postImportantWords", work.sendPostImportant());
+		client.sendEvent("postSalvageWords", work.sendPostSalvage());
+	}
+	
 	public void initialize()
 	{		
 		// This should be done after data import
@@ -67,6 +81,7 @@ public class Transport {
 		work.computePreprocessing();
 		work.computeSpellCorrect();
 		work.computeGroups();
+		work.prepareSalvaging();
 		
 		// Connection
 		server.addConnectListener(new ConnectListener() {
@@ -80,6 +95,7 @@ public class Transport {
 				sendPreprocessData(client);
 				sendSpellcorrectData(client);
 				sendCompositeData(client);
+				sendPostprocessData(client);
 			}
 		});
 		
@@ -183,42 +199,30 @@ public class Transport {
 	    // Composites
 	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		// Compute clusters
 		server.addEventListener("applyFrequentThreshold", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
 				work.applyCompositeFrequent(Double.parseDouble(data));
-				
-				client.sendEvent("output", work.sendOverview(3));
-				System.out.println(data);
 			}
         });
 		
-		// Compute clusters
 		server.addEventListener("applyUniqueThreshold", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
 				work.applyCompositeUnique(Double.parseDouble(data));
-				
-				client.sendEvent("output", work.sendOverview(3));
-				System.out.println(data);
 			}
         });
 		
-		// Compute clusters
 		server.addEventListener("applyMaxSize", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
 				work.applyCompositeSize(Integer.parseInt(data));
-				
-				client.sendEvent("output", work.sendOverview(3));
-				System.out.println(data);
 			}
         });
 		
@@ -226,26 +230,82 @@ public class Transport {
 	    // Postprocessing - Dataset 4
 	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-		// Get postprocessing data
-		server.addEventListener("getPostprocessingData", String.class, new DataListener<String>() {
+		server.addEventListener("applyPostFilter", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				if(data.equals("postFilterData"))
-				{
-					//client.sendEvent("postFilterData", work.sendPostImportanceHistogram());
-				}
-				if(data.equals("postFilterGrid"))
-				{
-					//client.sendEvent("postFilterGrid", work.sendPostVocab());
-				}
-				if(data.equals("importantWords"))
-				{
-					//client.sendEvent("importantWords", work.sendImportantWords());
-				}
+				work.applyPostFilter(Double.parseDouble(data));
+				
+				client.sendEvent("output", work.sendOverview(4));
+				System.out.println(data);
 			}
         });
+		
+		server.addEventListener("applyPostReplace", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyPostReplace(data);
+				
+				client.sendEvent("output", work.sendOverview(4));
+				System.out.println(data);
+			}
+        });
+		
+		server.addEventListener("applyPostLength", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyPostLength(Integer.parseInt(data));
+				
+				client.sendEvent("output", work.sendOverview(4));
+				System.out.println(data);
+			}
+        });
+		
+		server.addEventListener("applyPostAll", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyPostAll(Boolean.parseBoolean(data));
+				
+				client.sendEvent("output", work.sendOverview(4));
+				System.out.println(data);
+			}
+        });
+		
+		server.addEventListener("applySalvaging", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applySalvaging();
+				
+				client.sendEvent("output", work.sendOverview(4));
+				System.out.println(data);
+			}
+        });
+		
+		server.addEventListener("computeSalvaging", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.computeSalvaging();
+				
+				client.sendEvent("output", work.sendOverview(4));
+				System.out.println(data);
+			}
+        });
+		
+	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	    // Rest
+	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 		
 		// Get output data
 		server.addEventListener("getOutputData", String.class, new DataListener<String>() {

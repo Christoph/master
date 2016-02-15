@@ -4,22 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import processing.Composite;
 import processing.Helper;
+import processing.Postprocess;
 import processing.Preprocess;
-import processing.Regex;
 import processing.Spellcorrect;
 import processing.Weighting;
 import core.ImportCSV;
 import core.Tag;
-import core.json.gridHist;
 import core.json.gridOverview;
-import core.json.gridVocab;
 
 public class Workflow {
 	
@@ -28,14 +25,13 @@ public class Workflow {
   	private Helper help = new Helper();
     private ImportCSV im = new ImportCSV();
     private Weighting weighting = new Weighting();
-    private Regex regex = new Regex();
 
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Parameters
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    // Initial datasets
+    // Data
     private List<Tag> tags; 
     private Map<String, Double> vocabPre = new HashMap<String, Double>();
     private Map<String, Double> vocabPost = new HashMap<String, Double>();
@@ -45,14 +41,8 @@ public class Workflow {
     private Preprocess preprocess = new Preprocess(1);
     private Spellcorrect spellcorrect = new Spellcorrect(2);
     private Composite composite = new Composite(3);
-	
-	// Postprocessing
-	private double postFilter = 0;
-    private List<String> importantWords = new ArrayList<String>();
-	
-	private List<String> postReplace = new ArrayList<String>();
-	private List<String> postRemove = new ArrayList<String>();
-	
+	private Postprocess postprocess = new Postprocess(4);
+
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Load data - Dataset 0
@@ -251,6 +241,9 @@ public class Workflow {
 		
 		// Compute all word groups
 	    composite.applyGroups(tags);
+	    
+	    // Provide further data
+	    weighting.vocab(tags, vocabPost, 3);
 	}
 	
 	// Apply changes
@@ -336,78 +329,119 @@ public class Workflow {
     // Postprocessing - Dataset 4
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void regex()
+	public void prepareSalvaging()
 	{
-		/////////////////////////////////
-	    // Variable initialization  	    
-
-	    //List<String> subjective = im.importCSV("dicts/subjective.txt");
-	    List<String> synonyms = im.importCSV("dicts/synonyms.txt");
-	    List<String> messedup = im.importCSV("dicts/messedgroups.txt");
-
-		///////////////////////////////// 
-	    // Algorithm
-	    
-	    // Find oneword groups and replace them by the group
-	    regex.findGroups(tags, 4);
-	    log.info("group searching finished\n");
-	    
-	    // Synonym replacing regex
-	    regex.replaceCustomWords(tags, synonyms, 4);
-	    log.info("Synonym replacement finished\n");
-	    
-	    Map<String, String> important_tags = null;
-		// Word separation
-	    // Find important words in the unimportant tags
-	    regex.findImportantWords(tags, important_tags, 0.1, 4, false, 4);
-	    log.info("Word separation finished\n");
-	    
-	    // Messed up tags replacement
-	    regex.replaceCustomWords(tags, messedup, 4);
-	    
-	    // Weighting words as last step 
-	    //.byWeightedMean(tags ,"third", false);
-	    log.info("Last time importance\n");
-	    
-	    // Remove dashes
-	    help.removeDashes(tags, 4);
-	}
-
-	public void computeImportantWords(double threshold)
-	{
-	    // Build popular tags dict on raw data
-	    importantWords = help.getImportantTags(vocabPost, threshold);
+		postprocess.initializeSalvaging(vocabPost);
 	}
 	
-	public void removeSubjectiveWords(List<Tag> tags, List<String> subjective, Map<String, String> important_tags)
+	public void computeSalvaging()
 	{
-	    // Remove subjective tags
-	    for(String s: subjective)
-	    {
-	    	if(important_tags.containsKey(s))
-	    	{
-	        	important_tags.remove(s); 
-	    	}
-	    }
+		postprocess.computeSalvaging(vocabPost);
+	}
+	
+	// Apply changes
+	public void applySalvaging()
+	{
+		help.resetStep(tags, 4);
+		
+		postprocess.applySalvaging(tags);
+	}
+	
+	public void applyPostFilter(double threshold)
+	{
+		// Set threshold
+		postprocess.setPostFilter(threshold);
+		
+		// Apply
+		prepareSalvaging();
+	}
+	
+	public void applyPostReplace(String json)
+	{
+		List<Map<String, Object>> map = help.jsonStringToList(json);
+		
+		postprocess.setPostReplace(map);
+		
+		// Apply
+		prepareSalvaging();
+	}
+	
+	public void applyPostLength(int minLength)
+	{
+		// Set threshold
+		postprocess.setMinWordLength(minLength);
+		
+		// Apply
+		prepareSalvaging();
+	}
+	
+	public void applyPostAll(Boolean all)
+	{
+		// Set threshold
+		postprocess.setUseAllWords(all);
+		
+		// Apply
+		prepareSalvaging();
+	}
+	
+	// Send Params
+	public double sendPostFilterParams()
+	{
+		return postprocess.getPostFilter();
+	}
+	
+	public int sendPostLengthParams()
+	{
+		return postprocess.getMinWordLength();
+	}
+	
+	public Boolean sendPostAllParams()
+	{
+		return postprocess.getUseAllWords();
+	}
+	
+	public List<String> sendPostReplaceParams()
+	{
+		return postprocess.getPostReplace();
+	}
+	
+	// Send Data
+	public String sendPostVocab()
+	{
+	    return help.objectToJsonString(help.prepareVocab(vocabPost));
+	}
+	
+	public String sendPostVocabHistogram()
+	{
+	    return help.objectToJsonString(help.prepareVocabHistogram(vocabPost));
+	}
+	
+	public String sendPostImportant()
+	{
+	    return help.objectToJsonString(postprocess.prepareImportantWords());
+	}
+	
+	public String sendPostSalvage()
+	{
+	    return help.objectToJsonString(postprocess.prepareSalvageWords());
 	}
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Send Methods
+    // Finalize
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public String sendOverview(int index)
+	public String sendFinal()
 	{
 		Supplier<List<gridOverview>> supplier = () -> new ArrayList<gridOverview>();
 
 	    List<gridOverview> tags_filtered = tags.stream()
-	    		.map(p -> new gridOverview(p.getTag(index), p.getItem(), p.getImportance()))
+	    		.map(p -> new gridOverview(p.getTag(4), p.getItem(), p.getImportance()))
 	    		.collect(Collectors.toCollection(supplier));
 	    
 	    return help.objectToJsonString(tags_filtered); 
 	}
+
 	
-
-
 	/*
 	public String sendHistory(String data) {
 		
@@ -433,35 +467,16 @@ public class Workflow {
 	}
 	*/
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Main
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public String sendPostVocab()
-	{
-	    return help.objectToJsonString(help.prepareVocab(vocabPost));
-	}
-	
-	public String sendPostVocabHistogram()
-	{
-	    return help.objectToJsonString(help.prepareVocabHistogram(vocabPost));
-	}
-	
-	public String sendImportantWords()
-	{
-	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
-	    
-	    for(String s: importantWords)
-	    {
-	    	tags_filtered.add(new gridVocab(s, 0));
-	    }
-
-	    return help.objectToJsonString(tags_filtered);
-	}
-	
-	public String sendFinal()
+	public String sendOverview(int index)
 	{
 		Supplier<List<gridOverview>> supplier = () -> new ArrayList<gridOverview>();
 
 	    List<gridOverview> tags_filtered = tags.stream()
-	    		.map(p -> new gridOverview(p.getTag(4), p.getItem(), p.getImportance()))
+	    		.map(p -> new gridOverview(p.getTag(index), p.getItem(), p.getImportance()))
 	    		.collect(Collectors.toCollection(supplier));
 	    
 	    return help.objectToJsonString(tags_filtered); 
