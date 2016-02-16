@@ -27,6 +27,8 @@ public class Workflow {
   	private Helper help = new Helper();
     private ImportCSV im = new ImportCSV();
     private Weighting weighting = new Weighting();
+    
+    private int count, packages;
 
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +36,7 @@ public class Workflow {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     // Data
-    private List<Tag> tags; 
+    private List<Tag> tags = new ArrayList<Tag>();
     
     private Map<String, Long> tagsFreq = new HashMap<String, Long>();
     private Map<String, Double> vocabPre = new HashMap<String, Double>();
@@ -47,11 +49,10 @@ public class Workflow {
     private Composite composite = new Composite(3);
 	private Postprocess postprocess = new Postprocess(4);
 
-    
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Load data - Dataset 0
+    // Dev Mode
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+	
 	public void init(SocketIOClient client)
 	{
 		log.info("Initialize\n");
@@ -69,6 +70,57 @@ public class Workflow {
 		client.sendEvent("preFilterGrid", sendPreFilter());
 
 	    log.info("Data loaded\n");
+	}
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Load data - Dataset 0
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public void applyImportedData(String json, SocketIOClient client)
+	{
+		List<Map<String, Object>> map = help.jsonStringToList(json);
+		String item, name, weight;
+		
+		if(packages < count)
+		{
+			packages++;
+
+			for(int i = 0; i < map.size(); i++)
+			{
+				try {
+					item = String.valueOf(map.get(i).get("item"));
+					name = String.valueOf(map.get(i).get("tag"));
+					weight = String.valueOf(map.get(i).get("weight"));
+					
+					tags.add(new Tag( item, name, Double.parseDouble(weight) ,0));
+				} catch (Exception e) {
+					System.out.println(map.get(i));
+				}
+				
+			}
+		}
+	}
+	
+	public void applyImportedDataFinished(SocketIOClient client)
+	{
+		// Set to lower case
+		help.setToLowerCase(tags, 0);
+		
+		// Compute word frequency
+		help.wordFrequency(tags, tagsFreq, 0);
+		
+		client.sendEvent("preFilterData", sendPreFilterHistogram());
+		client.sendEvent("preFilterGrid", sendPreFilter());
+		
+		computePreprocessing(client);
+	}
+	
+	public void applyImportedDataCount(int count, SocketIOClient client)
+	{
+		tags.clear();
+		
+		this.count = count;
+		this.packages = 0;
 	}
 	
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -520,10 +572,6 @@ public class Workflow {
 	    return help.objectToJsonString(tags_filtered);
 	}
 	*/
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Main
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public String sendOverview(int index)
 	{

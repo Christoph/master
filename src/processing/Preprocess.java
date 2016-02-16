@@ -204,7 +204,7 @@ public class Preprocess {
 
 		for(int i = 0; i < map.size(); i++)
 		{
-			tag = (String) map.get(i).get("tag");
+			tag = String.valueOf(map.get(i).get("tag"));
 			
 			if(tag.length() > 0)
 			{

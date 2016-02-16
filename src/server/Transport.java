@@ -8,10 +8,9 @@ import com.corundumstudio.socketio.listener.DataListener;
 
 public class Transport {
 
-	//private WorkflowAbstract work = new WorkflowAbstract();
 	private Workflow work = new Workflow();
-	//private WorkflowMovie work = new WorkflowMovie();
 	private SocketIOServer server;
+	private Boolean devMode = false;
 	
 	protected Transport(SocketIOServer server) {
 		super();
@@ -20,6 +19,9 @@ public class Transport {
 
 	private void sendParams(SocketIOClient client)
 	{
+		// Main
+		client.sendEvent("mainData", work.sendOverview(0));
+		
 		// Preprocessing
 		client.sendEvent("preFilterParams", work.sendPreFilterParams());
 		client.sendEvent("preRemoveParams", work.sendPreRemoveParams());
@@ -44,63 +46,67 @@ public class Transport {
 		client.sendEvent("postSplitParams", work.sendPostSplitParams());
 	}
 	
-	private void sendPreprocessData(SocketIOClient client)
-	{
-		client.sendEvent("preFilterData", work.sendPreFilterHistogram());
-		client.sendEvent("preFilterGrid", work.sendPreFilter());
-	}
-	
-	private void sendSpellcorrectData(SocketIOClient client)
-	{
-		client.sendEvent("similarities", work.sendSimilarityHistogram());
-		client.sendEvent("vocab", work.sendVocab());
-		client.sendEvent("importance", work.sendPreVocabHistogram());
-	}
-	
-	private void sendCompositeData(SocketIOClient client)
-	{
-		client.sendEvent("frequentGroups", work.sendFrequentGroups());
-		client.sendEvent("frequentData", work.sendFrequentHistogram());
-		client.sendEvent("uniqueGroups", work.sendUniqueGroups());
-		client.sendEvent("uniqueData", work.sendUniqueHistogram());
-	}
-	
-	private void sendPostprocessData(SocketIOClient client)
-	{
-		client.sendEvent("postFilterGrid", work.sendPostVocab());
-		client.sendEvent("postFilterData", work.sendPostVocabHistogram());
-		client.sendEvent("postImportantWords", work.sendPostImportant());
-		client.sendEvent("postSalvageWords", work.sendPostSalvage());
-		client.sendEvent("postSalvageData", work.sendPostSalvageData());
-	}
-	
 	public void initialize()
 	{		
-		// This should be done after data import
-
-
 		// Connection
 		server.addConnectListener(new ConnectListener() {
 			
 			public void onConnect(SocketIOClient client) {
 				System.out.println("Connect");
 				
-				work.init(client);
-				
-				// Broadcast parameters
-				sendParams(client);
-				
-				// Compute everything with default values
-				work.computePreprocessing(client);
+				if(devMode)
+				{
+					work.init(client);
+					
+					sendParams(client);
+					
+					work.computePreprocessing(client);
+				}
+				else
+				{
+					sendParams(client);
+				}
 			}
 		});
+		
+		
+	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	    // Main
+	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		server.addEventListener("applyImportedData", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyImportedData(data, client);
+			}
+        });
+
+		server.addEventListener("applyImportedDataCount", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyImportedDataCount(Integer.parseInt(data), client);
+			}
+        });
+		
+		server.addEventListener("applyImportedDataFinished", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+					AckRequest arg2) throws Exception {
+				
+				work.applyImportedDataFinished(client);
+			}
+        });
 		
 	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    // Preprocessing
 	    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		// Apply characters to remove
-		server.addEventListener("applyRemoveCharacters", String.class, new DataListener<String>() {
+		server.addEventListener("applyPreRemoveCharacters", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
@@ -110,7 +116,7 @@ public class Transport {
         });
 		
 		// Apply characters to replace
-		server.addEventListener("applyReplaceCharacters", String.class, new DataListener<String>() {
+		server.addEventListener("applyPreReplaceCharacters", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
@@ -120,7 +126,7 @@ public class Transport {
         });
 		
 		// Apply dictionary
-		server.addEventListener("applyImportedData", String.class, new DataListener<String>() {
+		server.addEventListener("applyPreImportedData", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
