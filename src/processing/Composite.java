@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import core.Tag;
 import core.json.gridGroup;
@@ -105,7 +106,7 @@ public class Composite {
 	    	{
 	    		if(name.contains(s))
 	    		{
-	    			name = name.replaceAll(s, s.replace(" ", "-"));
+	    			name = name.replaceAll(Pattern.quote(s), s.replace(" ", "-"));
 	    		}
 	    	}
 	    	

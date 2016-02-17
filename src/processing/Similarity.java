@@ -160,7 +160,7 @@ public class Similarity {
 	    	}
 	    }
 	    
-	    // Resolve substitution chains
+	    // Apply this a second time, due to the fact that some chains are not resolved in one run
 	    for(Entry<String,String> e: substitution_list.entrySet())
 	    {
 	    	high = e.getValue();
@@ -176,14 +176,6 @@ public class Similarity {
 	    	}
 	    }
 	    
-	    for(Entry<String,String> e: substitution_list.entrySet())
-	    {
-	    	if(e.getValue().equals("punk"))
-	    	{
-	    		System.out.println("Problem: "+e.getKey()+"->"+e.getValue());
-	    	}
-	    }
-	    
     	// Replace tags corresponding to the substitution map
 	    for(Tag t: tags)
 	    {
@@ -192,10 +184,6 @@ public class Similarity {
 	    	
 	    	for(String w: words)
 	    	{	    	  
-	    		if(w.equals("punk"))
-	    		{
-	    			System.out.println("Replace:"+t.getTag(index));
-	    		}
 	    		if(substitution_list.containsKey(w))
 	    		{
 	    			new_tag = new_tag + " " + substitution_list.get(w);
@@ -207,14 +195,6 @@ public class Similarity {
 	    	}
 
 	    	t.setTag(index, new_tag.trim());
-	    }
-	    
-	    for(Tag t: tags)
-	    {
-	    	if(t.getTag(index).contains("punk"))
-	    	{
-	    		System.out.println(t.getTag(index));
-	    	}
 	    }
     }
     

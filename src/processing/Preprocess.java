@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import core.Tag;
 import core.json.gridHistFreq;
@@ -93,7 +94,7 @@ public class Preprocess {
 			  // Remove characters
 			  if(remove.length() > 0) 
 			  {
-				  	updated = updated.replaceAll("["+remove+"]", "");
+				  	updated = updated.replaceAll("["+Pattern.quote(remove)+"]", "");
 			  }
 	
 			  tag.setTag(index,updated);
@@ -114,7 +115,7 @@ public class Preprocess {
 				  for(String s: replace)
 				  {
 					  String temp[] = s.split(",");
-					  updated = updated.replaceAll(temp[0], temp[1]);
+					  updated = updated.replaceAll(Pattern.quote(temp[0]), temp[1]);
 				  }
 			  }
 

@@ -31,8 +31,8 @@ public class Spellcorrect {
 		this.index = index;
 		
 		// Initial values
-		setSpellImportance(0.3);
-		setSpellSimilarity(0.1);
+		setSpellImportance(0.5);
+		setSpellSimilarity(0.7);
 		minWordSize = 3;
 	}
 	

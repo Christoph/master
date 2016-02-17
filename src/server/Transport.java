@@ -10,7 +10,7 @@ public class Transport {
 
 	private Workflow work = new Workflow();
 	private SocketIOServer server;
-	private Boolean devMode = true;
+	private Boolean devMode = false;
 	
 	protected Transport(SocketIOServer server) {
 		super();
