@@ -149,13 +149,12 @@ public class Workflow {
 		client.sendEvent("similarities", sendSimilarityHistogram());
 		client.sendEvent("vocab", sendVocab());
 		client.sendEvent("importance", sendPreVocabHistogram());
-		client.sendEvent("getReplacements", sendReplacements(spellcorrect.getSpellSimilarity()));
 		
 		computeSpellCorrect(client);
 	}
 	
 	// Apply changes
-	public void applyPreFilter(double threshold, SocketIOClient client)
+	public void applyPreFilter(int threshold, SocketIOClient client)
 	{
 		// Set threshold
 		preprocess.setFilter(threshold);

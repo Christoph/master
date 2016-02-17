@@ -19,7 +19,7 @@ public class Preprocess {
 	private PlainStringSimilarity psim = new PlainStringSimilarity();
 	
 	// Parameters
-	private double filter;
+	private int filter;
 	private String remove;
 	private List<String> replace = new ArrayList<String>();
     private List<String> whitelistWords = new ArrayList<String>();
@@ -37,7 +37,7 @@ public class Preprocess {
 		replace.add(";, ");
 		replace.add("/, ");
 		
-		setFilter(0d);
+		setFilter(0);
 		setRemove("'");
 	}
 
@@ -58,11 +58,13 @@ public class Preprocess {
 		  		for(int j = 0; j < words.size(); j++)
 				{
 					key = words.get(j); 	
-		  			
-					if(tagsFreq.get(key) < filter && key.length() > 0)
+					if(key.length() > 0)
 					{
-						// Remove word
-						words.set(j, "");
+						if(tagsFreq.get(key) < filter && key.length() > 0)
+						{
+							// Remove word
+							words.set(j, "");
+						}
 					}
 				}
 		  		
@@ -158,11 +160,11 @@ public class Preprocess {
 	    return hist;
 	}
 	  
-	public double getFilter() {
+	public int getFilter() {
 		return filter;
 	}
 
-	public void setFilter(double filter) {
+	public void setFilter(int filter) {
 		this.filter = filter;
 	}
 

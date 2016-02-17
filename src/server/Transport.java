@@ -10,7 +10,7 @@ public class Transport {
 
 	private Workflow work = new Workflow();
 	private SocketIOServer server;
-	private Boolean devMode = false;
+	private Boolean devMode = true;
 	
 	protected Transport(SocketIOServer server) {
 		super();
@@ -141,7 +141,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 					AckRequest arg2) throws Exception {
 				
-				work.applyPreFilter(Double.parseDouble(data), client);
+				work.applyPreFilter(Integer.parseInt(data), client);
 			}
         });
 		

@@ -53,7 +53,7 @@ public class Similarity {
 	    
 	    //	Debug stuff
 	    int psize = sortedVocab.size();
-	    int part = psize/30;
+	    int part = (int) Math.ceil(psize/30.0);
 	    int iter = 0;
 	    
         // Find white listed words and prioritize them in the similarity computation
@@ -65,7 +65,7 @@ public class Similarity {
 		    	  iter++;
 		    	  if(iter%part == 0)
 		    	  {
-		    		  System.out.print(iter/part+"/30");
+		    		  System.out.print(iter/part+"/30 - ");
 		    	  }
 				
 				// Remove correct word from list
@@ -85,7 +85,7 @@ public class Similarity {
 			iter++;
     	  	if(iter%part == 0)
     	  	{
-    	  		System.out.println(iter/part+"/30");
+    	  		System.out.print(iter/part+"/30 - ");
 			}
 			  
 			// Remove the most important word from the list
