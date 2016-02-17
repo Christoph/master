@@ -31,8 +31,8 @@ public class Spellcorrect {
 		this.index = index;
 		
 		// Initial values
-		setSpellImportance(0.8);
-		setSpellSimilarity(0.70);
+		setSpellImportance(0.3);
+		setSpellSimilarity(0.1);
 		minWordSize = 3;
 	}
 	
@@ -45,9 +45,9 @@ public class Spellcorrect {
 	    createSimClusters();
 	}
 	
-	public void applyClustering(List<Tag> tags)
+	public void applyClustering(List<Tag> tags, Map<String, Double> vocabPre)
 	{
-		similarity.applyClusters(tags, spellSimilarity, vocabClusters, index);
+		similarity.applyClusters(tags,vocabPre, spellSimilarity, spellImportance, vocabClusters, index);
 		
 	    // Resolve errors from replacements
 	    //help.correctTags(tags, 2);

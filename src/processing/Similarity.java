@@ -97,7 +97,7 @@ public class Similarity {
 		}   
 	}
 	
-    public void applyClusters(List<? extends Tag> tags, double threshold, Map<String, Map<String, Double>> clusters, int index)
+    public void applyClusters(List<Tag> tags, Map<String, Double> vocabPre, double simThreshold, double impThreshold, Map<String, Map<String, Double>> clusters, int index)
     {
 	    List<String> words;
 	    String  new_tag, high, word;
@@ -115,8 +115,13 @@ public class Similarity {
 	    		word = e.getKey();
 	    		similarity = e.getValue();
 	    		
-	            // Check if similarity > threshold
-	            if(similarity > threshold)
+	    		if(similarity > simThreshold && vocabPre.get(word) >= impThreshold)
+	    		{
+	    			System.out.println(high+" too important tag "+word+" - Similarity "+similarity+" - Importance "+(vocabPre.get(word)));
+	    		}
+	    		
+	            // Check if similarity > threshold and importance < threshold
+	            if(similarity > simThreshold && vocabPre.get(word) < impThreshold)
 	            {
 		    		// Add new substitution
 		    		if(!substitution_list.containsKey(word))
@@ -143,17 +148,39 @@ public class Similarity {
 	    for(Entry<String,String> e: substitution_list.entrySet())
 	    {
 	    	high = e.getValue();
-	    	
+
 	    	// Find chains
 	    	if(substitution_list.containsKey(high))
 	    	{
 	    		word = substitution_list.get(high);
 	    		
-	    		//System.out.println("Resolved: "+high+"->"+word);
+	    		// Resolve chain
+	    		// A -> B; B -> C   =>   A -> C; B -> C
+	    		e.setValue(word);
+	    	}
+	    }
+	    
+	    // Resolve substitution chains
+	    for(Entry<String,String> e: substitution_list.entrySet())
+	    {
+	    	high = e.getValue();
+
+	    	// Find chains
+	    	if(substitution_list.containsKey(high))
+	    	{
+	    		word = substitution_list.get(high);
 	    		
 	    		// Resolve chain
 	    		// A -> B; B -> C   =>   A -> C; B -> C
 	    		e.setValue(word);
+	    	}
+	    }
+	    
+	    for(Entry<String,String> e: substitution_list.entrySet())
+	    {
+	    	if(e.getValue().equals("punk"))
+	    	{
+	    		System.out.println("Problem: "+e.getKey()+"->"+e.getValue());
 	    	}
 	    }
 	    
@@ -165,6 +192,10 @@ public class Similarity {
 	    	
 	    	for(String w: words)
 	    	{	    	  
+	    		if(w.equals("punk"))
+	    		{
+	    			System.out.println("Replace:"+t.getTag(index));
+	    		}
 	    		if(substitution_list.containsKey(w))
 	    		{
 	    			new_tag = new_tag + " " + substitution_list.get(w);
@@ -176,6 +207,14 @@ public class Similarity {
 	    	}
 
 	    	t.setTag(index, new_tag.trim());
+	    }
+	    
+	    for(Tag t: tags)
+	    {
+	    	if(t.getTag(index).contains("punk"))
+	    	{
+	    		System.out.println(t.getTag(index));
+	    	}
 	    }
     }
     

@@ -234,7 +234,7 @@ public class Workflow {
 		help.resetStep(tags, 2);
 		
 		// Apply clustering
-		spellcorrect.applyClustering(tags);
+		spellcorrect.applyClustering(tags,vocabPre);
 		
 		// Compute further data
 		composite.group(tags);
