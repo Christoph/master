@@ -56,12 +56,14 @@ public class Transport {
 				System.out.println("Connect");
 
 				if (devMode) {
-					work.init(client);
+					work.initDev(client);
 
 					sendParams(client);
 
 					work.computePreprocessing(client);
 				} else {
+					work.init(client);
+
 					sendParams(client);
 				}
 			}

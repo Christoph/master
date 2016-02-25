@@ -55,7 +55,7 @@ public class Workflow {
 	// Dev Mode
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void init(SocketIOClient client) {
+	public void initDev(SocketIOClient client) {
 		log.info("Initialize\n");
 		
 		// Load data
@@ -77,6 +77,12 @@ public class Workflow {
 	// Load data - Dataset 0
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	public void init(SocketIOClient client)
+	{
+		client.sendEvent("preFilterData", sendPreFilterHistogram());
+		client.sendEvent("preFilterGrid", sendPreFilter());
+	}
+
 	public void applyImportedData(String json) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		String item, name, weight;
