@@ -16,20 +16,20 @@ public class Spellcorrect {
 	
 	// Variables
 	private int index;
-	private List<String> whitelistWords;
-	private List<String> whitelistGroups;
-	private List<String> whitelistVocab;
-	private int minWordSize;
-	
+	private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
+	private TreeMap<Double, Map<String, String>> simClusters = new TreeMap<Double, Map<String, String>>();
+
 	// Classes
 	private Similarity similarity = new Similarity();
 
 	// Parameters
 	private double spellImportance;
 	private double spellSimilarity;
-	private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
-	private TreeMap<Double, Map<String, String>> simClusters = new TreeMap<Double, Map<String, String>>();
-	
+	private int minWordSize;
+	private List<String> whitelistWords;
+	private List<String> whitelistGroups;
+	private List<String> whitelistVocab;
+
 	public Spellcorrect(int index, List<String> whitelistWords, List<String> whitelistGroups, List<String> whitelistVocab) {
 		this.index = index;
 		this.whitelistWords = whitelistWords;
@@ -39,12 +39,12 @@ public class Spellcorrect {
 		// Initial values
 		setSpellImportance(0.5);
 		setSpellSimilarity(0.7);
-		minWordSize = 3;
+		setMinWordSize(3);
 	}
 	
 	public void clustering(List<Tag> tags, Map<String, Double> vocabPre, List<String> whitelist) {
 		// compute similarities
-		similarity.withVocab(tags, vocabPre, whitelist, minWordSize, vocabClusters);
+		similarity.withVocab(tags, vocabPre, whitelist, getMinWordSize(), vocabClusters);
 
 		// create similarity clusters
 		createSimClusters();
@@ -219,5 +219,13 @@ public class Spellcorrect {
 				}
 			}
 		}
+	}
+
+	public int getMinWordSize() {
+		return minWordSize;
+	}
+
+	public void setMinWordSize(int minWordSize) {
+		this.minWordSize = minWordSize;
 	}
 }

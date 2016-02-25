@@ -30,6 +30,7 @@ public class Transport {
 		// Spell correct
 		client.sendEvent("spellImportance", work.sendSpellImportanceParams());
 		client.sendEvent("spellSimilarity", work.sendSpellSimilarityParams());
+		client.sendEvent("spellMinWordSize", work.sendSpellMinWordSizeParams());
 		client.sendEvent("spellDictionaryParams", work.sendSpellDictionaryParams());
 
 		// Composite
@@ -154,7 +155,6 @@ public class Transport {
 		// Spell Checking
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		// Compute clusters
 		server.addEventListener("applySpellImportedData", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
@@ -163,7 +163,7 @@ public class Transport {
 				work.applySpellImport(data, client);
 			}
 		});
-		// Compute clusters
+
 		server.addEventListener("applySpellImportance", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
@@ -173,7 +173,6 @@ public class Transport {
 			}
 		});
 		
-		// Compute clusters
 		server.addEventListener("applySpellSimilarity", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
@@ -183,7 +182,15 @@ public class Transport {
 			}
 		});
 		
-		// Get cluster of tag
+		server.addEventListener("applySpellMinWordSize", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+			                   AckRequest arg2) throws Exception {
+
+				work.applySpellMinWordSize(Integer.parseInt(data), client);
+			}
+		});
+
 		server.addEventListener("getCluster", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
@@ -193,7 +200,6 @@ public class Transport {
 			}
 		});
 		
-		// Get replacements around threshold
 		server.addEventListener("getReplacements", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,

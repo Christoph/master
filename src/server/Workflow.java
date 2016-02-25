@@ -262,6 +262,14 @@ public class Workflow {
 		computeSpellCorrect(client);
 	}
 
+	public void applySpellMinWordSize(int minWordSize, SocketIOClient client) {
+		// Set minWordSize
+		spellcorrect.setMinWordSize(minWordSize);
+
+		// Apply
+		computeSpellCorrect(client);
+	}
+
 	// Send Params
 	public double sendSpellImportanceParams() {
 		return spellcorrect.getSpellImportance();
@@ -271,6 +279,19 @@ public class Workflow {
 		return spellcorrect.getSpellSimilarity();
 	}
 	
+	public int sendSpellMinWordSizeParams() {
+		return spellcorrect.getMinWordSize();
+	}
+
+	public List<String> sendSpellDictionaryParams() {
+		List<String> temp = new ArrayList<>();
+
+		temp.addAll(whitelistWords);
+		temp.addAll(whitelistGroups);
+
+		return temp;
+	}
+
 	// Send Data
 	public String sendCluster(String tag) {
 		return help.objectToJsonString(spellcorrect.prepareCluster(tag));
@@ -287,19 +308,11 @@ public class Workflow {
 	public String sendVocab() {
 		return help.objectToJsonString(help.prepareVocab(vocabPre));
 	}
-	
+
 	public String sendPreVocabHistogram() {
 		return help.objectToJsonString(help.prepareVocabHistogram(vocabPre));
 	}
 
-	public List<String> sendSpellDictionaryParams() {
-		List<String> temp = new ArrayList<>();
-
-		temp.addAll(whitelistWords);
-		temp.addAll(whitelistGroups);
-
-		return temp;
-	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Composites - Dataset 3
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
