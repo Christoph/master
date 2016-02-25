@@ -36,11 +36,11 @@ public class Workflow {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     // Data
-    private List<Tag> tags = new ArrayList<Tag>();
+    private List<Tag> tags = new ArrayList<>();
     
-    private Map<String, Long> tagsFreq = new HashMap<String, Long>();
-    private Map<String, Double> vocabPre = new HashMap<String, Double>();
-    private Map<String, Double> vocabPost = new HashMap<String, Double>();
+    private Map<String, Long> tagsFreq = new HashMap<>();
+    private Map<String, Double> vocabPre = new HashMap<>();
+    private Map<String, Double> vocabPost = new HashMap<>();
     
     // Initialize pipeline steps
     // The index selects the working copy. 0 = original
@@ -76,7 +76,7 @@ public class Workflow {
     // Load data - Dataset 0
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void applyImportedData(String json, SocketIOClient client)
+	public void applyImportedData(String json)
 	{
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		String item, name, weight;
@@ -85,16 +85,15 @@ public class Workflow {
 		{
 			packages++;
 
-			for(int i = 0; i < map.size(); i++)
-			{
+			for (Map<String, Object> aMap : map) {
 				try {
-					item = String.valueOf(map.get(i).get("item"));
-					name = String.valueOf(map.get(i).get("tag"));
-					weight = String.valueOf(map.get(i).get("weight"));
-					
-					tags.add(new Tag( item, name, Double.parseDouble(weight) ,0));
+					item = String.valueOf(aMap.get("item"));
+					name = String.valueOf(aMap.get("tag"));
+					weight = String.valueOf(aMap.get("weight"));
+
+					tags.add(new Tag(item, name, Double.parseDouble(weight), 0));
 				} catch (Exception e) {
-					System.out.println(map.get(i));
+					System.out.println(aMap);
 				}
 				
 			}
@@ -115,7 +114,7 @@ public class Workflow {
 		computePreprocessing(client);
 	}
 	
-	public void applyImportedDataCount(int count, SocketIOClient client)
+	public void applyImportedDataCount(int count)
 	{
 		tags.clear();
 		
@@ -534,10 +533,11 @@ public class Workflow {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Finalize
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
+	/*
 	public String sendFinal()
 	{
-		Supplier<List<gridOverview>> supplier = () -> new ArrayList<gridOverview>();
+		Supplier<List<gridOverview>> supplier = ArrayList::new;
 
 	    List<gridOverview> tags_filtered = tags.stream()
 	    		.map(p -> new gridOverview(p.getTag(4), p.getItem(), p.getImportance()))
@@ -545,9 +545,6 @@ public class Workflow {
 	    
 	    return help.objectToJsonString(tags_filtered); 
 	}
-
-	
-	/*
 	public String sendHistory(String data) {
 		
 	    Supplier<List<gridHistory>> supplier = () -> new ArrayList<gridHistory>();
@@ -574,7 +571,7 @@ public class Workflow {
 	
 	public String sendOverview(int index)
 	{
-		Supplier<List<gridOverview>> supplier = () -> new ArrayList<gridOverview>();
+		Supplier<List<gridOverview>> supplier = ArrayList::new;
 
 	    List<gridOverview> tags_filtered = tags.stream()
 	    		.map(p -> new gridOverview(p.getTag(index), p.getItem(), p.getImportance()))
