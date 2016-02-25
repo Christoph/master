@@ -37,6 +37,7 @@ public class Transport {
 		client.sendEvent("compFrequentParams", work.sendCompFrequentParams());
 		client.sendEvent("compUniqueParams", work.sendCompUniqueParams());
 		client.sendEvent("compSizeParams", work.sendCompSizeParams());
+		client.sendEvent("compOccParams", work.sendCompOccParams());
 		client.sendEvent("compSplitParams", work.sendCompSplitParams());
 		
 		// Postprocess
@@ -240,6 +241,15 @@ public class Transport {
 			}
 		});
 		
+		server.addEventListener("applyMinOcc", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+			                   AckRequest arg2) throws Exception {
+
+				work.applyCompositeOcc(Integer.parseInt(data), client);
+			}
+		});
+
 		server.addEventListener("applyCompSplit", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,

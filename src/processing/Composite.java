@@ -42,14 +42,14 @@ public class Composite {
 		
 		// Default parameters
 		maxGroupSize = 3;
-		minOccurrence = 2;
+		setMinOccurrence(2);
 		jaccardThreshold = 0.70;
 		frequentThreshold = 0.35;
 		split = true;
 	}
 	
 	public void group(List<Tag> tags) {
-		grouping.group(tags, maxGroupSize, minOccurrence, jaccard_groups, frequent_groups, index - 1);
+		grouping.group(tags, maxGroupSize, getMinOccurrence(), jaccard_groups, frequent_groups, index - 1);
 	}
 
 	public void applyGroups(List<Tag> tags) {
@@ -234,4 +234,11 @@ public class Composite {
 		this.split = split;
 	}
 
+	public int getMinOccurrence() {
+		return minOccurrence;
+	}
+
+	public void setMinOccurrence(int minOccurrence) {
+		this.minOccurrence = minOccurrence;
+	}
 }

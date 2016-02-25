@@ -366,7 +366,15 @@ public class Workflow {
 		// Apply
 		computeGroups(client);
 	}
+	
+	public void applyCompositeOcc(int minOcc, SocketIOClient client) {
+		// Set min occurrence
+		composite.setMinOccurrence(minOcc);
 
+		// Apply
+		computeGroups(client);
+	}
+	
 	// Send Params
 	public double sendCompFrequentParams() {
 		return composite.getFrequentThreshold();
@@ -380,6 +388,10 @@ public class Workflow {
 		return composite.getMaxGroupSize();
 	}
 	
+	public int sendCompOccParams() {
+		return composite.getMinOccurrence();
+	}
+
 	public Boolean sendCompSplitParams() {
 		return composite.getSplit();
 	}
