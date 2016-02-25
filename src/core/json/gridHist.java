@@ -8,12 +8,15 @@ public class gridHist {
 	public double getValue() {
 		return value;
 	}
+
 	public void setValue(double value) {
 		this.value = value;
 	}
+
 	public long getCount() {
 		return count;
 	}
+
 	public void setCount(long count) {
 		this.count = count;
 	}

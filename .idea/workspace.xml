@@ -1,8 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f9b3e752-5c3e-405e-844a-2e11337f5dac" name="Default" comment="Changed all tabs to size 4 and tab character.">
+    <list default="true" id="f9b3e752-5c3e-405e-844a-2e11337f5dac" name="Default" comment="Refactoring">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/Core.java" afterPath="$PROJECT_DIR$/src/core/Core.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/ImportCSV.java" afterPath="$PROJECT_DIR$/src/core/ImportCSV.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/Tag.java" afterPath="$PROJECT_DIR$/src/core/Tag.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/json/gridGroup.java" afterPath="$PROJECT_DIR$/src/core/json/gridGroup.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/json/gridHist.java" afterPath="$PROJECT_DIR$/src/core/json/gridHist.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/json/gridHistFreq.java" afterPath="$PROJECT_DIR$/src/core/json/gridHistFreq.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/json/gridHistory.java" afterPath="$PROJECT_DIR$/src/core/json/gridHistory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/json/gridRepl.java" afterPath="$PROJECT_DIR$/src/core/json/gridRepl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/json/gridVocab.java" afterPath="$PROJECT_DIR$/src/core/json/gridVocab.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/mining/DBImport.java" afterPath="$PROJECT_DIR$/src/mining/DBImport.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/mining/LastFM.java" afterPath="$PROJECT_DIR$/src/mining/LastFM.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/mining/NoTagsException.java" afterPath="$PROJECT_DIR$/src/mining/NoTagsException.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/mining/QueryManager.java" afterPath="$PROJECT_DIR$/src/mining/QueryManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/processing/Composite.java" afterPath="$PROJECT_DIR$/src/processing/Composite.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/processing/Grouping.java" afterPath="$PROJECT_DIR$/src/processing/Grouping.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/processing/Helper.java" afterPath="$PROJECT_DIR$/src/processing/Helper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/processing/PhoneticStringSimilarity.java" afterPath="$PROJECT_DIR$/src/processing/PhoneticStringSimilarity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/processing/PlainStringSimilarity.java" afterPath="$PROJECT_DIR$/src/processing/PlainStringSimilarity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/processing/Postprocess.java" afterPath="$PROJECT_DIR$/src/processing/Postprocess.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/processing/Preprocess.java" afterPath="$PROJECT_DIR$/src/processing/Preprocess.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/processing/Regex.java" afterPath="$PROJECT_DIR$/src/processing/Regex.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/processing/Similarity.java" afterPath="$PROJECT_DIR$/src/processing/Similarity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/processing/Spellcorrect.java" afterPath="$PROJECT_DIR$/src/processing/Spellcorrect.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/processing/StringLengthComparator.java" afterPath="$PROJECT_DIR$/src/processing/StringLengthComparator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/processing/Weighting.java" afterPath="$PROJECT_DIR$/src/processing/Weighting.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/Server.java" afterPath="$PROJECT_DIR$/src/server/Server.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/Transport.java" afterPath="$PROJECT_DIR$/src/server/Transport.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/Workflow.java" afterPath="$PROJECT_DIR$/src/server/Workflow.java" />
     </list>
     <ignored path="master.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,24 +53,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Workflow.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Workflow.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/server/Workflow.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="25" column="55" selection-start-line="25" selection-start-column="55" selection-end-line="25" selection-end-column="55" />
+            <state vertical-scroll-proportion="0.3697749">
+              <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Regex.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/processing/Regex.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8737864">
-              <caret line="47" column="52" selection-start-line="47" selection-start-column="52" selection-end-line="47" selection-end-column="52" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -60,6 +78,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/src/processing/Regex.java" />
         <option value="$PROJECT_DIR$/src/server/Workflow.java" />
       </list>
     </option>
@@ -217,24 +236,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="master" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tagrefinery-core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="processing" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
@@ -253,7 +254,7 @@
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Run">
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
       <module name="" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
@@ -410,6 +411,24 @@
       <envs />
       <method />
     </configuration>
+    <configuration default="false" name="Run" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" value="core.Core" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="master" />
+      <envs />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Application.Run" />
+    </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="TaskManager">
@@ -436,11 +455,17 @@
       <option name="project" value="LOCAL" />
       <updated>1456348414418</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Refactoring">
+      <created>1456392627974</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1456392627974</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2589000" />
+    <option name="totallyTimeSpent" value="5060000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -455,16 +480,17 @@
     <frame x="1440" y="-157" width="1920" height="1053" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928476" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32953367" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32882413" sideWeight="0.4968051" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32882413" sideWeight="0.4978701" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32778355" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32882413" sideWeight="0.50319487" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32778355" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298647" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32674298" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20181043" sideWeight="0.49636552" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20181043" sideWeight="0.49636552" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24973376" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19755058" sideWeight="0.50363445" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -475,7 +501,6 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout>
@@ -493,7 +518,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Changed all tabs to size 4 and tab character." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed all tabs to size 4 and tab character." />
+    <MESSAGE value="Refactoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactoring" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -591,21 +617,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/Workflow.java">
+    <entry file="file://$PROJECT_DIR$/src/processing/Regex.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="55" selection-start-line="25" selection-start-column="55" selection-end-line="25" selection-end-column="55" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.3215434">
+          <caret line="28" column="18" selection-start-line="28" selection-start-column="18" selection-end-line="28" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/processing/Regex.java">
+    <entry file="file://$PROJECT_DIR$/src/server/Workflow.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8737864">
-          <caret line="47" column="52" selection-start-line="47" selection-start-column="52" selection-end-line="47" selection-end-column="52" />
-          <folding />
+        <state vertical-scroll-proportion="0.3697749">
+          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

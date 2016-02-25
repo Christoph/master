@@ -24,42 +24,41 @@ public class Workflow {
 	
 	// Initialize variables and classes
 	private static final Logger log = Logger.getLogger("Logger");
-  	private Helper help = new Helper();
-    private ImportCSV im = new ImportCSV();
-    private Weighting weighting = new Weighting();
-    
-    private int count, packages;
+	private Helper help = new Helper();
+	private ImportCSV im = new ImportCSV();
+	private Weighting weighting = new Weighting();
 
-    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Parameters
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    // Data
-    private List<Tag> tags = new ArrayList<>();
-    
-    private Map<String, Long> tagsFreq = new HashMap<>();
-    private Map<String, Double> vocabPre = new HashMap<>();
-    private Map<String, Double> vocabPost = new HashMap<>();
-    
-    // Initialize pipeline steps
-    // The index selects the working copy. 0 = original
-    private Preprocess preprocess = new Preprocess(1);
-    private Spellcorrect spellcorrect = new Spellcorrect(2);
-    private Composite composite = new Composite(3);
+	private int count, packages;
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Parameters
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// Data
+	private List<Tag> tags = new ArrayList<>();
+
+	private Map<String, Long> tagsFreq = new HashMap<>();
+	private Map<String, Double> vocabPre = new HashMap<>();
+	private Map<String, Double> vocabPost = new HashMap<>();
+
+	// Initialize pipeline steps
+	// The index selects the working copy. 0 = original
+	private Preprocess preprocess = new Preprocess(1);
+	private Spellcorrect spellcorrect = new Spellcorrect(2);
+	private Composite composite = new Composite(3);
 	private Postprocess postprocess = new Postprocess(4);
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Dev Mode
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Dev Mode
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void init(SocketIOClient client)
-	{
+	public void init(SocketIOClient client) {
 		log.info("Initialize\n");
 		
-	    // Load data
-	    tags = im.importTags("reduced_music.csv");
-	    
+		// Load data
+		tags = im.importTags("reduced_music.csv");
+
 		// Set to lower case
 		help.setToLowerCase(tags, 0);
 		
@@ -69,20 +68,18 @@ public class Workflow {
 		client.sendEvent("preFilterData", sendPreFilterHistogram());
 		client.sendEvent("preFilterGrid", sendPreFilter());
 
-	    log.info("Data loaded\n");
+		log.info("Data loaded\n");
 	}
-    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Load data - Dataset 0
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Load data - Dataset 0
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void applyImportedData(String json)
-	{
+	public void applyImportedData(String json) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		String item, name, weight;
 		
-		if(packages < count)
-		{
+		if (packages < count) {
 			packages++;
 
 			for (Map<String, Object> aMap : map) {
@@ -100,8 +97,7 @@ public class Workflow {
 		}
 	}
 	
-	public void applyImportedDataFinished(SocketIOClient client)
-	{
+	public void applyImportedDataFinished(SocketIOClient client) {
 		// Set to lower case
 		help.setToLowerCase(tags, 0);
 		
@@ -114,20 +110,18 @@ public class Workflow {
 		computePreprocessing(client);
 	}
 	
-	public void applyImportedDataCount(int count)
-	{
+	public void applyImportedDataCount(int count) {
 		tags.clear();
 		
 		this.count = count;
 		this.packages = 0;
 	}
 	
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Preprocessing - Dataset 1
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Preprocessing - Dataset 1
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void computePreprocessing(SocketIOClient client)
-	{
+	public void computePreprocessing(SocketIOClient client) {
 		help.resetStep(tags, 1);
 		
 		// Remove tags
@@ -153,8 +147,7 @@ public class Workflow {
 	}
 	
 	// Apply changes
-	public void applyPreFilter(int threshold, SocketIOClient client)
-	{
+	public void applyPreFilter(int threshold, SocketIOClient client) {
 		// Set threshold
 		preprocess.setFilter(threshold);
 		
@@ -162,8 +155,7 @@ public class Workflow {
 		computePreprocessing(client);
 	}
 	
-	public void applyPreRemove(String chars, SocketIOClient client)
-	{
+	public void applyPreRemove(String chars, SocketIOClient client) {
 		// Set characters for removal
 		preprocess.setRemove(chars);
 		
@@ -171,8 +163,7 @@ public class Workflow {
 		computePreprocessing(client);
 	}
 	
-	public void applyPreReplace(String json, SocketIOClient client)
-	{
+	public void applyPreReplace(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		
 		preprocess.setReplace(map);
@@ -181,8 +172,7 @@ public class Workflow {
 		computePreprocessing(client);
 	}
 	
-	public void applyPreDictionary(String json, SocketIOClient client)
-	{
+	public void applyPreDictionary(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		
 		preprocess.setDictionary(map);
@@ -192,48 +182,41 @@ public class Workflow {
 	}
 	
 	// Send Params
-	public double sendPreFilterParams()
-	{
+	public double sendPreFilterParams() {
 		return preprocess.getFilter();
 	}
 	
-	public String sendPreRemoveParams()
-	{
+	public String sendPreRemoveParams() {
 		return preprocess.getRemove();
 	}
 	
-	public List<String> sendPreReplaceParams()
-	{
+	public List<String> sendPreReplaceParams() {
 		return preprocess.getReplace();
 	}
 	
-	public List<String> sendPreDictionaryParams()
-	{
+	public List<String> sendPreDictionaryParams() {
 		return preprocess.getDictionary();
 	}
 	
 	// Send Data
-	public String sendPreFilter()
-	{
-	    return help.objectToJsonString(preprocess.preparePreFilter(tagsFreq));
+	public String sendPreFilter() {
+		return help.objectToJsonString(preprocess.preparePreFilter(tagsFreq));
 	}
 	
-	public String sendPreFilterHistogram()
-	{
-	    return help.objectToJsonString(preprocess.preparePreFilterHistogram(tagsFreq));
+	public String sendPreFilterHistogram() {
+		return help.objectToJsonString(preprocess.preparePreFilterHistogram(tagsFreq));
 	}
 	
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Spell Correction - Dataset 2
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Spell Correction - Dataset 2
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void computeSpellCorrect(SocketIOClient client)
-	{
+	public void computeSpellCorrect(SocketIOClient client) {
 		// Reset current stage
 		help.resetStep(tags, 2);
 		
 		// Apply clustering
-		spellcorrect.applyClustering(tags,vocabPre);
+		spellcorrect.applyClustering(tags, vocabPre);
 		
 		// Compute further data
 		composite.group(tags);
@@ -247,8 +230,7 @@ public class Workflow {
 	}
 	
 	// Apply changes
-	public void applySpellImportance(double threshold, SocketIOClient client)
-	{
+	public void applySpellImportance(double threshold, SocketIOClient client) {
 		// Set threshold
 		spellcorrect.setSpellImportance(threshold);
 		
@@ -256,8 +238,7 @@ public class Workflow {
 		computeSpellCorrect(client);
 	}
 	
-	public void applySpellSimilarity(double threshold, SocketIOClient client)
-	{
+	public void applySpellSimilarity(double threshold, SocketIOClient client) {
 		// Set threshold
 		spellcorrect.setSpellSimilarity(threshold);
 		
@@ -266,56 +247,48 @@ public class Workflow {
 	}
 	
 	// Send Params
-	public double sendSpellImportanceParams()
-	{
+	public double sendSpellImportanceParams() {
 		return spellcorrect.getSpellImportance();
 	}
 	
-	public double sendSpellSimilarityParams()
-	{
+	public double sendSpellSimilarityParams() {
 		return spellcorrect.getSpellSimilarity();
 	}
 	
 	// Send Data
-	public String sendCluster(String tag)
-	{
-	    return help.objectToJsonString(spellcorrect.prepareCluster(tag));
+	public String sendCluster(String tag) {
+		return help.objectToJsonString(spellcorrect.prepareCluster(tag));
 	}
 	
-	public String sendSimilarityHistogram()
-	{
-	    return help.objectToJsonString(spellcorrect.prepareSimilarityHistogram());
+	public String sendSimilarityHistogram() {
+		return help.objectToJsonString(spellcorrect.prepareSimilarityHistogram());
 	}
 	
-	public String sendReplacements(double threshold)
-	{
-	    return help.objectToJsonString(spellcorrect.prepareReplacements(threshold));
+	public String sendReplacements(double threshold) {
+		return help.objectToJsonString(spellcorrect.prepareReplacements(threshold));
 	}
 	
-	public String sendVocab()
-	{
-	    return help.objectToJsonString(help.prepareVocab(vocabPre));
+	public String sendVocab() {
+		return help.objectToJsonString(help.prepareVocab(vocabPre));
 	}
 	
-	public String sendPreVocabHistogram()
-	{
-	    return help.objectToJsonString(help.prepareVocabHistogram(vocabPre));
+	public String sendPreVocabHistogram() {
+		return help.objectToJsonString(help.prepareVocabHistogram(vocabPre));
 	}
 	
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Composites - Dataset 3
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Composites - Dataset 3
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void computeGroups(SocketIOClient client)
-	{
+	public void computeGroups(SocketIOClient client) {
 		help.resetStep(tags, 3);
 		
 		// Compute all word groups
-	    composite.applyGroups(tags);
-	    
-	    // Provide further data
-	    weighting.vocab(tags, vocabPost, 3);
-	    
+		composite.applyGroups(tags);
+
+		// Provide further data
+		weighting.vocab(tags, vocabPost, 3);
+
 		client.sendEvent("postFilterGrid", sendPostVocab());
 		client.sendEvent("postFilterData", sendPostVocabHistogram());
 		
@@ -325,8 +298,7 @@ public class Workflow {
 	}
 	
 	// Apply changes
-	public void applyCompositeFrequent(double threshold, SocketIOClient client)
-	{
+	public void applyCompositeFrequent(double threshold, SocketIOClient client) {
 		// Set threshold
 		composite.setFrequentThreshold(threshold);
 		
@@ -334,8 +306,7 @@ public class Workflow {
 		computeGroups(client);
 	}
 	
-	public void applyCompositeUnique(double threshold, SocketIOClient client)
-	{
+	public void applyCompositeUnique(double threshold, SocketIOClient client) {
 		// Set threshold
 		composite.setJaccardThreshold(threshold);
 		
@@ -343,88 +314,75 @@ public class Workflow {
 		computeGroups(client);
 	}
 	
-	public void applyCompositeSize(int maxGroupSize, SocketIOClient client)
-	{
-	    // Set max group size
-	    composite.setMaxGroupSize(maxGroupSize);
-	    
+	public void applyCompositeSize(int maxGroupSize, SocketIOClient client) {
+		// Set max group size
+		composite.setMaxGroupSize(maxGroupSize);
+
 		// Apply
 		computeGroups(client);
 	}
 	
-	public void applyCompositeSplit(Boolean split, SocketIOClient client)
-	{
-	    // Set max group size
-	    composite.setSplit(split);
-	    
+	public void applyCompositeSplit(Boolean split, SocketIOClient client) {
+		// Set max group size
+		composite.setSplit(split);
+
 		// Apply
 		computeGroups(client);
 	}
 
 	// Send Params
-	public double sendCompFrequentParams()
-	{
+	public double sendCompFrequentParams() {
 		return composite.getFrequentThreshold();
 	}
 	
-	public double sendCompUniqueParams()
-	{
+	public double sendCompUniqueParams() {
 		return composite.getJaccardThreshold();
 	}
 	
-	public int sendCompSizeParams()
-	{
+	public int sendCompSizeParams() {
 		return composite.getMaxGroupSize();
 	}
 	
-	public Boolean sendCompSplitParams()
-	{
+	public Boolean sendCompSplitParams() {
 		return composite.getSplit();
 	}
 
 	// Send Data
-	public String sendFrequentGroups()
-	{
+	public String sendFrequentGroups() {
 		return help.objectToJsonString(composite.prepareFrequentGroups());
 	}
 	
-	public String sendUniqueGroups()
-	{
+	public String sendUniqueGroups() {
 		return help.objectToJsonString(composite.prepareUniqueGroups());
 	}
 	
-	public String sendFrequentHistogram()
-	{
+	public String sendFrequentHistogram() {
 		return help.objectToJsonString(composite.prepareFrequentHistogram());
 	}
 	
-	public String sendUniqueHistogram()
-	{
+	public String sendUniqueHistogram() {
 		return help.objectToJsonString(composite.prepareUniqueHistogram());
 	}
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Postprocessing - Dataset 4
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Postprocessing - Dataset 4
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void prepareSalvaging(SocketIOClient client)
-	{
+	public void prepareSalvaging(SocketIOClient client) {
 		postprocess.initializeSalvaging(vocabPost);
 		
 		client.sendEvent("postImportantWords", sendPostImportant());
 		client.sendEvent("postSalvageWords", sendPostSalvage());
 	}
 	
-	public void computeSalvaging(SocketIOClient client)
-	{
+	public void computeSalvaging(SocketIOClient client) {
 		postprocess.computeSalvaging(vocabPost);
 		
 		client.sendEvent("postSalvageData", sendPostSalvageData());
 	}
 	
 	// Apply changes
-	public void applySalvaging(SocketIOClient client)
-	{
+	public void applySalvaging(SocketIOClient client) {
 		help.resetStep(tags, 4);
 		
 		postprocess.applySalvaging(tags);
@@ -432,8 +390,7 @@ public class Workflow {
 		client.sendEvent("output", sendOverview(4));
 	}
 	
-	public void applyPostFilter(double threshold, SocketIOClient client)
-	{
+	public void applyPostFilter(double threshold, SocketIOClient client) {
 		// Set threshold
 		postprocess.setPostFilter(threshold);
 		
@@ -441,8 +398,7 @@ public class Workflow {
 		prepareSalvaging(client);
 	}
 	
-	public void applyPostReplace(String json, SocketIOClient client)
-	{
+	public void applyPostReplace(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		
 		postprocess.setPostReplace(map);
@@ -451,8 +407,7 @@ public class Workflow {
 		prepareSalvaging(client);
 	}
 	
-	public void applyPostLength(int minLength, SocketIOClient client)
-	{
+	public void applyPostLength(int minLength, SocketIOClient client) {
 		// Set threshold
 		postprocess.setMinWordLength(minLength);
 		
@@ -460,8 +415,7 @@ public class Workflow {
 		prepareSalvaging(client);
 	}
 	
-	public void applyPostAll(Boolean all, SocketIOClient client)
-	{
+	public void applyPostAll(Boolean all, SocketIOClient client) {
 		// Set threshold
 		postprocess.setUseAllWords(all);
 		
@@ -469,8 +423,7 @@ public class Workflow {
 		prepareSalvaging(client);
 	}
 	
-	public void applyPostSplit(Boolean split, SocketIOClient client)
-	{
+	public void applyPostSplit(Boolean split, SocketIOClient client) {
 		// Set threshold
 		postprocess.setSplitTags(split);
 		
@@ -479,60 +432,50 @@ public class Workflow {
 	}
 	
 	// Send Params
-	public double sendPostFilterParams()
-	{
+	public double sendPostFilterParams() {
 		return postprocess.getPostFilter();
 	}
 	
-	public int sendPostLengthParams()
-	{
+	public int sendPostLengthParams() {
 		return postprocess.getMinWordLength();
 	}
 	
-	public Boolean sendPostAllParams()
-	{
+	public Boolean sendPostAllParams() {
 		return postprocess.getUseAllWords();
 	}
 	
-	public List<String> sendPostReplaceParams()
-	{
+	public List<String> sendPostReplaceParams() {
 		return postprocess.getPostReplace();
 	}
 	
-	public Boolean sendPostSplitParams()
-	{
+	public Boolean sendPostSplitParams() {
 		return postprocess.getSplitTags();
 	}
 	
 	// Send Data
-	public String sendPostVocab()
-	{
-	    return help.objectToJsonString(help.prepareVocab(vocabPost));
+	public String sendPostVocab() {
+		return help.objectToJsonString(help.prepareVocab(vocabPost));
 	}
 	
-	public String sendPostVocabHistogram()
-	{
-	    return help.objectToJsonString(help.prepareVocabHistogram(vocabPost));
+	public String sendPostVocabHistogram() {
+		return help.objectToJsonString(help.prepareVocabHistogram(vocabPost));
 	}
 	
-	public String sendPostImportant()
-	{
-	    return help.objectToJsonString(postprocess.prepareImportantWords());
+	public String sendPostImportant() {
+		return help.objectToJsonString(postprocess.prepareImportantWords());
 	}
 	
-	public String sendPostSalvage()
-	{
-	    return help.objectToJsonString(postprocess.prepareSalvageWords());
+	public String sendPostSalvage() {
+		return help.objectToJsonString(postprocess.prepareSalvageWords());
 	}
 	
-	public String sendPostSalvageData()
-	{
-	    return help.objectToJsonString(postprocess.prepareSalvagedData());
+	public String sendPostSalvageData() {
+		return help.objectToJsonString(postprocess.prepareSalvagedData());
 	}
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Finalize
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Finalize
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/*
 	public String sendFinal()
@@ -569,14 +512,13 @@ public class Workflow {
 	}
 	*/
 	
-	public String sendOverview(int index)
-	{
+	public String sendOverview(int index) {
 		Supplier<List<gridOverview>> supplier = ArrayList::new;
 
-	    List<gridOverview> tags_filtered = tags.stream()
-	    		.map(p -> new gridOverview(p.getTag(index), p.getItem(), p.getImportance()))
-	    		.collect(Collectors.toCollection(supplier));
-	    
-	    return help.objectToJsonString(tags_filtered); 
+		List<gridOverview> tags_filtered = tags.stream()
+				.map(p -> new gridOverview(p.getTag(index), p.getItem(), p.getImportance()))
+				.collect(Collectors.toCollection(supplier));
+
+		return help.objectToJsonString(tags_filtered);
 	}
 }

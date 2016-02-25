@@ -12,23 +12,23 @@ import core.json.gridVocab;
 public class Postprocess {
 
 	// Variables
-		int index;
-		
-		// Classes
-	  	private Helper help = new Helper();
-	    private Regex regex = new Regex();
-		
-	    // Data
-	    private List<String> importantWords = new ArrayList<String>();
-	    private List<String> salvageWords = new ArrayList<String>();
-	  	protected Map<String, String> salvagedData = new HashMap<String, String>();
-	    
-	  	// Parameters
-		private double postFilter;
-		private int minWordLength;
-		private Boolean useAllWords;
-		private Boolean splitTags;
-		private List<String> postReplace = new ArrayList<String>();
+	int index;
+
+	// Classes
+	private Helper help = new Helper();
+	private Regex regex = new Regex();
+
+	// Data
+	private List<String> importantWords = new ArrayList<String>();
+	private List<String> salvageWords = new ArrayList<String>();
+	protected Map<String, String> salvagedData = new HashMap<String, String>();
+
+	// Parameters
+	private double postFilter;
+	private int minWordLength;
+	private Boolean useAllWords;
+	private Boolean splitTags;
+	private List<String> postReplace = new ArrayList<String>();
 	
 	public Postprocess(int index) {
 		this.index = index;
@@ -40,69 +40,59 @@ public class Postprocess {
 		splitTags = false;
 	}
 	
-	public void initializeSalvaging(Map<String, Double> vocabPost)
-	{
-	    // Get important words
+	public void initializeSalvaging(Map<String, Double> vocabPost) {
+		// Get important words
 		importantWords = help.getImportantTags(vocabPost, postFilter);
 		
 		// Get salvage words
 		salvageWords = regex.replaceCustomWords(importantWords, postReplace, index);
 	}
 	
-	public void computeSalvaging(Map<String, Double> vocabPost)
-	{
-	    // Find important words in the unimportant tags
-	    regex.findImportantWords(vocabPost, salvageWords, salvagedData, postFilter, minWordLength, index);
-	    System.out.println(salvagedData.toString());
+	public void computeSalvaging(Map<String, Double> vocabPost) {
+		// Find important words in the unimportant tags
+		regex.findImportantWords(vocabPost, salvageWords, salvagedData, postFilter, minWordLength, index);
+		System.out.println(salvagedData.toString());
 	}
 	
-	public void applySalvaging(List<Tag> tags)
-	{
+	public void applySalvaging(List<Tag> tags) {
 		regex.apply(tags, salvageWords, salvagedData, useAllWords, index);
 		
-		if(splitTags) 
-		{
+		if (splitTags) {
 			help.splitCompositeTag(tags, index);
 			//help.correctTags(tags);
 		}
 		
-	    //help.removeDashes(tags, index);
+		//help.removeDashes(tags, index);
 	}
 
-	public List<gridVocab> prepareImportantWords()
-	{
-	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
-	    
-	    for(String s: importantWords)
-	    {
-	    	tags_filtered.add(new gridVocab(s, 0));
-	    }
+	public List<gridVocab> prepareImportantWords() {
+		List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
 
-	    return tags_filtered;
+		for (String s : importantWords) {
+			tags_filtered.add(new gridVocab(s, 0));
+		}
+
+		return tags_filtered;
 	}
 	
-	public List<gridVocab> prepareSalvageWords()
-	{
-	    List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
-	    
-	    for(String s: salvageWords)
-	    {
-	    	tags_filtered.add(new gridVocab(s, 0));
-	    }
+	public List<gridVocab> prepareSalvageWords() {
+		List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
 
-	    return tags_filtered;
+		for (String s : salvageWords) {
+			tags_filtered.add(new gridVocab(s, 0));
+		}
+
+		return tags_filtered;
 	}
 	
-	public List<gridRepl> prepareSalvagedData()
-	{
-	    List<gridRepl> tags_filtered = new ArrayList<gridRepl>();
-	    
-	    for(String s: salvagedData.keySet())
-	    {
-	    	tags_filtered.add(new gridRepl(salvagedData.get(s), s, 0));
-	    }
+	public List<gridRepl> prepareSalvagedData() {
+		List<gridRepl> tags_filtered = new ArrayList<gridRepl>();
 
-	    return tags_filtered;
+		for (String s : salvagedData.keySet()) {
+			tags_filtered.add(new gridRepl(salvagedData.get(s), s, 0));
+		}
+
+		return tags_filtered;
 	}
 
 	public double getPostFilter() {
@@ -128,9 +118,8 @@ public class Postprocess {
 	public void setPostReplace(List<Map<String, Object>> map) {
 		postReplace.clear();
 		
-		for(int i = 0; i < map.size(); i++)
-		{
-			postReplace.add(map.get(i).get("replace")+","+map.get(i).get("by"));
+		for (int i = 0; i < map.size(); i++) {
+			postReplace.add(map.get(i).get("replace") + "," + map.get(i).get("by"));
 		}
 	}
 

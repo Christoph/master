@@ -8,12 +8,15 @@ public class gridHistFreq {
 	public long getValue() {
 		return value;
 	}
+
 	public void setValue(long value) {
 		this.value = value;
 	}
+
 	public long getCount() {
 		return count;
 	}
+
 	public void setCount(long count) {
 		this.count = count;
 	}
