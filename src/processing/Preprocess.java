@@ -23,14 +23,13 @@ public class Preprocess {
 	private int filter;
 	private String remove;
 	private List<String> replace = new ArrayList<String>();
-	private List<String> whitelistWords = new ArrayList<String>();
-	private List<String> whitelistGroups = new ArrayList<String>();
-	private List<String> blacklist = new ArrayList<String>();
+	private List<String> blacklist;
 	
-	public Preprocess(int index) {
+	public Preprocess(int index, List<String> blacklist) {
 		// Set working copy
 		this.index = index;
-		
+		this.blacklist = blacklist;
+
 		// Default parameters
 		replace.add("-, ");
 		replace.add("_, ");
@@ -167,50 +166,16 @@ public class Preprocess {
 		}
 	}
 
-	public List<String> getDictionary() {
-		List<String> temp = new ArrayList<String>();
-		
-		temp.addAll(whitelistWords);
-		temp.addAll(whitelistGroups);
-		
-		return temp;
-	}
-
 	public void setDictionary(List<Map<String, Object>> map) {
 		String tag;
-		whitelistGroups.clear();
-		whitelistWords.clear();
+		blacklist.clear();
 
 		for (int i = 0; i < map.size(); i++) {
-			tag = String.valueOf(map.get(i).get("tag"));
+			tag = String.valueOf(map.get(i).get("word"));
 			
 			if (tag.length() > 0) {
-				if (tag.contains(" ")) {
-					whitelistGroups.add(tag);
-					
-					for (String s : tag.split(" ")) {
-						if (!whitelistWords.contains(tag)) whitelistWords.add(s);
-					}
-				} else {
-					if (!whitelistWords.contains(tag)) whitelistWords.add(tag);
-				}
+				blacklist.add(tag);
 			}
 		}
-	}
-
-	public List<String> getWhitelistWords() {
-		return whitelistWords;
-	}
-	
-	public List<String> getWhitelistGroups() {
-		return whitelistGroups;
-	}
-
-	public List<String> getBlacklist() {
-		return blacklist;
-	}
-
-	public void setBlacklist(List<String> blacklist) {
-		this.blacklist = blacklist;
 	}
 }

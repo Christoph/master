@@ -1,9 +1,6 @@
 package server;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -42,10 +39,15 @@ public class Workflow {
 	private Map<String, Double> vocabPre = new HashMap<>();
 	private Map<String, Double> vocabPost = new HashMap<>();
 
+	private List<String> whitelistWords = new ArrayList<String>();
+	private List<String> whitelistGroups = new ArrayList<String>();
+	private List<String> whitelistVocab = new ArrayList<String>();
+	private List<String> blacklist = new ArrayList<String>();
+
 	// Initialize pipeline steps
 	// The index selects the working copy. 0 = original
-	private Preprocess preprocess = new Preprocess(1);
-	private Spellcorrect spellcorrect = new Spellcorrect(2);
+	private Preprocess preprocess = new Preprocess(1, blacklist);
+	private Spellcorrect spellcorrect = new Spellcorrect(2, whitelistWords, whitelistGroups, whitelistVocab);
 	private Composite composite = new Composite(3);
 	private Postprocess postprocess = new Postprocess(4);
 
@@ -106,8 +108,6 @@ public class Workflow {
 		
 		client.sendEvent("preFilterData", sendPreFilterHistogram());
 		client.sendEvent("preFilterGrid", sendPreFilter());
-		
-		computePreprocessing(client);
 	}
 	
 	public void applyImportedDataCount(int count) {
@@ -116,6 +116,10 @@ public class Workflow {
 		this.count = count;
 		this.packages = 0;
 	}
+
+	public void runAll(SocketIOClient client) {
+		computePreprocessing(client);
+	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Preprocessing - Dataset 1
@@ -123,7 +127,7 @@ public class Workflow {
 	
 	public void computePreprocessing(SocketIOClient client) {
 		help.resetStep(tags, 1);
-		
+
 		// Remove tags
 		preprocess.applyFilter(tags, tagsFreq);
 		
@@ -133,11 +137,14 @@ public class Workflow {
 		// Replace characters
 		preprocess.replaceCharacters(tags);
 
+		// Remove blacklisted words
+		help.removeBlacklistedWords(tags, blacklist, 1);
+
 		// Create preFilter vocab
 		weighting.vocab(tags, vocabPre, 1);
 
 		// Cluster words for further use
-		spellcorrect.clustering(tags, vocabPre, preprocess.getWhitelistWords());
+		spellcorrect.clustering(tags, vocabPre, whitelistVocab);
 		
 		client.sendEvent("similarities", sendSimilarityHistogram());
 		client.sendEvent("vocab", sendVocab());
@@ -195,7 +202,7 @@ public class Workflow {
 	}
 	
 	public List<String> sendPreDictionaryParams() {
-		return preprocess.getDictionary();
+		return blacklist;
 	}
 	
 	// Send Data
@@ -214,7 +221,7 @@ public class Workflow {
 	public void computeSpellCorrect(SocketIOClient client) {
 		// Reset current stage
 		help.resetStep(tags, 2);
-		
+
 		// Apply clustering
 		spellcorrect.applyClustering(tags, vocabPre);
 		
@@ -246,6 +253,15 @@ public class Workflow {
 		computeSpellCorrect(client);
 	}
 	
+	public void applySpellImport(String json, SocketIOClient client) {
+		List<Map<String, Object>> map = help.jsonStringToList(json);
+
+		spellcorrect.setDictionary(map);
+
+		// Apply
+		computeSpellCorrect(client);
+	}
+
 	// Send Params
 	public double sendSpellImportanceParams() {
 		return spellcorrect.getSpellImportance();
@@ -275,7 +291,15 @@ public class Workflow {
 	public String sendPreVocabHistogram() {
 		return help.objectToJsonString(help.prepareVocabHistogram(vocabPre));
 	}
-	
+
+	public List<String> sendSpellDictionaryParams() {
+		List<String> temp = new ArrayList<>();
+
+		temp.addAll(whitelistWords);
+		temp.addAll(whitelistGroups);
+
+		return temp;
+	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Composites - Dataset 3
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////

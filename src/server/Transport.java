@@ -26,11 +26,12 @@ public class Transport {
 		client.sendEvent("preRemoveParams", work.sendPreRemoveParams());
 		client.sendEvent("preReplaceParams", work.sendPreReplaceParams());
 		client.sendEvent("preDictionaryParams", work.sendPreDictionaryParams());
-		
-		// Postprocessing
+
+		// Spell correct
 		client.sendEvent("spellImportance", work.sendSpellImportanceParams());
 		client.sendEvent("spellSimilarity", work.sendSpellSimilarityParams());
-		
+		client.sendEvent("spellDictionaryParams", work.sendSpellDictionaryParams());
+
 		// Composite
 		client.sendEvent("compFrequentParams", work.sendCompFrequentParams());
 		client.sendEvent("compUniqueParams", work.sendCompUniqueParams());
@@ -48,15 +49,15 @@ public class Transport {
 	public void initialize() {
 		// Connection
 		server.addConnectListener(new ConnectListener() {
-			
+
 			public void onConnect(SocketIOClient client) {
 				System.out.println("Connect");
-				
+
 				if (devMode) {
 					work.init(client);
-					
+
 					sendParams(client);
-					
+
 					work.computePreprocessing(client);
 				} else {
 					sendParams(client);
@@ -96,6 +97,15 @@ public class Transport {
 			}
 		});
 		
+		server.addEventListener("runAll", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+			                   AckRequest arg2) throws Exception {
+
+				work.runAll(client);
+			}
+		});
+
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Preprocessing
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,6 +154,15 @@ public class Transport {
 		// Spell Checking
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+		// Compute clusters
+		server.addEventListener("applySpellImportedData", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+			                   AckRequest arg2) throws Exception {
+
+				work.applySpellImport(data, client);
+			}
+		});
 		// Compute clusters
 		server.addEventListener("applySpellImportance", String.class, new DataListener<String>() {
 

@@ -289,7 +289,7 @@ public class Helper {
 
 	public void removeBlacklistedWords(List<Tag> tags, List<String> blacklist, int index) {
 		String name, uptated;
-		List<String> list = new ArrayList<String>();
+		List<String> list;
 		PlainStringSimilarity psim = new PlainStringSimilarity();
 
 		for (Tag tag : tags) {

@@ -16,6 +16,9 @@ public class Spellcorrect {
 	
 	// Variables
 	private int index;
+	private List<String> whitelistWords;
+	private List<String> whitelistGroups;
+	private List<String> whitelistVocab;
 	private int minWordSize;
 	
 	// Classes
@@ -27,8 +30,11 @@ public class Spellcorrect {
 	private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
 	private TreeMap<Double, Map<String, String>> simClusters = new TreeMap<Double, Map<String, String>>();
 	
-	public Spellcorrect(int index) {
+	public Spellcorrect(int index, List<String> whitelistWords, List<String> whitelistGroups, List<String> whitelistVocab) {
 		this.index = index;
+		this.whitelistWords = whitelistWords;
+		this.whitelistGroups = whitelistGroups;
+		this.whitelistVocab = whitelistVocab;
 		
 		// Initial values
 		setSpellImportance(0.5);
@@ -186,5 +192,32 @@ public class Spellcorrect {
 
 	public void setSpellSimilarity(double spellSimilarity) {
 		this.spellSimilarity = spellSimilarity;
+	}
+
+	public void setDictionary(List<Map<String, Object>> map) {
+		String tag;
+		whitelistGroups.clear();
+		whitelistWords.clear();
+		whitelistVocab.clear();
+
+		for (int i = 0; i < map.size(); i++) {
+			tag = String.valueOf(map.get(i).get("tag"));
+
+			if (tag.length() > 0) {
+				if (tag.contains(" ")) {
+					whitelistGroups.add(tag);
+
+					// Build vocab
+					for (String s : tag.split(" ")) {
+						if (!whitelistVocab.contains(tag)) whitelistVocab.add(s);
+					}
+				} else {
+					whitelistWords.add(tag);
+
+					// Build vocab
+					if (!whitelistVocab.contains(tag)) whitelistVocab.add(tag);
+				}
+			}
+		}
 	}
 }
