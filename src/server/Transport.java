@@ -10,17 +10,13 @@ public class Transport {
 
 	private Workflow work = new Workflow();
 	private SocketIOServer server;
-	private Boolean devMode = false;
-	
+
 	protected Transport(SocketIOServer server) {
 		super();
 		this.server = server;
 	}
 
 	private void sendParams(SocketIOClient client) {
-		// Main
-		client.sendEvent("mainData", work.sendOverview(0));
-		
 		// Preprocessing
 		client.sendEvent("preFilterParams", work.sendPreFilterParams());
 		client.sendEvent("preRemoveParams", work.sendPreRemoveParams());
@@ -47,6 +43,46 @@ public class Transport {
 		client.sendEvent("postLengthParams", work.sendPostLengthParams());
 		client.sendEvent("postSplitParams", work.sendPostSplitParams());
 	}
+
+	private void sendData(SocketIOClient client)
+	{
+		// Main
+		client.sendEvent("mainData", work.sendOverview(0));
+
+		// Send Pre data
+		client.sendEvent("preFilterData", work.sendPreFilterHistogram());
+		client.sendEvent("preFilterGrid", work.sendPreFilter());
+
+		if(work.getSimpleRun())
+		{
+			// Send Spell data
+			client.sendEvent("similarities", work.sendSimilarityHistogram());
+			client.sendEvent("vocab", work.sendVocab());
+			client.sendEvent("importance", work.sendPreVocabHistogram());
+
+			// Send Composite data
+			client.sendEvent("frequentGroups", work.sendFrequentGroups());
+			client.sendEvent("frequentData", work.sendFrequentHistogram());
+			client.sendEvent("uniqueGroups", work.sendUniqueGroups());
+			client.sendEvent("uniqueData", work.sendUniqueHistogram());
+
+			// Send Post data
+			client.sendEvent("postFilterGrid", work.sendPostVocab());
+			client.sendEvent("postFilterData", work.sendPostVocabHistogram());
+			client.sendEvent("output", work.sendOverview(3));
+
+			// Send Final data
+			client.sendEvent("postImportantWords", work.sendPostImportant());
+			client.sendEvent("postSalvageWords", work.sendPostSalvage());
+		}
+
+		if(work.getComplexRun())
+		{
+			// Send Final data
+			client.sendEvent("postSalvageData", work.sendPostSalvageData());
+			client.sendEvent("output", work.sendOverview(4));
+		}
+	}
 	
 	public void initialize() {
 		// Connection
@@ -55,17 +91,8 @@ public class Transport {
 			public void onConnect(SocketIOClient client) {
 				System.out.println("Connect");
 
-				if (devMode) {
-					work.initDev(client);
-
-					sendParams(client);
-
-					work.computePreprocessing(client);
-				} else {
-					work.init(client);
-
-					sendParams(client);
-				}
+				sendParams(client);
+				sendData(client);
 			}
 		});
 		

@@ -27,6 +27,9 @@ public class Workflow {
 
 	private int count, packages;
 
+	private Boolean simpleRun = false;
+	private Boolean complexRun = false;
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Parameters
@@ -52,36 +55,8 @@ public class Workflow {
 	private Postprocess postprocess = new Postprocess(4);
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Dev Mode
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	public void initDev(SocketIOClient client) {
-		log.info("Initialize\n");
-		
-		// Load data
-		tags = im.importTags("reduced_music.csv");
-
-		// Set to lower case
-		help.setToLowerCase(tags, 0);
-		
-		// Compute word frequency
-		help.wordFrequency(tags, tagsFreq, 0);
-		
-		client.sendEvent("preFilterData", sendPreFilterHistogram());
-		client.sendEvent("preFilterGrid", sendPreFilter());
-
-		log.info("Data loaded\n");
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Load data - Dataset 0
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	public void init(SocketIOClient client)
-	{
-		client.sendEvent("preFilterData", sendPreFilterHistogram());
-		client.sendEvent("preFilterGrid", sendPreFilter());
-	}
 
 	public void applyImportedData(String json) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
@@ -428,12 +403,16 @@ public class Workflow {
 		
 		client.sendEvent("postImportantWords", sendPostImportant());
 		client.sendEvent("postSalvageWords", sendPostSalvage());
+
+		setSimpleRun(true);
 	}
 	
 	public void computeSalvaging(SocketIOClient client) {
 		postprocess.computeSalvaging(vocabPost);
 		
 		client.sendEvent("postSalvageData", sendPostSalvageData());
+
+		setComplexRun(true);
 	}
 	
 	// Apply changes
@@ -575,5 +554,21 @@ public class Workflow {
 				.collect(Collectors.toCollection(supplier));
 
 		return help.objectToJsonString(tags_filtered);
+	}
+
+	public Boolean getSimpleRun() {
+		return simpleRun;
+	}
+
+	public void setSimpleRun(Boolean simpleRun) {
+		this.simpleRun = simpleRun;
+	}
+
+	public Boolean getComplexRun() {
+		return complexRun;
+	}
+
+	public void setComplexRun(Boolean complexRun) {
+		this.complexRun = complexRun;
 	}
 }
