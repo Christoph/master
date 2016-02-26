@@ -234,7 +234,7 @@ public class Transport {
 			}
 		});
 		
-		server.addEventListener("applyMaxSize", String.class, new DataListener<String>() {
+		server.addEventListener("applyCompMaxSize", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 			                   AckRequest arg2) throws Exception {
@@ -243,7 +243,7 @@ public class Transport {
 			}
 		});
 		
-		server.addEventListener("applyMinOcc", String.class, new DataListener<String>() {
+		server.addEventListener("applyCompMinOcc", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 			                   AckRequest arg2) throws Exception {
