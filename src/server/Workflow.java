@@ -213,7 +213,8 @@ public class Workflow {
 		client.sendEvent("frequentData", sendFrequentHistogram());
 		client.sendEvent("uniqueGroups", sendUniqueGroups());
 		client.sendEvent("uniqueData", sendUniqueHistogram());
-		
+		client.sendEvent("replacements", sendReplacements());
+
 		computeGroups(client);
 	}
 	
@@ -276,10 +277,45 @@ public class Workflow {
 		return help.objectToJsonString(spellcorrect.prepareSimilarityHistogram());
 	}
 	
-	public String sendReplacements(double threshold) {
-		return help.objectToJsonString(spellcorrect.prepareReplacements(threshold));
+	public int sendReplacements(String json) {
+		List<Map<String, Object>> map = help.jsonStringToList(json);
+
+		double imp, sim;
+
+		if(map.get(0).get("importance").equals(0)) return 0;
+
+		if(map.get(0).get("importance").equals(1))
+		{
+			imp = ((Integer) map.get(0).get("importance"));
+		}
+		else
+		{
+			imp = ((Double) map.get(0).get("importance"));
+		}
+
+		if(map.get(0).get("similarity").equals(0))
+		{
+			sim = ((Integer) map.get(0).get("similarity"));
+		}
+		else if(map.get(0).get("similarity").equals(1))
+		{
+			sim = ((Integer) map.get(0).get("similarity"));
+		}
+		else
+		{
+			sim = ((Double) map.get(0).get("similarity"));
+		}
+
+		return spellcorrect.prepareReplacements(sim, imp, vocabPre);
 	}
 	
+	public int sendReplacements() {
+		double sim = spellcorrect.getSpellSimilarity();
+		double imp = spellcorrect.getSpellImportance();
+
+		return spellcorrect.prepareReplacements(sim, imp, vocabPre);
+	}
+
 	public String sendVocab() {
 		return help.objectToJsonString(help.prepareVocab(vocabPre));
 	}

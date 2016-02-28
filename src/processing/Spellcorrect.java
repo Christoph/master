@@ -117,67 +117,26 @@ public class Spellcorrect {
 		return hist;
 	}
 	
-	// Send 100 entries around the threshold
-	public List<gridRepl> prepareReplacements(double threshold) {
-		List<gridRepl> repl = new ArrayList<gridRepl>();
+	public int prepareReplacements(double sim, double imp, Map<String, Double> vocabPre) {
+		int replacements = 0;
 
-		double core = simGet(threshold);
-		double lower = core;
-		double higher = core;
-		Boolean init = false;
+		for(Map<String, Double> cluster: vocabClusters.values())
+		{
+			for(Entry<String, Double> e: cluster.entrySet())
+			{
+				double a = e.getValue();
+				double b = vocabPre.get(e.getKey());
 
-		// Add core replacements
-		addElementsToRepl(repl, core);
-
-		// Add at least one layer around the center until the total number of entries rises above 101
-		while (repl.size() <= 101 || init == false) {
-			init = true;
-
-			Entry<Double, Map<String, String>> high = simClusters.higherEntry(higher);
-
-			if (high != null) {
-				higher = high.getKey();
-				addElementsToRepl(repl, higher);
-			}
-
-			Entry<Double, Map<String, String>> low = simClusters.lowerEntry(lower);
-
-			if (low != null) {
-				lower = low.getKey();
-				addElementsToRepl(repl, lower);
-			}
-		}
-		
-		return repl;
-	}
-	
-	private void addElementsToRepl(List<gridRepl> repl, double key) {
-		for (Entry<String, String> e : simClusters.get(key).entrySet()) {
-			repl.add(new gridRepl(e.getKey(), e.getValue(), key));
-		}
-	}
-	
-	// Get nearest entry from the similarity tree map
-	private double simGet(double key) {
-		Map<String, String> value = simClusters.get(key);
-		double entry = key;
-
-		if (value == null) {
-			Entry<Double, Map<String, String>> floor = simClusters.floorEntry(key);
-			Entry<Double, Map<String, String>> ceiling = simClusters.ceilingEntry(key);
-
-			if ((key - floor.getKey()) < (ceiling.getKey() - key)) {
-				value = floor.getValue();
-				entry = floor.getKey();
-			} else {
-				value = ceiling.getValue();
-				entry = ceiling.getKey();
+				if(e.getValue() > sim && vocabPre.get(e.getKey()) < imp)
+				{
+					replacements += 1;
+				}
 			}
 		}
 
-		return entry;
+		return replacements;
 	}
-	
+
 	public double getSpellImportance() {
 		return spellImportance;
 	}

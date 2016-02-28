@@ -226,7 +226,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 			                   AckRequest arg2) throws Exception {
 				
-				client.sendEvent("replacements", work.sendReplacements(Double.parseDouble(data)));
+				client.sendEvent("replacements", work.sendReplacements(data));
 			}
 		});
 		
