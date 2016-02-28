@@ -3,11 +3,13 @@ package core.json;
 public class gridCluster {
 
 	private String tag;
+	private double importance;
 	private double similarity;
 	
-	public gridCluster(String tag, double similarity) {
+	public gridCluster(String tag, double importance, double similarity) {
 		super();
 		this.tag = tag;
+		this.importance = importance;
 		this.similarity = similarity;
 	}
 
@@ -34,4 +36,11 @@ public class gridCluster {
 	}
 	
 
+	public double getImportance() {
+		return importance;
+	}
+
+	public void setImportance(double importance) {
+		this.importance = importance;
+	}
 }

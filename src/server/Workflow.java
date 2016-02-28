@@ -269,7 +269,7 @@ public class Workflow {
 
 	// Send Data
 	public String sendCluster(String tag) {
-		return help.objectToJsonString(spellcorrect.prepareCluster(tag));
+		return help.objectToJsonString(spellcorrect.prepareCluster(tag, vocabPre));
 	}
 	
 	public String sendSimilarityHistogram() {

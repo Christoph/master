@@ -84,12 +84,12 @@ public class Spellcorrect {
 		}
 	}
 	
-	public List<gridCluster> prepareCluster(String tag) {
+	public List<gridCluster> prepareCluster(String tag, Map<String, Double> vocabPre) {
 		List<gridCluster> tags_filtered = new ArrayList<gridCluster>();
 
 		if (vocabClusters.containsKey(tag)) {
 			for (String s : vocabClusters.get(tag).keySet()) {
-				tags_filtered.add(new gridCluster(s, vocabClusters.get(tag).get(s)));
+				tags_filtered.add(new gridCluster(s, vocabPre.get(s), vocabClusters.get(tag).get(s)));
 			}
 		}
 
