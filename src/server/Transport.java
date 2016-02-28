@@ -194,24 +194,15 @@ public class Transport {
 			}
 		});
 
-		server.addEventListener("applySpellImportance", String.class, new DataListener<String>() {
+		server.addEventListener("applySpellCorrect", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 			                   AckRequest arg2) throws Exception {
-				
-				work.applySpellImportance(Double.parseDouble(data), client);
-			}
-		});
-		
-		server.addEventListener("applySpellSimilarity", String.class, new DataListener<String>() {
 
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applySpellSimilarity(Double.parseDouble(data), client);
+				work.applySpellCorrect(data, client);
 			}
 		});
-		
+
 		server.addEventListener("applySpellMinWordSize", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,

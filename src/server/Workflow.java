@@ -218,22 +218,16 @@ public class Workflow {
 	}
 	
 	// Apply changes
-	public void applySpellImportance(double threshold, SocketIOClient client) {
-		// Set threshold
-		spellcorrect.setSpellImportance(threshold);
-		
+	public void applySpellCorrect(String json, SocketIOClient client) {
+		List<Map<String, Object>> map = help.jsonStringToList(json);
+
+		spellcorrect.setSpellImportance((Double) map.get(0).get("importance"));
+		spellcorrect.setSpellSimilarity((Double) map.get(0).get("similarity"));
+
 		// Apply
 		computeSpellCorrect(client);
 	}
-	
-	public void applySpellSimilarity(double threshold, SocketIOClient client) {
-		// Set threshold
-		spellcorrect.setSpellSimilarity(threshold);
-		
-		// Apply
-		computeSpellCorrect(client);
-	}
-	
+
 	public void applySpellImport(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 
