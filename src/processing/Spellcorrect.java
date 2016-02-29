@@ -120,21 +120,41 @@ public class Spellcorrect {
 	public int prepareReplacements(double sim, double imp, Map<String, Double> vocabPre) {
 		int replacements = 0;
 
-		for(Map<String, Double> cluster: vocabClusters.values())
+		for(Entry<Double, Map<String,String>> entry: simClusters.descendingMap().entrySet())
 		{
-			for(Entry<String, Double> e: cluster.entrySet())
+			if(entry.getKey() >= sim)
 			{
-				double a = e.getValue();
-				double b = vocabPre.get(e.getKey());
-
-				if(e.getValue() > sim && vocabPre.get(e.getKey()) < imp)
+				for(String s: entry.getValue().values())
 				{
-					replacements += 1;
+					if(vocabPre.get(s) < imp)
+					{
+						replacements += 1;
+					}
 				}
 			}
 		}
 
 		return replacements;
+	}
+
+	public List<gridRepl> prepareReplacementData(double sim, double imp, Map<String, Double> vocabPre) {
+		List<gridRepl> tags_filtered = new ArrayList<>();
+
+		for(Entry<Double, Map<String,String>> entry: simClusters.descendingMap().entrySet())
+		{
+			if(entry.getKey() >= sim)
+			{
+				for(Entry<String, String> s: entry.getValue().entrySet())
+				{
+					if(vocabPre.get(s.getValue()) < imp)
+					{
+						tags_filtered.add(new gridRepl(s.getKey(), s.getValue(), entry.getKey()));
+					}
+				}
+			}
+		}
+
+		return tags_filtered;
 	}
 
 	public double getSpellImportance() {

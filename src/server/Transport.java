@@ -229,7 +229,16 @@ public class Transport {
 				client.sendEvent("replacements", work.sendReplacements(data));
 			}
 		});
-		
+
+		server.addEventListener("getReplacementData", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+			                   AckRequest arg2) throws Exception {
+
+				client.sendEvent("replacementData", work.sendReplacementData(data));
+			}
+		});
+
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Composites
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////

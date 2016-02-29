@@ -293,6 +293,13 @@ public class Workflow {
 			imp = ((Double) map.get(0).get("importance"));
 		}
 
+		sim = getSim(map);
+
+		return spellcorrect.prepareReplacements(sim, imp, vocabPre);
+	}
+
+	private double getSim(List<Map<String, Object>> map) {
+		double sim;
 		if(map.get(0).get("similarity").equals(0))
 		{
 			sim = ((Integer) map.get(0).get("similarity"));
@@ -305,8 +312,29 @@ public class Workflow {
 		{
 			sim = ((Double) map.get(0).get("similarity"));
 		}
+		return sim;
+	}
 
-		return spellcorrect.prepareReplacements(sim, imp, vocabPre);
+	public String sendReplacementData(String json)
+	{
+		List<Map<String, Object>> map = help.jsonStringToList(json);
+
+		double imp, sim;
+
+		if(map.get(0).get("importance").equals(0)) return "";
+
+		if(map.get(0).get("importance").equals(1))
+		{
+			imp = ((Integer) map.get(0).get("importance"));
+		}
+		else
+		{
+			imp = ((Double) map.get(0).get("importance"));
+		}
+
+		sim = getSim(map);
+
+		return help.objectToJsonString(spellcorrect.prepareReplacementData(sim, imp, vocabPre));
 	}
 	
 	public int sendReplacements() {
