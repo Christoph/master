@@ -362,7 +362,7 @@ public class Workflow {
 		computeGroups(client);
 	}
 	
-	public void applyCompositeSize(String json, SocketIOClient client) {
+	public void applyCompositeParams(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 
 		composite.setMaxGroupSize((Integer) map.get(0).get("maxGroupSize"));
@@ -457,27 +457,14 @@ public class Workflow {
 		// Apply
 		prepareSalvaging(client);
 	}
-	
-	public void applyPostLength(int minLength, SocketIOClient client) {
-		// Set threshold
-		postprocess.setMinWordLength(minLength);
-		
-		// Apply
-		prepareSalvaging(client);
-	}
-	
-	public void applyPostAll(Boolean all, SocketIOClient client) {
-		// Set threshold
-		postprocess.setUseAllWords(all);
-		
-		// Apply
-		prepareSalvaging(client);
-	}
-	
-	public void applyPostSplit(Boolean split, SocketIOClient client) {
-		// Set threshold
-		postprocess.setSplitTags(split);
-		
+
+	public void applyPostParams(String json, SocketIOClient client) {
+		List<Map<String, Object>> map = help.jsonStringToList(json);
+
+		postprocess.setMinWordLength((Integer) map.get(0).get("minWordLength"));
+		postprocess.setSplitTags((Boolean) map.get(0).get("split"));
+		postprocess.setUseAllWords((Boolean) map.get(0).get("useAll"));
+
 		// Apply
 		prepareSalvaging(client);
 	}

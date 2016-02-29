@@ -257,7 +257,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 			                   AckRequest arg2) throws Exception {
 				
-				work.applyCompositeSize(data, client);
+				work.applyCompositeParams(data, client);
 			}
 		});
 
@@ -282,31 +282,13 @@ public class Transport {
 				work.applyPostReplace(data, client);
 			}
 		});
-		
-		server.addEventListener("applyPostLength", String.class, new DataListener<String>() {
+
+		server.addEventListener("applyPostParams", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 			                   AckRequest arg2) throws Exception {
 				
-				work.applyPostLength(Integer.parseInt(data), client);
-			}
-		});
-		
-		server.addEventListener("applyPostAll", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyPostAll(Boolean.parseBoolean(data), client);
-			}
-		});
-		
-		server.addEventListener("applyPostSplit", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyPostSplit(Boolean.parseBoolean(data), client);
+				work.applyPostParams(data, client);
 			}
 		});
 		
