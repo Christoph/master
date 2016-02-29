@@ -252,33 +252,15 @@ public class Transport {
 			}
 		});
 		
-		server.addEventListener("applyCompMaxSize", String.class, new DataListener<String>() {
+		server.addEventListener("applyCompositeParams", String.class, new DataListener<String>() {
 
 			public void onData(SocketIOClient client, String data,
 			                   AckRequest arg2) throws Exception {
 				
-				work.applyCompositeSize(Integer.parseInt(data), client);
-			}
-		});
-		
-		server.addEventListener("applyCompMinOcc", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-
-				work.applyCompositeOcc(Integer.parseInt(data), client);
+				work.applyCompositeSize(data, client);
 			}
 		});
 
-		server.addEventListener("applyCompSplit", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyCompositeSplit(Boolean.parseBoolean(data), client);
-			}
-		});
-		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Postprocessing - Dataset 4
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////

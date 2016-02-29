@@ -362,25 +362,12 @@ public class Workflow {
 		computeGroups(client);
 	}
 	
-	public void applyCompositeSize(int maxGroupSize, SocketIOClient client) {
-		// Set max group size
-		composite.setMaxGroupSize(maxGroupSize);
+	public void applyCompositeSize(String json, SocketIOClient client) {
+		List<Map<String, Object>> map = help.jsonStringToList(json);
 
-		// Apply
-		computeGroups(client);
-	}
-	
-	public void applyCompositeSplit(Boolean split, SocketIOClient client) {
-		// Set max group size
-		composite.setSplit(split);
-
-		// Apply
-		computeGroups(client);
-	}
-	
-	public void applyCompositeOcc(int minOcc, SocketIOClient client) {
-		// Set min occurrence
-		composite.setMinOccurrence(minOcc);
+		composite.setMaxGroupSize((Integer) map.get(0).get("maxGroupSize"));
+		composite.setMinOccurrence((Integer) map.get(0).get("minOcc"));
+		composite.setSplit((Boolean) map.get(0).get("split"));
 
 		// Apply
 		computeGroups(client);
