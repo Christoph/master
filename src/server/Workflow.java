@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.corundumstudio.socketio.SocketIOClient;
 
+import core.json.gridHistory;
 import processing.Composite;
 import processing.Helper;
 import processing.Postprocess;
@@ -540,53 +541,8 @@ public class Workflow {
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Finalize
+	// Header
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	/*
-	public String sendFinal()
-	{
-		Supplier<List<gridOverview>> supplier = ArrayList::new;
-
-	    List<gridOverview> tags_filtered = tags.stream()
-	    		.map(p -> new gridOverview(p.getTag(4), p.getItem(), p.getImportance()))
-	    		.collect(Collectors.toCollection(supplier));
-	    
-	    return help.objectToJsonString(tags_filtered); 
-	}
-	public String sendHistory(String data) {
-		
-	    Supplier<List<gridHistory>> supplier = () -> new ArrayList<gridHistory>();
-	    List<Integer> ids = new ArrayList<Integer>();
-	    
-	    if(data.length()>0)
-	    {
-		    String[] temp = data.split(",");
-		    
-		    for(String s: temp)
-		    {
-		    	ids.add(Integer.parseInt(s));
-		    }
-	    }
-	    
-	    List<gridHistory> tags_filtered = tags.stream()
-	    		.filter(p -> ids.contains(p.getID()) )
-	    		.map(p -> new gridHistory(p.getHistory()))
-	    		.collect(Collectors.toCollection(supplier));
-	    
-	    return help.objectToJsonString(tags_filtered);
-	}
-	*/
-	
-	public String sendOverview(int index) {
-		Supplier<List<gridOverview>> supplier = ArrayList::new;
-
-		List<gridOverview> tags_filtered = tags.stream()
-				.map(p -> new gridOverview(p.getTag(index), p.getItem(), p.getImportance()))
-				.collect(Collectors.toCollection(supplier));
-
-		return help.objectToJsonString(tags_filtered);
-	}
 
 	public Boolean getSimpleRun() {
 		return simpleRun;
@@ -602,5 +558,35 @@ public class Workflow {
 
 	public void setComplexRun(Boolean complexRun) {
 		this.complexRun = complexRun;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Overview
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public String sendOverview(int index) {
+		Supplier<List<gridOverview>> supplier = ArrayList::new;
+
+		List<gridOverview> tags_filtered = tags.stream()
+				.map(p -> new gridOverview(p.getTag(index), p.getItem(), p.getImportance()))
+				.collect(Collectors.toCollection(supplier));
+
+		return help.objectToJsonString(tags_filtered);
+	}
+
+	public String sendHistory(String json) {
+		List<Map<String, Object>> map = help.jsonStringToList(json);
+
+		String tag = (String) map.get(0).get("tag");
+		String item = (String) map.get(0).get("item");
+
+	    Supplier<List<gridHistory>> supplier = () -> new ArrayList<>();
+
+	    List<gridHistory> tags_filtered = tags.stream()
+	    		.filter(p -> p.getTag().contains(tag) && p.getItem().contains(item) )
+	    		.map(p -> new gridHistory(p.getTag()))
+	    		.collect(Collectors.toCollection(supplier));
+
+	    return help.objectToJsonString(tags_filtered.subList(0,1));
 	}
 }

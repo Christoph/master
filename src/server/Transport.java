@@ -344,7 +344,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 			                   AckRequest arg2) throws Exception {
 				
-				//client.sendEvent("history", work.sendHistory(data));
+				client.sendEvent("history", work.sendHistory(data));
 			}
 		});
 	}
