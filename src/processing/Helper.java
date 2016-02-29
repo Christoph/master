@@ -72,18 +72,21 @@ public class Helper {
 	}
 
 	public void correctTags(List<Tag> tags, int index) {
-		// "TagName": Weight
+		// "Tag+Item": Weight
 		Map<String, Double> song_name = new HashMap<String, Double>();
 
-		Set<String> used = new HashSet<String>();
+		Set<String> used = new HashSet<>();
 
 		double weight;
-		String key;
+		String key, item ,tag;
 
 		// Find maximum Weight per song/tag pair
 		for (Tag t : tags) {
-			key = t.getTag(index);
+			tag = t.getTag(index);
 			weight = t.getWeight();
+			item = t.getItem();
+
+			key = tag+item;
 
 			if (song_name.containsKey(key)) {
 				if (weight > song_name.get(key)) {
@@ -96,8 +99,11 @@ public class Helper {
 
 		// Resolve multiple equal tags per song
 		for (Tag t : tags) {
-			key = t.getTag(index);
+			tag = t.getTag(index);
 			weight = t.getWeight();
+			item = t.getItem();
+
+			key = tag+item;
 
 			if (song_name.containsKey(key)) {
 				if (weight < song_name.get(key)) {
@@ -121,7 +127,7 @@ public class Helper {
 		String tag = "";
 		String name[] = null;
 		List<Tag> tt = new ArrayList<Tag>();
-		List<String> temp;
+		List<String> temp = new ArrayList<>();
 
 		for (Tag t : tags) {
 			tag = t.getTag(index);
@@ -131,10 +137,10 @@ public class Helper {
 
 				// Replace current name by the first word
 				t.setTag(index, name[0]);
+				temp = t.getTag();
 
 				// Create for all other words new entries
 				for (int i = 1; i < name.length; i++) {
-					temp = t.getTag();
 					temp.set(index, name[i]);
 
 					tt.add(new Tag(t.getItem(), temp, t.getWeight(), t.getImportance()));

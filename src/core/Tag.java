@@ -13,7 +13,7 @@ public class Tag {
 		super();
 		this.item = item;
 		this.tag = new ArrayList<String>();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 5; i++) {
 			this.tag.add("");
 		}
 		this.tag.set(0, name);

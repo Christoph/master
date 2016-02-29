@@ -40,18 +40,7 @@ public class Grouping {
 			for (int i = 0; i < tags.size(); i++) {
 				words = psim.create_word_gram(tags.get(i).getTag(index));
 				
-				for (int j = 0; j < words.size(); j++) {
-					key = words.get(j);
-					
-					if (word_count.containsKey(key)) {
-						value = word_count.get(key);
-						
-						// Sum up the count
-						word_count.put(key, value + 1);
-					} else {
-						word_count.put(key, 1l);
-					}
-				}
+				countOccurrences(word_count, words);
 			}
 			
 			// Create a n-word-gram/total occurrences
@@ -92,16 +81,21 @@ public class Grouping {
 			}
 			
 			// Normalize
-			for (String s : groups_strength.keySet()) {
-				strength = (groups_strength.get(s) - min_o) / (max_o - min_o);
-				
-				// Add all groups
-				if (jaccard_groups.containsKey(strength)) {
-					jaccard_groups.get(strength).put(s, size);
-				} else {
-					jaccard_groups.put(strength, new HashMap<String, Integer>());
-					jaccard_groups.get(strength).put(s, size);
-				}
+			normalizeGroup(jaccard_groups, size, groups_strength, min_o, max_o);
+		}
+	}
+
+	private void normalizeGroup(TreeMap<Double, Map<String, Integer>> jaccard_groups, int size, Map<String, Double> groups_strength, double min_o, double max_o) {
+		double strength;
+		for (String s : groups_strength.keySet()) {
+			strength = (groups_strength.get(s) - min_o) / (max_o - min_o);
+
+			// Add all groups
+			if (jaccard_groups.containsKey(strength)) {
+				jaccard_groups.get(strength).put(s, size);
+			} else {
+				jaccard_groups.put(strength, new HashMap<String, Integer>());
+				jaccard_groups.get(strength).put(s, size);
 			}
 		}
 	}
@@ -125,18 +119,7 @@ public class Grouping {
 			for (int i = 0; i < tags.size(); i++) {
 				words = psim.create_word_n_gram(tags.get(i).getTag(index), size);
 
-				for (int j = 0; j < words.size(); j++) {
-					key = words.get(j);
-
-					if (word_count.containsKey(key)) {
-						value = word_count.get(key);
-
-						// Sum up the count
-						word_count.put(key, value + 1);
-					} else {
-						word_count.put(key, 1l);
-					}
-				}
+				countOccurrences(word_count, words);
 			}
 
 			// Find min and max
@@ -146,16 +129,38 @@ public class Grouping {
 			}
 
 			// Normalize
-			for (String s : word_count.keySet()) {
-				strength = (word_count.get(s) - min_o) / (max_o - min_o);
+			normalizeFrequent(frequent_groups, size, word_count, min_o, max_o);
+		}
+	}
 
-				// Add all groups
-				if (frequent_groups.containsKey(strength)) {
-					frequent_groups.get(strength).put(s, size);
-				} else {
-					frequent_groups.put(strength, new HashMap<String, Integer>());
-					frequent_groups.get(strength).put(s, size);
-				}
+	private void normalizeFrequent(TreeMap<Double, Map<String, Integer>> frequent_groups, int size, Map<String, Long> word_count, double min_o, double max_o) {
+		double strength;
+		for (String s : word_count.keySet()) {
+			strength = (word_count.get(s) - min_o) / (max_o - min_o);
+
+			// Add all groups
+			if (frequent_groups.containsKey(strength)) {
+				frequent_groups.get(strength).put(s, size);
+			} else {
+				frequent_groups.put(strength, new HashMap<String, Integer>());
+				frequent_groups.get(strength).put(s, size);
+			}
+		}
+	}
+
+	private void countOccurrences(Map<String, Long> word_count, List<String> words) {
+		String key;
+		long value;
+		for (int j = 0; j < words.size(); j++) {
+			key = words.get(j);
+
+			if (word_count.containsKey(key)) {
+				value = word_count.get(key);
+
+				// Sum up the count
+				word_count.put(key, value + 1);
+			} else {
+				word_count.put(key, 1l);
 			}
 		}
 	}

@@ -45,7 +45,7 @@ public class Composite {
 		setMinOccurrence(2);
 		jaccardThreshold = 0.70;
 		frequentThreshold = 0.35;
-		split = true;
+		split = false;
 	}
 	
 	public void group(List<Tag> tags) {
@@ -105,7 +105,7 @@ public class Composite {
 
 		if (split) {
 			help.splitCompositeTag(tags, index);
-			//help.correctTags(tags, index);
+			help.correctTags(tags, index);
 		}
 	}
 	
@@ -183,7 +183,7 @@ public class Composite {
 		for (double d : temp.keySet()) {
 			hist.add(new gridHist(d, temp.get(d)));
 		}
-		
+
 		return hist;
 	}
 

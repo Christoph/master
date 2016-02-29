@@ -21,6 +21,7 @@ public class Spellcorrect {
 
 	// Classes
 	private Similarity similarity = new Similarity();
+	private Helper help = new Helper();
 
 	// Parameters
 	private double spellImportance;
@@ -54,9 +55,10 @@ public class Spellcorrect {
 		similarity.applyClusters(tags, vocabPre, spellSimilarity, spellImportance, vocabClusters, index);
 		
 		// Resolve errors from replacements
-		//help.correctTags(tags, 2);
+		help.correctTags(tags, 2);
 	}
 	
+
 	private void createSimClusters() {
 		String head = "";
 		String key = "";
