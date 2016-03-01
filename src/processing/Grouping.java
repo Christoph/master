@@ -11,22 +11,22 @@ public class Grouping {
 	
 	PlainStringSimilarity psim = new PlainStringSimilarity();
 
-	public void group(List<? extends Tag> tags, int maxGroupSize, int minOccurrence, TreeMap<Double, Map<String, Integer>> jaccard_groups, TreeMap<Double, Map<String, Integer>> frequent_groups, int index) {
+	public void group(List<? extends Tag> tags, int maxGroupSize, int minOccurrence, TreeMap<Double, Map<String, Integer>> jaccard_groups, TreeMap<Double, Map<String, Integer>> frequent_groups) {
 		jaccard_groups.clear();
 		frequent_groups.clear();
 		
 		// Compute groups
-		jaccard(tags, maxGroupSize, minOccurrence, jaccard_groups, index);
-		frequency(tags, maxGroupSize, frequent_groups, index);
+		jaccard(tags, maxGroupSize, minOccurrence, jaccard_groups);
+		frequency(tags, maxGroupSize, frequent_groups);
 	}
 	
-	private void jaccard(List<? extends Tag> tags, int maxGroupSize, int minOccurrence, TreeMap<Double, Map<String, Integer>> jaccard_groups, int index) {
+	private void jaccard(List<? extends Tag> tags, int maxGroupSize, int minOccurrence, TreeMap<Double, Map<String, Integer>> jaccard_groups) {
 		for (int size = maxGroupSize; size >= 2; size--) {
 			/////////////////////////////////
 			// Variables		
-			Map<String, Long> word_count = new HashMap<String, Long>();
-			Map<String, Long> word_groups = new HashMap<String, Long>();
-			Map<String, Double> groups_strength = new HashMap<String, Double>();
+			Map<String, Long> word_count = new HashMap<>();
+			Map<String, Long> word_groups = new HashMap<>();
+			Map<String, Double> groups_strength = new HashMap<>();
 
 			List<String> words;
 			long value;
@@ -38,14 +38,14 @@ public class Grouping {
 			
 			// Create a 1-word-gram/total occurrences dict
 			for (int i = 0; i < tags.size(); i++) {
-				words = psim.create_word_gram(tags.get(i).getTag(index));
+				words = psim.create_word_gram(tags.get(i).getTag());
 				
 				countOccurrences(word_count, words);
 			}
 			
 			// Create a n-word-gram/total occurrences
 			for (int i = 0; i < tags.size(); i++) {
-				words = psim.create_word_n_gram(tags.get(i).getTag(index), size);
+				words = psim.create_word_n_gram(tags.get(i).getTag(), size);
 				
 				for (int j = 0; j < words.size(); j++) {
 					key = words.get(j);
@@ -54,9 +54,9 @@ public class Grouping {
 						value = word_groups.get(key);
 						
 						// Sum up the count
-						word_groups.put(key, value + 1l);
+						word_groups.put(key, value + 1L);
 					} else {
-						word_groups.put(key, 1l);
+						word_groups.put(key, 1L);
 					}
 				}
 			}
@@ -94,13 +94,13 @@ public class Grouping {
 			if (jaccard_groups.containsKey(strength)) {
 				jaccard_groups.get(strength).put(s, size);
 			} else {
-				jaccard_groups.put(strength, new HashMap<String, Integer>());
+				jaccard_groups.put(strength, new HashMap<>());
 				jaccard_groups.get(strength).put(s, size);
 			}
 		}
 	}
-	
-	private void frequency(List<? extends Tag> tags, int maxGroupSize, TreeMap<Double, Map<String, Integer>> frequent_groups, int index) {
+
+	private void frequency(List<? extends Tag> tags, int maxGroupSize, TreeMap<Double, Map<String, Integer>> frequent_groups) {
 		for (int size = maxGroupSize; size >= 2; size--) {
 			/////////////////////////////////
 			// Variables
@@ -108,16 +108,14 @@ public class Grouping {
 
 			List<String> words;
 
-			long value;
-			double strength, min_o = 1, max_o = 0;
-			String key;
+			double min_o = 1, max_o = 0;
 
 			/////////////////////////////////
 			// Algorithm
 			
 			// Create a n-word-gram/total occurrences
 			for (int i = 0; i < tags.size(); i++) {
-				words = psim.create_word_n_gram(tags.get(i).getTag(index), size);
+				words = psim.create_word_n_gram(tags.get(i).getTag(), size);
 
 				countOccurrences(word_count, words);
 			}

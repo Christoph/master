@@ -16,17 +16,14 @@ import core.json.gridHist;
 
 public class Composite {
 
-	// Variables
-	int index;
-	
 	// Classes
 	private Grouping grouping = new Grouping();
 	private Helper help = new Helper();
 	
 	// Data
-	private List<String> whitelist = new ArrayList<String>();
-	private TreeMap<Double, Map<String, Integer>> jaccard_groups = new TreeMap<Double, Map<String, Integer>>();
-	private TreeMap<Double, Map<String, Integer>> frequent_groups = new TreeMap<Double, Map<String, Integer>>();
+	private List<String> whitelist = new ArrayList<>();
+	private TreeMap<Double, Map<String, Integer>> jaccard_groups = new TreeMap<>();
+	private TreeMap<Double, Map<String, Integer>> frequent_groups = new TreeMap<>();
 	
 	
 	// Parameters
@@ -36,9 +33,9 @@ public class Composite {
 	private int minOccurrence = 0;
 	private Boolean split;
 
-	public Composite(int index) {
+	public Composite(List<String> whitelistGroups) {
 		// Set working copy
-		this.index = index;
+		this.whitelist = whitelistGroups;
 		
 		// Default parameters
 		maxGroupSize = 3;
@@ -49,35 +46,18 @@ public class Composite {
 	}
 	
 	public void group(List<Tag> tags) {
-		grouping.group(tags, maxGroupSize, getMinOccurrence(), jaccard_groups, frequent_groups, index - 1);
+		grouping.group(tags, maxGroupSize, getMinOccurrence(), jaccard_groups, frequent_groups);
 	}
 
 	public void applyGroups(List<Tag> tags) {
-		TreeMap<Double, Map<String, Integer>> temp = new TreeMap<Double, Map<String, Integer>>();
-		List<String> subs = new ArrayList<String>();
+		TreeMap<Double, Map<String, Integer>> temp = new TreeMap<>();
+		List<String> subs = new ArrayList<>();
 		String name;
 		
 		// Merge all relevant items into one list
-		for (Entry<Double, Map<String, Integer>> st : frequent_groups.descendingMap().entrySet()) {
-			if (st.getKey() >= frequentThreshold) {
-				if (!temp.containsKey(st.getKey())) {
-					temp.put(st.getKey(), new HashMap<String, Integer>());
-				}
-				
-				temp.get(st.getKey()).putAll(st.getValue());
-			}
-		}
-		
-		for (Entry<Double, Map<String, Integer>> st : jaccard_groups.descendingMap().entrySet()) {
-			if (st.getKey() >= jaccardThreshold) {
-				if (!temp.containsKey(st.getKey())) {
-					temp.put(st.getKey(), new HashMap<String, Integer>());
-				}
-				
-				temp.get(st.getKey()).putAll(st.getValue());
-			}
-		}
-		
+		addRelevantItems(temp, frequent_groups, frequentThreshold);
+		addRelevantItems(temp, jaccard_groups, jaccardThreshold);
+
 		// Add substitutions in correct order: whitelist > highest group + highest strength > rest
 		if (whitelist.size() > 0) {
 			subs.addAll(whitelist);
@@ -89,7 +69,7 @@ public class Composite {
 		
 		// Replace word groups
 		for (Tag t : tags) {
-			name = t.getTag(index);
+			name = t.getTag();
 
 			for (String s : subs) {
 				if (name.contains(s)) {
@@ -97,29 +77,41 @@ public class Composite {
 				}
 			}
 
-			t.setTag(index, name);
+			t.setTag(name);
 		}
 
 		// Find groups without spaces hardrock -> hard-rock
-		findGroups(tags, index);
+		findGroups(tags);
 
 		if (split) {
-			help.splitCompositeTag(tags, index);
-			help.correctTags(tags, index);
+			help.splitCompositeTag(tags);
+			help.correctTags(tags);
+		}
+	}
+
+	private void addRelevantItems(TreeMap<Double, Map<String, Integer>> temp, TreeMap<Double, Map<String, Integer>> groups, double threshold) {
+		for (Entry<Double, Map<String, Integer>> st : groups.descendingMap().entrySet()) {
+			if (st.getKey() >= threshold) {
+				if (!temp.containsKey(st.getKey())) {
+					temp.put(st.getKey(), new HashMap<>());
+				}
+
+				temp.get(st.getKey()).putAll(st.getValue());
+			}
 		}
 	}
 	
-	private void findGroups(List<Tag> tags, int index) {
-		Set<String> groups = new HashSet<String>();
-		Map<String, String> subs = new HashMap<String, String>();
+	private void findGroups(List<Tag> tags) {
+		Set<String> groups = new HashSet<>();
+		Map<String, String> subs = new HashMap<>();
 		
-		String words[] = null;
-		String name = "";
+		String words[];
+		String name;
 		
 		//Find all groups
 		for (Tag t : tags) {
-			if (t.getTag(index).contains("-")) {
-				words = t.getTag(index).split(" ");
+			if (t.getTag().contains("-")) {
+				words = t.getTag().split(" ");
 				
 				for (String s : words) {
 					if (s.contains("-")) {
@@ -136,7 +128,7 @@ public class Composite {
 		
 		//Find groups
 		for (Tag t : tags) {
-			name = t.getTag(index);
+			name = t.getTag();
 			words = name.split(" +");
 			
 			for (String s : words) {
@@ -145,13 +137,15 @@ public class Composite {
 				}
 			}
 			
-			t.setTag(index, name);
+			t.setTag(name);
 		}
 	}
 
 	public List<gridGroup> prepareUniqueGroups() {
-		List<gridGroup> temp = new ArrayList<gridGroup>();
-		
+		List<gridGroup> temp = new ArrayList<>();
+
+
+
 		for (Entry<Double, Map<String, Integer>> s : jaccard_groups.descendingMap().entrySet()) {
 			for (Entry<String, Integer> e : Helper.sortByComparatorInteger(s.getValue()).entrySet()) {
 				temp.add(new gridGroup(e.getKey(), s.getKey()));
@@ -162,7 +156,7 @@ public class Composite {
 	}
 
 	public List<gridGroup> prepareFrequentGroups() {
-		List<gridGroup> temp = new ArrayList<gridGroup>();
+		List<gridGroup> temp = new ArrayList<>();
 		
 		for (Entry<Double, Map<String, Integer>> s : frequent_groups.descendingMap().entrySet()) {
 			for (Entry<String, Integer> e : Helper.sortByComparatorInteger(s.getValue()).entrySet()) {
@@ -173,32 +167,25 @@ public class Composite {
 	}
 	
 	public List<gridHist> prepareFrequentHistogram() {
-		List<gridHist> hist = new ArrayList<gridHist>();
-		Map<Double, Long> temp = new HashMap<Double, Long>();
-
-		for (Entry<Double, Map<String, Integer>> c : frequent_groups.entrySet()) {
-			temp.put(c.getKey(), (long) c.getValue().size());
-		}
-
-		for (double d : temp.keySet()) {
-			hist.add(new gridHist(d, temp.get(d)));
-		}
-
-		return hist;
+		return getGridHists(frequent_groups);
 	}
 
 	public List<gridHist> prepareUniqueHistogram() {
-		List<gridHist> hist = new ArrayList<gridHist>();
-		Map<Double, Long> temp = new HashMap<Double, Long>();
+		return getGridHists(jaccard_groups);
+	}
 
-		for (Entry<Double, Map<String, Integer>> c : jaccard_groups.entrySet()) {
+	private List<gridHist> getGridHists(TreeMap<Double, Map<String, Integer>> groups) {
+		List<gridHist> hist = new ArrayList<>();
+		Map<Double, Long> temp = new HashMap<>();
+
+		for (Entry<Double, Map<String, Integer>> c : groups.entrySet()) {
 			temp.put(c.getKey(), (long) c.getValue().size());
 		}
 
 		for (double d : temp.keySet()) {
 			hist.add(new gridHist(d, temp.get(d)));
 		}
-		
+
 		return hist;
 	}
 

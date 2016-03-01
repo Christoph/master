@@ -15,9 +15,8 @@ import core.json.gridRepl;
 public class Spellcorrect {
 	
 	// Variables
-	private int index;
-	private Map<String, Map<String, Double>> vocabClusters = new HashMap<String, Map<String, Double>>();
-	private TreeMap<Double, Map<String, String>> simClusters = new TreeMap<Double, Map<String, String>>();
+	private Map<String, Map<String, Double>> vocabClusters = new HashMap<>();
+	private TreeMap<Double, Map<String, String>> simClusters = new TreeMap<>();
 
 	// Classes
 	private Similarity similarity = new Similarity();
@@ -31,8 +30,7 @@ public class Spellcorrect {
 	private List<String> whitelistGroups;
 	private List<String> whitelistVocab;
 
-	public Spellcorrect(int index, List<String> whitelistWords, List<String> whitelistGroups, List<String> whitelistVocab) {
-		this.index = index;
+	public Spellcorrect(List<String> whitelistWords, List<String> whitelistGroups, List<String> whitelistVocab) {
 		this.whitelistWords = whitelistWords;
 		this.whitelistGroups = whitelistGroups;
 		this.whitelistVocab = whitelistVocab;
@@ -52,17 +50,17 @@ public class Spellcorrect {
 	}
 	
 	public void applyClustering(List<Tag> tags, Map<String, Double> vocabPre) {
-		similarity.applyClusters(tags, vocabPre, spellSimilarity, spellImportance, vocabClusters, index);
+		similarity.applyClusters(tags, vocabPre, spellSimilarity, spellImportance, vocabClusters);
 		
 		// Resolve errors from replacements
-		help.correctTags(tags, 2);
+		help.correctTags(tags);
 	}
 	
 
 	private void createSimClusters() {
-		String head = "";
-		String key = "";
-		double value = 0;
+		String head;
+		String key;
+		double value;
 		
 		simClusters.clear();
 		
@@ -77,7 +75,7 @@ public class Spellcorrect {
 					simClusters.get(value).put(head, key);
 				} else {
 					// Create inner map
-					simClusters.put(value, new HashMap<String, String>());
+					simClusters.put(value, new HashMap<>());
 
 					// Add first line
 					simClusters.get(value).put(head, key);
@@ -87,7 +85,7 @@ public class Spellcorrect {
 	}
 	
 	public List<gridCluster> prepareCluster(String tag, Map<String, Double> vocabPre) {
-		List<gridCluster> tags_filtered = new ArrayList<gridCluster>();
+		List<gridCluster> tags_filtered = new ArrayList<>();
 
 		if (vocabClusters.containsKey(tag)) {
 			for (String s : vocabClusters.get(tag).keySet()) {
@@ -99,8 +97,8 @@ public class Spellcorrect {
 	}
 	
 	public List<gridHist> prepareSimilarityHistogram() {
-		List<gridHist> hist = new ArrayList<gridHist>();
-		Map<Double, Long> temp = new HashMap<Double, Long>();
+		List<gridHist> hist = new ArrayList<>();
+		Map<Double, Long> temp = new HashMap<>();
 
 		for (Entry<String, Map<String, Double>> c : vocabClusters.entrySet()) {
 			for (double s : c.getValue().values()) {

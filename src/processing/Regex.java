@@ -15,40 +15,28 @@ public class Regex {
 	protected String name = "";
 	protected String join = "";
 
-	protected String ls = "";
-	protected String ms = "";
-	protected String rs = "";
-	
 	protected String e = "";
 
-	protected List<String> numbers = new ArrayList<String>();
-	protected List<String> replacements;
-	protected List<String> out = new ArrayList<String>();
+	protected List<String> out = new ArrayList<>();
 	protected Helper help = new Helper();
-
-	// Debug output
-	protected Boolean print_groups = true;
 
 	// Create a Pattern object
 	protected Pattern r, l;
 
 	// Pattern dict
-	protected Map<String, Pattern> patterns_greedy = new HashMap<String, Pattern>();
-	protected Map<String, Pattern> patterns_conservative = new HashMap<String, Pattern>();
+	protected Map<String, Pattern> patterns_greedy = new HashMap<>();
+	protected Map<String, Pattern> patterns_conservative = new HashMap<>();
 
 	// Now create matcher object.
 	protected Matcher mr, ml;
 
-	// Temporary
-
-
-	public void apply(List<Tag> tags, List<String> salvageWords, Map<String, String> salvagedData, Boolean useAllWords, int index) {
+	public void apply(List<Tag> tags, List<String> salvageWords, Map<String, String> salvagedData, Boolean useAllWords) {
 		String tag, newTag;
-		List<String> temp = new ArrayList<String>();
+		List<String> temp = new ArrayList<>();
 		String[] words;
 
 		for (Tag t : tags) {
-			tag = t.getTag(index);
+			tag = t.getTag();
 			temp.clear();
 			newTag = "";
 
@@ -73,13 +61,13 @@ public class Regex {
 				}
 			}
 
-			t.setTag(index, newTag);
+			t.setTag(newTag);
 		}
 
-		help.removeTagsWithoutWords(tags, index);
+		help.removeTagsWithoutWords(tags);
 	}
 
-	public void findImportantWords(Map<String, Double> vocabPost, List<String> importantWords, Map<String, String> salvagedData, double threshold, int minWordLength, int index) {
+	public void findImportantWords(Map<String, Double> vocabPost, List<String> importantWords, Map<String, String> salvagedData, double threshold, int minWordLength) {
 		salvagedData.clear();
 
 		System.out.print(vocabPost.size());
@@ -176,7 +164,7 @@ public class Regex {
 		}
 	}
 	
-	public List<String> replaceCustomWords(List<String> importantWords, List<String> patterns, int index) {
+	public List<String> replaceCustomWords(List<String> importantWords, List<String> patterns) {
 		String[] row;
 		
 		for (String s : patterns) {

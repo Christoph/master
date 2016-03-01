@@ -30,7 +30,7 @@ public class Helper {
 	StringLengthComparator slc = new StringLengthComparator();
 	PlainStringSimilarity psim = new PlainStringSimilarity();
 
-	public void wordFrequency(List<? extends Tag> tags, Map<String, Long> tagsFrequency, int index) {
+	public void wordFrequency(List<Tag> tags, Map<String, Long> tagsFrequency) {
 		String key;
 		long value;
 		long max_value = 0;
@@ -40,7 +40,7 @@ public class Helper {
 
 		// Summing up the occurrences
 		for (Tag t : tags) {
-			key = t.getTag(index);
+			key = t.getTag();
 			words = psim.create_word_gram(key);
 
 			for (String s : words) {
@@ -61,19 +61,19 @@ public class Helper {
 		}
 	}
 
-	public void setToLowerCase(List<Tag> tags, int index) {
+	public void setToLowerCase(List<Tag> tags) {
 		String updated;
 
 		for (Tag tag : tags) {
-			updated = tag.getTag(index).toLowerCase();
+			updated = tag.getTag().toLowerCase();
 
-			tag.setTag(index, updated);
+			tag.setTag(updated);
 		}
 	}
 
-	public void correctTags(List<Tag> tags, int index) {
+	public void correctTags(List<Tag> tags) {
 		// "Tag+Item": Weight
-		Map<String, Double> song_name = new HashMap<String, Double>();
+		Map<String, Double> song_name = new HashMap<>();
 
 		Set<String> used = new HashSet<>();
 
@@ -82,7 +82,7 @@ public class Helper {
 
 		// Find maximum Weight per song/tag pair
 		for (Tag t : tags) {
-			tag = t.getTag(index);
+			tag = t.getTag();
 			weight = t.getWeight();
 			item = t.getItem();
 
@@ -99,7 +99,7 @@ public class Helper {
 
 		// Resolve multiple equal tags per song
 		for (Tag t : tags) {
-			tag = t.getTag(index);
+			tag = t.getTag();
 			weight = t.getWeight();
 			item = t.getItem();
 
@@ -108,42 +108,41 @@ public class Helper {
 			if (song_name.containsKey(key)) {
 				if (weight < song_name.get(key)) {
 					// This marks the tag object as removable
-					t.setTag(index, "");
+					t.setTag("");
 				}
 
 				if (weight == song_name.get(key) && used.contains(key)) {
 					// This marks the tag object as removable
-					t.setTag(index, "");
+					t.setTag("");
 				} else if (weight == song_name.get(key)) {
 					used.add(key);
 				}
 			}
 		}
 
-		removeTagsWithoutWords(tags, index);
+		removeTagsWithoutWords(tags);
 	}
 
-	public void splitCompositeTag(List<Tag> tags, int index) {
-		String tag = "";
-		String name[] = null;
-		List<Tag> tt = new ArrayList<Tag>();
-		List<String> temp = new ArrayList<>();
+	public void splitCompositeTag(List<Tag> tags) {
+		String tag;
+		String name[];
+		List<Tag> tt = new ArrayList<>();
+		String temp;
 
 		for (Tag t : tags) {
-			tag = t.getTag(index);
+			tag = t.getTag();
 
 			if (tag.contains(" ")) {
 				name = tag.split(" ");
 
 				// Replace current name by the first word
-				t.setTag(index, name[0]);
-				temp = t.getTag();
+				t.setTag(name[0]);
 
 				// Create for all other words new entries
 				for (int i = 1; i < name.length; i++) {
-					temp.set(index, name[i]);
+					temp = name[i];
 
-					tt.add(new Tag(t.getItem(), temp, t.getWeight(), t.getImportance()));
+					tt.add(new Tag(t.getId(), t.getItem(), temp, t.getWeight(), t.getImportance()));
 				}
 			}
 		}
@@ -151,155 +150,27 @@ public class Helper {
 		if (tt.size() > 0) {
 			// Add all new entries
 			tags.addAll(tt);
-
-			// Fix IDs and so on
-			//correctTags(tags);
 		}
 	}
 
-	public void removeTagsWithoutWords(List<Tag> tags, int index) {
+	public void removeTagsWithoutWords(List<Tag> tags) {
 		// Remove tags with no words
 		for (Iterator<? extends Tag> iterator = tags.iterator(); iterator.hasNext(); ) {
 			Tag t = iterator.next();
 
-			if (t.getTag(index).length() == 0) {
+			if (t.getTag().length() == 0) {
 				iterator.remove();
 			}
 		}
 	}
-	  
-	  /*
-	  public void removeRareWords(List<? extends Tag> tags, int minOccu, Boolean verbose)
-	  {
-		  	Map<String, Integer> occu = new HashMap<String, Integer>();
-		  	List<String> output = new ArrayList<String>();
-		  	String key = "";
-		  	String temp = "";
-		  	
-		  	int value;
-		    List<String> words;
-			TagsToCSV writer;
-		  	
-		  	for(Tag t: tags)
-		  	{
-		  		words = psim.create_word_gram(t.getTagName());
-		  		
-		  		for(int j = 0; j < words.size(); j++)
-				{
-					key = words.get(j); 	
-		  			
-			  		if(occu.containsKey(key))
-					{
-						value = occu.get(key);
-						
-						// Sum up the count
-						occu.put(key, value + 1);
-					}
-					else
-					{
-						occu.put(key, 1);
-					}
-				}
-		  	}
-		  	
-		    // Remove tags which occurs less than minOccu times 
-		  	for(Tag t: tags)
-		    {
-		  		words = psim.create_word_gram(t.getTagName());
-		  		temp = "";
-				
-		  		for(int j = 0; j < words.size(); j++)
-				{
-					key = words.get(j); 	
-		  			
-					if(occu.get(key) < minOccu)
-					{
-						// Remove word
-						words.set(j, "");
-						
-						// Add to output list
-						output.add(key);
-					}
-				}
-		  		
-		  		// Rebuild tags and save them
-		  		for(String s: words)
-		  		{
-		  			if(s.length()>0)
-		  			{
-		  				temp = temp + s + " ";
-		  			}
-		  		}
-		  		
-		  		t.setTagName(temp.trim());
-		    }
-		  	
-			// Write temp files
-		    if(verbose) 
-	    	{
-		    	writer = new TagsToCSV("filtered_words.csv");
-		    	writer.writeFilteredWords(output);
-	    	}
-	  }
-	  
-	  public void removeRareComposites(List<? extends Tag> tags, int minOccu, Boolean verbose)
-	  {
-		  	Map<String, Integer> occu = new HashMap<String, Integer>();
-		  	List<String> output = new ArrayList<String>();
-		  	String key = "";
-		  	int value;
-			TagsToCSV writer;
-		  	
-		  	for(Tag t: tags)
-		  	{
-		  		key = t.getTagName();
-	  			
-		  		if(occu.containsKey(key))
-				{
-					value = occu.get(key);
-					
-					// Sum up the count
-					occu.put(key, value + 1);
-				}
-				else
-				{
-					occu.put(key, 1);
-				}
-		  	}
-		  	
-		    // Remove tags which occurs less than minOccu times 
-		  	for(Tag t: tags)
-		    {
-				key = t.getTagName(); 	
-	  			
-				if(occu.get(key) < minOccu)
-				{
-					// Remove tag
-					t.setTagName("");
-					
-					// Add to output list
-					output.add(key);
-				}
-		    }
-		  	
-		  	//removeTagsWithoutWords(tags);
-		  	
-			// Write temp files
-		    if(verbose) 
-	    	{
-		    	writer = new TagsToCSV("filtered_composites.csv");
-		    	writer.writeFilteredWords(output);
-	    	}
-	  }
-	  */
 
-	public void removeBlacklistedWords(List<Tag> tags, List<String> blacklist, int index) {
+	public void removeBlacklistedWords(List<Tag> tags, List<String> blacklist) {
 		String name, uptated;
 		List<String> list;
 		PlainStringSimilarity psim = new PlainStringSimilarity();
 
 		for (Tag tag : tags) {
-			name = tag.getTag(index);
+			name = tag.getTag();
 			uptated = "";
 
 			list = psim.create_word_gram(name);
@@ -310,14 +181,14 @@ public class Helper {
 				uptated = uptated + " " + s;
 			}
 
-			tag.setTag(index, uptated.trim());
+			tag.setTag(uptated.trim());
 		}
 
-		removeTagsWithoutWords(tags, index);
+		removeTagsWithoutWords(tags);
 	}
 
 	public List<String> getImportantTags(Map<String, Double> vocabPost, double threshold) {
-		List<String> temp = new ArrayList<String>();
+		List<String> temp = new ArrayList<>();
 
 		for (Entry<String, Double> e : vocabPost.entrySet()) {
 			if (e.getValue() >= threshold) {
@@ -328,18 +199,18 @@ public class Helper {
 		return temp;
 	}
 
-	public void removeDashes(List<Tag> tags, int index) {
+	public void removeDashes(List<Tag> tags) {
 		String name = "";
 
 		for (Tag t : tags) {
-			name = t.getTag(index);
+			name = t.getTag();
 
-			t.setTag(index, name.replaceAll("\\s*-\\s*", " "));
+			t.setTag(name.replaceAll("\\s*-\\s*", " "));
 		}
 	}
 
 	public <T> String objectToJsonString(List<T> list) {
-		List<String> out = new ArrayList<String>();
+		List<String> out = new ArrayList<>();
 
 		//ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		ObjectWriter ow = new ObjectMapper().writer();
@@ -361,89 +232,31 @@ public class Helper {
 	public List<Map<String, Object>> jsonStringToList(String json) {
 		ObjectMapper mapper = new ObjectMapper();
 
-		List<Map<String, Object>> map = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> map = new ArrayList<>();
 
 		try {
 			// convert JSON string to Map
 			map = mapper.readValue(json, new TypeReference<List<Map<String, Object>>>() {
 			});
 
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return map;
 	}
 
-	public String objectToJsonString(Map<String, Double> list) {
-		List<String> out = new ArrayList<String>();
-
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		//ObjectWriter ow = new ObjectMapper().writer();
-
-		try {
-
-			for (Entry<String, Double> entry : list.entrySet()) {
-				out.add(ow.writeValueAsString(entry));
-			}
-
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-
-		return out.toString();
-	}
-	  
-	  /*
-	  public void extractCorrectGroupsAndWords(List<? extends Tag> tags, String marker, List<String> groups, List<String> words, int index)
-	  {
-		  List<String> temp;
-		  String shingle[];
-		  String word;
-		  
-		  for(Tag t: tags)
-		  {
-			  temp = psim.create_word_gram(t.getTag(index));
-			  
-			  for(String s: temp)
-			  {
-				  if(s.contains(marker))
-				  {
-					  word = s.replace(marker, " ");
-					  
-					  if(!groups.contains(word)) groups.add(word);
-					  
-					  shingle = word.split(" ");
-					  
-					  for(String w: shingle)
-					  {
-						  if(!words.contains(w)) words.add(w);
-					  }
-				  }
-			  }
-		  }
-	  }
-	  */
-
 	public static Map<String, Double> sortByComparatorDouble(Map<String, Double> unsorted) {
 
 		// Variables
-		Map<String, Double> sortedMap = new LinkedHashMap<String, Double>();
+		Map<String, Double> sortedMap = new LinkedHashMap<>();
 
 		// Convert map to list
 		List<Map.Entry<String, Double>> list =
-				new LinkedList<Map.Entry<String, Double>>(unsorted.entrySet());
+				new LinkedList<>(unsorted.entrySet());
 
 		// Sort list with comparator
 		// Sort in decreasing order
-		Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
-			public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
-				return (o2.getValue()).compareTo(o1.getValue());
-			}
-		});
+		Collections.sort(list, (o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
 
 		// Convert sorted map back to a map
 		for (Iterator<Map.Entry<String, Double>> it = list.iterator(); it.hasNext(); ) {
@@ -457,19 +270,15 @@ public class Helper {
 	public static Map<String, Integer> sortByComparatorInteger(Map<String, Integer> unsorted) {
 
 		// Variables
-		Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
+		Map<String, Integer> sortedMap = new LinkedHashMap<>();
 
 		// Convert map to list
 		List<Map.Entry<String, Integer>> list =
-				new LinkedList<Map.Entry<String, Integer>>(unsorted.entrySet());
+				new LinkedList<>(unsorted.entrySet());
 
 		// Sort list with comparator
 		// Sort in decreasing order
-		Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-			public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-				return (o2.getValue()).compareTo(o1.getValue());
-			}
-		});
+		Collections.sort(list, (o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
 
 		// Convert sorted map back to a map
 		for (Iterator<Map.Entry<String, Integer>> it = list.iterator(); it.hasNext(); ) {
@@ -480,21 +289,26 @@ public class Helper {
 		return sortedMap;
 	}
 
-	public void provideTagsForNextStep(List<Tag> tags, int index) {
-		for (Tag t : tags) {
-			t.setTag(index + 1, t.getTag(index));
-		}
-	}
+	public void resetStep(List<List<Tag>> tags, int index) {
+		// Clear old values
+		tags.get(index).clear();
 
-	public void resetStep(List<Tag> tags, int index) {
-		for (Tag t : tags) {
-			t.setTag(index, t.getTag(index - 1));
+		// The clone
+		List<Tag> temp = new ArrayList<>();
+
+		// Cloning
+		for(Tag t: tags.get(index-1))
+		{
+			temp.add(new Tag(t));
 		}
+
+		// Copy From previous step
+		tags.set(index, temp);
 	}
 
 	public List<gridHist> prepareVocabHistogram(Map<String, Double> vocab) {
-		List<gridHist> hist = new ArrayList<gridHist>();
-		Map<Double, Long> temp = new HashMap<Double, Long>();
+		List<gridHist> hist = new ArrayList<>();
+		Map<Double, Long> temp = new HashMap<>();
 
 		for (Entry<String, Double> c : vocab.entrySet()) {
 			if (temp.containsKey(c.getValue())) {
@@ -513,7 +327,7 @@ public class Helper {
 	}
 
 	public List<gridVocab> prepareVocab(Map<String, Double> vocab) {
-		List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
+		List<gridVocab> tags_filtered = new ArrayList<>();
 
 		for (String s : vocab.keySet()) {
 			tags_filtered.add(new gridVocab(s, vocab.get(s)));

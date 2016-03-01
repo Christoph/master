@@ -2,7 +2,7 @@ package server;
 
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.corundumstudio.socketio.SocketIOClient;
@@ -14,16 +14,14 @@ import processing.Postprocess;
 import processing.Preprocess;
 import processing.Spellcorrect;
 import processing.Weighting;
-import core.ImportCSV;
 import core.Tag;
 import core.json.gridOverview;
 
 public class Workflow {
 	
 	// Initialize variables and classes
-	private static final Logger log = Logger.getLogger("Logger");
+	//private static final Logger log = Logger.getLogger("Logger");
 	private Helper help = new Helper();
-	private ImportCSV im = new ImportCSV();
 	private Weighting weighting = new Weighting();
 
 	private int count, packages;
@@ -37,63 +35,79 @@ public class Workflow {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// Data
-	private List<Tag> tags = new ArrayList<>();
+	private List<List<Tag>> tags = new ArrayList<>();
 
 	private Map<String, Long> tagsFreq = new HashMap<>();
 	private Map<String, Double> vocabPre = new HashMap<>();
 	private Map<String, Double> vocabPost = new HashMap<>();
 
-	private List<String> whitelistWords = new ArrayList<String>();
-	private List<String> whitelistGroups = new ArrayList<String>();
-	private List<String> whitelistVocab = new ArrayList<String>();
-	private List<String> blacklist = new ArrayList<String>();
+	private List<String> whitelistWords = new ArrayList<>();
+	private List<String> whitelistGroups = new ArrayList<>();
+	private List<String> whitelistVocab = new ArrayList<>();
+	private List<String> blacklist = new ArrayList<>();
 
 	// Initialize pipeline steps
 	// The index selects the working copy. 0 = original
-	private Preprocess preprocess = new Preprocess(1, blacklist);
-	private Spellcorrect spellcorrect = new Spellcorrect(2, whitelistWords, whitelistGroups, whitelistVocab);
-	private Composite composite = new Composite(3);
-	private Postprocess postprocess = new Postprocess(4);
+	private Preprocess preprocess;
+	private Spellcorrect spellcorrect;
+	private Composite composite;
+	private Postprocess postprocess;
+
+	public Workflow() {
+		for (int i = 0; i < 5; i++) {
+			tags.add(new ArrayList<>());
+		}
+
+		preprocess = new Preprocess(blacklist);
+		spellcorrect = new Spellcorrect(whitelistWords, whitelistGroups, whitelistVocab);
+		composite = new Composite(whitelistGroups);
+		postprocess = new Postprocess();
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Load data - Dataset 0
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	private int globalID = 0;
+
 	public void applyImportedData(String json) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		String item, name, weight;
-		
+
 		if (packages < count) {
 			packages++;
 
 			for (Map<String, Object> aMap : map) {
 				try {
+					// Starting ID with 1 to be database ready
+					globalID++;
+
 					item = String.valueOf(aMap.get("item"));
 					name = String.valueOf(aMap.get("tag"));
 					weight = String.valueOf(aMap.get("weight"));
 
-					tags.add(new Tag(item, name, Double.parseDouble(weight), 0));
+					tags.get(0).add(new Tag(globalID, item, name, Double.parseDouble(weight), 0));
 				} catch (Exception e) {
 					System.out.println(aMap);
 				}
-				
 			}
 		}
 	}
 	
 	public void applyImportedDataFinished(SocketIOClient client) {
 		// Set to lower case
-		help.setToLowerCase(tags, 0);
+		help.setToLowerCase(tags.get(0));
 		
 		// Compute word frequency
-		help.wordFrequency(tags, tagsFreq, 0);
+		help.wordFrequency(tags.get(0), tagsFreq);
 		
 		client.sendEvent("preFilterData", sendPreFilterHistogram());
 		client.sendEvent("preFilterGrid", sendPreFilter());
 	}
 	
 	public void applyImportedDataCount(int count) {
-		tags.clear();
+		tags.get(0).clear();
+		globalID = 0;
 		
 		this.count = count;
 		this.packages = 0;
@@ -111,22 +125,22 @@ public class Workflow {
 		help.resetStep(tags, 1);
 
 		// Remove tags
-		preprocess.applyFilter(tags, tagsFreq);
+		preprocess.applyFilter(tags.get(1), tagsFreq);
 		
 		// Remove characters
-		preprocess.removeCharacters(tags);
+		preprocess.removeCharacters(tags.get(1));
 		
 		// Replace characters
-		preprocess.replaceCharacters(tags);
+		preprocess.replaceCharacters(tags.get(1));
 
 		// Remove blacklisted words
-		help.removeBlacklistedWords(tags, blacklist, 1);
+		help.removeBlacklistedWords(tags.get(1), blacklist);
 
 		// Create preFilter vocab
-		weighting.vocab(tags, vocabPre, 1);
+		weighting.vocab(tags.get(1), vocabPre);
 
 		// Cluster words for further use
-		spellcorrect.clustering(tags, vocabPre, whitelistVocab);
+		spellcorrect.clustering(tags.get(1), vocabPre, whitelistVocab);
 		
 		client.sendEvent("similarities", sendSimilarityHistogram());
 		client.sendEvent("vocab", sendVocab());
@@ -205,10 +219,10 @@ public class Workflow {
 		help.resetStep(tags, 2);
 
 		// Apply clustering
-		spellcorrect.applyClustering(tags, vocabPre);
+		spellcorrect.applyClustering(tags.get(2), vocabPre);
 		
 		// Compute further data
-		composite.group(tags);
+		composite.group(tags.get(2));
 		
 		client.sendEvent("frequentGroups", sendFrequentGroups());
 		client.sendEvent("frequentData", sendFrequentHistogram());
@@ -361,10 +375,10 @@ public class Workflow {
 		help.resetStep(tags, 3);
 		
 		// Compute all word groups
-		composite.applyGroups(tags);
+		composite.applyGroups(tags.get(3));
 
 		// Provide further data
-		weighting.vocab(tags, vocabPost, 3);
+		weighting.vocab(tags.get(3), vocabPost);
 
 		client.sendEvent("postFilterGrid", sendPostVocab());
 		client.sendEvent("postFilterData", sendPostVocabHistogram());
@@ -465,7 +479,7 @@ public class Workflow {
 	public void applySalvaging(SocketIOClient client) {
 		help.resetStep(tags, 4);
 		
-		postprocess.applySalvaging(tags);
+		postprocess.applySalvaging(tags.get(4));
 		
 		client.sendEvent("output", sendOverview(4));
 	}
@@ -567,26 +581,30 @@ public class Workflow {
 	public String sendOverview(int index) {
 		Supplier<List<gridOverview>> supplier = ArrayList::new;
 
-		List<gridOverview> tags_filtered = tags.stream()
-				.map(p -> new gridOverview(p.getTag(index), p.getItem(), p.getImportance()))
+		List<gridOverview> tags_filtered = tags.get(index).stream()
+				.map(p -> new gridOverview(p.getTag(), p.getItem(), p.getImportance()))
 				.collect(Collectors.toCollection(supplier));
 
 		return help.objectToJsonString(tags_filtered);
 	}
 
 	public String sendHistory(String json) {
+		List<gridHistory> tags_filtered = new ArrayList<>();
+
+		/*
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 
 		String tag = (String) map.get(0).get("tag");
 		String item = (String) map.get(0).get("item");
 
-	    Supplier<List<gridHistory>> supplier = () -> new ArrayList<>();
+	    Supplier<List<gridHistory>> supplier = ArrayList::new;
 
 	    List<gridHistory> tags_filtered = tags.stream()
 	    		.filter(p -> p.getTag().contains(tag) && p.getItem().contains(item) )
 	    		.map(p -> new gridHistory(p.getTag()))
 	    		.collect(Collectors.toCollection(supplier));
+	    		*/
 
-	    return help.objectToJsonString(tags_filtered.subList(0,1));
+	    return help.objectToJsonString(tags_filtered);
 	}
 }

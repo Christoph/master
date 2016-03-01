@@ -13,9 +13,6 @@ import core.json.gridVocab;
 
 public class Preprocess {
 
-	// Variables
-	int index;
-	
 	// Classes
 	private PlainStringSimilarity psim = new PlainStringSimilarity();
 	
@@ -25,9 +22,8 @@ public class Preprocess {
 	private List<String> replace = new ArrayList<String>();
 	private List<String> blacklist;
 	
-	public Preprocess(int index, List<String> blacklist) {
+	public Preprocess(List<String> blacklist) {
 		// Set working copy
-		this.index = index;
 		this.blacklist = blacklist;
 
 		// Default parameters
@@ -43,13 +39,13 @@ public class Preprocess {
 
 	// Remove all words below the threshold
 	public void applyFilter(List<Tag> tags, Map<String, Long> tagsFreq) {
-		String key = "";
-		String temp = "";
+		String key;
+		String temp;
 		List<String> words;
 
 		if (tagsFreq.size() > 0) {
 			for (Tag t : tags) {
-				words = psim.create_word_gram(t.getTag(index));
+				words = psim.create_word_gram(t.getTag());
 				temp = "";
 				
 				for (int j = 0; j < words.size(); j++) {
@@ -69,7 +65,7 @@ public class Preprocess {
 					}
 				}
 
-				t.setTag(index, temp.trim());
+				t.setTag(temp.trim());
 			}
 		}
 	}
@@ -78,14 +74,14 @@ public class Preprocess {
 		String updated;
 
 		for (Tag tag : tags) {
-			updated = tag.getTag(index);
+			updated = tag.getTag();
 
 			// Remove characters
 			if (remove.length() > 0) {
 				updated = updated.replaceAll("[" + Pattern.quote(remove) + "]", "");
 			}
 
-			tag.setTag(index, updated);
+			tag.setTag(updated);
 		}
 	}
 
@@ -93,7 +89,7 @@ public class Preprocess {
 		String updated;
 
 		for (Tag tag : tags) {
-			updated = tag.getTag(index);
+			updated = tag.getTag();
 
 			if (replace.size() > 0) {
 				// Replace characters
@@ -103,12 +99,12 @@ public class Preprocess {
 				}
 			}
 
-			tag.setTag(index, updated);
+			tag.setTag(updated);
 		}
 	}
 
 	public List<gridVocab> preparePreFilter(Map<String, Long> tagsFreq) {
-		List<gridVocab> tags_filtered = new ArrayList<gridVocab>();
+		List<gridVocab> tags_filtered = new ArrayList<>();
 
 		for (String s : tagsFreq.keySet()) {
 			tags_filtered.add(new gridVocab(s, tagsFreq.get(s)));
@@ -118,8 +114,8 @@ public class Preprocess {
 	}
 	
 	public List<gridHistFreq> preparePreFilterHistogram(Map<String, Long> tagsFreq) {
-		List<gridHistFreq> hist = new ArrayList<gridHistFreq>();
-		Map<Long, Long> temp = new HashMap<Long, Long>();
+		List<gridHistFreq> hist = new ArrayList<>();
+		Map<Long, Long> temp = new HashMap<>();
 
 		for (Entry<String, Long> c : tagsFreq.entrySet()) {
 			if (temp.containsKey(c.getValue())) {
@@ -178,4 +174,6 @@ public class Preprocess {
 			}
 		}
 	}
+
+
 }

@@ -13,10 +13,10 @@ public class Similarity {
 	
 	PlainStringSimilarity psim = new PlainStringSimilarity();
 	
-	Map<String, HashSet<String>> tag_2grams = new HashMap<String, HashSet<String>>();
-	Map<String, String> substitution_list = new HashMap<String, String>();
+	Map<String, HashSet<String>> tag_2grams = new HashMap<>();
+	Map<String, String> substitution_list = new HashMap<>();
 	
-	Map<String, Double> sortedVocab = new HashMap<String, Double>();
+	Map<String, Double> sortedVocab = new HashMap<>();
 
 	public void withVocab(List<Tag> tags, Map<String, Double> vocab, List<String> whiteList, int minWordSize, Map<String, Map<String, Double>> clusters) {
 		/////////////////////////////////
@@ -89,7 +89,7 @@ public class Similarity {
 		}
 	}
 	
-	public void applyClusters(List<Tag> tags, Map<String, Double> vocabPre, double simThreshold, double impThreshold, Map<String, Map<String, Double>> clusters, int index) {
+	public void applyClusters(List<Tag> tags, Map<String, Double> vocabPre, double simThreshold, double impThreshold, Map<String, Map<String, Double>> clusters) {
 		List<String> words;
 		String new_tag, high, word;
 		double similarity, similarity2;
@@ -128,36 +128,14 @@ public class Similarity {
 		}
 
 		// Resolve substitution chains
-		for (Entry<String, String> e : substitution_list.entrySet()) {
-			high = e.getValue();
-
-			// Find chains
-			if (substitution_list.containsKey(high)) {
-				word = substitution_list.get(high);
-
-				// Resolve chain
-				// A -> B; B -> C   =>   A -> C; B -> C
-				e.setValue(word);
-			}
-		}
+		resolveChain();
 
 		// Apply this a second time, due to the fact that some chains are not resolved in one run
-		for (Entry<String, String> e : substitution_list.entrySet()) {
-			high = e.getValue();
-
-			// Find chains
-			if (substitution_list.containsKey(high)) {
-				word = substitution_list.get(high);
-
-				// Resolve chain
-				// A -> B; B -> C   =>   A -> C; B -> C
-				e.setValue(word);
-			}
-		}
+		resolveChain();
 
 		// Replace tags corresponding to the substitution map
 		for (Tag t : tags) {
-			words = psim.create_word_gram(t.getTag(index));
+			words = psim.create_word_gram(t.getTag());
 			new_tag = "";
 
 			for (String w : words) {
@@ -168,22 +146,37 @@ public class Similarity {
 				}
 			}
 
-			t.setTag(index, new_tag.trim());
+			t.setTag(new_tag.trim());
+		}
+	}
+
+	private void resolveChain() {
+		String high;
+		String word;
+		for (Entry<String, String> e : substitution_list.entrySet()) {
+			high = e.getValue();
+
+			// Find chains
+			if (substitution_list.containsKey(high)) {
+				word = substitution_list.get(high);
+
+				// Resolve chain
+				// A -> B; B -> C   =>   A -> C; B -> C
+				e.setValue(word);
+			}
 		}
 	}
 
 	private void findCluster(Map<String, Double> sortedVocab, String high, Map<String, Map<String, Double>> clusters) {
 		HashSet<String> h1, h2;
 		double similarity;
-		Map<String, Double> cluster = new HashMap<String, Double>();
+		Map<String, Double> cluster = new HashMap<>();
 		
 		// Compute 2-gram character set of the most important word
 		h2 = tag_2grams.get(high);
 
 		// Iterate over all less important words
 		for (String word : sortedVocab.keySet()) {
-			similarity = 0;
-
 			h1 = tag_2grams.get(word);
 
 			// Compute distance
