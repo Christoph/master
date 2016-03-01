@@ -591,19 +591,40 @@ public class Workflow {
 	public String sendHistory(String json) {
 		List<gridHistory> tags_filtered = new ArrayList<>();
 
-		/*
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 
 		String tag = (String) map.get(0).get("tag");
 		String item = (String) map.get(0).get("item");
+		int id = 0;
+		List<String> temp = new ArrayList<>(5);
 
-	    Supplier<List<gridHistory>> supplier = ArrayList::new;
+		temp.add("");
+		temp.add("");
+		temp.add("");
+		temp.add("");
+		temp.add("");
 
-	    List<gridHistory> tags_filtered = tags.stream()
-	    		.filter(p -> p.getTag().contains(tag) && p.getItem().contains(item) )
-	    		.map(p -> new gridHistory(p.getTag()))
-	    		.collect(Collectors.toCollection(supplier));
-	    		*/
+		// Get ID
+		for(Tag t: tags.get(3))
+		{
+			if(t.getTag().equals(tag) && t.getItem().equals(item))
+			{
+				id = t.getId();
+			}
+		}
+
+		for(int i = 0; i < 5; i++)
+		{
+			for(Tag t: tags.get(i))
+			{
+				if(t.getId() == id)
+				{
+					temp.set(i, t.getTag());
+				}
+			}
+		}
+
+		tags_filtered.add(new gridHistory(temp));
 
 	    return help.objectToJsonString(tags_filtered);
 	}
