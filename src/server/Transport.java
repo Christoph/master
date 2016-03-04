@@ -17,6 +17,8 @@ public class Transport {
 	}
 
 	private void sendParams(SocketIOClient client) {
+		client.sendEvent("isRunning", work.sendStatus());
+
 		// Preprocessing
 		client.sendEvent("preFilterParams", work.sendPreFilterParams());
 		client.sendEvent("preRemoveParams", work.sendPreRemoveParams());

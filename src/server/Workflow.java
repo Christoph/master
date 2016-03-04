@@ -53,6 +53,8 @@ public class Workflow {
 	private Composite composite;
 	private Postprocess postprocess;
 
+	private Boolean running = false;
+
 	public Workflow() {
 		for (int i = 0; i < 5; i++) {
 			tags.add(new ArrayList<>());
@@ -69,6 +71,10 @@ public class Workflow {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private int globalID = 0;
+
+	public String sendStatus() {
+		return running.toString();
+	}
 
 	public void applyImportedData(String json) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
@@ -103,6 +109,8 @@ public class Workflow {
 		
 		client.sendEvent("preFilterData", sendPreFilterHistogram());
 		client.sendEvent("preFilterGrid", sendPreFilter());
+
+		running = true;
 	}
 	
 	public void applyImportedDataCount(int count) {
