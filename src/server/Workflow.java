@@ -425,7 +425,8 @@ public class Workflow {
 		client.sendEvent("postFilterData", sendPostVocabHistogram());
 		
 		client.sendEvent("output", sendOverview(3));
-		
+		client.sendEvent("outputState", "Multiword Tags");
+
 		prepareSalvaging(client);
 	}
 	
@@ -504,16 +505,12 @@ public class Workflow {
 		
 		client.sendEvent("postImportantWords", sendPostImportant());
 		client.sendEvent("postSalvageWords", sendPostSalvage());
-
-		setSimpleRun(true);
 	}
 	
 	public void computeSalvaging(SocketIOClient client) {
 		postprocess.computeSalvaging(vocabPost);
 		
 		client.sendEvent("postSalvageData", sendPostSalvageData());
-
-		setComplexRun(true);
 	}
 	
 	// Apply changes
@@ -523,6 +520,7 @@ public class Workflow {
 		postprocess.applySalvaging(tags.get(4));
 		
 		client.sendEvent("output", sendOverview(4));
+		client.sendEvent("outputState", "Finalize");
 	}
 	
 	public void applyPostFilter(double threshold, SocketIOClient client) {
