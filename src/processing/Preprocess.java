@@ -17,24 +17,13 @@ public class Preprocess {
 	private PlainStringSimilarity psim = new PlainStringSimilarity();
 	
 	// Parameters
-	private int filter;
-	private String remove;
+	private int filter = 0;
+	private String remove = "";
 	private List<String> replace = new ArrayList<String>();
 	private List<String> blacklist;
 	
 	public Preprocess(List<String> blacklist) {
-		// Set working copy
 		this.blacklist = blacklist;
-
-		// Default parameters
-		replace.add("-, ");
-		replace.add("_, ");
-		replace.add(":, ");
-		replace.add(";, ");
-		replace.add("/, ");
-		
-		setFilter(0);
-		setRemove("'");
 	}
 
 	// Remove all words below the threshold
@@ -151,6 +140,11 @@ public class Preprocess {
 
 	public List<String> getReplace() {
 		return replace;
+	}
+
+	public void addReplace(String data)
+	{
+		replace.add(data);
 	}
 
 	public void setReplace(List<Map<String, Object>> map) {

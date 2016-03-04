@@ -27,22 +27,15 @@ public class Composite {
 	
 	
 	// Parameters
-	private double jaccardThreshold = 0;
-	private double frequentThreshold = 0;
-	private int maxGroupSize = 0;
-	private int minOccurrence = 0;
-	private Boolean split;
+	private double jaccardThreshold = 1;
+	private double frequentThreshold = 1;
+	private int maxGroupSize = 3;
+	private int minOccurrence = 1;
+	private Boolean split = false;
 
 	public Composite(List<String> whitelistGroups) {
 		// Set working copy
 		this.whitelist = whitelistGroups;
-		
-		// Default parameters
-		maxGroupSize = 3;
-		setMinOccurrence(2);
-		jaccardThreshold = 0.70;
-		frequentThreshold = 0.35;
-		split = false;
 	}
 	
 	public void group(List<Tag> tags) {

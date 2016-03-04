@@ -121,8 +121,41 @@ public class Workflow {
 		this.packages = 0;
 	}
 
-	public void runAll(SocketIOClient client) {
-		computePreprocessing(client);
+	public void runAll(String data, SocketIOClient client) {
+
+		if(data.equals("default"))
+		{
+			applyDefaults();
+			computePreprocessing(client);
+		}
+
+		if(data.equals("custom"))
+		{
+			computePreprocessing(client);
+		}
+	}
+
+	private void applyDefaults() {
+		// Preprocessing
+		preprocess.addReplace("-, ");
+		preprocess.addReplace("_, ");
+		preprocess.addReplace(":, ");
+		preprocess.addReplace(";, ");
+		preprocess.addReplace("/, ");
+
+		preprocess.setRemove("'");
+
+		// Spell correct
+		spellcorrect.setSpellImportance(0.7);
+		spellcorrect.setSpellSimilarity(0.7);
+		spellcorrect.setMinWordSize(3);
+
+		// Composite
+		composite.setFrequentThreshold(0.35);
+		composite.setJaccardThreshold(0.7);
+
+		// Postprocessing
+		postprocess.setPostFilter(0.25);
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////

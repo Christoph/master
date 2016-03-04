@@ -135,7 +135,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 			                   AckRequest arg2) throws Exception {
 
-				work.runAll(client);
+				work.runAll(data, client);
 			}
 		});
 

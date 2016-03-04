@@ -21,20 +21,12 @@ public class Postprocess {
 	protected Map<String, String> salvagedData = new HashMap<>();
 
 	// Parameters
-	private double postFilter;
-	private int minWordLength;
-	private Boolean useAllWords;
-	private Boolean splitTags;
+	private double postFilter = 1;
+	private int minWordLength = 3;
+	private Boolean useAllWords = false;
+	private Boolean splitTags = false;
 	private List<String> postReplace = new ArrayList<String>();
-	
-	public Postprocess() {
-		// Default parameter
-		minWordLength = 3;
-		postFilter = 0.25;
-		useAllWords = false;
-		splitTags = false;
-	}
-	
+
 	public void initializeSalvaging(Map<String, Double> vocabPost) {
 		// Get important words
 		importantWords = help.getImportantTags(vocabPost, postFilter);
