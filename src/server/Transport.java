@@ -55,35 +55,27 @@ public class Transport {
 		client.sendEvent("preFilterData", work.sendPreFilterHistogram());
 		client.sendEvent("preFilterGrid", work.sendPreFilter());
 
-		if(work.getSimpleRun())
-		{
-			// Send Spell data
-			client.sendEvent("similarities", work.sendSimilarityHistogram());
-			client.sendEvent("vocab", work.sendVocab());
-			client.sendEvent("importance", work.sendPreVocabHistogram());
+		// Send Spell data
+		client.sendEvent("similarities", work.sendSimilarityHistogram());
+		client.sendEvent("vocab", work.sendVocab());
+		client.sendEvent("importance", work.sendPreVocabHistogram());
 
-			// Send Composite data
-			client.sendEvent("frequentGroups", work.sendFrequentGroups());
-			client.sendEvent("frequentData", work.sendFrequentHistogram());
-			client.sendEvent("uniqueGroups", work.sendUniqueGroups());
-			client.sendEvent("uniqueData", work.sendUniqueHistogram());
+		// Send Composite data
+		client.sendEvent("frequentGroups", work.sendFrequentGroups());
+		client.sendEvent("frequentData", work.sendFrequentHistogram());
+		client.sendEvent("uniqueGroups", work.sendUniqueGroups());
+		client.sendEvent("uniqueData", work.sendUniqueHistogram());
 
-			// Send Post data
-			client.sendEvent("postFilterGrid", work.sendPostVocab());
-			client.sendEvent("postFilterData", work.sendPostVocabHistogram());
-			client.sendEvent("output", work.sendOverview(3));
+		// Send Post data
+		client.sendEvent("postFilterGrid", work.sendPostVocab());
+		client.sendEvent("postFilterData", work.sendPostVocabHistogram());
+		client.sendEvent("output", work.sendOverview(3));
+		client.sendEvent("outputState", "Multiword Tags");
 
-			// Send Final data
-			client.sendEvent("postImportantWords", work.sendPostImportant());
-			client.sendEvent("postSalvageWords", work.sendPostSalvage());
-		}
+		// Send Final data
+		client.sendEvent("postImportantWords", work.sendPostImportant());
+		client.sendEvent("postSalvageWords", work.sendPostSalvage());
 
-		if(work.getComplexRun())
-		{
-			// Send Final data
-			client.sendEvent("postSalvageData", work.sendPostSalvageData());
-			client.sendEvent("output", work.sendOverview(4));
-		}
 	}
 	
 	public void initialize() {
