@@ -582,7 +582,7 @@ public class Workflow {
 		Supplier<List<gridOverview>> supplier = ArrayList::new;
 
 		List<gridOverview> tags_filtered = tags.get(index).stream()
-				.map(p -> new gridOverview(p.getTag(), p.getItem(), p.getImportance()))
+				.map(p -> new gridOverview(p.getTag(), p.getItem(), p.getWeight()))
 				.collect(Collectors.toCollection(supplier));
 
 		return help.objectToJsonString(tags_filtered);

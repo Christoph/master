@@ -3,13 +3,13 @@ package core.json;
 public class gridOverview {
 
 	public String tag;
-	public double importance;
+	public double weight;
 	public String item;
 	
 	public gridOverview(String tag, String carrier, double importance) {
 		super();
 		this.tag = tag;
-		this.importance = importance;
+		this.weight = importance;
 		this.item = carrier;
 	}
 
@@ -22,20 +22,12 @@ public class gridOverview {
 		this.tag = tag;
 	}
 
-	public double getImportance() {
-		return importance;
+	public double getWeight() {
+		return weight;
 	}
 
-	public void setImportance(double importance) {
-		this.importance = importance;
-	}
-
-	public String getCarrier() {
-		return item;
-	}
-
-	public void setCarrier(String carrier) {
-		this.item = carrier;
+	public void setWeight(double weight) {
+		this.weight = weight;
 	}
 
 }
