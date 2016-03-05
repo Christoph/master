@@ -109,7 +109,7 @@ public class Transport {
 			public void onData(SocketIOClient client, String data,
 			                   AckRequest arg2) throws Exception {
 				
-				work.applyImportedDataCount(Integer.parseInt(data));
+				work.applyImportedDataCount(Integer.parseInt(data), client);
 			}
 		});
 		

@@ -107,12 +107,15 @@ public class Workflow {
 		client.sendEvent("dataLoaded","");
 	}
 	
-	public void applyImportedDataCount(int count) {
+	public void applyImportedDataCount(int count, SocketIOClient client) {
 		tags.get(0).clear();
 		globalID = 0;
 		
 		this.count = count;
 		this.packages = 0;
+
+		running = false;
+		client.sendEvent("isRunning",sendStatus());
 	}
 
 	public void runAll(String data, SocketIOClient client) {
