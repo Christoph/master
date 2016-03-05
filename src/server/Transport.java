@@ -1,10 +1,7 @@
 package server;
 
-import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.corundumstudio.socketio.listener.ConnectListener;
-import com.corundumstudio.socketio.listener.DataListener;
 
 public class Transport {
 
@@ -80,14 +77,11 @@ public class Transport {
 	
 	public void initialize() {
 		// Connection
-		server.addConnectListener(new ConnectListener() {
+		server.addConnectListener(client -> {
+			System.out.println("Connect");
 
-			public void onConnect(SocketIOClient client) {
-				System.out.println("Connect");
-
-				sendParams(client);
-				sendData(client);
-			}
+			sendParams(client);
+			sendData(client);
 		});
 		
 		
@@ -95,260 +89,85 @@ public class Transport {
 		// Main
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		server.addEventListener("applyImportedData", String.class, new DataListener<String>() {
+		server.addEventListener("applyImportedData", String.class, (client, data, arg2) -> work.applyImportedData(data));
 
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyImportedData(data);
-			}
-		});
-
-		server.addEventListener("applyImportedDataCount", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyImportedDataCount(Integer.parseInt(data), client);
-			}
-		});
+		server.addEventListener("applyImportedDataCount", String.class, (client, data, arg2) -> work.applyImportedDataCount(Integer.parseInt(data), client));
 		
-		server.addEventListener("applyImportedDataFinished", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyImportedDataFinished(client);
-			}
-		});
+		server.addEventListener("applyImportedDataFinished", String.class, (client, data, arg2) -> work.applyImportedDataFinished(client));
 		
-		server.addEventListener("runAll", String.class, new DataListener<String>() {
+		server.addEventListener("runAll", String.class, (client, data, arg2) -> work.runAll(data, client));
 
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
+		server.addEventListener("getParameters", String.class, (client, data, arg2) -> {
 
-				work.runAll(data, client);
-			}
-		});
-
-		server.addEventListener("getParameters", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-
-				sendParams(client);
-				sendData(client);
-			}
+			sendParams(client);
+			sendData(client);
 		});
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Preprocessing
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		// Apply characters to remove
-		server.addEventListener("applyPreRemoveCharacters", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyPreRemove(data, client);
-			}
-		});
+		server.addEventListener("applyPreRemoveCharacters", String.class, (client, data, arg2) -> work.applyPreRemove(data, client));
 		
 		// Apply characters to replace
-		server.addEventListener("applyPreReplaceCharacters", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyPreReplace(data, client);
-			}
-		});
+		server.addEventListener("applyPreReplaceCharacters", String.class, (client, data, arg2) -> work.applyPreReplace(data, client));
 		
 		// Apply dictionary
-		server.addEventListener("applyPreImportedData", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyPreDictionary(data, client);
-			}
-		});
+		server.addEventListener("applyPreImportedData", String.class, (client, data, arg2) -> work.applyPreDictionary(data, client));
 		
 		// Apply filter
-		server.addEventListener("applyPrefilter", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyPreFilter(Integer.parseInt(data), client);
-			}
-		});
+		server.addEventListener("applyPrefilter", String.class, (client, data, arg2) -> work.applyPreFilter(Integer.parseInt(data), client));
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Spell Checking
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		server.addEventListener("applySpellImportedData", String.class, new DataListener<String>() {
+		server.addEventListener("applySpellImportedData", String.class, (client, data, arg2) -> work.applySpellImport(data, client));
 
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
+		server.addEventListener("applySpellCorrect", String.class, (client, data, arg2) -> work.applySpellCorrect(data, client));
 
-				work.applySpellImport(data, client);
-			}
-		});
+		server.addEventListener("applySpellMinWordSize", String.class, (client, data, arg2) -> work.applySpellMinWordSize(Integer.parseInt(data), client));
 
-		server.addEventListener("applySpellCorrect", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-
-				work.applySpellCorrect(data, client);
-			}
-		});
-
-		server.addEventListener("applySpellMinWordSize", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-
-				work.applySpellMinWordSize(Integer.parseInt(data), client);
-			}
-		});
-
-		server.addEventListener("getCluster", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				client.sendEvent("cluster", work.sendCluster(data));
-			}
-		});
+		server.addEventListener("getCluster", String.class, (client, data, arg2) -> client.sendEvent("cluster", work.sendCluster(data)));
 		
-		server.addEventListener("getReplacements", String.class, new DataListener<String>() {
+		server.addEventListener("getReplacements", String.class, (client, data, arg2) -> client.sendEvent("replacements", work.sendReplacements(data)));
 
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				client.sendEvent("replacements", work.sendReplacements(data));
-			}
-		});
-
-		server.addEventListener("getReplacementData", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-
-				client.sendEvent("replacementData", work.sendReplacementData(data));
-			}
-		});
+		server.addEventListener("getReplacementData", String.class, (client, data, arg2) -> client.sendEvent("replacementData", work.sendReplacementData(data)));
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Composites
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		server.addEventListener("applyFrequentThreshold", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyCompositeFrequent(Double.parseDouble(data), client);
-			}
-		});
+		server.addEventListener("applyFrequentThreshold", String.class, (client, data, arg2) -> work.applyCompositeFrequent(Double.parseDouble(data), client));
 		
-		server.addEventListener("applyUniqueThreshold", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyCompositeUnique(Double.parseDouble(data), client);
-			}
-		});
+		server.addEventListener("applyUniqueThreshold", String.class, (client, data, arg2) -> work.applyCompositeUnique(Double.parseDouble(data), client));
 		
-		server.addEventListener("applyCompositeParams", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyCompositeParams(data, client);
-			}
-		});
+		server.addEventListener("applyCompositeParams", String.class, (client, data, arg2) -> work.applyCompositeParams(data, client));
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Postprocessing - Dataset 4
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		server.addEventListener("applyPostFilter", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyPostFilter(Double.parseDouble(data), client);
-			}
-		});
+		server.addEventListener("applyPostFilter", String.class, (client, data, arg2) -> work.applyPostFilter(Double.parseDouble(data), client));
 		
-		server.addEventListener("applyPostReplace", String.class, new DataListener<String>() {
+		server.addEventListener("applyPostReplace", String.class, (client, data, arg2) -> work.applyPostReplace(data, client));
 
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyPostReplace(data, client);
-			}
-		});
-
-		server.addEventListener("applyPostParams", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applyPostParams(data, client);
-			}
-		});
+		server.addEventListener("applyPostParams", String.class, (client, data, arg2) -> work.applyPostParams(data, client));
 		
-		server.addEventListener("applySalvaging", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.applySalvaging(client);
-			}
-		});
+		server.addEventListener("applySalvaging", String.class, (client, data, arg2) -> work.applySalvaging(client));
 		
-		server.addEventListener("computeSalvaging", String.class, new DataListener<String>() {
+		server.addEventListener("computeSalvaging", String.class, (client, data, arg2) -> {
 
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				work.computeSalvaging(client);
-				
-				client.sendEvent("postSalvageData", work.sendPostSalvageData());
-			}
+			work.computeSalvaging(client);
+
+			client.sendEvent("postSalvageData", work.sendPostSalvageData());
 		});
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Rest
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		
-		// Get output data
-		server.addEventListener("getOutputData", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				if (data.equals("output")) {
-					//client.sendEvent("output", work.sendFinal());
-				}
-			}
-		});
-		
 		// Get history data
-		server.addEventListener("getHistory", String.class, new DataListener<String>() {
-
-			public void onData(SocketIOClient client, String data,
-			                   AckRequest arg2) throws Exception {
-				
-				client.sendEvent("history", work.sendHistory(data));
-			}
-		});
+		server.addEventListener("getHistory", String.class, (client, data, arg2) -> client.sendEvent("history", work.sendHistory(data)));
 	}
 }
