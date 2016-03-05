@@ -2,7 +2,6 @@ package server;
 
 import java.util.*;
 import java.util.function.Supplier;
-//import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.corundumstudio.socketio.SocketIOClient;
@@ -20,7 +19,6 @@ import core.json.gridOverview;
 public class Workflow {
 	
 	// Initialize variables and classes
-	//private static final Logger log = Logger.getLogger("Logger");
 	private Helper help = new Helper();
 	private Weighting weighting = new Weighting();
 
@@ -78,34 +76,34 @@ public class Workflow {
 
 		if(preDirty)
 		{
-			System.out.println("pre");
 			computePreprocessing(client);
 
 			preDirty = false;
 			spellDirty = true;
+			System.out.println("pre");
 		}
 
 		if(spellDirty)
 		{
-			System.out.println("spell");
 			computeSpellCorrect(client);
 
 			spellDirty = false;
 			compDirty = true;
+			System.out.println("spell");
 		}
 
 		if(compDirty)
 		{
-			System.out.println("comp");
 			computeGroups(client);
 
 			compDirty = false;
+			System.out.println("comp");
 		}
 
 		if(postDirty)
 		{
-			System.out.println("post");
 			computeSalvaging(client);
+			System.out.println("post");
 		}
 	}
 
@@ -328,9 +326,28 @@ public class Workflow {
 	// Apply changes
 	public void applySpellCorrect(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
+		double imp, sim;
 
-		spellcorrect.setSpellImportance((Double) map.get(0).get("importance"));
-		spellcorrect.setSpellSimilarity((Double) map.get(0).get("similarity"));
+		if(map.get(0).get("importance").equals(1) || map.get(0).get("importance").equals(0))
+		{
+			imp = ((Integer) map.get(0).get("importance"));
+		}
+		else
+		{
+			imp = ((Double) map.get(0).get("importance"));
+		}
+
+		if(map.get(0).get("similarity").equals(1) || map.get(0).get("similarity").equals(0))
+		{
+			sim = ((Integer) map.get(0).get("similarity"));
+		}
+		else
+		{
+			sim = ((Double) map.get(0).get("similarity"));
+		}
+
+		spellcorrect.setSpellImportance(imp);
+		spellcorrect.setSpellSimilarity(sim);
 
 		spellDirty = true;
 	}
@@ -471,7 +488,7 @@ public class Workflow {
 
 		client.sendEvent("postFilterGrid", sendPostVocab());
 		client.sendEvent("postFilterData", sendPostVocabHistogram());
-		
+
 		client.sendEvent("output", sendOverview(3));
 		client.sendEvent("outputState", "Multiword Tags");
 

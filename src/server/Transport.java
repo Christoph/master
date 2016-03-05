@@ -81,8 +81,11 @@ public class Transport {
 		server.addConnectListener(client -> {
 			System.out.println("Connect");
 
-			sendParams(client);
-			sendData(client);
+			if(work.sendStatus().equals("true"))
+			{
+				sendParams(client);
+				sendData(client);
+			}
 		});
 		
 		
