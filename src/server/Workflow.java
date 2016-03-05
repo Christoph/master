@@ -26,6 +26,11 @@ public class Workflow {
 
 	private int count, packages;
 
+	private Boolean preDirty = false;
+	private Boolean spellDirty = false;
+	private Boolean compDirty = false;
+	private Boolean postDirty = false;
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Parameters
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +65,45 @@ public class Workflow {
 		spellcorrect = new Spellcorrect(whitelistWords, whitelistGroups, whitelistVocab);
 		composite = new Composite(whitelistGroups);
 		postprocess = new Postprocess();
+	}
+
+	public void computeWorkflow(SocketIOClient client)
+	{
+		// Send pre filter data
+		client.sendEvent("preFilterData", sendPreFilterHistogram());
+		client.sendEvent("preFilterGrid", sendPreFilter());
+
+		if(preDirty)
+		{
+			System.out.println("pre");
+			computePreprocessing(client);
+
+			preDirty = false;
+			spellDirty = true;
+		}
+
+		if(spellDirty)
+		{
+			System.out.println("spell");
+			computeSpellCorrect(client);
+
+			spellDirty = false;
+			compDirty = true;
+		}
+
+		if(compDirty)
+		{
+			System.out.println("comp");
+			computeGroups(client);
+
+			compDirty = false;
+		}
+
+		if(postDirty)
+		{
+			System.out.println("post");
+			computeSalvaging(client);
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,22 +162,20 @@ public class Workflow {
 		client.sendEvent("isRunning",sendStatus());
 	}
 
-	public void runAll(String data, SocketIOClient client) {
+	public void selectMode(String data, SocketIOClient client) {
 
 		if(data.equals("guided"))
 		{
 			if(!running) applyDefaults();
 
 			client.sendEvent("isGuided","true");
-
-			computePreprocessing(client);
 		}
 
 		if(data.equals("free"))
 		{
 			client.sendEvent("isGuided","false");
 
-			computePreprocessing(client);
+			computeWorkflow(client);
 		}
 
 		running = true;
@@ -172,10 +214,6 @@ public class Workflow {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public void computePreprocessing(SocketIOClient client) {
-		// Send pre filter data
-		client.sendEvent("preFilterData", sendPreFilterHistogram());
-		client.sendEvent("preFilterGrid", sendPreFilter());
-
 		help.resetStep(tags, 1);
 
 		// Remove tags
@@ -199,43 +237,37 @@ public class Workflow {
 		client.sendEvent("similarities", sendSimilarityHistogram());
 		client.sendEvent("vocab", sendVocab());
 		client.sendEvent("importance", sendPreVocabHistogram());
-		
-		computeSpellCorrect(client);
 	}
 	
 	// Apply changes
 	public void applyPreFilter(int threshold, SocketIOClient client) {
 		// Set threshold
 		preprocess.setFilter(threshold);
-		
-		// Apply
-		computePreprocessing(client);
+
+		preDirty = true;
 	}
 	
 	public void applyPreRemove(String chars, SocketIOClient client) {
 		// Set characters for removal
 		preprocess.setRemove(chars);
-		
-		// Apply
-		computePreprocessing(client);
+
+		preDirty = true;
 	}
 	
 	public void applyPreReplace(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		
 		preprocess.setReplace(map);
-		
-		// Apply
-		computePreprocessing(client);
+
+		preDirty = true;
 	}
 	
 	public void applyPreDictionary(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		
 		preprocess.setDictionary(map);
-		
-		// Apply
-		computePreprocessing(client);
+
+		preDirty = true;
 	}
 	
 	// Send Params
@@ -283,8 +315,6 @@ public class Workflow {
 		client.sendEvent("uniqueGroups", sendUniqueGroups());
 		client.sendEvent("uniqueData", sendUniqueHistogram());
 		client.sendEvent("replacements", sendReplacements());
-
-		computeGroups(client);
 	}
 	
 	// Apply changes
@@ -294,8 +324,7 @@ public class Workflow {
 		spellcorrect.setSpellImportance((Double) map.get(0).get("importance"));
 		spellcorrect.setSpellSimilarity((Double) map.get(0).get("similarity"));
 
-		// Apply
-		computeSpellCorrect(client);
+		spellDirty = true;
 	}
 
 	public void applySpellImport(String json, SocketIOClient client) {
@@ -303,16 +332,14 @@ public class Workflow {
 
 		spellcorrect.setDictionary(map);
 
-		// Apply
-		computeSpellCorrect(client);
+		spellDirty = true;
 	}
 
 	public void applySpellMinWordSize(int minWordSize, SocketIOClient client) {
 		// Set minWordSize
 		spellcorrect.setMinWordSize(minWordSize);
 
-		// Apply
-		computeSpellCorrect(client);
+		spellDirty = true;
 	}
 
 	// Send Params
@@ -448,16 +475,14 @@ public class Workflow {
 		// Set threshold
 		composite.setFrequentThreshold(threshold);
 		
-		// Apply
-		computeGroups(client);
+		compDirty = true;
 	}
 	
 	public void applyCompositeUnique(double threshold, SocketIOClient client) {
 		// Set threshold
 		composite.setJaccardThreshold(threshold);
-		
-		// Apply
-		computeGroups(client);
+
+		compDirty = true;
 	}
 	
 	public void applyCompositeParams(String json, SocketIOClient client) {
@@ -467,8 +492,7 @@ public class Workflow {
 		composite.setMinOccurrence((Integer) map.get(0).get("minOcc"));
 		composite.setSplit((Boolean) map.get(0).get("split"));
 
-		// Apply
-		computeGroups(client);
+		compDirty = true;
 	}
 	
 	// Send Params
@@ -540,17 +564,15 @@ public class Workflow {
 		// Set threshold
 		postprocess.setPostFilter(threshold);
 		
-		// Apply
-		prepareSalvaging(client);
+		postDirty = true;
 	}
 	
 	public void applyPostReplace(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		
 		postprocess.setPostReplace(map);
-		
-		// Apply
-		prepareSalvaging(client);
+
+		postDirty = true;
 	}
 
 	public void applyPostParams(String json, SocketIOClient client) {
@@ -560,8 +582,7 @@ public class Workflow {
 		postprocess.setSplitTags((Boolean) map.get(0).get("split"));
 		postprocess.setUseAllWords((Boolean) map.get(0).get("useAll"));
 
-		// Apply
-		prepareSalvaging(client);
+		postDirty = true;
 	}
 	
 	// Send Params

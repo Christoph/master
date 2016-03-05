@@ -95,7 +95,9 @@ public class Transport {
 		
 		server.addEventListener("applyImportedDataFinished", String.class, (client, data, arg2) -> work.applyImportedDataFinished(client));
 		
-		server.addEventListener("runAll", String.class, (client, data, arg2) -> work.runAll(data, client));
+		server.addEventListener("selectMode", String.class, (client, data, arg2) -> work.selectMode(data, client));
+
+		server.addEventListener("computeWorkflow", String.class, (client, data, arg2) -> work.computeWorkflow(client));
 
 		server.addEventListener("getParameters", String.class, (client, data, arg2) -> {
 
