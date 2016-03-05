@@ -102,6 +102,9 @@ public class Workflow {
 		
 		// Compute word frequency
 		help.wordFrequency(tags.get(0), tagsFreq);
+
+		// Send that the data is loaded
+		client.sendEvent("dataLoaded","");
 	}
 	
 	public void applyImportedDataCount(int count) {
