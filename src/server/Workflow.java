@@ -24,7 +24,11 @@ public class Workflow {
 	private Helper help = new Helper();
 	private Weighting weighting = new Weighting();
 
+	private int globalID = 0;
 	private int count, packages;
+
+	private Boolean running = false;
+	private Boolean guided = false;
 
 	private Boolean preDirty = false;
 	private Boolean spellDirty = false;
@@ -54,7 +58,6 @@ public class Workflow {
 	private Composite composite;
 	private Postprocess postprocess;
 
-	private Boolean running = false;
 
 	public Workflow() {
 		for (int i = 0; i < 5; i++) {
@@ -110,12 +113,6 @@ public class Workflow {
 	// Load data - Dataset 0
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private int globalID = 0;
-
-	public String sendStatus() {
-		return running.toString();
-	}
-
 	public void applyImportedData(String json) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 		String item, name, weight;
@@ -168,13 +165,16 @@ public class Workflow {
 		{
 			if(!running) applyDefaults();
 
-			client.sendEvent("isGuided","true");
+			guided = true;
+			client.sendEvent("isGuided",guided.toString());
 		}
 
 		if(data.equals("free"))
 		{
-			client.sendEvent("isGuided","false");
+			guided = false;
+			client.sendEvent("isGuided",guided.toString());
 
+			preDirty = true;
 			computeWorkflow(client);
 		}
 
@@ -209,6 +209,14 @@ public class Workflow {
 		postprocess.setPostFilter(0.25);
 	}
 	
+	public String sendStatus() {
+		return running.toString();
+	}
+
+	public String sendMode() {
+		return guided.toString();
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Preprocessing - Dataset 1
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////

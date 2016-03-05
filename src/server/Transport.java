@@ -15,6 +15,7 @@ public class Transport {
 
 	private void sendParams(SocketIOClient client) {
 		client.sendEvent("isRunning", work.sendStatus());
+		client.sendEvent("isGuided", work.sendMode());
 
 		// Preprocessing
 		client.sendEvent("preFilterParams", work.sendPreFilterParams());
