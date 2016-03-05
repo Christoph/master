@@ -131,6 +131,15 @@ public class Transport {
 			}
 		});
 
+		server.addEventListener("getParameters", String.class, new DataListener<String>() {
+
+			public void onData(SocketIOClient client, String data,
+			                   AckRequest arg2) throws Exception {
+
+				sendParams(client);
+				sendData(client);
+			}
+		});
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Preprocessing
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////

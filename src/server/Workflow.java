@@ -120,14 +120,19 @@ public class Workflow {
 
 	public void runAll(String data, SocketIOClient client) {
 
-		if(data.equals("default"))
+		if(data.equals("guided"))
 		{
-			applyDefaults();
+			if(!running) applyDefaults();
+
+			client.sendEvent("isGuided","true");
+
 			computePreprocessing(client);
 		}
 
-		if(data.equals("custom"))
+		if(data.equals("free"))
 		{
+			client.sendEvent("isGuided","false");
+
 			computePreprocessing(client);
 		}
 
