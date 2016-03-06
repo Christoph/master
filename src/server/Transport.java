@@ -1,6 +1,5 @@
 package server;
 
-import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 
 public class Transport {
@@ -13,81 +12,16 @@ public class Transport {
 		this.server = server;
 	}
 
-	private void sendParams(SocketIOClient client) {
-		System.out.println("params");
 
-		client.sendEvent("dataLoaded", work.sendDataLoaded());
-		client.sendEvent("isRunning", work.sendStatus());
-
-		// Preprocessing
-		client.sendEvent("preFilterParams", work.sendPreFilterParams());
-		client.sendEvent("preRemoveParams", work.sendPreRemoveParams());
-		client.sendEvent("preReplaceParams", work.sendPreReplaceParams());
-		client.sendEvent("preDictionaryParams", work.sendPreDictionaryParams());
-
-		// Spell correct
-		client.sendEvent("spellImportance", work.sendSpellImportanceParams());
-		client.sendEvent("spellSimilarity", work.sendSpellSimilarityParams());
-		client.sendEvent("spellMinWordSize", work.sendSpellMinWordSizeParams());
-		client.sendEvent("spellDictionaryParams", work.sendSpellDictionaryParams());
-
-		// Composite
-		client.sendEvent("compFrequentParams", work.sendCompFrequentParams());
-		client.sendEvent("compUniqueParams", work.sendCompUniqueParams());
-		client.sendEvent("compSizeParams", work.sendCompSizeParams());
-		client.sendEvent("compOccParams", work.sendCompOccParams());
-		client.sendEvent("compSplitParams", work.sendCompSplitParams());
-		
-		// Postprocess
-		client.sendEvent("postFilterParams", work.sendPostFilterParams());
-		client.sendEvent("postAllParams", work.sendPostAllParams());
-		client.sendEvent("postReplaceParams", work.sendPostReplaceParams());
-		client.sendEvent("postLengthParams", work.sendPostLengthParams());
-		client.sendEvent("postSplitParams", work.sendPostSplitParams());
-	}
-
-	private void sendData(SocketIOClient client)
-	{
-		// Main
-		client.sendEvent("mainData", work.sendOverview(0));
-
-		// Send Pre data
-		client.sendEvent("preFilterData", work.sendPreFilterHistogram());
-		client.sendEvent("preFilterGrid", work.sendPreFilter());
-
-		// Send Spell data
-		client.sendEvent("similarities", work.sendSimilarityHistogram());
-		client.sendEvent("vocab", work.sendVocab());
-		client.sendEvent("importance", work.sendPreVocabHistogram());
-
-		// Send Composite data
-		client.sendEvent("frequentGroups", work.sendFrequentGroups());
-		client.sendEvent("frequentData", work.sendFrequentHistogram());
-		client.sendEvent("uniqueGroups", work.sendUniqueGroups());
-		client.sendEvent("uniqueData", work.sendUniqueHistogram());
-
-		// Send Post data
-		client.sendEvent("postFilterGrid", work.sendPostVocab());
-		client.sendEvent("postFilterData", work.sendPostVocabHistogram());
-		client.sendEvent("output", work.sendOverview(3));
-		client.sendEvent("outputState", "Multiword Tags");
-
-		// Send Final data
-		client.sendEvent("postImportantWords", work.sendPostImportant());
-		client.sendEvent("postSalvageWords", work.sendPostSalvage());
-
-	}
-	
 	public void initialize() {
 		// Connection
 		server.addConnectListener(client -> {
 			System.out.println("Connect");
 
-			sendParams(client);
-			sendData(client);
+			client.sendEvent("dataLoaded", work.sendDataLoaded());
+			client.sendEvent("isRunning", work.sendStatus());
 		});
-		
-		
+
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Main
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,8 +38,8 @@ public class Transport {
 
 		server.addEventListener("getParameters", String.class, (client, data, arg2) -> {
 
-			sendParams(client);
-			sendData(client);
+			work.sendParams(client);
+			work.sendData(client);
 		});
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Preprocessing

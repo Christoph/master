@@ -112,6 +112,68 @@ public class Workflow {
 		}
 	}
 
+	public void sendParams(SocketIOClient client) {
+		System.out.println("params");
+
+		// Preprocessing
+		client.sendEvent("preFilterParams", sendPreFilterParams());
+		client.sendEvent("preRemoveParams", sendPreRemoveParams());
+		client.sendEvent("preReplaceParams", sendPreReplaceParams());
+		client.sendEvent("preDictionaryParams", sendPreDictionaryParams());
+
+		// Spell correct
+		client.sendEvent("spellImportance", sendSpellImportanceParams());
+		client.sendEvent("spellSimilarity", sendSpellSimilarityParams());
+		client.sendEvent("spellMinWordSize", sendSpellMinWordSizeParams());
+		client.sendEvent("spellDictionaryParams", sendSpellDictionaryParams());
+
+		// Composite
+		client.sendEvent("compFrequentParams", sendCompFrequentParams());
+		client.sendEvent("compUniqueParams", sendCompUniqueParams());
+		client.sendEvent("compSizeParams", sendCompSizeParams());
+		client.sendEvent("compOccParams", sendCompOccParams());
+		client.sendEvent("compSplitParams", sendCompSplitParams());
+
+		// Postprocess
+		client.sendEvent("postFilterParams", sendPostFilterParams());
+		client.sendEvent("postAllParams", sendPostAllParams());
+		client.sendEvent("postReplaceParams", sendPostReplaceParams());
+		client.sendEvent("postLengthParams", sendPostLengthParams());
+		client.sendEvent("postSplitParams", sendPostSplitParams());
+	}
+
+	public void sendData(SocketIOClient client)
+	{
+		// Main
+		client.sendEvent("mainData", sendOverview(0));
+
+		// Send Pre data
+		client.sendEvent("preFilterData", sendPreFilterHistogram());
+		client.sendEvent("preFilterGrid", sendPreFilter());
+
+		// Send Spell data
+		client.sendEvent("similarities", sendSimilarityHistogram());
+		client.sendEvent("vocab", sendVocab());
+		client.sendEvent("importance", sendPreVocabHistogram());
+
+		// Send Composite data
+		client.sendEvent("frequentGroups", sendFrequentGroups());
+		client.sendEvent("frequentData", sendFrequentHistogram());
+		client.sendEvent("uniqueGroups", sendUniqueGroups());
+		client.sendEvent("uniqueData", sendUniqueHistogram());
+
+		// Send Post data
+		client.sendEvent("postFilterGrid", sendPostVocab());
+		client.sendEvent("postFilterData", sendPostVocabHistogram());
+		client.sendEvent("output", sendOverview(3));
+		client.sendEvent("outputState", "Multiword Tags");
+
+		// Send Final data
+		client.sendEvent("postImportantWords", sendPostImportant());
+		client.sendEvent("postSalvageWords", sendPostSalvage());
+
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Load data - Dataset 0
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,12 +236,18 @@ public class Workflow {
 
 			guided = true;
 			client.sendEvent("isGuided",sendMode());
+
+			sendParams(client);
+			sendData(client);
 		}
 
-		if(data.equals("free"))
+		if(data.equals("free") || data.equals("reconnect"))
 		{
 			guided = false;
 			client.sendEvent("isGuided",sendMode());
+
+			sendParams(client);
+			sendData(client);
 
 			preDirty = true;
 			computeWorkflow(client);
