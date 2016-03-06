@@ -75,9 +75,9 @@ public class Workflow {
 
 		if(preDirty)
 		{
-			client.sendEvent("startedPre", "");
+			client.sendEvent("computePre", "started");
 			computePreprocessing(client);
-			client.sendEvent("finishedPre", "");
+			client.sendEvent("computePre", "finished");
 
 			preDirty = false;
 			spellDirty = true;
@@ -86,9 +86,9 @@ public class Workflow {
 
 		if(spellDirty)
 		{
-			client.sendEvent("startedSpell", "");
+			client.sendEvent("computeSpell", "started");
 			computeSpellCorrect(client);
-			client.sendEvent("finishedSpell", "");
+			client.sendEvent("computeSpell", "finished");
 
 			spellDirty = false;
 			compDirty = true;
@@ -97,9 +97,9 @@ public class Workflow {
 
 		if(compDirty)
 		{
-			client.sendEvent("startedComp", "");
+			client.sendEvent("computeComp", "started");
 			computeGroups(client);
-			client.sendEvent("finishedComp", "");
+			client.sendEvent("computeComp", "finished");
 
 			compDirty = false;
 			System.out.println("comp");
