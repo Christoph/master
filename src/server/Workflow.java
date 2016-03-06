@@ -27,6 +27,7 @@ public class Workflow {
 
 	private Boolean running = false;
 	private Boolean guided = false;
+	private Boolean dataLoaded = false;
 
 	private Boolean preDirty = false;
 	private Boolean spellDirty = false;
@@ -70,9 +71,7 @@ public class Workflow {
 
 	public void computeWorkflow(SocketIOClient client)
 	{
-		// Send pre filter data
-		client.sendEvent("preFilterData", sendPreFilterHistogram());
-		client.sendEvent("preFilterGrid", sendPreFilter());
+		System.out.println("computeWorkflow");
 
 		if(preDirty)
 		{
@@ -143,7 +142,9 @@ public class Workflow {
 		help.wordFrequency(tags.get(0), tagsFreq);
 
 		// Send that the data is loaded
-		client.sendEvent("dataLoaded","");
+		dataLoaded = true;
+		client.sendEvent("dataLoaded", sendDataLoaded());
+		System.out.println("DataLoaded");
 	}
 	
 	public void applyImportedDataCount(int count, SocketIOClient client) {
@@ -159,18 +160,20 @@ public class Workflow {
 
 	public void selectMode(String data, SocketIOClient client) {
 
+		System.out.println("selectMode");
+
 		if(data.equals("guided"))
 		{
 			if(!running) applyDefaults();
 
 			guided = true;
-			client.sendEvent("isGuided",guided.toString());
+			client.sendEvent("isGuided",sendMode());
 		}
 
 		if(data.equals("free"))
 		{
 			guided = false;
-			client.sendEvent("isGuided",guided.toString());
+			client.sendEvent("isGuided",sendMode());
 
 			preDirty = true;
 			computeWorkflow(client);
@@ -213,6 +216,10 @@ public class Workflow {
 
 	public String sendMode() {
 		return guided.toString();
+	}
+
+	public String sendDataLoaded() {
+		return dataLoaded.toString();
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////

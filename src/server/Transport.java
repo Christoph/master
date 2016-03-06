@@ -14,8 +14,9 @@ public class Transport {
 	}
 
 	private void sendParams(SocketIOClient client) {
-		client.sendEvent("isRunning", work.sendStatus());
-		client.sendEvent("isGuided", work.sendMode());
+		System.out.println("params");
+
+		client.sendEvent("dataLoaded", work.sendDataLoaded());
 
 		// Preprocessing
 		client.sendEvent("preFilterParams", work.sendPreFilterParams());
@@ -80,6 +81,8 @@ public class Transport {
 		// Connection
 		server.addConnectListener(client -> {
 			System.out.println("Connect");
+
+			client.sendEvent("isRunning", work.sendStatus());
 
 			if(work.sendStatus().equals("true"))
 			{
