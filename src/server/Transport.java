@@ -17,6 +17,7 @@ public class Transport {
 		System.out.println("params");
 
 		client.sendEvent("dataLoaded", work.sendDataLoaded());
+		client.sendEvent("isRunning", work.sendStatus());
 
 		// Preprocessing
 		client.sendEvent("preFilterParams", work.sendPreFilterParams());
@@ -82,13 +83,8 @@ public class Transport {
 		server.addConnectListener(client -> {
 			System.out.println("Connect");
 
-			client.sendEvent("isRunning", work.sendStatus());
-
-			if(work.sendStatus().equals("true"))
-			{
-				sendParams(client);
-				sendData(client);
-			}
+			sendParams(client);
+			sendData(client);
 		});
 		
 		
