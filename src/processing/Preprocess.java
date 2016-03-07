@@ -142,9 +142,11 @@ public class Preprocess {
 		return replace;
 	}
 
-	public void addReplace(String data)
+	public void setDefaultReplace(List<String> data)
 	{
-		replace.add(data);
+		replace.clear();
+
+		replace.addAll(data);
 	}
 
 	public void setReplace(List<Map<String, Object>> map) {

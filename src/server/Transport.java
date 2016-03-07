@@ -20,6 +20,8 @@ public class Transport {
 
 			client.sendEvent("dataLoaded", work.sendDataLoaded());
 			client.sendEvent("isRunning", work.sendStatus());
+
+			client.sendEvent("mainData", work.sendOverview(0));
 		});
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,7 +58,10 @@ public class Transport {
 		
 		// Apply filter
 		server.addEventListener("applyPrefilter", String.class, (client, data, arg2) -> work.applyPreFilter(Integer.parseInt(data), client));
-		
+
+		// Get Blacklist
+		server.addEventListener("getBlacklist", String.class, (client, data, arg2) -> client.sendEvent("preDictionaryParams", work.sendPreDictionaryParams()));
+
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Spell Checking
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,6 +77,9 @@ public class Transport {
 		server.addEventListener("getReplacements", String.class, (client, data, arg2) -> client.sendEvent("replacements", work.sendReplacements(data)));
 
 		server.addEventListener("getReplacementData", String.class, (client, data, arg2) -> client.sendEvent("replacementData", work.sendReplacementData(data)));
+
+		// Get Whitelist
+		server.addEventListener("getWhitelist", String.class, (client, data, arg2) -> client.sendEvent("spellDictionaryParams", work.sendSpellDictionaryParams()));
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Composites
