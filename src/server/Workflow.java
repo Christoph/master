@@ -76,6 +76,8 @@ public class Workflow {
 		if(preDirty)
 		{
 			client.sendEvent("computePre", "started");
+			client.sendEvent("computeSpell", "started");
+			client.sendEvent("computeComp", "started");
 			computePreprocessing(client);
 			client.sendEvent("computePre", "finished");
 
@@ -87,6 +89,7 @@ public class Workflow {
 		if(spellDirty)
 		{
 			client.sendEvent("computeSpell", "started");
+			client.sendEvent("computeComp", "started");
 			computeSpellCorrect(client);
 			client.sendEvent("computeSpell", "finished");
 
@@ -232,7 +235,7 @@ public class Workflow {
 
 		if(data.equals("guided"))
 		{
-			if(!running) applyDefaults();
+			applyDefaults();
 
 			guided = true;
 			client.sendEvent("isGuided",sendMode());
