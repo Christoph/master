@@ -220,7 +220,8 @@ public class Workflow {
 	}
 	
 	public void applyImportedDataCount(int count, SocketIOClient client) {
-		tags.get(0).clear();
+		tags.forEach(List<Tag>::clear);
+
 		globalID = 0;
 		
 		this.count = count;
@@ -236,6 +237,8 @@ public class Workflow {
 
 		if(data.equals("guided"))
 		{
+			client.sendEvent("initRunning","started");
+
 			if(!running) applyDefaults();
 
 			guided = true;
@@ -243,10 +246,14 @@ public class Workflow {
 
 			sendParams(client);
 			sendData(client);
+
+			client.sendEvent("initRunning","finished");
 		}
 
 		if(data.equals("free") || data.equals("reconnect"))
 		{
+			client.sendEvent("initRunning","started");
+
 			guided = false;
 			client.sendEvent("isGuided",sendMode());
 
@@ -255,6 +262,8 @@ public class Workflow {
 
 			preDirty = true;
 			computeWorkflow(client);
+
+			client.sendEvent("initRunning","finished");
 		}
 
 		running = true;
