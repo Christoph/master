@@ -260,10 +260,10 @@ public class Workflow {
 			sendParams(client);
 			sendData(client);
 
+			client.sendEvent("initRunning","finished");
+
 			preDirty = true;
 			computeWorkflow(client);
-
-			client.sendEvent("initRunning","finished");
 		}
 
 		running = true;
