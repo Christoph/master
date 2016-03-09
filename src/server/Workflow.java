@@ -246,6 +246,9 @@ public class Workflow {
 			sendData(client);
 
 			client.sendEvent("initRunning","finished");
+
+			preDirty = true;
+			computeWorkflow(client);
 		}
 
 		if(data.equals("free") || data.equals("linked"))
