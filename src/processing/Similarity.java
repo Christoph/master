@@ -104,9 +104,11 @@ public class Similarity {
 				word = e.getKey();
 				similarity = e.getValue();
 
+				/*
 				if (similarity >= simThreshold && vocabPre.get(word) >= impThreshold) {
 					System.out.println(high + " too important tag " + word + " - Similarity " + similarity + " - Importance " + (vocabPre.get(word)));
 				}
+				*/
 
 				// Check if similarity > threshold and importance < threshold
 				if (similarity >= simThreshold && vocabPre.get(word) < impThreshold) {

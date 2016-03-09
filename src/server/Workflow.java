@@ -26,7 +26,7 @@ public class Workflow {
 	private int count, packages;
 
 	private Boolean running = false;
-	private Boolean guided = false;
+	private String mode = "";
 	private Boolean dataLoaded = false;
 
 	private Boolean preDirty = false;
@@ -233,16 +233,14 @@ public class Workflow {
 
 	public void selectMode(String data, SocketIOClient client) {
 
-		System.out.println("selectMode");
-
 		if(data.equals("guided"))
 		{
 			client.sendEvent("initRunning","started");
 
 			if(!running) applyDefaults();
 
-			guided = true;
-			client.sendEvent("isGuided",sendMode());
+			mode = data;
+			client.sendEvent("selectedMode",sendMode());
 
 			sendParams(client);
 			sendData(client);
@@ -250,12 +248,12 @@ public class Workflow {
 			client.sendEvent("initRunning","finished");
 		}
 
-		if(data.equals("free") || data.equals("reconnect"))
+		if(data.equals("free") || data.equals("linked"))
 		{
 			client.sendEvent("initRunning","started");
 
-			guided = false;
-			client.sendEvent("isGuided",sendMode());
+			mode = data;
+			client.sendEvent("selectedMode",sendMode());
 
 			sendParams(client);
 			sendData(client);
@@ -264,6 +262,19 @@ public class Workflow {
 
 			preDirty = true;
 			computeWorkflow(client);
+		}
+
+		if(data.equals("reconnect"))
+		{
+			client.sendEvent("initRunning","started");
+
+			// Mode stays
+			client.sendEvent("selectedMode",sendMode());
+
+			sendParams(client);
+			sendData(client);
+
+			client.sendEvent("initRunning","finished");
 		}
 
 		running = true;
@@ -297,7 +308,7 @@ public class Workflow {
 	}
 
 	public String sendMode() {
-		return guided.toString();
+		return mode;
 	}
 
 	public String sendDataLoaded() {
