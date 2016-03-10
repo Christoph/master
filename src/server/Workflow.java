@@ -72,6 +72,8 @@ public class Workflow {
 		defaultReplace.add(":, ");
 		defaultReplace.add(";, ");
 		defaultReplace.add("/, ");
+		defaultReplace.add("(, ");
+		defaultReplace.add("), ");
 
 		preprocess = new Preprocess(blacklist);
 		spellcorrect = new Spellcorrect(whitelistWords, whitelistGroups, whitelistVocab);
