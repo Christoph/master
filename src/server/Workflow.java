@@ -244,6 +244,13 @@ public class Workflow {
 			mode = data;
 			client.sendEvent("selectedMode",sendMode());
 
+			// Wait a little bit for the angular ng-if statement
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 			sendParams(client);
 			sendData(client);
 
@@ -260,6 +267,13 @@ public class Workflow {
 			mode = data;
 			client.sendEvent("selectedMode",sendMode());
 
+			// Wait a little bit for the angular ng-if statement
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 			sendParams(client);
 			sendData(client);
 
@@ -275,6 +289,13 @@ public class Workflow {
 
 			// Mode stays
 			client.sendEvent("selectedMode",sendMode());
+
+			// Wait a little bit for the angular ng-if statement
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 
 			sendParams(client);
 			sendData(client);
