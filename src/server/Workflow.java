@@ -303,8 +303,10 @@ public class Workflow {
 			client.sendEvent("initRunning","finished");
 		}
 
-		running = true;
-		client.sendEvent("isRunning",sendStatus());
+		if(!running)
+		{
+			running = true;
+		}
 	}
 
 	private void applyDefaults() {
