@@ -256,7 +256,8 @@ public class Workflow {
 
 			client.sendEvent("initRunning","finished");
 
-			preDirty = true;
+			if(!running) preDirty = true;
+
 			computeWorkflow(client);
 		}
 
@@ -279,7 +280,8 @@ public class Workflow {
 
 			client.sendEvent("initRunning","finished");
 
-			preDirty = true;
+			if(!running) preDirty = true;
+
 			computeWorkflow(client);
 		}
 
