@@ -25,20 +25,21 @@ public class Postprocess {
 	private int minWordLength = 3;
 	private Boolean useAllWords = false;
 	private Boolean splitTags = false;
-	private List<String> postReplace = new ArrayList<String>();
+	private List<String> postReplace = new ArrayList<>();
+	private List<String> postRemove = new ArrayList<>();
 
-	public void initializeSalvaging(Map<String, Double> vocabPost) {
-		// Get important words
+	public void updateImportantWords(Map<String, Double> vocabPost) {
 		importantWords = help.getImportantTags(vocabPost, postFilter);
-		
-		// Get salvage words
-		salvageWords = regex.replaceCustomWords(importantWords, postReplace);
 	}
-	
+
+	public void updateSalvageWords()
+	{
+		salvageWords = regex.replaceREmoveWords(importantWords, postReplace, postRemove);
+	}
+
 	public void computeSalvaging(Map<String, Double> vocabPost) {
 		// Find important words in the unimportant tags
 		regex.findImportantWords(vocabPost, salvageWords, salvagedData, postFilter, minWordLength);
-		System.out.println(salvagedData.toString());
 	}
 	
 	public void applySalvaging(List<Tag> tags) {
@@ -56,16 +57,6 @@ public class Postprocess {
 		List<gridVocab> tags_filtered = new ArrayList<>();
 
 		for (String s : importantWords) {
-			tags_filtered.add(new gridVocab(s, 0));
-		}
-
-		return tags_filtered;
-	}
-	
-	public List<gridVocab> prepareSalvageWords() {
-		List<gridVocab> tags_filtered = new ArrayList<>();
-
-		for (String s : salvageWords) {
 			tags_filtered.add(new gridVocab(s, 0));
 		}
 
@@ -94,11 +85,25 @@ public class Postprocess {
 		return postReplace;
 	}
 
+	public List<String> getPostRemove() {
+		return postRemove;
+	}
+
 	public void setPostReplace(List<Map<String, Object>> map) {
 		postReplace.clear();
-		
-		for (int i = 0; i < map.size(); i++) {
-			postReplace.add(map.get(i).get("replace") + "," + map.get(i).get("by"));
+
+		for(String s: map.get(0).keySet())
+		{
+			postReplace.add(s+","+map.get(0).get(s));
+		}
+	}
+
+	public void setPostRemove(List<Map<String, Object>> map) {
+		postRemove.clear();
+
+		for(String s: map.get(0).keySet())
+		{
+			postRemove.add(s);
 		}
 	}
 

@@ -99,6 +99,8 @@ public class Transport {
 		
 		server.addEventListener("applyPostReplace", String.class, (client, data, arg2) -> work.applyPostReplace(data, client));
 
+		server.addEventListener("applyPostRemove", String.class, (client, data, arg2) -> work.applyPostRemove(data, client));
+
 		server.addEventListener("applyPostParams", String.class, (client, data, arg2) -> work.applyPostParams(data, client));
 		
 		server.addEventListener("applySalvaging", String.class, (client, data, arg2) -> work.applySalvaging(client));

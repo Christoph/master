@@ -76,8 +76,8 @@ public class Regex {
 
 		// Precompile patterns
 		for (String s : importantWords) {
-			patterns_greedy.put(s, Pattern.compile("(.*)(" + s + ")(.*)"));
-			patterns_conservative.put(s, Pattern.compile("(\\s)(" + s + ")(\\s)"));
+			patterns_greedy.put(s, Pattern.compile("(.*)(" + Pattern.quote(s) + ")(.*)"));
+			patterns_conservative.put(s, Pattern.compile("(\\s)(" + Pattern.quote(s) + ")(\\s)"));
 		}
 
 		for (Entry<String, Double> e : vocabPost.entrySet()) {
@@ -112,6 +112,8 @@ public class Regex {
 				}
 			}
 		}
+
+		System.out.println("regex end");
 	}
 	
 	
@@ -164,17 +166,23 @@ public class Regex {
 		}
 	}
 	
-	public List<String> replaceCustomWords(List<String> importantWords, List<String> patterns) {
+	public List<String> replaceREmoveWords(List<String> importantWords, List<String> patterns, List<String> postRemove) {
 		String[] row;
-		
+		List<String> out = new ArrayList<>();
+		out.addAll(importantWords);
+
+		// Remove words
+		out.removeAll(postRemove);
+
+		// Replace Words
 		for (String s : patterns) {
 			row = s.split(",");
 			
-			if (importantWords.contains(row[0])) {
-				importantWords.set(importantWords.indexOf(row[0]), row[1]);
+			if (out.contains(row[0])) {
+				out.set(out.indexOf(row[0]), row[1]);
 			}
 		}
-		
-		return importantWords;
+
+		return out;
 	}
 }

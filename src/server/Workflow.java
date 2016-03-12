@@ -116,11 +116,6 @@ public class Workflow {
 
 			compDirty = false;
 		}
-
-		if(postDirty)
-		{
-			computeSalvaging(client);
-		}
 	}
 
 	public void sendParams(SocketIOClient client) {
@@ -147,6 +142,7 @@ public class Workflow {
 		client.sendEvent("postFilterParams", sendPostFilterParams());
 		client.sendEvent("postAllParams", sendPostAllParams());
 		client.sendEvent("postReplaceParams", sendPostReplaceParams());
+		client.sendEvent("postRemoveParams", sendPostRemoveParams());
 		client.sendEvent("postLengthParams", sendPostLengthParams());
 		client.sendEvent("postSplitParams", sendPostSplitParams());
 	}
@@ -176,7 +172,6 @@ public class Workflow {
 
 		// Send Final data
 		client.sendEvent("postImportantWords", sendPostImportant());
-		client.sendEvent("postSalvageWords", sendPostSalvage());
 
 	}
 
@@ -693,15 +688,17 @@ public class Workflow {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public void prepareSalvaging(SocketIOClient client) {
-		postprocess.initializeSalvaging(vocabPost);
+		postprocess.updateImportantWords(vocabPost);
+		postprocess.updateSalvageWords();
 		
 		client.sendEvent("postImportantWords", sendPostImportant());
-		client.sendEvent("postSalvageWords", sendPostSalvage());
 	}
 	
 	public void computeSalvaging(SocketIOClient client) {
+		client.sendEvent("postSalvaging", "true");
 		postprocess.computeSalvaging(vocabPost);
-		
+		client.sendEvent("postSalvaging", "false");
+
 		client.sendEvent("postSalvageData", sendPostSalvageData());
 	}
 	
@@ -709,8 +706,13 @@ public class Workflow {
 	public void applySalvaging(SocketIOClient client) {
 		help.resetStep(tags, 4);
 		
+		client.sendEvent("computePost", "started");
+
+		computeSalvaging(client);
 		postprocess.applySalvaging(tags.get(4));
-		
+
+		client.sendEvent("computePost", "finished");
+
 		client.sendEvent("output", sendOverview(4));
 		client.sendEvent("outputState", "Finalize");
 	}
@@ -718,16 +720,34 @@ public class Workflow {
 	public void applyPostFilter(double threshold, SocketIOClient client) {
 		// Set threshold
 		postprocess.setPostFilter(threshold);
-		
-		postDirty = true;
+
+		postprocess.updateImportantWords(vocabPost);
+
+		client.sendEvent("postImportantWords", sendPostImportant());
+
+		postprocess.updateSalvageWords();
+
+		computeSalvaging(client);
 	}
 	
 	public void applyPostReplace(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
-		
+
 		postprocess.setPostReplace(map);
 
-		postDirty = true;
+		postprocess.updateSalvageWords();
+
+		computeSalvaging(client);
+	}
+
+	public void applyPostRemove(String json, SocketIOClient client) {
+		List<Map<String, Object>> map = help.jsonStringToList(json);
+
+		postprocess.setPostRemove(map);
+
+		postprocess.updateSalvageWords();
+
+		computeSalvaging(client);
 	}
 
 	public void applyPostParams(String json, SocketIOClient client) {
@@ -737,7 +757,7 @@ public class Workflow {
 		postprocess.setSplitTags((Boolean) map.get(0).get("split"));
 		postprocess.setUseAllWords((Boolean) map.get(0).get("useAll"));
 
-		postDirty = true;
+		computeSalvaging(client);
 	}
 	
 	// Send Params
@@ -756,7 +776,11 @@ public class Workflow {
 	public List<String> sendPostReplaceParams() {
 		return postprocess.getPostReplace();
 	}
-	
+
+	public List<String> sendPostRemoveParams() {
+		return postprocess.getPostRemove();
+	}
+
 	public Boolean sendPostSplitParams() {
 		return postprocess.getSplitTags();
 	}
@@ -773,11 +797,7 @@ public class Workflow {
 	public String sendPostImportant() {
 		return help.objectToJsonString(postprocess.prepareImportantWords());
 	}
-	
-	public String sendPostSalvage() {
-		return help.objectToJsonString(postprocess.prepareSalvageWords());
-	}
-	
+
 	public String sendPostSalvageData() {
 		return help.objectToJsonString(postprocess.prepareSalvagedData());
 	}
