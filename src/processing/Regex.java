@@ -48,7 +48,7 @@ public class Regex {
 
 			for (String w : words) {
 				if (salvagedData.keySet().contains(w)) {
-					temp.add(salvagedData.get(w));
+					temp.add(removeWord(salvagedData.get(w), postRemove));
 				}
 				else if (salvageWords.contains(w))
 				{
@@ -179,6 +179,22 @@ public class Regex {
 		}
 	}
 	
+	public String removeWord(String text, List<String> postRemove) {
+		String out = text;
+
+		// Replace Words
+		if(out.length() > 0)
+		{
+			// Remove
+			for(String s: postRemove)
+			{
+				out = out.replaceAll(Pattern.quote(s),"");
+			}
+		}
+
+		return out;
+	}
+
 	public String replaceWords(String text, List<String> patterns) {
 		String[] row;
 		String out = text;
