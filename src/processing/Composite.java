@@ -136,12 +136,17 @@ public class Composite {
 
 	public List<gridGroup> prepareUniqueGroups() {
 		List<gridGroup> temp = new ArrayList<>();
+		List<String> other = new ArrayList<>();
 
-
+		frequent_groups.descendingMap()
+				.entrySet()
+				.stream()
+				.filter(s -> s.getKey() >= frequentThreshold)
+				.forEach(l -> other.addAll(l.getValue().keySet()));
 
 		for (Entry<Double, Map<String, Integer>> s : jaccard_groups.descendingMap().entrySet()) {
 			for (Entry<String, Integer> e : Helper.sortByComparatorInteger(s.getValue()).entrySet()) {
-				temp.add(new gridGroup(e.getKey(), s.getKey()));
+				if(!other.contains(e.getKey())) temp.add(new gridGroup(e.getKey(), s.getKey()));
 			}
 		}
 		
@@ -150,10 +155,26 @@ public class Composite {
 
 	public List<gridGroup> prepareFrequentGroups() {
 		List<gridGroup> temp = new ArrayList<>();
+		List<String> other = new ArrayList<>();
 		
+		jaccard_groups.descendingMap()
+				.entrySet()
+				.stream()
+				.filter(s -> s.getKey() >= jaccardThreshold)
+				.forEach(l -> other.addAll(l.getValue().keySet()));
+
 		for (Entry<Double, Map<String, Integer>> s : frequent_groups.descendingMap().entrySet()) {
-			for (Entry<String, Integer> e : Helper.sortByComparatorInteger(s.getValue()).entrySet()) {
-				temp.add(new gridGroup(e.getKey(), s.getKey()));
+			if(s.getKey() >= frequentThreshold)
+			{
+				for (Entry<String, Integer> e : Helper.sortByComparatorInteger(s.getValue()).entrySet()) {
+					temp.add(new gridGroup(e.getKey(), s.getKey()));
+				}
+			}
+			else
+			{
+				for (Entry<String, Integer> e : Helper.sortByComparatorInteger(s.getValue()).entrySet()) {
+					if(!other.contains(e.getKey())) temp.add(new gridGroup(e.getKey(), s.getKey()));
+				}
 			}
 		}
 		return temp;

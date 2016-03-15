@@ -635,6 +635,9 @@ public class Workflow {
 		composite.setFrequentThreshold(threshold);
 		
 		compDirty = true;
+
+		// Send new grid information after a change of threshold
+		client.sendEvent("uniqueGroups", sendUniqueGroups());
 	}
 	
 	public void applyCompositeUnique(double threshold, SocketIOClient client) {
@@ -642,6 +645,9 @@ public class Workflow {
 		composite.setJaccardThreshold(threshold);
 
 		compDirty = true;
+
+		// Send new grid information after a change of threshold
+		client.sendEvent("frequentGroups", sendFrequentGroups());
 	}
 	
 	public void applyCompositeParams(String json, SocketIOClient client) {
