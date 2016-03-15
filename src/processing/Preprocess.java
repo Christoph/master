@@ -40,7 +40,7 @@ public class Preprocess {
 				for (int j = 0; j < words.size(); j++) {
 					key = words.get(j);
 					if (key.length() > 0) {
-						if (tagsFreq.get(key) < filter && key.length() > 0) {
+						if (tagsFreq.get(key) <= filter && key.length() > 0) {
 							// Remove word
 							words.set(j, "");
 						}
