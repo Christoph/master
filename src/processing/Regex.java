@@ -30,10 +30,14 @@ public class Regex {
 	// Now create matcher object.
 	protected Matcher mr, ml;
 
-	public void apply(List<Tag> tags, List<String> salvageWords, Map<String, String> salvagedData, Boolean useAllWords) {
+	public void apply(List<Tag> tags, List<String> importantWords, Map<String, String> salvagedData, Boolean useAllWords, List<String> postRemove, List<String> postReplace) {
 		String tag, newTag;
 		List<String> temp = new ArrayList<>();
 		String[] words;
+		List<String> salvageWords;
+
+		// Remove the marked words before the regex
+		salvageWords = removeWords(importantWords, postRemove);
 
 		for (Tag t : tags) {
 			tag = t.getTag();
@@ -61,21 +65,25 @@ public class Regex {
 				}
 			}
 
-			t.setTag(newTag);
+			t.setTag(replaceWords(newTag, postReplace));
 		}
 
 		help.removeTagsWithoutWords(tags);
 	}
 
-	public void findImportantWords(Map<String, Double> vocabPost, List<String> importantWords, Map<String, String> salvagedData, double threshold, int minWordLength) {
+	public void findImportantWords(Map<String, Double> vocabPost, List<String> importantWords, Map<String, String> salvagedData, double threshold, int minWordLength, List<String> postRemove, List<String> postReplace) {
 		salvagedData.clear();
+		List<String> temp;
+
+		// Remove the marked words before the regex
+		temp = removeWords(importantWords, postRemove);
 
 		System.out.print(vocabPost.size());
 		int part = vocabPost.size() / 30;
 		int iter = 0;
 
 		// Precompile patterns
-		for (String s : importantWords) {
+		for (String s : temp) {
 			patterns_greedy.put(s, Pattern.compile("(.*)(" + Pattern.quote(s) + ")(.*)"));
 			patterns_conservative.put(s, Pattern.compile("(\\s)(" + Pattern.quote(s) + ")(\\s)"));
 		}
@@ -108,7 +116,7 @@ public class Regex {
 
 				// Add the extraction to the output
 				if (!name.equals(join) && !join.isEmpty()) {
-					salvagedData.put(name, join);
+					salvagedData.put(replaceWords(name, postReplace), replaceWords(join, postReplace));
 				}
 			}
 		}
@@ -166,22 +174,26 @@ public class Regex {
 		}
 	}
 	
-	public List<String> replaceREmoveWords(List<String> importantWords, List<String> patterns, List<String> postRemove) {
+	public String replaceWords(String text, List<String> patterns) {
 		String[] row;
+		String out = "";
+
+		// Replace Words
+		for (String s : patterns) {
+			row = s.split(",");
+
+			out = text.replaceAll(Pattern.quote(row[0]),row[1]);
+		}
+
+		return out;
+	}
+
+	public List<String> removeWords(List<String> importantWords, List<String> postRemove) {
 		List<String> out = new ArrayList<>();
 		out.addAll(importantWords);
 
 		// Remove words
 		out.removeAll(postRemove);
-
-		// Replace Words
-		for (String s : patterns) {
-			row = s.split(",");
-			
-			if (out.contains(row[0])) {
-				out.set(out.indexOf(row[0]), row[1]);
-			}
-		}
 
 		return out;
 	}

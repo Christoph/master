@@ -89,6 +89,10 @@ public class Workflow {
 	public void computeWorkflow(SocketIOClient client)
 	{
 		System.out.println("computeWorkflow");
+		if(!running)
+		{
+			running = true;
+		}
 
 		if(preDirty)
 		{
