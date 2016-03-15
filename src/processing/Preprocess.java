@@ -95,7 +95,7 @@ public class Preprocess {
 	public List<gridVocab> preparePreFilter(Map<String, Long> tagsFreq) {
 		List<gridVocab> tags_filtered = new ArrayList<>();
 
-		for (String s : tagsFreq.keySet()) {
+		for (String s : Helper.sortByComparatorLong(tagsFreq).keySet()) {
 			tags_filtered.add(new gridVocab(s, tagsFreq.get(s)));
 		}
 

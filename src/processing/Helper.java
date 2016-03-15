@@ -289,6 +289,28 @@ public class Helper {
 		return sortedMap;
 	}
 
+	public static Map<String, Long> sortByComparatorLong(Map<String, Long> unsorted) {
+
+		// Variables
+		Map<String, Long> sortedMap = new LinkedHashMap<>();
+
+		// Convert map to list
+		List<Map.Entry<String, Long>> list =
+				new LinkedList<>(unsorted.entrySet());
+
+		// Sort list with comparator
+		// Sort in decreasing order
+		Collections.sort(list, (o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
+
+		// Convert sorted map back to a map
+		for (Iterator<Map.Entry<String, Long>> it = list.iterator(); it.hasNext(); ) {
+			Map.Entry<String, Long> entry = it.next();
+			sortedMap.put(entry.getKey(), entry.getValue());
+		}
+
+		return sortedMap;
+	}
+
 	public void resetStep(List<List<Tag>> tags, int index) {
 		// Clear old values
 		tags.get(index).clear();
