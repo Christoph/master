@@ -97,23 +97,20 @@ public class Composite {
 	private void findGroups(List<Tag> tags) {
 		Set<String> groups = new HashSet<>();
 		Map<String, String> subs = new HashMap<>();
-		
+		TreeMap<Double, Map<String, Integer>> temp = new TreeMap<>();
+
 		String words[];
 		String name;
 		
-		//Find all groups
-		for (Tag t : tags) {
-			if (t.getTag().contains("-")) {
-				words = t.getTag().split(" ");
-				
-				for (String s : words) {
-					if (s.contains("-")) {
-						groups.add(s);
-					}
-				}
-			}
+		// Merge all relevant items into one list
+		addRelevantItems(temp, frequent_groups, frequentThreshold);
+		addRelevantItems(temp, jaccard_groups, jaccardThreshold);
+
+		for(Map<String, Integer> c: temp.values())
+		{
+			groups.addAll(c.keySet());
 		}
-		
+
 		// Create substitution list
 		for (String s : groups) {
 			subs.put(s.replace("-", ""), s);
