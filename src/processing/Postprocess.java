@@ -47,9 +47,10 @@ public class Postprocess {
 		
 		if (splitTags) {
 			help.splitCompositeTag(tags);
-			help.correctTags(tags);
 		}
-		
+
+		help.correctTags(tags);
+
 		//help.removeDashes(tags, index);
 	}
 
