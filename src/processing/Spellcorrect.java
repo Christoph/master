@@ -180,7 +180,7 @@ public class Spellcorrect {
 		whitelistVocab.clear();
 
 		for (int i = 0; i < map.size(); i++) {
-			tag = String.valueOf(map.get(i).get("tag"));
+			tag = String.valueOf(map.get(i).get("word"));
 
 			if (tag.length() > 0) {
 				if (tag.contains(" ")) {
