@@ -142,7 +142,7 @@ public class Helper {
 				for (int i = 1; i < name.length; i++) {
 					temp = name[i];
 
-					tt.add(new Tag(t.getId(), t.getItem(), temp, t.getWeight(), t.getImportance()));
+					tt.add(new Tag(t.getId(), t.getItem(), temp, t.getWeight(), t.getImportance(), 1));
 				}
 			}
 		}

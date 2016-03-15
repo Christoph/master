@@ -200,7 +200,7 @@ public class Workflow {
 					name = String.valueOf(aMap.get("tag"));
 					weight = String.valueOf(aMap.get("weight"));
 
-					tags.get(0).add(new Tag(globalID, item, name, Double.parseDouble(weight), 0));
+					tags.get(0).add(new Tag(globalID, item, name.toLowerCase().replaceAll(" +"," "), Double.parseDouble(weight), 0, 0));
 				} catch (Exception e) {
 					System.out.println(aMap);
 				}
@@ -209,9 +209,6 @@ public class Workflow {
 	}
 	
 	public void applyImportedDataFinished(SocketIOClient client) {
-		// Set to lower case
-		help.setToLowerCase(tags.get(0));
-		
 		// Compute word frequency
 		help.wordFrequency(tags.get(0), tagsFreq);
 
@@ -826,7 +823,7 @@ public class Workflow {
 		Supplier<List<gridOverview>> supplier = ArrayList::new;
 
 		List<gridOverview> tags_filtered = tags.get(index).stream()
-				.map(p -> new gridOverview(p.getTag(), p.getItem(), p.getWeight()))
+				.map(p -> new gridOverview(p.getTag(), p.getItem(), p.getWeight(), p.getChanged()))
 				.collect(Collectors.toCollection(supplier));
 
 		return help.objectToJsonString(tags_filtered);

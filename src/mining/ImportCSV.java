@@ -45,7 +45,7 @@ public class ImportCSV {
 		for (String l : lines) {
 			temp = l.split(",");
 
-			tags.add(new Tag(0, temp[0], temp[1], Double.parseDouble(temp[2]), 0));
+			tags.add(new Tag(0, temp[0], temp[1], Double.parseDouble(temp[2]), 0, 0));
 
 		}
 		return tags;
