@@ -25,8 +25,8 @@ public class gridHistory {
 		while (history.size() < 5) history.add("");
 		
 		this.original = history.get(0);
-		this.spell = history.get(1);
-		this.pre = history.get(2);
+		this.pre = history.get(1);
+		this.spell = history.get(2);
 		this.composite = history.get(3);
 		this.post = history.get(4);
 	}

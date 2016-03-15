@@ -24,6 +24,7 @@ public class Workflow {
 
 	private int globalID = 0;
 	private int count, packages;
+	private int lastAppliedStep = 0;
 
 	private Boolean running = false;
 	private String mode = "";
@@ -818,6 +819,10 @@ public class Workflow {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public String sendOverview(int index) {
+		// Each send to the overview sets the history provider correctly
+		lastAppliedStep = index;
+
+		// Send history data
 		Supplier<List<gridOverview>> supplier = ArrayList::new;
 
 		List<gridOverview> tags_filtered = tags.get(index).stream()
@@ -844,7 +849,7 @@ public class Workflow {
 		temp.add("");
 
 		// Get ID
-		for(Tag t: tags.get(3))
+		for(Tag t: tags.get(lastAppliedStep))
 		{
 			if(t.getTag().equals(tag) && t.getItem().equals(item))
 			{
