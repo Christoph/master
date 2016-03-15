@@ -698,8 +698,7 @@ public class Workflow {
 	
 	public void prepareSalvaging(SocketIOClient client) {
 		postprocess.updateImportantWords(vocabPost);
-		postprocess.updateSalvageWords();
-		
+
 		client.sendEvent("postImportantWords", sendPostImportant());
 	}
 	
@@ -733,30 +732,18 @@ public class Workflow {
 		postprocess.updateImportantWords(vocabPost);
 
 		client.sendEvent("postImportantWords", sendPostImportant());
-
-		postprocess.updateSalvageWords();
-
-		computeSalvaging(client);
 	}
 	
 	public void applyPostReplace(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 
 		postprocess.setPostReplace(map);
-
-		postprocess.updateSalvageWords();
-
-		computeSalvaging(client);
 	}
 
 	public void applyPostRemove(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
 
 		postprocess.setPostRemove(map);
-
-		postprocess.updateSalvageWords();
-
-		computeSalvaging(client);
 	}
 
 	public void applyPostParams(String json, SocketIOClient client) {
@@ -765,8 +752,6 @@ public class Workflow {
 		postprocess.setMinWordLength((Integer) map.get(0).get("minWordLength"));
 		postprocess.setSplitTags((Boolean) map.get(0).get("split"));
 		postprocess.setUseAllWords((Boolean) map.get(0).get("useAll"));
-
-		computeSalvaging(client);
 	}
 	
 	// Send Params

@@ -49,10 +49,15 @@ public class Regex {
 			for (String w : words) {
 				if (salvagedData.keySet().contains(w)) {
 					temp.add(salvagedData.get(w));
-				} else if (salvageWords.contains(w)) {
+				}
+				else if (salvageWords.contains(w))
+				{
 					temp.add(w);
-				} else {
-					if (useAllWords) {
+				}
+				else
+				{
+					if (useAllWords)
+					{
 						temp.add(w);
 					}
 				}
@@ -176,13 +181,16 @@ public class Regex {
 	
 	public String replaceWords(String text, List<String> patterns) {
 		String[] row;
-		String out = "";
+		String out = text;
 
 		// Replace Words
-		for (String s : patterns) {
-			row = s.split(",");
+		if(out.length() > 0)
+		{
+			for (String s : patterns) {
+				row = s.split(",");
 
-			out = text.replaceAll(Pattern.quote(row[0]),row[1]);
+				out = out.replaceAll(Pattern.quote(row[0]),row[1]);
+			}
 		}
 
 		return out;

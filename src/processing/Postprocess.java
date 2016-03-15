@@ -32,10 +32,6 @@ public class Postprocess {
 		importantWords = help.getImportantTags(vocabPost, postFilter);
 	}
 
-	public void updateSalvageWords()
-	{
-	}
-
 	public void computeSalvaging(Map<String, Double> vocabPost) {
 		// Find important words in the unimportant tags
 		regex.findImportantWords(vocabPost, importantWords, salvagedData, postFilter, minWordLength, postRemove, postReplace);
@@ -92,18 +88,24 @@ public class Postprocess {
 	public void setPostReplace(List<Map<String, Object>> map) {
 		postReplace.clear();
 
-		for(String s: map.get(0).keySet())
+		if(map.size() > 0)
 		{
-			postReplace.add(s+","+map.get(0).get(s));
+			for(String s: map.get(0).keySet())
+			{
+				postReplace.add(s+","+map.get(0).get(s));
+			}
 		}
 	}
 
 	public void setPostRemove(List<Map<String, Object>> map) {
 		postRemove.clear();
 
-		for(String s: map.get(0).keySet())
+		if(map.size() > 0)
 		{
-			postRemove.add(s);
+			for(String s: map.get(0).keySet())
+			{
+				postRemove.add(s);
+			}
 		}
 	}
 
