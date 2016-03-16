@@ -10,6 +10,7 @@ public class Server {
 		config.setHostname("localhost");
 		config.setPort(9092);
 		config.setMaxFramePayloadLength(131072);
+		config.setPingTimeout(600000);
 		final SocketIOServer server = new SocketIOServer(config);
 		Transport transport = new Transport(server);
 
