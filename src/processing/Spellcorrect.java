@@ -38,7 +38,7 @@ public class Spellcorrect {
 		// Initial values
 		setSpellImportance(1.0);
 		setSpellSimilarity(1.0);
-		setMinWordSize(3);
+		setMinWordSize(4);
 	}
 	
 	public void clustering(List<Tag> tags, Map<String, Double> vocabPre, List<String> whitelist) {
