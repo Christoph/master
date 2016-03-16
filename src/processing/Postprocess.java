@@ -21,7 +21,7 @@ public class Postprocess {
 	protected Map<String, String> salvagedData = new HashMap<>();
 
 	// Parameters
-	private double postFilter = 1;
+	private double postFilter = 0;
 	private int minWordLength = 3;
 	private Boolean useAllWords = false;
 	private Boolean splitTags = false;
