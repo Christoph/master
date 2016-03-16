@@ -29,6 +29,7 @@ public class Workflow {
 	private Boolean running = false;
 	private String mode = "";
 	private Boolean dataLoaded = false;
+	private Boolean runs = false;
 
 	private Boolean preDirty = false;
 	private Boolean spellDirty = false;
@@ -94,36 +95,40 @@ public class Workflow {
 			running = true;
 		}
 
-		if(preDirty)
+		if(!runs)
 		{
-			client.sendEvent("computePre", "started");
-			client.sendEvent("computeSpell", "started");
-			client.sendEvent("computeComp", "started");
-			computePreprocessing(client);
-			client.sendEvent("computePre", "finished");
+			runs = true;
 
-			preDirty = false;
-			spellDirty = true;
-		}
+			if (preDirty) {
+				client.sendEvent("computePre", "started");
+				client.sendEvent("computeSpell", "started");
+				client.sendEvent("computeComp", "started");
+				computePreprocessing(client);
+				client.sendEvent("computePre", "finished");
 
-		if(spellDirty)
-		{
-			client.sendEvent("computeSpell", "started");
-			client.sendEvent("computeComp", "started");
-			computeSpellCorrect(client);
-			client.sendEvent("computeSpell", "finished");
+				preDirty = false;
+				spellDirty = true;
+			}
 
-			spellDirty = false;
-			compDirty = true;
-		}
+			if (spellDirty) {
+				client.sendEvent("computeSpell", "started");
+				client.sendEvent("computeComp", "started");
+				computeSpellCorrect(client);
+				client.sendEvent("computeSpell", "finished");
 
-		if(compDirty)
-		{
-			client.sendEvent("computeComp", "started");
-			computeGroups(client);
-			client.sendEvent("computeComp", "finished");
+				spellDirty = false;
+				compDirty = true;
+			}
 
-			compDirty = false;
+			if (compDirty) {
+				client.sendEvent("computeComp", "started");
+				computeGroups(client);
+				client.sendEvent("computeComp", "finished");
+
+				compDirty = false;
+			}
+
+			runs = false;
 		}
 	}
 
