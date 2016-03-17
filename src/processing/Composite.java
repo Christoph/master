@@ -27,8 +27,8 @@ public class Composite {
 	
 	
 	// Parameters
-	private double jaccardThreshold = 1;
-	private double frequentThreshold = 1;
+	private double jaccardThreshold = 1.5;
+	private double frequentThreshold = 1.5;
 	private int maxGroupSize = 3;
 	private int minOccurrence = 1;
 	private Boolean split = false;
