@@ -33,12 +33,26 @@ public class Weighting {
 					sums.put(s, value + t.getWeight());
 					
 					if (value + t.getWeight() < 0) {
-						throw new IndexOutOfBoundsException("The sum of all weights corresponding to one tag is too big. OVERLOW!");
+						throw new IndexOutOfBoundsException("The sum of all weights corresponding to one tag is too big. OVERFLOW!");
 					}
 				} else {
 					sums.put(s, t.getWeight());
 				}
 			}
+		}
+
+		// Take the log of all numbers
+		for(Map.Entry<String, Double> e: sums.entrySet())
+		{
+			if(e.getValue() < 1)
+			{
+				e.setValue(Math.log(1));
+			}
+			else
+			{
+				e.setValue(Math.log(e.getValue()));
+			}
+
 		}
 
 		// Normalizing frequency and setting it as importance in vocab
