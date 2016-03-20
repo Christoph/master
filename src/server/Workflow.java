@@ -146,6 +146,20 @@ public class Workflow {
 
 	public void sendData(SocketIOClient client)
 	{
+		//Vocab Data
+		client.sendEvent("rawVocabSize", vocabs.get(0).size());
+		client.sendEvent("preVocabSize", vocabs.get(1).size());
+		client.sendEvent("spellVocabSize", vocabs.get(2).size());
+		client.sendEvent("compVocabSize", vocabs.get(3).size());
+		client.sendEvent("postVocabSize", vocabs.get(4).size());
+
+		//Dataset Data
+		client.sendEvent("rawDataset", tags.get(0).size());
+		client.sendEvent("preDataset", tags.get(1).size());
+		client.sendEvent("spellDataset", tags.get(2).size());
+		client.sendEvent("compDataset", tags.get(3).size());
+		client.sendEvent("postDataset", tags.get(4).size());
+
 		// Send Pre data
 		client.sendEvent("preFilterData", sendPreFilterHistogram());
 		client.sendEvent("preFilterGrid", sendPreFilter());
@@ -206,6 +220,9 @@ public class Workflow {
 		// Compute word frequency
 		help.wordFrequency(tags.get(0), tagsFreq);
 		weighting.vocab(tags.get(0), vocabs.get(0));
+
+		client.sendEvent("rawDataset", tags.get(0).size());
+		client.sendEvent("rawVocabSize", vocabs.get(0).size());
 
 		// Send that the data is loaded
 		dataLoaded = true;
@@ -314,6 +331,8 @@ public class Workflow {
 		// Cluster words for further use
 		spellcorrect.clustering(tags.get(1), vocabs.get(1), whitelistVocab);
 		
+		client.sendEvent("preDataset", tags.get(1).size());
+		client.sendEvent("preVocabSize", vocabs.get(1).size());
 		client.sendEvent("similarities", sendSimilarityHistogram());
 		client.sendEvent("vocab", sendVocab());
 		client.sendEvent("importance", sendPreVocabHistogram());
@@ -393,6 +412,8 @@ public class Workflow {
 		// New Vocab
 		weighting.vocab(tags.get(2), vocabs.get(2));
 
+		client.sendEvent("spellDataset", tags.get(2).size());
+		client.sendEvent("spellVocabSize", vocabs.get(2).size());
 		client.sendEvent("frequentGroups", sendFrequentGroups());
 		client.sendEvent("frequentData", sendFrequentHistogram());
 		client.sendEvent("uniqueGroups", sendUniqueGroups());
@@ -543,6 +564,8 @@ public class Workflow {
 		client.sendEvent("postFilterGrid", sendPostVocab());
 		client.sendEvent("postFilterData", sendPostVocabHistogram());
 
+		client.sendEvent("compVocabSize", vocabs.get(3).size());
+		client.sendEvent("compDataset", tags.get(3).size());
 		client.sendEvent("output", sendOverview(3));
 		client.sendEvent("resultVocab", sendVocab(3));
 		client.sendEvent("outputState", "Multiword Tags");
@@ -649,6 +672,9 @@ public class Workflow {
 		client.sendEvent("computePost", "finished");
 
 		weighting.vocab(tags.get(4), vocabs.get(4));
+
+		client.sendEvent("postVocabSize", vocabs.get(4).size());
+		client.sendEvent("postDataset", tags.get(4).size());
 		client.sendEvent("output", sendOverview(4));
 		client.sendEvent("resultVocab", sendVocab(4));
 		client.sendEvent("outputState", "Finalize");
