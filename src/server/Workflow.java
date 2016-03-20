@@ -42,10 +42,9 @@ public class Workflow {
 
 	// Data
 	private List<List<Tag>> tags = new ArrayList<>();
+	private List<Map<String, Double>> vocabs = new ArrayList<>();
 
 	private Map<String, Long> tagsFreq = new HashMap<>();
-	private Map<String, Double> vocabPre = new HashMap<>();
-	private Map<String, Double> vocabPost = new HashMap<>();
 
 	private List<String> whitelistWords = new ArrayList<>();
 	private List<String> whitelistGroups = new ArrayList<>();
@@ -63,6 +62,10 @@ public class Workflow {
 	public Workflow() {
 		for (int i = 0; i < 5; i++) {
 			tags.add(new ArrayList<>());
+		}
+
+		for (int i = 0; i < 5; i++) {
+			vocabs.add(new HashMap<>());
 		}
 
 		preprocess = new Preprocess(blacklist);
@@ -163,6 +166,7 @@ public class Workflow {
 		client.sendEvent("postFilterGrid", sendPostVocab());
 		client.sendEvent("postFilterData", sendPostVocabHistogram());
 		client.sendEvent("output", sendOverview(3));
+		client.sendEvent("resultVocab", sendVocab(3));
 		client.sendEvent("outputState", "Multiword Tags");
 
 		// Send Final data
@@ -201,6 +205,7 @@ public class Workflow {
 	public void applyImportedDataFinished(SocketIOClient client) {
 		// Compute word frequency
 		help.wordFrequency(tags.get(0), tagsFreq);
+		weighting.vocab(tags.get(0), vocabs.get(0));
 
 		// Send that the data is loaded
 		dataLoaded = true;
@@ -304,10 +309,10 @@ public class Workflow {
 		help.removeBlacklistedWords(tags.get(1), blacklist);
 
 		// Create preFilter vocab
-		weighting.vocab(tags.get(1), vocabPre);
+		weighting.vocab(tags.get(1), vocabs.get(1));
 
 		// Cluster words for further use
-		spellcorrect.clustering(tags.get(1), vocabPre, whitelistVocab);
+		spellcorrect.clustering(tags.get(1), vocabs.get(1), whitelistVocab);
 		
 		client.sendEvent("similarities", sendSimilarityHistogram());
 		client.sendEvent("vocab", sendVocab());
@@ -380,11 +385,14 @@ public class Workflow {
 		help.resetStep(tags, 2);
 
 		// Apply clustering
-		spellcorrect.applyClustering(tags.get(2), vocabPre);
+		spellcorrect.applyClustering(tags.get(2), vocabs.get(0));
 		
 		// Compute further data
 		composite.group(tags.get(2));
-		
+
+		// New Vocab
+		weighting.vocab(tags.get(2), vocabs.get(2));
+
 		client.sendEvent("frequentGroups", sendFrequentGroups());
 		client.sendEvent("frequentData", sendFrequentHistogram());
 		client.sendEvent("uniqueGroups", sendUniqueGroups());
@@ -460,7 +468,7 @@ public class Workflow {
 
 	// Send Data
 	public String sendCluster(String tag) {
-		return help.objectToJsonString(spellcorrect.prepareCluster(tag, vocabPre));
+		return help.objectToJsonString(spellcorrect.prepareCluster(tag, vocabs.get(1)));
 	}
 	
 	public String sendSimilarityHistogram() {
@@ -486,7 +494,7 @@ public class Workflow {
 
 	public String sendReplacements(double sim)
 	{
-		return help.objectToJsonString(spellcorrect.prepareReplacements(sim, vocabPre));
+		return help.objectToJsonString(spellcorrect.prepareReplacements(sim, vocabs.get(1)));
 	}
 
 	public String sendReplacementData(String json)
@@ -508,15 +516,15 @@ public class Workflow {
 
 		sim = getSim(map);
 
-		return help.objectToJsonString(spellcorrect.prepareReplacementData(sim, imp, vocabPre));
+		return help.objectToJsonString(spellcorrect.prepareReplacementData(sim, imp, vocabs.get(1)));
 	}
 
 	public String sendVocab() {
-		return help.objectToJsonString(help.prepareVocab(vocabPre));
+		return help.objectToJsonString(help.prepareVocab(vocabs.get(1)));
 	}
 
 	public String sendPreVocabHistogram() {
-		return help.objectToJsonString(help.prepareVocabHistogram(vocabPre));
+		return help.objectToJsonString(help.prepareVocabHistogram(vocabs.get(1)));
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -530,12 +538,13 @@ public class Workflow {
 		composite.applyGroups(tags.get(3));
 
 		// Provide further data
-		weighting.vocab(tags.get(3), vocabPost);
+		weighting.vocab(tags.get(3), vocabs.get(3));
 
 		client.sendEvent("postFilterGrid", sendPostVocab());
 		client.sendEvent("postFilterData", sendPostVocabHistogram());
 
 		client.sendEvent("output", sendOverview(3));
+		client.sendEvent("resultVocab", sendVocab(3));
 		client.sendEvent("outputState", "Multiword Tags");
 
 		prepareSalvaging(client);
@@ -615,14 +624,14 @@ public class Workflow {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public void prepareSalvaging(SocketIOClient client) {
-		postprocess.updateImportantWords(vocabPost);
+		postprocess.updateImportantWords(vocabs.get(3));
 
 		client.sendEvent("postImportantWords", sendPostImportant());
 	}
 	
 	public void computeSalvaging(SocketIOClient client) {
 		client.sendEvent("postSalvaging", "true");
-		postprocess.computeSalvaging(vocabPost);
+		postprocess.computeSalvaging(vocabs.get(3));
 		client.sendEvent("postSalvaging", "false");
 
 		client.sendEvent("postSalvageData", sendPostSalvageData());
@@ -639,7 +648,9 @@ public class Workflow {
 
 		client.sendEvent("computePost", "finished");
 
+		weighting.vocab(tags.get(4), vocabs.get(4));
 		client.sendEvent("output", sendOverview(4));
+		client.sendEvent("resultVocab", sendVocab(4));
 		client.sendEvent("outputState", "Finalize");
 	}
 	
@@ -647,7 +658,7 @@ public class Workflow {
 		// Set threshold
 		postprocess.setPostFilter(threshold);
 
-		postprocess.updateImportantWords(vocabPost);
+		postprocess.updateImportantWords(vocabs.get(3));
 
 		client.sendEvent("postImportantWords", sendPostImportant());
 	}
@@ -699,11 +710,11 @@ public class Workflow {
 	
 	// Send Data
 	public String sendPostVocab() {
-		return help.objectToJsonString(help.prepareVocab(vocabPost));
+		return help.objectToJsonString(help.prepareVocab(vocabs.get(3)));
 	}
 	
 	public String sendPostVocabHistogram() {
-		return help.objectToJsonString(help.prepareVocabHistogram(vocabPost));
+		return help.objectToJsonString(help.prepareVocabHistogram(vocabs.get(3)));
 	}
 	
 	public String sendPostImportant() {
@@ -734,6 +745,10 @@ public class Workflow {
 				.collect(Collectors.toCollection(supplier));
 
 		return help.objectToJsonString(tags_filtered);
+	}
+
+	public String sendVocab(int index) {
+		return help.objectToJsonString(help.prepareVocab(vocabs.get(index)));
 	}
 
 	public String sendHistory(String json) {
