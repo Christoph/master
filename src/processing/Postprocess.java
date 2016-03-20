@@ -24,7 +24,7 @@ public class Postprocess {
 	private double postFilter = 0;
 	private int minWordLength = 3;
 	private Boolean useAllWords = false;
-	private Boolean splitTags = false;
+	private Boolean splitTags = true;
 	private List<String> postReplace = new ArrayList<>();
 	private List<String> postRemove = new ArrayList<>();
 
