@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import core.Tag;
 import core.json.gridHistFreq;
+import core.json.gridOcc;
 import core.json.gridVocab;
 
 public class Preprocess {
@@ -24,6 +25,20 @@ public class Preprocess {
 	
 	public Preprocess(List<String> blacklist) {
 		this.blacklist = blacklist;
+
+		// Defaults
+		remove = "'´";
+
+		replace.add("_, ");
+		replace.add("-, ");
+		replace.add(";, ");
+		replace.add(":, ");
+		replace.add("(, ");
+		replace.add("), ");
+		replace.add("[, ");
+		replace.add("], ");
+		replace.add("{, ");
+		replace.add("}, ");
 	}
 
 	// Remove all words below the threshold
@@ -92,11 +107,11 @@ public class Preprocess {
 		}
 	}
 
-	public List<gridVocab> preparePreFilter(Map<String, Long> tagsFreq) {
-		List<gridVocab> tags_filtered = new ArrayList<>();
+	public List<gridOcc> preparePreFilter(Map<String, Long> tagsFreq) {
+		List<gridOcc> tags_filtered = new ArrayList<>();
 
 		for (String s : Helper.sortByComparatorLong(tagsFreq).keySet()) {
-			tags_filtered.add(new gridVocab(s, tagsFreq.get(s)));
+			tags_filtered.add(new gridOcc(s, tagsFreq.get(s)));
 		}
 
 		return tags_filtered;
