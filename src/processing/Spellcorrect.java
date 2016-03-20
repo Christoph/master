@@ -11,6 +11,7 @@ import core.Tag;
 import core.json.gridCluster;
 import core.json.gridHist;
 import core.json.gridRepl;
+import core.json.gridSpell;
 
 public class Spellcorrect {
 	
@@ -116,25 +117,22 @@ public class Spellcorrect {
 
 		return hist;
 	}
-	
-	public int prepareReplacements(double sim, double imp, Map<String, Double> vocabPre) {
-		int replacements = 0;
+
+	public List<gridSpell> prepareReplacements(double sim, Map<String, Double> vocabPre) {
+		List<gridSpell> tags_filtered = new ArrayList<>();
 
 		for(Entry<Double, Map<String,String>> entry: simClusters.descendingMap().entrySet())
 		{
 			if(entry.getKey() >= sim)
 			{
-				for(String s: entry.getValue().values())
+				for(Entry<String, String> s: entry.getValue().entrySet())
 				{
-					if(vocabPre.get(s) < imp)
-					{
-						replacements += 1;
-					}
+					tags_filtered.add(new gridSpell(s.getKey(), s.getValue(), vocabPre.get(s.getKey()), vocabPre.get(s.getValue()), entry.getKey()));
 				}
 			}
 		}
 
-		return replacements;
+		return tags_filtered;
 	}
 
 	public List<gridRepl> prepareReplacementData(double sim, double imp, Map<String, Double> vocabPre) {

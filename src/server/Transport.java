@@ -73,8 +73,8 @@ public class Transport {
 		server.addEventListener("applySpellMinWordSize", String.class, (client, data, arg2) -> work.applySpellMinWordSize(Integer.parseInt(data), client));
 
 		server.addEventListener("getCluster", String.class, (client, data, arg2) -> client.sendEvent("cluster", work.sendCluster(data)));
-		
-		server.addEventListener("getReplacements", String.class, (client, data, arg2) -> client.sendEvent("replacements", work.sendReplacements(data)));
+
+		server.addEventListener("getReplacements", String.class, (client, data, arg2) -> client.sendEvent("replacementData", work.sendReplacements(Double.parseDouble(data))));
 
 		server.addEventListener("getReplacementData", String.class, (client, data, arg2) -> client.sendEvent("replacementData", work.sendReplacementData(data)));
 

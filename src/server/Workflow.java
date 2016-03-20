@@ -151,6 +151,7 @@ public class Workflow {
 		client.sendEvent("similarities", sendSimilarityHistogram());
 		client.sendEvent("vocab", sendVocab());
 		client.sendEvent("importance", sendPreVocabHistogram());
+		client.sendEvent("replacementData", sendReplacements(0.5));
 
 		// Send Composite data
 		client.sendEvent("frequentGroups", sendFrequentGroups());
@@ -388,7 +389,7 @@ public class Workflow {
 		client.sendEvent("frequentData", sendFrequentHistogram());
 		client.sendEvent("uniqueGroups", sendUniqueGroups());
 		client.sendEvent("uniqueData", sendUniqueHistogram());
-		client.sendEvent("replacements", sendReplacements());
+		client.sendEvent("replacementData", sendReplacements(0.5));
 	}
 	
 	// Apply changes
@@ -466,27 +467,6 @@ public class Workflow {
 		return help.objectToJsonString(spellcorrect.prepareSimilarityHistogram());
 	}
 	
-	public int sendReplacements(String json) {
-		List<Map<String, Object>> map = help.jsonStringToList(json);
-
-		double imp, sim;
-
-		if(map.get(0).get("importance").equals(0)) return 0;
-
-		if(map.get(0).get("importance").equals(1))
-		{
-			imp = ((Integer) map.get(0).get("importance"));
-		}
-		else
-		{
-			imp = ((Double) map.get(0).get("importance"));
-		}
-
-		sim = getSim(map);
-
-		return spellcorrect.prepareReplacements(sim, imp, vocabPre);
-	}
-
 	private double getSim(List<Map<String, Object>> map) {
 		double sim;
 		if(map.get(0).get("similarity").equals(0))
@@ -502,6 +482,11 @@ public class Workflow {
 			sim = ((Double) map.get(0).get("similarity"));
 		}
 		return sim;
+	}
+
+	public String sendReplacements(double sim)
+	{
+		return help.objectToJsonString(spellcorrect.prepareReplacements(sim, vocabPre));
 	}
 
 	public String sendReplacementData(String json)
@@ -524,13 +509,6 @@ public class Workflow {
 		sim = getSim(map);
 
 		return help.objectToJsonString(spellcorrect.prepareReplacementData(sim, imp, vocabPre));
-	}
-	
-	public int sendReplacements() {
-		double sim = spellcorrect.getSpellSimilarity();
-		double imp = spellcorrect.getSpellImportance();
-
-		return spellcorrect.prepareReplacements(sim, imp, vocabPre);
 	}
 
 	public String sendVocab() {

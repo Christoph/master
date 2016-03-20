@@ -101,7 +101,7 @@ public class Regex {
 			
 			// Set tag name
 			name = e.getKey();
-			
+
 			if (e.getValue() < threshold) {
 				// Reset join string and out list
 				join = "";
@@ -133,6 +133,10 @@ public class Regex {
 	// String, > 0 == right, list of important tags
 	public void matcher(String name, List<String> importantWords, int minWordLength) {
 		name = " " + name + " ";
+
+		if(name.length() < 1){
+			System.out.println(name);
+		}
 		
 		for (String e : importantWords) {
 			// Compile patterns
