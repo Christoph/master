@@ -351,7 +351,7 @@ public class Helper {
 	public List<gridVocab> prepareVocab(Map<String, Double> vocab) {
 		List<gridVocab> tags_filtered = new ArrayList<>();
 
-		for (String s : vocab.keySet()) {
+		for (String s : Helper.sortByComparatorDouble(vocab).keySet()) {
 			tags_filtered.add(new gridVocab(s, vocab.get(s)));
 		}
 
