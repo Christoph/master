@@ -262,10 +262,7 @@ public class Workflow {
 
 			client.sendEvent("initRunning","finished");
 
-			if(!running) {
-				preDirty = true;
-				computeWorkflow(client);
-			}
+			computeWorkflow(client);
 		}
 
 		if(data.equals("reconnect"))
