@@ -200,7 +200,7 @@ public class Helper {
 	}
 
 	public void removeDashes(List<Tag> tags) {
-		String name = "";
+		String name;
 
 		for (Tag t : tags) {
 			name = t.getTag();

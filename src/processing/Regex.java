@@ -108,7 +108,7 @@ public class Regex {
 				out.clear();
 
 				// Apply regex
-				matcher(name, importantWords, minWordLength);
+				matcher(name, temp, minWordLength);
 
 				// Rebuild string from out
 				for (String s : out) {
@@ -134,10 +134,6 @@ public class Regex {
 	public void matcher(String name, List<String> importantWords, int minWordLength) {
 		name = " " + name + " ";
 
-		if(name.length() < 1){
-			System.out.println(name);
-		}
-		
 		for (String e : importantWords) {
 			// Compile patterns
 			// If bigger than min word length do substring search
