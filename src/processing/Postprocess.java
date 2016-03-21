@@ -45,8 +45,6 @@ public class Postprocess {
 		}
 
 		help.correctTags(tags);
-
-		help.removeDashes(tags);
 	}
 
 	public List<gridVocab> prepareImportantWords() {
