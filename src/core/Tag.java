@@ -64,7 +64,7 @@ public class Tag {
 
 		if(hasChanged == 0)
 		{
-			if(!this.tag.equals(tag)) {
+			if(!this.tag.replaceAll("-"," ").equals(tag.replaceAll("-"," "))) {
 				hasChanged = 1;
 			}
 		}
