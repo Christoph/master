@@ -10,14 +10,6 @@ public class gridOcc {
 		this.tag = tag;
 		this.occurrence = occurrence;
 	}
-	
-	public long getImportance() {
-		return occurrence;
-	}
-	
-	public void setImportance(long occurrence) {
-		this.occurrence = occurrence;
-	}
 
 	public String getTag() {
 		return tag;
@@ -27,5 +19,11 @@ public class gridOcc {
 		this.tag = tag;
 	}
 	
+	public long getOccurrence() {
+		return occurrence;
+	}
 
+	public void setOccurrence(long occurrence) {
+		this.occurrence = occurrence;
+	}
 }

@@ -404,7 +404,7 @@ public class Workflow {
 		help.resetStep(tags, 2);
 
 		// Apply clustering
-		spellcorrect.applyClustering(tags.get(2), vocabs.get(0));
+		spellcorrect.applyClustering(tags.get(2), vocabs.get(1));
 		
 		// Compute further data
 		composite.group(tags.get(2));
