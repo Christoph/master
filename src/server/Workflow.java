@@ -793,7 +793,7 @@ public class Workflow {
 		// Get ID
 		for(Tag t: tags.get(lastAppliedStep))
 		{
-			if(t.getTag().equals(tag) && t.getItem().equals(item))
+			if(t.getTag().replaceAll("-"," ").equals(tag) && t.getItem().equals(item))
 			{
 				id = t.getId();
 			}
@@ -805,7 +805,7 @@ public class Workflow {
 			{
 				if(t.getId() == id)
 				{
-					temp.set(i, t.getTag());
+					temp.set(i, t.getTag().replaceAll("-"," "));
 				}
 			}
 		}
