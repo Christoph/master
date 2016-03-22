@@ -166,7 +166,7 @@ public class Workflow {
 
 		// Send Spell data
 		//client.sendEvent("similarities", sendSimilarityHistogram());
-		//client.sendEvent("importance", sendPreVocabHistogram());
+		client.sendEvent("importance", sendPreVocabHistogram());
 		client.sendEvent("replacementData", sendReplacements(0.5));
 
 		// Send Composite data
