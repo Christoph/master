@@ -308,7 +308,7 @@ public class Workflow {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public void computePreprocessing(SocketIOClient client) {
-		help.resetStep(tags, 1);
+		help.resetStep(tags, vocabs, 1);
 
 		// Remove tags
 		preprocess.applyFilter(tags.get(1), tagsFreq);
@@ -398,7 +398,7 @@ public class Workflow {
 	
 	public void computeSpellCorrect(SocketIOClient client) {
 		// Reset current stage
-		help.resetStep(tags, 2);
+		help.resetStep(tags, vocabs, 2);
 
 		// Apply clustering
 		spellcorrect.applyClustering(tags.get(2), vocabs.get(1));
@@ -550,7 +550,7 @@ public class Workflow {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public void computeGroups(SocketIOClient client) {
-		help.resetStep(tags, 3);
+		help.resetStep(tags, vocabs, 3);
 		
 		// Compute all word groups
 		composite.applyGroups(tags.get(3));
@@ -659,7 +659,7 @@ public class Workflow {
 	
 	// Apply changes
 	public void applySalvaging(SocketIOClient client) {
-		help.resetStep(tags, 4);
+		help.resetStep(tags, vocabs, 4);
 		
 		client.sendEvent("computePost", "started");
 

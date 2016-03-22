@@ -311,12 +311,14 @@ public class Helper {
 		return sortedMap;
 	}
 
-	public void resetStep(List<List<Tag>> tags, int index) {
+	public void resetStep(List<List<Tag>> tags, List<Map<String, Double>> vocabs, int index) {
 		// Clear old values
 		tags.get(index).clear();
+		vocabs.get(index).clear();
 
 		// The clone
 		List<Tag> temp = new ArrayList<>();
+		Map<String, Double> vocab = new HashMap<>();
 
 		// Cloning
 		for(Tag t: tags.get(index-1))
@@ -324,8 +326,14 @@ public class Helper {
 			temp.add(new Tag(t));
 		}
 
+		for(Entry<String, Double> v: vocabs.get(index-1).entrySet())
+		{
+			vocab.put(v.getKey(), v.getValue());
+		}
+
 		// Copy From previous step
 		tags.set(index, temp);
+		vocabs.set(index, vocab);
 	}
 
 	public List<gridHist> prepareVocabHistogram(Map<String, Double> vocab) {
