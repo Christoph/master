@@ -165,9 +165,8 @@ public class Workflow {
 		client.sendEvent("preFilterGrid", sendPreFilter());
 
 		// Send Spell data
-		client.sendEvent("similarities", sendSimilarityHistogram());
-		client.sendEvent("vocab", sendVocab());
-		client.sendEvent("importance", sendPreVocabHistogram());
+		//client.sendEvent("similarities", sendSimilarityHistogram());
+		//client.sendEvent("importance", sendPreVocabHistogram());
 		client.sendEvent("replacementData", sendReplacements(0.5));
 
 		// Send Composite data
@@ -242,6 +241,20 @@ public class Workflow {
 		client.sendEvent("isRunning",sendStatus());
 	}
 
+	public void provideData(SocketIOClient client)
+	{
+		// Wait a little bit for the angular ng-if statement
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		sendParams(client);
+
+		if(!runs) sendData(client);
+	}
+
 	public void selectMode(String data, SocketIOClient client) {
 		if(data.equals("free") || data.equals("linked") ||data.equals("guided"))
 		{
@@ -250,15 +263,7 @@ public class Workflow {
 			mode = data;
 			client.sendEvent("selectedMode",sendMode());
 
-			// Wait a little bit for the angular ng-if statement
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			sendParams(client);
-			sendData(client);
+			provideData(client);
 
 			client.sendEvent("initRunning","finished");
 
@@ -272,15 +277,7 @@ public class Workflow {
 			// Mode stays
 			client.sendEvent("selectedMode",sendMode());
 
-			// Wait a little bit for the angular ng-if statement
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			sendParams(client);
-			sendData(client);
+			provideData(client);
 
 			client.sendEvent("initRunning","finished");
 		}
