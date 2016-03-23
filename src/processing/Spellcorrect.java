@@ -37,8 +37,8 @@ public class Spellcorrect {
 		this.whitelistVocab = whitelistVocab;
 		
 		// Initial values
-		setSpellImportance(1);
-		setSpellSimilarity(1);
+		setSpellImportance(0.7);
+		setSpellSimilarity(0.75);
 		setMinWordSize(4);
 	}
 	
