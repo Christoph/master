@@ -106,7 +106,7 @@ public class Similarity {
 				}
 				*/
 
-				// Check if similarity > threshold and importance < threshold
+				// Check if similarity >= threshold and importance < threshold
 				if (similarity >= simThreshold && vocabPre.get(word) < impThreshold) {
 					// Add new substitution
 					if (!substitution_list.containsKey(word)) {
