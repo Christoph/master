@@ -38,7 +38,7 @@ public class Spellcorrect {
 		
 		// Initial values
 		setSpellImportance(0.7);
-		setSpellSimilarity(0.75);
+		setSpellSimilarity(0.58);
 		setMinWordSize(4);
 	}
 	
