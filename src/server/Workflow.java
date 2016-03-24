@@ -663,6 +663,7 @@ public class Workflow {
 		computeSalvaging(client);
 		postprocess.applySalvaging(tags.get(4));
 
+		client.sendEvent("salvageCount", postprocess.prepareSalvageCount());
 		client.sendEvent("computePost", "finished");
 
 		weighting.vocab(tags.get(4), vocabs.get(4));

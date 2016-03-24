@@ -67,6 +67,10 @@ public class Postprocess {
 		return tags_filtered;
 	}
 
+	public int prepareSalvageCount() {
+		return salvagedData.size();
+	}
+
 	public double getPostFilter() {
 		return postFilter;
 	}
