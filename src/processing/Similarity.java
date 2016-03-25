@@ -22,6 +22,7 @@ public class Similarity {
 
 		clusters.clear();
 		tag_2grams.clear();
+		sortedVocab.clear();
 
 		// Set the size for the n-gram distance method
 		ngram_size = 2;
@@ -185,11 +186,18 @@ public class Similarity {
 			h1 = tag_2grams.get(word);
 
 			// Compute distance
-			similarity = psim.jaccard_index(h1, h2);
+			try
+			{
+				similarity = psim.jaccard_index(h1, h2);
 
-			// Add each word with a similarity bigger than 0 to the cluster
-			if (similarity > 0) {
-				cluster.put(word, similarity);
+				// Add each word with a similarity bigger than 0 to the cluster
+				if (similarity > 0) {
+					cluster.put(word, similarity);
+				}
+			}
+			catch(Exception ex)
+			{
+				System.out.println();
 			}
 		}
 
