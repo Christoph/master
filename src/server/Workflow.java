@@ -257,6 +257,8 @@ public class Workflow {
 	}
 
 	public void selectMode(String data, SocketIOClient client) {
+		if(!running) preDirty = true;
+
 		if(data.equals("free") || data.equals("linked") ||data.equals("guided"))
 		{
 			client.sendEvent("initRunning","started");
