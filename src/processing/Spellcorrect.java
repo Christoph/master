@@ -44,7 +44,7 @@ public class Spellcorrect {
 	
 	public void clustering(List<Tag> tags, Map<String, Double> vocabPre, List<String> whitelist) {
 		// compute similarities
-		similarity.withVocab(tags, vocabPre, whitelist, getMinWordSize(), vocabClusters);
+		similarity.withVocab(tags, vocabPre, whitelist, getMinWordSize(), vocabClusters, spellImportance);
 
 		// create similarity clusters
 		createSimClusters();

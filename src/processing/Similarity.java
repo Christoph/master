@@ -14,7 +14,7 @@ public class Similarity {
 	
 	Map<String, Double> sortedVocab = new HashMap<>();
 
-	public void withVocab(List<Tag> tags, Map<String, Double> vocab, List<String> whiteList, int minWordSize, Map<String, Map<String, Double>> clusters) {
+	public void withVocab(List<Tag> tags, Map<String, Double> vocab, List<String> whiteList, int minWordSize, Map<String, Map<String, Double>> clusters, double impThreshold) {
 		/////////////////////////////////
 		// Variables
 		int ngram_size;
@@ -68,20 +68,27 @@ public class Similarity {
 
 		// Iterate over the rest of the sorted vocab
 		for (Iterator<Entry<String, Double>> iterator = sortedVocab.entrySet().iterator(); iterator.hasNext(); ) {
-			high = iterator.next().getKey();
+			Entry<String, Double> e = iterator.next();
+			high = e.getKey();
+			double importance = e.getValue();
 
-			// Debug
-			iter++;
-			if (iter % part == 0) {
-				System.out.print(iter / part + "/30 - ");
+			// Todo ! check real impact
+			if(importance >= impThreshold)
+			{
+
+				// Debug
+				iter++;
+				if (iter % part == 0) {
+					System.out.print(iter / part + "/30 - ");
+				}
+
+				// Remove the most important word from the list
+				// This word is treated as truth
+				iterator.remove();
+
+				// Find similar words and save them to the substitution list
+				findCluster(sortedVocab, high, clusters);
 			}
-
-			// Remove the most important word from the list
-			// This word is treated as truth
-			iterator.remove();
-
-			// Find similar words and save them to the substitution list
-			findCluster(sortedVocab, high, clusters);
 		}
 	}
 	
@@ -126,10 +133,10 @@ public class Similarity {
 		}
 
 		// Resolve substitution chains
-		resolveChain();
+		//resolveChain();
 
 		// Apply this a second time, due to the fact that some chains are not resolved in one run
-		resolveChain();
+		//resolveChain();
 
 		// Replace tags corresponding to the substitution map
 		for (Tag t : tags) {

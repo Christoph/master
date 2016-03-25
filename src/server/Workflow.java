@@ -166,8 +166,9 @@ public class Workflow {
 
 		// Send Spell data
 		//client.sendEvent("similarities", sendSimilarityHistogram());
+		client.sendEvent("spellVocab", sendVocab(1));
 		client.sendEvent("importance", sendPreVocabHistogram());
-		client.sendEvent("replacementData", sendReplacements(0.5));
+		client.sendEvent("replacementData", sendReplacements(0));
 
 		// Send Composite data
 		client.sendEvent("frequentGroups", sendFrequentGroups());
@@ -328,7 +329,7 @@ public class Workflow {
 		client.sendEvent("preDataset", tags.get(1).size());
 		client.sendEvent("preVocabSize", vocabs.get(1).size());
 		client.sendEvent("similarities", sendSimilarityHistogram());
-		client.sendEvent("vocab", sendVocab());
+		client.sendEvent("spellVocab", sendVocab(1));
 		client.sendEvent("importance", sendPreVocabHistogram());
 	}
 	
@@ -412,7 +413,7 @@ public class Workflow {
 		client.sendEvent("frequentData", sendFrequentHistogram());
 		client.sendEvent("uniqueGroups", sendUniqueGroups());
 		client.sendEvent("uniqueData", sendUniqueHistogram());
-		client.sendEvent("replacementData", sendReplacements(0.5));
+		client.sendEvent("replacementData", sendReplacements(0));
 	}
 	
 	// Apply changes
@@ -440,6 +441,9 @@ public class Workflow {
 
 		spellcorrect.setSpellImportance(imp);
 		spellcorrect.setSpellSimilarity(sim);
+
+		// Update clustering with new values
+		spellcorrect.clustering(tags.get(1), vocabs.get(1), whitelistVocab);
 
 		spellDirty = true;
 	}
