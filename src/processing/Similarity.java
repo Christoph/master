@@ -108,12 +108,6 @@ public class Similarity {
 				word = e.getKey();
 				similarity = e.getValue();
 
-				/*
-				if (similarity >= simThreshold && vocabPre.get(word) >= impThreshold) {
-					System.out.println(high + " too important tag " + word + " - Similarity " + similarity + " - Importance " + (vocabPre.get(word)));
-				}
-				*/
-
 				// Check if similarity >= threshold and importance < threshold
 				if (similarity >= simThreshold) {
 					// Add new substitution
@@ -186,18 +180,11 @@ public class Similarity {
 			h1 = tag_2grams.get(word);
 
 			// Compute distance
-			try
-			{
-				similarity = psim.jaccard_index(h1, h2);
+			similarity = psim.jaccard_index(h1, h2);
 
-				// Add each word with a similarity bigger than 0 and a importance smaller than the threshold to the cluster
-				if (similarity > 0 && sortedVocab.get(word) < impThreshold) {
-					cluster.put(word, similarity);
-				}
-			}
-			catch(Exception ex)
-			{
-				System.out.println();
+			// Add each word with a similarity bigger than 0 and a importance smaller than the threshold to the cluster
+			if (similarity > 0 && sortedVocab.get(word) < impThreshold) {
+				cluster.put(word, similarity);
 			}
 		}
 
