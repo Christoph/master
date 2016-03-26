@@ -9,8 +9,8 @@ public class Server {
 		Configuration config = new Configuration();
 		config.setHostname("localhost");
 		config.setPort(9092);
-		config.setMaxFramePayloadLength(262144);
-		config.setPingTimeout(600000);
+		config.setMaxFramePayloadLength(1048576);
+		config.setPingTimeout(1200000);
 		final SocketIOServer server = new SocketIOServer(config);
 		Transport transport = new Transport(server);
 
