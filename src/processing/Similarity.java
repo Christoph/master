@@ -63,7 +63,7 @@ public class Similarity {
 				sortedVocab.remove(s);
 
 				// Find similar words and save them to the substitution list
-				findCluster(sortedVocab, s, clusters);
+				findCluster(sortedVocab, s, clusters, impThreshold);
 			}
 		}
 
@@ -88,7 +88,7 @@ public class Similarity {
 				iterator.remove();
 
 				// Find similar words and save them to the substitution list
-				findCluster(sortedVocab, high, clusters);
+				findCluster(sortedVocab, high, clusters, impThreshold);
 			}
 		}
 	}
@@ -115,7 +115,7 @@ public class Similarity {
 				*/
 
 				// Check if similarity >= threshold and importance < threshold
-				if (similarity >= simThreshold && vocabPre.get(word) < impThreshold) {
+				if (similarity >= simThreshold) {
 					// Add new substitution
 					if (!substitution_list.containsKey(word)) {
 						substitution_list.put(word, high);
@@ -173,7 +173,7 @@ public class Similarity {
 		}
 	}
 
-	private void findCluster(Map<String, Double> sortedVocab, String high, Map<String, Map<String, Double>> clusters) {
+	private void findCluster(Map<String, Double> sortedVocab, String high, Map<String, Map<String, Double>> clusters, double impThreshold) {
 		HashSet<String> h1, h2;
 		double similarity;
 		Map<String, Double> cluster = new HashMap<>();
@@ -190,8 +190,8 @@ public class Similarity {
 			{
 				similarity = psim.jaccard_index(h1, h2);
 
-				// Add each word with a similarity bigger than 0 to the cluster
-				if (similarity > 0) {
+				// Add each word with a similarity bigger than 0 and a importance smaller than the threshold to the cluster
+				if (similarity > 0 && sortedVocab.get(word) < impThreshold) {
 					cluster.put(word, similarity);
 				}
 			}
