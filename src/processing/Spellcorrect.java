@@ -27,6 +27,7 @@ public class Spellcorrect {
 	private double spellImportance;
 	private double spellSimilarity;
 	private int minWordSize;
+	private List<String> exclude;
 	private List<String> whitelistWords;
 	private List<String> whitelistGroups;
 	private List<String> whitelistVocab;
@@ -40,6 +41,7 @@ public class Spellcorrect {
 		setSpellImportance(0.7);
 		setSpellSimilarity(0.58);
 		setMinWordSize(4);
+		exclude = new ArrayList<>();
 	}
 	
 	public void clustering(List<Tag> tags, Map<String, Double> vocabPre, List<String> whitelist) {
@@ -51,7 +53,7 @@ public class Spellcorrect {
 	}
 	
 	public void applyClustering(List<Tag> tags, Map<String, Double> vocabPre) {
-		similarity.applyClusters(tags, vocabPre, spellSimilarity, spellImportance, vocabClusters);
+		similarity.applyClusters(tags, vocabPre, spellSimilarity, spellImportance, vocabClusters, exclude);
 		
 		// Resolve errors from replacements
 		help.correctTags(tags);
@@ -204,5 +206,17 @@ public class Spellcorrect {
 
 	public void setMinWordSize(int minWordSize) {
 		this.minWordSize = minWordSize;
+	}
+
+	public List<String> getExclude()
+	{
+		return exclude;
+	}
+
+	public void setExclude(List<String> list) {
+
+		exclude.clear();
+
+		exclude.addAll(list);
 	}
 }

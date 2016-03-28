@@ -126,6 +126,7 @@ public class Workflow {
 		client.sendEvent("spellImportance", sendSpellImportanceParams());
 		client.sendEvent("spellSimilarity", sendSpellSimilarityParams());
 		client.sendEvent("spellMinWordSize", sendSpellMinWordSizeParams());
+		client.sendEvent("spellExclude", sendSpellExcludeParams());
 		client.sendEvent("spellDictionaryParams", sendSpellDictionaryParams());
 
 		// Composite
@@ -352,7 +353,7 @@ public class Workflow {
 	
 	public void applyPreReplace(String json, SocketIOClient client) {
 		List<Map<String, Object>> map = help.jsonStringToList(json);
-		
+
 		preprocess.setReplace(map);
 
 		preDirty = true;
@@ -465,6 +466,19 @@ public class Workflow {
 		spellDirty = true;
 	}
 
+	public void applySpellExclude(String json, SocketIOClient client) {
+		List<String> temp = new ArrayList<>();
+
+		if(json.length()>2)
+		{
+			Collections.addAll(temp, json.substring(1, json.length() - 2).replaceAll("\"","").split(","));
+		}
+
+		spellcorrect.setExclude(temp);
+
+		spellDirty = true;
+	}
+
 	// Send Params
 	public double sendSpellImportanceParams() {
 		return spellcorrect.getSpellImportance();
@@ -476,6 +490,10 @@ public class Workflow {
 	
 	public int sendSpellMinWordSizeParams() {
 		return spellcorrect.getMinWordSize();
+	}
+
+	public List<String> sendSpellExcludeParams() {
+		return spellcorrect.getExclude();
 	}
 
 	public List<String> sendSpellDictionaryParams() {

@@ -93,7 +93,7 @@ public class Similarity {
 		}
 	}
 	
-	public void applyClusters(List<Tag> tags, Map<String, Double> vocabPre, double simThreshold, double impThreshold, Map<String, Map<String, Double>> clusters) {
+	public void applyClusters(List<Tag> tags, Map<String, Double> vocabPre, double simThreshold, double impThreshold, Map<String, Map<String, Double>> clusters, List<String> exclude) {
 		List<String> words;
 		String new_tag, high, word;
 		double similarity, similarity2;
@@ -108,8 +108,8 @@ public class Similarity {
 				word = e.getKey();
 				similarity = e.getValue();
 
-				// Check if similarity >= threshold and importance < threshold
-				if (similarity >= simThreshold) {
+				// Check if similarity >= threshold and replacement is not excluded
+				if (similarity >= simThreshold && !exclude.contains(word)) {
 					// Add new substitution
 					if (!substitution_list.containsKey(word)) {
 						substitution_list.put(word, high);
