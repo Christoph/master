@@ -39,6 +39,7 @@ public class Preprocess {
 		replace.add("], ");
 		replace.add("{, ");
 		replace.add("}, ");
+		replace.add("., ");
 	}
 
 	// Remove all words below the threshold
