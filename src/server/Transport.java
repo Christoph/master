@@ -18,10 +18,15 @@ public class Transport {
 		server.addConnectListener(client -> {
 			System.out.println("Connect");
 
-			client.sendEvent("dataLoaded", work.sendDataLoaded());
-			client.sendEvent("isRunning", work.sendStatus());
+			// Wait one second so the main controller can load before
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 
-			client.sendEvent("mainData", work.sendOverview(0));
+			// Send connected event
+			client.sendEvent("connect", "");
 		});
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,6 +48,11 @@ public class Transport {
 			work.sendParams(client);
 			work.sendData(client);
 		});
+
+		server.addEventListener("getRunning", String.class, (client, data, arg2) -> client.sendEvent("isRunning", work.sendStatus()));
+
+		server.addEventListener("getLoaded", String.class, (client, data, arg2) -> client.sendEvent("isLoaded", work.sendDataLoaded()));
+
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Preprocessing
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
