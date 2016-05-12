@@ -49,9 +49,16 @@ public class Transport {
 			work.sendData(client);
 		});
 
+
+		// Start View
+
 		server.addEventListener("getRunning", String.class, (client, data, arg2) -> client.sendEvent("isRunning", work.sendStatus()));
 
 		server.addEventListener("getLoaded", String.class, (client, data, arg2) -> client.sendEvent("isLoaded", work.sendDataLoaded()));
+
+		// Import View
+
+		server.addEventListener("getStartImportData", String.class, (client, data, arg2) -> client.sendEvent("isStartImportData", work.sendOverview(0)));
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Preprocessing
